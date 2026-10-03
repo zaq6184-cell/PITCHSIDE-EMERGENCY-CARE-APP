@@ -10,6 +10,7 @@ import {
   Stethoscope,
   ClipboardList,
   PlayCircle,
+  UsersRound,
 } from "lucide-react";
 import { AppShell, HeroPhoto, Note, Panel, SectionLabel } from "@/components/workshop";
 import { programme } from "@/lib/programme";
@@ -108,6 +109,7 @@ function Home() {
         <SectionLabel>WORKSHOP</SectionLabel>
         <Tiles
           items={[
+            { to: "/groups", icon: UsersRound, title: "Find your group", sub: "Sunday practical session · Groups 1–6 · search your name", wide: true },
             { to: "/stations", icon: ClipboardList, title: "Skill stations", sub: "Stations 1–5 + simulation" },
             { to: "/event", icon: CalendarDays, title: "Programme", sub: `${programme.datesLabel}` },
             { to: "/bag", icon: BriefcaseMedical, title: "Emergency bag", sub: "FIFA packing list" },
@@ -146,7 +148,7 @@ function PdfList({ items }: { items: [string, string][] }) {
 }
 
 type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/event" | "/bag" | "/guides";
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/groups" | "/stations" | "/event" | "/bag" | "/guides";
   icon: typeof HeartPulse;
   title: string;
   sub: string;

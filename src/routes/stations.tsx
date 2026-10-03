@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, MapPin } from "lucide-react";
+import { ChevronRight, MapPin, Users } from "lucide-react";
 import { LockedList } from "@/components/locked-list";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { simulation, stations } from "@/lib/stations";
@@ -15,6 +15,17 @@ function Stations() {
           <span className="font-semibold text-navy">Sunday 4 Oct · </span>
           Skill stations 8.30 AM – 1.00 PM, then scenario simulation {simulation.time}.
         </Note>
+        <Link
+          to="/groups"
+          className="flex items-center gap-3 rounded-xl bg-navy px-3.5 py-3 text-on-navy shadow-card active:scale-[0.99]"
+        >
+          <Users className="size-6 shrink-0 text-gold" />
+          <span className="min-w-0 flex-1">
+            <span className="block font-display text-xs font-semibold tracking-[0.14em] text-gold">FIND YOUR GROUP</span>
+            <span className="block text-sm leading-snug">Groups 1–6 for the practical session · search your name</span>
+          </span>
+          <ChevronRight className="size-5 shrink-0 text-gold" />
+        </Link>
         <SectionLabel>SKILL STATIONS</SectionLabel>
         {stations.map((s) => (
           <Link

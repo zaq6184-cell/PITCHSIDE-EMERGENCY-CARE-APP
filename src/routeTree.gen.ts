@@ -16,6 +16,7 @@ import { Route as DrillRouteImport } from './routes/drill'
 import { Route as EventRouteImport } from './routes/event'
 import { Route as FifaRouteImport } from './routes/fifa'
 import { Route as FocusRouteImport } from './routes/focus'
+import { Route as GroupsRouteImport } from './routes/groups'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as PitchsideRouteImport } from './routes/pitchside'
 import { Route as RulesRouteImport } from './routes/rules'
@@ -58,6 +59,11 @@ const FifaRoute = FifaRouteImport.update({
 const FocusRoute = FocusRouteImport.update({
   id: '/focus',
   path: '/focus',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GroupsRoute = GroupsRouteImport.update({
+  id: '/groups',
+  path: '/groups',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuidesRoute = GuidesRouteImport.update({
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
+  '/groups': typeof GroupsRoute
   '/guides': typeof GuidesRoute
   '/pitchside': typeof PitchsideRoute
   '/rules': typeof RulesRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
+  '/groups': typeof GroupsRoute
   '/guides': typeof GuidesRoute
   '/pitchside': typeof PitchsideRoute
   '/rules': typeof RulesRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
+  '/groups': typeof GroupsRoute
   '/guides': typeof GuidesRoute
   '/pitchside': typeof PitchsideRoute
   '/rules': typeof RulesRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/event'
     | '/fifa'
     | '/focus'
+    | '/groups'
     | '/guides'
     | '/pitchside'
     | '/rules'
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/event'
     | '/fifa'
     | '/focus'
+    | '/groups'
     | '/guides'
     | '/pitchside'
     | '/rules'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/event'
     | '/fifa'
     | '/focus'
+    | '/groups'
     | '/guides'
     | '/pitchside'
     | '/rules'
@@ -215,6 +227,7 @@ export interface RootRouteChildren {
   EventRoute: typeof EventRoute
   FifaRoute: typeof FifaRoute
   FocusRoute: typeof FocusRoute
+  GroupsRoute: typeof GroupsRoute
   GuidesRoute: typeof GuidesRoute
   PitchsideRoute: typeof PitchsideRoute
   RulesRoute: typeof RulesRoute
@@ -274,6 +287,13 @@ declare module '@tanstack/react-router' {
       path: '/focus'
       fullPath: '/focus'
       preLoaderRoute: typeof FocusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/groups': {
+      id: '/groups'
+      path: '/groups'
+      fullPath: '/groups'
+      preLoaderRoute: typeof GroupsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guides': {
@@ -343,6 +363,7 @@ const rootRouteChildren: RootRouteChildren = {
   EventRoute: EventRoute,
   FifaRoute: FifaRoute,
   FocusRoute: FocusRoute,
+  GroupsRoute: GroupsRoute,
   GuidesRoute: GuidesRoute,
   PitchsideRoute: PitchsideRoute,
   RulesRoute: RulesRoute,
