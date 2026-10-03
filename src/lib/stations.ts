@@ -308,7 +308,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Trauma: scoop stretcher + basket. Cardiac arrest: spinal board ± basket. The scoop / basket set piece above is for trauma; for an arrest in progress, log-roll onto the spinal board (± basket for the carry) — see Station 4.",
+            text: "Trauma: scoop stretcher + basket. Cardiac arrest: spinal board ± basket. The scoop / basket set piece above is for trauma; for an arrest in progress, log-roll onto the spinal board (± basket for the carry) — see Station 5.",
           },
           {
             kind: "list",
@@ -803,7 +803,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Listen as you approach: gurgling / stridor = upper airway; wheeze = lower airway; coughing is reassuring. Watch the trend. Auscultation has no value inside a noisy stadium. No respiratory effort → cardiac arrest protocol (Station 4).",
+            text: "Listen as you approach: gurgling / stridor = upper airway; wheeze = lower airway; coughing is reassuring. Watch the trend. Auscultation has no value inside a noisy stadium. No respiratory effort → cardiac arrest protocol (Station 5).",
           },
         ],
       },
@@ -883,126 +883,6 @@ export const stations: Station[] = [
   },
   {
     id: "4",
-    short: "Cardiac arrest",
-    title: "Approach to Pitch-side Cardiac Arrest",
-    subtitle: "Part 1 — BLS + AED · Part 2 — 10-second stop and start for ambulance transfer",
-    location: "Seminar Room 5 & 6",
-    equipment: [
-      { name: "CPR manikin", qty: "5" },
-      { name: "Airway manikin", qty: "1" },
-      { name: "AED trainer", qty: "5" },
-      { name: "BVM", qty: "5" },
-      { name: "LMA", qty: "1" },
-      { name: "OPA", qty: "1" },
-      { name: "Oxygen tank (dummy)", qty: "1" },
-      { name: "Spinal board", qty: "1" },
-      { name: "Spider strap", qty: "1" },
-      { name: "Mechanical CPR (AutoPulse by Zoll)", qty: "1" },
-    ],
-    sections: [
-      {
-        title: "Workshop standard",
-        blocks: [
-          {
-            kind: "info",
-            title: "Follows the HKL SCA Colour Role Cards",
-            text: "First shock before the board. Then Orange (the head) controls the log roll; White + Yellow First Aiders slide in the spinal board; player + spinal board + AED move as one strapped unit (± basket for the carry). Blue takes over compressions from Red at 2 minutes (FIFA role card). First carry only after the 3rd shock (earlier if ROSC): ≤ 10 seconds on Black's “LIFT”, then board down and at least 2 minutes of compressions.",
-          },
-        ],
-      },
-      {
-        title: "Team member roles & equipment",
-        blocks: [
-          {
-            kind: "steps",
-            items: [
-              ...workshop.roles.map((r) => ({
-                title: `${r.role} — brings: ${r.bring}`,
-                who: [r.id],
-                lines: [r.stand],
-              })),
-            ],
-          },
-        ],
-      },
-      {
-        title: "Step by step",
-        blocks: [
-          {
-            kind: "image",
-            src: asset("/img/drill-sequence-v4.jpg"),
-            alt: "Six-panel drill: assess, airway + O2 + AED, first shock, spinal board, 10-second carry after the 3rd shock, continue",
-            caption: "The workshop drill in six pictures — tap to open full size. Same order as the steps below.",
-          },
-          { kind: "video", clip: fifaOwnClips[0] },
-          {
-            kind: "steps",
-            items: workshop.steps.map((s) => ({
-              title: `${s.n} · ${s.title} (${s.time})`,
-              who: [...s.who],
-              lines: [...s.lines],
-            })),
-          },
-        ],
-      },
-      {
-        title: "Airway & ventilation in arrest",
-        blocks: [
-          {
-            kind: "defs",
-            items: [
-              { term: "FIFA — 3 keys to survival", text: "1 Recognise SCA · 2 Early good-quality compressions · 3 Early, safe defibrillation." },
-              { term: "Pads", text: "Anterolateral, lateral pad in the mid-axillary line — keep compressing while the pads go on." },
-            ],
-          },
-          {
-            kind: "list",
-            items: [
-              "i-gel is FIFA's adjunct of choice: one person holds it and squeezes the bag.",
-              "Bag with reservoir on oxygen at 15 L/min — better than a face mask + Guedel (two-person, poorer seal).",
-              "Continuous compressions, one breath every 10th compression. Leak → pause for 30:2.",
-              "Let the bag refill after each squeeze. Watch for symmetrical chest rise.",
-              "No i-gel: use the adjunct you know best (OPA or NPA) with a face mask.",
-            ],
-          },
-          {
-            kind: "info",
-            title: "Oxygen at the shock — workshop rule",
-            text: "LMA / i-gel connected (closed circuit): leave the BVM and oxygen connected for the shock — no need to turn the O2 off. Face mask only (no LMA): Orange lifts the BVM off the face for the shock and replaces it straight after.",
-          },
-        ],
-      },
-      {
-        title: "Advanced life support (if trained)",
-        blocks: [
-          {
-            kind: "table",
-            head: ["Rhythm", "Drug"],
-            rows: [
-              ["Shockable (VF / pVT)", "Adrenaline 1 mg IV after the 3rd shock, then every 3–5 min. Amiodarone 300 mg after the 3rd shock; 150 mg after the 5th."],
-              ["Non-shockable (asystole / PEA)", "Adrenaline 1 mg IV as soon as possible, then every 3–5 min."],
-            ],
-          },
-          {
-            kind: "text",
-            text: "Good compressions and early defibrillation matter most — do not let ALS distract from them. Reversible causes on the pitch: hypoxia, hypovolaemia, hypo/hyperthermia, tension pneumothorax.",
-          },
-          {
-            kind: "alert",
-            title: "Every minute counts",
-            text: "For every minute without return of circulation, the chance of a good outcome falls by up to 10% (FIFA).",
-          },
-          {
-            kind: "text",
-            text: "FIFA World Cup protocol (ALS-trained team): after the third shock and drugs, the Match Doctor decides when to extricate — ideally with a mechanical CPR device (e.g. LUCAS / AutoPulse) fitted first, so compressions are not interrupted. The workshop follows the same timing: extricate only after the 3rd shock (earlier if ROSC), using the manual 10-second stop-and-start carry when no mechanical CPR device is available — Step 5.",
-          },
-        ],
-      },
-    ],
-    source: "Station 4 handout, aligned with the FIFA Emergency Care Manual (2022) Ch.3.",
-  },
-  {
-    id: "5",
     short: "Immobilization",
     title: "Immobilization",
     subtitle: "Collar, head immobilizer, spinal board, scoop, basket, splints and slings",
@@ -1393,7 +1273,127 @@ export const stations: Station[] = [
         ],
       },
     ],
-    source: "Station 5 — Immobilization instructor quick reference & participant handout.",
+    source: "Station 4 — Immobilization instructor quick reference & participant handout.",
+  },
+  {
+    id: "5",
+    short: "Cardiac arrest",
+    title: "Approach to Pitch-side Cardiac Arrest",
+    subtitle: "Part 1 — BLS + AED · Part 2 — 10-second stop and start for ambulance transfer",
+    location: "Seminar Room 5 & 6",
+    equipment: [
+      { name: "CPR manikin", qty: "5" },
+      { name: "Airway manikin", qty: "1" },
+      { name: "AED trainer", qty: "5" },
+      { name: "BVM", qty: "5" },
+      { name: "LMA", qty: "1" },
+      { name: "OPA", qty: "1" },
+      { name: "Oxygen tank (dummy)", qty: "1" },
+      { name: "Spinal board", qty: "1" },
+      { name: "Spider strap", qty: "1" },
+      { name: "Mechanical CPR (AutoPulse by Zoll)", qty: "1" },
+    ],
+    sections: [
+      {
+        title: "Workshop standard",
+        blocks: [
+          {
+            kind: "info",
+            title: "Follows the HKL SCA Colour Role Cards",
+            text: "First shock before the board. Then Orange (the head) controls the log roll; White + Yellow First Aiders slide in the spinal board; player + spinal board + AED move as one strapped unit (± basket for the carry). Blue takes over compressions from Red at 2 minutes (FIFA role card). First carry only after the 3rd shock (earlier if ROSC): ≤ 10 seconds on Black's “LIFT”, then board down and at least 2 minutes of compressions.",
+          },
+        ],
+      },
+      {
+        title: "Team member roles & equipment",
+        blocks: [
+          {
+            kind: "steps",
+            items: [
+              ...workshop.roles.map((r) => ({
+                title: `${r.role} — brings: ${r.bring}`,
+                who: [r.id],
+                lines: [r.stand],
+              })),
+            ],
+          },
+        ],
+      },
+      {
+        title: "Step by step",
+        blocks: [
+          {
+            kind: "image",
+            src: asset("/img/drill-sequence-v4.jpg"),
+            alt: "Six-panel drill: assess, airway + O2 + AED, first shock, spinal board, 10-second carry after the 3rd shock, continue",
+            caption: "The workshop drill in six pictures — tap to open full size. Same order as the steps below.",
+          },
+          { kind: "video", clip: fifaOwnClips[0] },
+          {
+            kind: "steps",
+            items: workshop.steps.map((s) => ({
+              title: `${s.n} · ${s.title} (${s.time})`,
+              who: [...s.who],
+              lines: [...s.lines],
+            })),
+          },
+        ],
+      },
+      {
+        title: "Airway & ventilation in arrest",
+        blocks: [
+          {
+            kind: "defs",
+            items: [
+              { term: "FIFA — 3 keys to survival", text: "1 Recognise SCA · 2 Early good-quality compressions · 3 Early, safe defibrillation." },
+              { term: "Pads", text: "Anterolateral, lateral pad in the mid-axillary line — keep compressing while the pads go on." },
+            ],
+          },
+          {
+            kind: "list",
+            items: [
+              "i-gel is FIFA's adjunct of choice: one person holds it and squeezes the bag.",
+              "Bag with reservoir on oxygen at 15 L/min — better than a face mask + Guedel (two-person, poorer seal).",
+              "Continuous compressions, one breath every 10th compression. Leak → pause for 30:2.",
+              "Let the bag refill after each squeeze. Watch for symmetrical chest rise.",
+              "No i-gel: use the adjunct you know best (OPA or NPA) with a face mask.",
+            ],
+          },
+          {
+            kind: "info",
+            title: "Oxygen at the shock — workshop rule",
+            text: "LMA / i-gel connected (closed circuit): leave the BVM and oxygen connected for the shock — no need to turn the O2 off. Face mask only (no LMA): Orange lifts the BVM off the face for the shock and replaces it straight after.",
+          },
+        ],
+      },
+      {
+        title: "Advanced life support (if trained)",
+        blocks: [
+          {
+            kind: "table",
+            head: ["Rhythm", "Drug"],
+            rows: [
+              ["Shockable (VF / pVT)", "Adrenaline 1 mg IV after the 3rd shock, then every 3–5 min. Amiodarone 300 mg after the 3rd shock; 150 mg after the 5th."],
+              ["Non-shockable (asystole / PEA)", "Adrenaline 1 mg IV as soon as possible, then every 3–5 min."],
+            ],
+          },
+          {
+            kind: "text",
+            text: "Good compressions and early defibrillation matter most — do not let ALS distract from them. Reversible causes on the pitch: hypoxia, hypovolaemia, hypo/hyperthermia, tension pneumothorax.",
+          },
+          {
+            kind: "alert",
+            title: "Every minute counts",
+            text: "For every minute without return of circulation, the chance of a good outcome falls by up to 10% (FIFA).",
+          },
+          {
+            kind: "text",
+            text: "FIFA World Cup protocol (ALS-trained team): after the third shock and drugs, the Match Doctor decides when to extricate — ideally with a mechanical CPR device (e.g. LUCAS / AutoPulse) fitted first, so compressions are not interrupted. The workshop follows the same timing: extricate only after the 3rd shock (earlier if ROSC), using the manual 10-second stop-and-start carry when no mechanical CPR device is available — Step 5.",
+          },
+        ],
+      },
+    ],
+    source: "Station 5 handout, aligned with the FIFA Emergency Care Manual (2022) Ch.3.",
   },
 ];
 

@@ -338,8 +338,8 @@ function CspinePage() {
           <Link to="/station/$id" params={{ id: "3" }} className={more}>
             Station 3 — primary survey (A: airway & cervical spine) →
           </Link>
-          <Link to="/station/$id" params={{ id: "5" }} className={more}>
-            Station 5 — immobilization devices →
+          <Link to="/station/$id" params={{ id: "4" }} className={more}>
+            Station 4 — immobilization devices →
           </Link>
           <Link to="/focus" className={more}>
             Concussion assessment (FOCUS) →
