@@ -635,6 +635,7 @@ export const stations: Station[] = [
     short: "Primary survey",
     title: "Approach to Pitch-side Injury Care",
     subtitle: "Focused primary survey vs complete primary survey",
+    location: "Seminar Room 4",
     equipment: [
       { name: "Full body manikin", qty: "1" },
       { name: "Airway manikin", qty: "1" },
@@ -885,6 +886,7 @@ export const stations: Station[] = [
     short: "Cardiac arrest",
     title: "Approach to Pitch-side Cardiac Arrest",
     subtitle: "Part 1 — BLS + AED · Part 2 — 10-second stop and start for ambulance transfer",
+    location: "Seminar Room 5 & 6",
     equipment: [
       { name: "CPR manikin", qty: "5" },
       { name: "Airway manikin", qty: "1" },
@@ -1004,6 +1006,7 @@ export const stations: Station[] = [
     short: "Immobilization",
     title: "Immobilization",
     subtitle: "Collar, head immobilizer, spinal board, scoop, basket, splints and slings",
+    location: "Lobby",
     pic: "PPP Fakhri / Sr Aznie",
     equipment: [
       { name: "Cervical collar", qty: "1" },
