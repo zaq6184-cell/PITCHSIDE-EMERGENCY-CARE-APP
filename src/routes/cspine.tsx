@@ -13,7 +13,7 @@ const setPiece: { title: string; note?: string; tasks: Task[] }[] = [
   {
     title: "Suspected cervical spine injury — cannot be ruled out clinically",
     tasks: [
-      ["black", "Match Doctor (team leader). Focus on good communication. Ensure the ambulance is called."],
+      ["black", "Match Doctor / Leader. Focus on good communication. Ensure the ambulance is called."],
       ["orange", "Immobilise the cervical spine (MILS)."],
       ["red", "A (c-spine) B C assessment."],
       ["green", "Bring the FIFA bag. Assist as directed by the Match Doctor."],

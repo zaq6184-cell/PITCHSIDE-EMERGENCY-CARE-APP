@@ -69,7 +69,7 @@ export const stations: Station[] = [
             kind: "list",
             items: [
               "Team doctor enters first, followed by the Field of Play (FoP) medical team.",
-              "Match Doctor (Black) — leads the FoP medical team.",
+              "Match Doctor / Leader (Black) — leads the FoP medical team.",
               "First-response FoP medical team: Red, Blue, White, Green and Orange.",
               "Second-response FoP medical team: Yellow (First Aiders).",
             ],
@@ -150,7 +150,7 @@ export const stations: Station[] = [
             kind: "table",
             head: ["Role", "Position", "Main responsibility"],
             rows: [
-              ["Match Doctor (Black)", "Left flank, 2–3 m back; full view", "Hands off. Overall command, CPR/AED flow, calls the lift for extrication, ambulance/referee liaison."],
+              ["Match Doctor / Leader (Black)", "Left flank, 2–3 m back; full view", "Hands off. Overall command, CPR/AED flow, calls the lift for extrication, ambulance/referee liaison."],
               ["M1 Head (Orange)", "At head", "MILS, airway alignment; commands the log-roll / tilt count."],
               ["M2 Chest (Red)", "Right chest", "ABCDE, continuous CPR 100–120/min, full recoil."],
               ["M3 Oxygen (Blue)", "Right hip", "O2 15 L/min; takes PELVIS in log-roll; takes over compressions at 2 min."],
@@ -162,7 +162,7 @@ export const stations: Station[] = [
           {
             kind: "defs",
             items: [
-              { term: "Match Doctor", text: "Black — the FoP team leader." },
+              { term: "Match Doctor / Leader", text: "Black — leads the FoP medical team." },
               { term: "First-response FoP medical team", text: "Red + Blue + White + Green + Orange (M1–M5)." },
               { term: "Second-response FoP medical team", text: "Yellow — the First Aiders." },
             ],

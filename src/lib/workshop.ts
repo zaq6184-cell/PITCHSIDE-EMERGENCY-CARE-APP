@@ -62,7 +62,7 @@ export const workshop = {
     {
       id: "black",
       name: "BLACK",
-      role: "Match Doctor",
+      role: "Match Doctor / Leader",
       color: "#1C1C1C",
       text: "#FFFFFF",
       stand: "Player's LEFT flank, mid-torso (FIFA PEAP black mark). Hands-off. Not at the feet.",
@@ -70,7 +70,7 @@ export const workshop = {
       photo: asset("/img/roles/black.jpg"),
       fifa: "Hands-off. Closed-loop commands. Ensure ambulance is called. Prefer the ambulance onto the field.",
       do: [
-        "You are the Match Doctor — leader of the Field of Play (FoP) medical team. Remain hands-off on the LEFT flank.",
+        "You are the Match Doctor / Leader of the Field of Play (FoP) medical team. Remain hands-off on the LEFT flank.",
         "Ensure the ambulance is called.",
         "Confirm compressions are running and that Green applies the AED.",
         "After the first shock, oversee the log-roll onto the spinal board (Orange controls it): Red chest, Blue pelvis, White legs.",

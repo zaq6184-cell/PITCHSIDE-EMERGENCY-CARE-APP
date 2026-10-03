@@ -53,7 +53,7 @@ function Home() {
             <SectionLabel>FIELD OF PLAY (FoP) MEDICAL TEAM</SectionLabel>
             <dl className="mt-2 flex flex-col divide-y divide-line text-sm leading-snug">
               {[
-                ["Match Doctor", "Black — leads the FoP medical team."],
+                ["Match Doctor / Leader", "Black — leads the FoP medical team."],
                 ["First-response team", "Red + Blue + White + Green + Orange."],
                 ["Second-response team", "Yellow — the First Aiders."],
               ].map(([t, d]) => (
