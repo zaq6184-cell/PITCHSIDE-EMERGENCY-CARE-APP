@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Eye, FileText, RefreshCw } from "lucide-react";
+import { ArrowUp, Eye, FileText, RefreshCw } from "lucide-react";
 import { FifaClipCard } from "@/components/fifa-video";
 import { AppShell, JumpChips, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
@@ -9,7 +9,8 @@ import { FIFA_FOCUS_PAGE, fifaFocusClip } from "@/lib/videos";
 export const Route = createFileRoute("/focus")({ component: FocusPage });
 
 /** watch = lower threshold for concern + continue; sub = substitute + assess off the pitch. */
-type Outcome = "watch" | "sub";
+/** step = a workshop action between FIFA's domains, not an assessment item. */
+type Outcome = "watch" | "sub" | "step";
 type Domain = { domain: string; outcome: Outcome; lead: string; items?: string[] };
 type Stage = { id: string; where: string; when: string; domains: Domain[] };
 
@@ -78,6 +79,11 @@ const stages: Stage[] = [
           "Unexplained limb strength and / or sensation abnormality",
           "Numbness / tingling",
         ],
+      },
+      {
+        domain: "Sit the player up",
+        outcome: "step",
+        lead: "Ask the player to sit up — once the cervical spine assessment is done — then carry on with the symptoms.",
       },
       {
         domain: "Symptoms",
@@ -163,6 +169,13 @@ const downloads: [string, string, string][] = [
 ];
 
 function OutcomeIcon({ outcome }: { outcome: Outcome }) {
+  if (outcome === "step") {
+    return (
+      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-navy text-gold" title="Workshop step">
+        <ArrowUp className="size-3.5" strokeWidth={2.6} />
+      </span>
+    );
+  }
   return outcome === "sub" ? (
     <span className="grid size-6 shrink-0 place-items-center rounded-full bg-danger text-white" title="Substitute">
       <RefreshCw className="size-3.5" strokeWidth={2.4} />
@@ -258,7 +271,11 @@ function FocusPage() {
                       key={d.domain + d.outcome}
                       className={cn(
                         "flex gap-2.5 rounded-lg border-l-4 px-2.5 py-2",
-                        d.outcome === "sub" ? "border-danger bg-danger/10" : "border-gold bg-gold/15",
+                        d.outcome === "sub"
+                          ? "border-danger bg-danger/10"
+                          : d.outcome === "step"
+                            ? "border-navy bg-note"
+                            : "border-gold bg-gold/15",
                       )}
                     >
                       <div className="min-w-0 flex-1">
@@ -279,7 +296,10 @@ function FocusPage() {
               </li>
             ))}
           </ol>
-          <Note>ACVPU = Alert, Confusion (new), Voice, Pain, Unresponsive.</Note>
+          <Note>
+            ACVPU = Alert, Confusion (new), Voice, Pain, Unresponsive. “Sit the player up” is a workshop step added
+            between FIFA's cervical spine and symptoms domains; it is not on FIFA's card.
+          </Note>
         </Section>
 
         <Section id="focus-card" title="FOCUS LANYARD CARD">
