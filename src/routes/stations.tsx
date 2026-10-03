@@ -43,7 +43,9 @@ function Stations() {
                   <p className="font-display text-xs font-semibold tracking-[0.14em] text-navy">
                     STATION {s.id} · {s.short.toUpperCase()}
                   </p>
-                  <p className="text-sm leading-snug">{s.title}</p>
+                  <p className="text-sm leading-snug">
+                    {s.title.toLowerCase() === s.short.toLowerCase() ? s.subtitle : s.title}
+                  </p>
                   {s.location ? (
                     <p className="mt-0.5 flex items-center gap-1 text-xs text-muted">
                       <MapPin className="size-3" />
