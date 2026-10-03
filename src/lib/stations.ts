@@ -308,7 +308,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Trauma: scoop stretcher + basket. Cardiac arrest: spinal board ± basket. The scoop / basket set piece above is for trauma; for an arrest in progress, log-roll onto the spinal board (± basket for the carry) — see Station 5.",
+            text: "Trauma: scoop stretcher + basket. Cardiac arrest: spinal board ± basket. The scoop / basket set piece above is for trauma; for an arrest in progress, log-roll onto the spinal board (± basket for the carry) — see Station 2.",
           },
           {
             kind: "list",
@@ -357,278 +357,123 @@ export const stations: Station[] = [
   },
   {
     id: "2",
-    short: "Emergency care bag",
-    title: "Preparation of the Football Emergency Care Bag",
-    subtitle: "Bag numbers, full equipment checklist, 11-compartment layout, critical fails",
-    location: "Seminar Room 3",
+    short: "Cardiac arrest",
+    title: "Approach to Pitch-side Cardiac Arrest",
+    subtitle: "Part 1 — BLS + AED · Part 2 — 10-second stop and start for ambulance transfer",
+    location: "Seminar Room 5 & 6",
     equipment: [
-      { name: "AFC medical bags", qty: "4" },
-      { name: "Full list of equipment and drugs", qty: "–" },
+      { name: "CPR manikin", qty: "5" },
+      { name: "Airway manikin", qty: "1" },
+      { name: "AED trainer", qty: "5" },
+      { name: "BVM", qty: "5" },
+      { name: "LMA", qty: "1" },
+      { name: "OPA", qty: "1" },
+      { name: "Oxygen tank (dummy)", qty: "1" },
+      { name: "Spinal board", qty: "1" },
+      { name: "Spider strap", qty: "1" },
+      { name: "Mechanical CPR (AutoPulse by Zoll)", qty: "1" },
     ],
     sections: [
       {
-        title: "Session flow",
+        title: "Workshop standard",
         blocks: [
           {
-            kind: "list",
-            ordered: true,
+            kind: "info",
+            title: "Follows the HKL SCA Colour Role Cards",
+            text: "First shock before the board. Then Orange (the head) controls the log roll; White + Yellow First Aiders slide in the spinal board; player + spinal board + AED move as one strapped unit (± basket for the carry). Blue takes over compressions from Red at 2 minutes (FIFA role card). First carry only after the 3rd shock (earlier if ROSC): ≤ 10 seconds on Black's “LIFT”, then board down and at least 2 minutes of compressions.",
+          },
+        ],
+      },
+      {
+        title: "Team member roles & equipment",
+        blocks: [
+          {
+            kind: "steps",
             items: [
-              "Introduction — pitchside emergency preparedness and quick access to emergency equipment; contexts (single match, tournament) and number of bags required.",
-              "Emergency bag setup — recommended number and types of bags per pitch or tournament; accessibility of the AED and bags.",
-              "Equipment walkthrough — compartments and key categories; function checks (AED operation, oxygen cylinder pressure).",
-              "Bag layout — the 11-compartment layout for rapid access and clear labelling.",
-              "Practical — “Prepare and check a fully equipped Football Emergency Care Bag before a match.”",
-              "Critical safety failures — no AED, expired medication, inaccessible bag; emergency access plans and EMS communication.",
-              "Q&A and wrap-up.",
+              ...workshop.roles.map((r) => ({
+                title: `${r.role} — brings: ${r.bring}`,
+                who: [r.id],
+                lines: [r.stand],
+              })),
             ],
           },
         ],
       },
       {
-        title: "Recommended standard",
+        title: "Step by step",
         blocks: [
           {
-            kind: "table",
-            head: ["Match setting", "Primary bags", "Backup"],
-            rows: [
-              ["1 football pitch", "1 fully equipped bag", "1 reserve / secondary bag"],
-              ["2 pitches operating simultaneously", "2 bags", "1 reserve"],
-              ["3 pitches", "3 bags", "1 reserve"],
-              ["Tournament, multiple simultaneous matches", "1 bag per active pitch", "At least 1 central reserve"],
-              ["High-risk / large tournament", "1 per pitch + dedicated trauma/medical team bag", "Additional reserve"],
-            ],
+            kind: "image",
+            src: asset("/img/drill-sequence-v4.jpg"),
+            alt: "Six-panel drill: assess, airway + O2 + AED, first shock, spinal board, 10-second carry after the 3rd shock, continue",
+            caption: "The workshop drill in six pictures — tap to open full size. Same order as the steps below.",
           },
+          { kind: "video", clip: fifaOwnClips[0] },
           {
-            kind: "alert",
-            title: "Do not rely on one bag shared between pitches",
-            text: "The bag must be immediately accessible at the pitch where the emergency occurs. Emergency planning should be venue-specific and rehearsed before the event.",
-          },
-          {
-            kind: "text",
-            text: "Single football match: 1 × pitchside emergency medical bag + 1 × backup / resupply bag + 1 × AED immediately available pitchside. The AED should not be buried inside the medical bag — it needs to be rapidly accessible.",
+            kind: "steps",
+            items: workshop.steps.map((s) => ({
+              title: `${s.n} · ${s.title} (${s.time})`,
+              who: [...s.who],
+              lines: [...s.lines],
+            })),
           },
         ],
       },
       {
-        title: "A. Airway",
-        blocks: [
-          {
-            kind: "table",
-            head: ["Equipment", "Qty"],
-            rows: [
-              ["Oropharyngeal airway", "1 set"],
-              ["Nasopharyngeal airway", "1 set"],
-              ["LMA / supraglottic airway / i-gel size 3, 4, 5", "1"],
-              ["Lubricating gel", "1"],
-              ["Pocket mask with O₂ port", "1"],
-              ["Magill forceps", "1"],
-              ["Portable suction", "1"],
-              ["Suction catheters, appropriate sizes", "2–3 each"],
-              ["Pen torch", "1"],
-            ],
-          },
-        ],
-      },
-      {
-        title: "B. Breathing / oxygen",
-        blocks: [
-          {
-            kind: "table",
-            head: ["Equipment", "Qty"],
-            rows: [
-              ["Adult BVM set", "1"],
-              ["Adult face masks", "2"],
-              ["Oxygen tubing", "2"],
-              ["Non-rebreather oxygen mask", "2"],
-              ["Simple oxygen mask", "1"],
-              ["Nebuliser mask / set", "1–2"],
-              ["Oxygen cylinder", "Separate dedicated cylinder"],
-              ["Oxygen regulator", "1"],
-              ["Pulse oximeter", "1"],
-              ["Spacer device", "1"],
-            ],
-          },
-          {
-            kind: "alert",
-            text: "Oxygen availability should be considered part of the pitchside emergency response, not simply an optional accessory.",
-          },
-        ],
-      },
-      {
-        title: "C. Circulation / cardiac",
-        blocks: [
-          {
-            kind: "table",
-            head: ["Equipment", "Qty"],
-            rows: [
-              ["AED", "1"],
-              ["AED adult pads", "1 set + spare if available"],
-              ["AED paediatric pads", "According to event population"],
-              ["BP machine", "1"],
-              ["Adult BP cuffs", "1–2"],
-              ["Stethoscope", "1"],
-              ["IV cannula 14G / 16G / 18G / 20G / 22G", "2 each"],
-              ["Tourniquet", "2"],
-              ["Alcohol swabs", "10"],
-              ["IV dressing / Tegaderm", "5"],
-              ["5 mL syringe", "5"],
-              ["10 mL syringe", "5"],
-              ["Needles", "Assorted"],
-              ["IV giving set", "2"],
-              ["Normal saline 0.9%", "According to clinical protocol"],
-              ["Sharps container", "1"],
-            ],
-          },
-          {
-            kind: "text",
-            text: "Rapid recognition, CPR and defibrillation are critical components of field-of-play cardiac emergency management.",
-          },
-        ],
-      },
-      {
-        title: "Diagnostic equipment (minimum)",
-        blocks: [
-          {
-            kind: "list",
-            items: [
-              "BP machine",
-              "Stethoscope",
-              "Pulse oximeter",
-              "Glucometer, blood glucose strips, lancets",
-              "Thermometer",
-              "Pen torch",
-              "Watch / timer",
-              "ECG machine — preferably with the medical team / medical room rather than inside the bag",
-            ],
-          },
-        ],
-      },
-      {
-        title: "Heat / environmental emergencies",
-        blocks: [
-          { kind: "text", text: "For football in Malaysia this is a mandatory module." },
-          {
-            kind: "list",
-            items: [
-              "Instant cold packs",
-              "Ice; ice-water immersion capability where appropriate",
-              "Cooling towels, wet towels, cooling blanket",
-              "Spray bottle",
-              "Water, oral rehydration solution",
-              "Fan",
-              "Thermal blanket",
-            ],
-          },
-          {
-            kind: "alert",
-            text: "The pre-event emergency plan should specifically address exertional heat illness and rapid cooling before transport.",
-          },
-        ],
-      },
-      {
-        title: "Medications — emergency drug pouch",
-        blocks: [
-          {
-            kind: "alert",
-            title: "Follow local authority",
-            text: "Drugs and quantities must follow the event medical director’s standing orders, prescriber authority, Malaysian regulations, formulary and local SOP. Do not place prescription medicines into a generic football bag without an approved medication protocol.",
-          },
-          {
-            kind: "table",
-            head: ["Clinical problem", "Medication category"],
-            rows: [
-              ["Anaphylaxis", "Adrenaline / epinephrine IM"],
-              ["Asthma / bronchospasm", "Salbutamol ± ipratropium according to protocol"],
-              ["Hypoglycaemia", "Oral glucose"],
-              ["Severe hypoglycaemia / unconscious", "Parenteral glucose / dextrose according to protocol"],
-              ["Pain", "Analgesia according to approved formulary"],
-              ["Allergic reaction", "Antihistamine according to protocol"],
-              ["Cardiac arrest", "Resuscitation drugs only where advanced medical team / protocol supports them"],
-              ["IV fluid requirement", "Isotonic crystalloid according to clinical indication"],
-            ],
-          },
-        ],
-      },
-      {
-        title: "Bag layout — 11 labelled compartments",
+        title: "Airway & ventilation in arrest",
         blocks: [
           {
             kind: "defs",
             items: [
-              { term: "1 · Airway", text: "OPA / NPA / i-gel / lubricant" },
-              { term: "2 · BVM & oxygen", text: "BVM / masks / oxygen masks / nebuliser" },
-              { term: "3 · Suction", text: "Suction device / catheters" },
-              { term: "4 · Circulation", text: "IV cannulas / syringes / tourniquet / IV set" },
-              { term: "5 · Drugs", text: "Approved emergency medications" },
-              { term: "6 · Trauma", text: "Gauze / dressing / haemorrhage control / shears" },
-              { term: "7 · Splints", text: "Splints / sling / bandages / cervical collar" },
-              { term: "8 · Diagnostics", text: "BP / SpO₂ / glucose / thermometer / stethoscope" },
-              { term: "9 · PPE & sharps", text: "Gloves / eye protection / sharps box / waste bags" },
-              { term: "10 · Concussion / documentation", text: "SCAT6 / CRT / forms / pen" },
-              { term: "11 · Heat / environmental", text: "Cold packs / cooling towels / oral rehydration solution / fan" },
+              { term: "FIFA — 3 keys to survival", text: "1 Recognise SCA · 2 Early good-quality compressions · 3 Early, safe defibrillation." },
+              { term: "Pads", text: "Anterolateral, lateral pad in the mid-axillary line — keep compressing while the pads go on." },
             ],
+          },
+          {
+            kind: "list",
+            items: [
+              "i-gel is FIFA's adjunct of choice: one person holds it and squeezes the bag.",
+              "Bag with reservoir on oxygen at 15 L/min — better than a face mask + Guedel (two-person, poorer seal).",
+              "Continuous compressions, one breath every 10th compression. Leak → pause for 30:2.",
+              "Let the bag refill after each squeeze. Watch for symmetrical chest rise.",
+              "No i-gel: use the adjunct you know best (OPA or NPA) with a face mask.",
+            ],
+          },
+          {
+            kind: "info",
+            title: "Oxygen at the shock — workshop rule",
+            text: "LMA / i-gel connected (closed circuit): leave the BVM and oxygen connected for the shock — no need to turn the O2 off. Face mask only (no LMA): Orange lifts the BVM off the face for the shock and replaces it straight after.",
           },
         ],
       },
       {
-        title: "FIFA Emergency Care Bag (FECB 2022)",
+        title: "Advanced life support (if trained)",
         blocks: [
+          {
+            kind: "table",
+            head: ["Rhythm", "Drug"],
+            rows: [
+              ["Shockable (VF / pVT)", "Adrenaline 1 mg IV after the 3rd shock, then every 3–5 min. Amiodarone 300 mg after the 3rd shock; 150 mg after the 5th."],
+              ["Non-shockable (asystole / PEA)", "Adrenaline 1 mg IV as soon as possible, then every 3–5 min."],
+            ],
+          },
           {
             kind: "text",
-            text: "FIFA's standard bag is a minimum. Teams may add items, but FIFA recommends not altering the basic inventory, so different teams can work together on the same pitch with the same kit. Contents suit players over 14 years and over 50 kg.",
+            text: "Good compressions and early defibrillation matter most — do not let ALS distract from them. Reversible causes on the pitch: hypoxia, hypovolaemia, hypo/hyperthermia, tension pneumothorax.",
           },
           {
-            kind: "defs",
-            items: [
-              { term: "Airway", text: "Suction · NPA 6, 7, 8 · OPA 2, 3, 4 · i-gel 4, 5 · lubricant · Magill forceps" },
-              { term: "Breathing", text: "BVM · trauma O2 mask · nebuliser mask · pocket mask · spacer" },
-              { term: "Circulation", text: "IV cannula 14G, 16G · syringes 5 & 10 mL · needles · tourniquet · swabs · giving set · AED (own compartment)" },
-              { term: "Cervical spine", text: "Hard collar" },
-              { term: "Diagnostics", text: "Stethoscope · BP · glucometer · SpO₂ probe · peak flow · pen torch · thermometer" },
-              { term: "Wounds · PPE", text: "Suture set, steristrips, gauze, shears, eye wash · aprons, gloves, gel, glasses, sharps bin" },
-            ],
+            kind: "alert",
+            title: "Every minute counts",
+            text: "For every minute without return of circulation, the chance of a good outcome falls by up to 10% (FIFA).",
           },
           {
-            kind: "list",
-            items: [
-              "Oxygen is clipped to the outside of the bag (cannot be flown) — stadiums should provide it.",
-              "IV fluids and drugs are added per the clinician / local protocol — they count as medication.",
-              "Check the bag against the checklist before AND after every match: batteries charged, adjuncts replaced, everything in date.",
-            ],
-          },
-          { kind: "text", text: "Other recommended pitchside kit (FIFA):" },
-          {
-            kind: "list",
-            items: [
-              "Scoop stretcher (preferred over a spinal / long board for trauma, where affordable)",
-              "Spider straps or clip-on straps · head huggers / restraints",
-              "Basket stretcher — carrying a scoop or board is far safer inside a basket",
-              "Splints (vacuum or individual)",
-            ],
-          },
-        ],
-      },
-      {
-        title: "Critical fail items",
-        blocks: [
-          {
-            kind: "list",
-            ordered: true,
-            items: [
-              "No AED available",
-              "No oxygen / BVM",
-              "No suction when required by the service level",
-              "Unable to identify emergency access / ambulance plan",
-              "Expired / unavailable emergency medication",
-              "Bag not accessible pitchside",
-              "Unable to activate EMS / ambulance",
-              "Unsafe medication administration",
-            ],
+            kind: "text",
+            text: "FIFA World Cup protocol (ALS-trained team): after the third shock and drugs, the Match Doctor decides when to extricate — ideally with a mechanical CPR device (e.g. LUCAS / AutoPulse) fitted first, so compressions are not interrupted. The workshop follows the same timing: extricate only after the 3rd shock (earlier if ROSC), using the manual 10-second stop-and-start carry when no mechanical CPR device is available — Step 5.",
           },
         ],
       },
     ],
-    source: "Station 2 participant notes.",
+    source: "Station 2 handout, aligned with the FIFA Emergency Care Manual (2022) Ch.3.",
   },
   {
     id: "3",
@@ -803,7 +648,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Listen as you approach: gurgling / stridor = upper airway; wheeze = lower airway; coughing is reassuring. Watch the trend. Auscultation has no value inside a noisy stadium. No respiratory effort → cardiac arrest protocol (Station 5).",
+            text: "Listen as you approach: gurgling / stridor = upper airway; wheeze = lower airway; coughing is reassuring. Watch the trend. Auscultation has no value inside a noisy stadium. No respiratory effort → cardiac arrest protocol (Station 2).",
           },
         ],
       },
@@ -1277,123 +1122,278 @@ export const stations: Station[] = [
   },
   {
     id: "5",
-    short: "Cardiac arrest",
-    title: "Approach to Pitch-side Cardiac Arrest",
-    subtitle: "Part 1 — BLS + AED · Part 2 — 10-second stop and start for ambulance transfer",
-    location: "Seminar Room 5 & 6",
+    short: "Emergency care bag",
+    title: "Preparation of the Football Emergency Care Bag",
+    subtitle: "Bag numbers, full equipment checklist, 11-compartment layout, critical fails",
+    location: "Seminar Room 3",
     equipment: [
-      { name: "CPR manikin", qty: "5" },
-      { name: "Airway manikin", qty: "1" },
-      { name: "AED trainer", qty: "5" },
-      { name: "BVM", qty: "5" },
-      { name: "LMA", qty: "1" },
-      { name: "OPA", qty: "1" },
-      { name: "Oxygen tank (dummy)", qty: "1" },
-      { name: "Spinal board", qty: "1" },
-      { name: "Spider strap", qty: "1" },
-      { name: "Mechanical CPR (AutoPulse by Zoll)", qty: "1" },
+      { name: "AFC medical bags", qty: "4" },
+      { name: "Full list of equipment and drugs", qty: "–" },
     ],
     sections: [
       {
-        title: "Workshop standard",
+        title: "Session flow",
         blocks: [
           {
-            kind: "info",
-            title: "Follows the HKL SCA Colour Role Cards",
-            text: "First shock before the board. Then Orange (the head) controls the log roll; White + Yellow First Aiders slide in the spinal board; player + spinal board + AED move as one strapped unit (± basket for the carry). Blue takes over compressions from Red at 2 minutes (FIFA role card). First carry only after the 3rd shock (earlier if ROSC): ≤ 10 seconds on Black's “LIFT”, then board down and at least 2 minutes of compressions.",
-          },
-        ],
-      },
-      {
-        title: "Team member roles & equipment",
-        blocks: [
-          {
-            kind: "steps",
+            kind: "list",
+            ordered: true,
             items: [
-              ...workshop.roles.map((r) => ({
-                title: `${r.role} — brings: ${r.bring}`,
-                who: [r.id],
-                lines: [r.stand],
-              })),
+              "Introduction — pitchside emergency preparedness and quick access to emergency equipment; contexts (single match, tournament) and number of bags required.",
+              "Emergency bag setup — recommended number and types of bags per pitch or tournament; accessibility of the AED and bags.",
+              "Equipment walkthrough — compartments and key categories; function checks (AED operation, oxygen cylinder pressure).",
+              "Bag layout — the 11-compartment layout for rapid access and clear labelling.",
+              "Practical — “Prepare and check a fully equipped Football Emergency Care Bag before a match.”",
+              "Critical safety failures — no AED, expired medication, inaccessible bag; emergency access plans and EMS communication.",
+              "Q&A and wrap-up.",
             ],
           },
         ],
       },
       {
-        title: "Step by step",
+        title: "Recommended standard",
         blocks: [
           {
-            kind: "image",
-            src: asset("/img/drill-sequence-v4.jpg"),
-            alt: "Six-panel drill: assess, airway + O2 + AED, first shock, spinal board, 10-second carry after the 3rd shock, continue",
-            caption: "The workshop drill in six pictures — tap to open full size. Same order as the steps below.",
+            kind: "table",
+            head: ["Match setting", "Primary bags", "Backup"],
+            rows: [
+              ["1 football pitch", "1 fully equipped bag", "1 reserve / secondary bag"],
+              ["2 pitches operating simultaneously", "2 bags", "1 reserve"],
+              ["3 pitches", "3 bags", "1 reserve"],
+              ["Tournament, multiple simultaneous matches", "1 bag per active pitch", "At least 1 central reserve"],
+              ["High-risk / large tournament", "1 per pitch + dedicated trauma/medical team bag", "Additional reserve"],
+            ],
           },
-          { kind: "video", clip: fifaOwnClips[0] },
           {
-            kind: "steps",
-            items: workshop.steps.map((s) => ({
-              title: `${s.n} · ${s.title} (${s.time})`,
-              who: [...s.who],
-              lines: [...s.lines],
-            })),
+            kind: "alert",
+            title: "Do not rely on one bag shared between pitches",
+            text: "The bag must be immediately accessible at the pitch where the emergency occurs. Emergency planning should be venue-specific and rehearsed before the event.",
+          },
+          {
+            kind: "text",
+            text: "Single football match: 1 × pitchside emergency medical bag + 1 × backup / resupply bag + 1 × AED immediately available pitchside. The AED should not be buried inside the medical bag — it needs to be rapidly accessible.",
           },
         ],
       },
       {
-        title: "Airway & ventilation in arrest",
+        title: "A. Airway",
+        blocks: [
+          {
+            kind: "table",
+            head: ["Equipment", "Qty"],
+            rows: [
+              ["Oropharyngeal airway", "1 set"],
+              ["Nasopharyngeal airway", "1 set"],
+              ["LMA / supraglottic airway / i-gel size 3, 4, 5", "1"],
+              ["Lubricating gel", "1"],
+              ["Pocket mask with O₂ port", "1"],
+              ["Magill forceps", "1"],
+              ["Portable suction", "1"],
+              ["Suction catheters, appropriate sizes", "2–3 each"],
+              ["Pen torch", "1"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "B. Breathing / oxygen",
+        blocks: [
+          {
+            kind: "table",
+            head: ["Equipment", "Qty"],
+            rows: [
+              ["Adult BVM set", "1"],
+              ["Adult face masks", "2"],
+              ["Oxygen tubing", "2"],
+              ["Non-rebreather oxygen mask", "2"],
+              ["Simple oxygen mask", "1"],
+              ["Nebuliser mask / set", "1–2"],
+              ["Oxygen cylinder", "Separate dedicated cylinder"],
+              ["Oxygen regulator", "1"],
+              ["Pulse oximeter", "1"],
+              ["Spacer device", "1"],
+            ],
+          },
+          {
+            kind: "alert",
+            text: "Oxygen availability should be considered part of the pitchside emergency response, not simply an optional accessory.",
+          },
+        ],
+      },
+      {
+        title: "C. Circulation / cardiac",
+        blocks: [
+          {
+            kind: "table",
+            head: ["Equipment", "Qty"],
+            rows: [
+              ["AED", "1"],
+              ["AED adult pads", "1 set + spare if available"],
+              ["AED paediatric pads", "According to event population"],
+              ["BP machine", "1"],
+              ["Adult BP cuffs", "1–2"],
+              ["Stethoscope", "1"],
+              ["IV cannula 14G / 16G / 18G / 20G / 22G", "2 each"],
+              ["Tourniquet", "2"],
+              ["Alcohol swabs", "10"],
+              ["IV dressing / Tegaderm", "5"],
+              ["5 mL syringe", "5"],
+              ["10 mL syringe", "5"],
+              ["Needles", "Assorted"],
+              ["IV giving set", "2"],
+              ["Normal saline 0.9%", "According to clinical protocol"],
+              ["Sharps container", "1"],
+            ],
+          },
+          {
+            kind: "text",
+            text: "Rapid recognition, CPR and defibrillation are critical components of field-of-play cardiac emergency management.",
+          },
+        ],
+      },
+      {
+        title: "Diagnostic equipment (minimum)",
+        blocks: [
+          {
+            kind: "list",
+            items: [
+              "BP machine",
+              "Stethoscope",
+              "Pulse oximeter",
+              "Glucometer, blood glucose strips, lancets",
+              "Thermometer",
+              "Pen torch",
+              "Watch / timer",
+              "ECG machine — preferably with the medical team / medical room rather than inside the bag",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Heat / environmental emergencies",
+        blocks: [
+          { kind: "text", text: "For football in Malaysia this is a mandatory module." },
+          {
+            kind: "list",
+            items: [
+              "Instant cold packs",
+              "Ice; ice-water immersion capability where appropriate",
+              "Cooling towels, wet towels, cooling blanket",
+              "Spray bottle",
+              "Water, oral rehydration solution",
+              "Fan",
+              "Thermal blanket",
+            ],
+          },
+          {
+            kind: "alert",
+            text: "The pre-event emergency plan should specifically address exertional heat illness and rapid cooling before transport.",
+          },
+        ],
+      },
+      {
+        title: "Medications — emergency drug pouch",
+        blocks: [
+          {
+            kind: "alert",
+            title: "Follow local authority",
+            text: "Drugs and quantities must follow the event medical director’s standing orders, prescriber authority, Malaysian regulations, formulary and local SOP. Do not place prescription medicines into a generic football bag without an approved medication protocol.",
+          },
+          {
+            kind: "table",
+            head: ["Clinical problem", "Medication category"],
+            rows: [
+              ["Anaphylaxis", "Adrenaline / epinephrine IM"],
+              ["Asthma / bronchospasm", "Salbutamol ± ipratropium according to protocol"],
+              ["Hypoglycaemia", "Oral glucose"],
+              ["Severe hypoglycaemia / unconscious", "Parenteral glucose / dextrose according to protocol"],
+              ["Pain", "Analgesia according to approved formulary"],
+              ["Allergic reaction", "Antihistamine according to protocol"],
+              ["Cardiac arrest", "Resuscitation drugs only where advanced medical team / protocol supports them"],
+              ["IV fluid requirement", "Isotonic crystalloid according to clinical indication"],
+            ],
+          },
+        ],
+      },
+      {
+        title: "Bag layout — 11 labelled compartments",
         blocks: [
           {
             kind: "defs",
             items: [
-              { term: "FIFA — 3 keys to survival", text: "1 Recognise SCA · 2 Early good-quality compressions · 3 Early, safe defibrillation." },
-              { term: "Pads", text: "Anterolateral, lateral pad in the mid-axillary line — keep compressing while the pads go on." },
+              { term: "1 · Airway", text: "OPA / NPA / i-gel / lubricant" },
+              { term: "2 · BVM & oxygen", text: "BVM / masks / oxygen masks / nebuliser" },
+              { term: "3 · Suction", text: "Suction device / catheters" },
+              { term: "4 · Circulation", text: "IV cannulas / syringes / tourniquet / IV set" },
+              { term: "5 · Drugs", text: "Approved emergency medications" },
+              { term: "6 · Trauma", text: "Gauze / dressing / haemorrhage control / shears" },
+              { term: "7 · Splints", text: "Splints / sling / bandages / cervical collar" },
+              { term: "8 · Diagnostics", text: "BP / SpO₂ / glucose / thermometer / stethoscope" },
+              { term: "9 · PPE & sharps", text: "Gloves / eye protection / sharps box / waste bags" },
+              { term: "10 · Concussion / documentation", text: "SCAT6 / CRT / forms / pen" },
+              { term: "11 · Heat / environmental", text: "Cold packs / cooling towels / oral rehydration solution / fan" },
+            ],
+          },
+        ],
+      },
+      {
+        title: "FIFA Emergency Care Bag (FECB 2022)",
+        blocks: [
+          {
+            kind: "text",
+            text: "FIFA's standard bag is a minimum. Teams may add items, but FIFA recommends not altering the basic inventory, so different teams can work together on the same pitch with the same kit. Contents suit players over 14 years and over 50 kg.",
+          },
+          {
+            kind: "defs",
+            items: [
+              { term: "Airway", text: "Suction · NPA 6, 7, 8 · OPA 2, 3, 4 · i-gel 4, 5 · lubricant · Magill forceps" },
+              { term: "Breathing", text: "BVM · trauma O2 mask · nebuliser mask · pocket mask · spacer" },
+              { term: "Circulation", text: "IV cannula 14G, 16G · syringes 5 & 10 mL · needles · tourniquet · swabs · giving set · AED (own compartment)" },
+              { term: "Cervical spine", text: "Hard collar" },
+              { term: "Diagnostics", text: "Stethoscope · BP · glucometer · SpO₂ probe · peak flow · pen torch · thermometer" },
+              { term: "Wounds · PPE", text: "Suture set, steristrips, gauze, shears, eye wash · aprons, gloves, gel, glasses, sharps bin" },
             ],
           },
           {
             kind: "list",
             items: [
-              "i-gel is FIFA's adjunct of choice: one person holds it and squeezes the bag.",
-              "Bag with reservoir on oxygen at 15 L/min — better than a face mask + Guedel (two-person, poorer seal).",
-              "Continuous compressions, one breath every 10th compression. Leak → pause for 30:2.",
-              "Let the bag refill after each squeeze. Watch for symmetrical chest rise.",
-              "No i-gel: use the adjunct you know best (OPA or NPA) with a face mask.",
+              "Oxygen is clipped to the outside of the bag (cannot be flown) — stadiums should provide it.",
+              "IV fluids and drugs are added per the clinician / local protocol — they count as medication.",
+              "Check the bag against the checklist before AND after every match: batteries charged, adjuncts replaced, everything in date.",
             ],
           },
+          { kind: "text", text: "Other recommended pitchside kit (FIFA):" },
           {
-            kind: "info",
-            title: "Oxygen at the shock — workshop rule",
-            text: "LMA / i-gel connected (closed circuit): leave the BVM and oxygen connected for the shock — no need to turn the O2 off. Face mask only (no LMA): Orange lifts the BVM off the face for the shock and replaces it straight after.",
+            kind: "list",
+            items: [
+              "Scoop stretcher (preferred over a spinal / long board for trauma, where affordable)",
+              "Spider straps or clip-on straps · head huggers / restraints",
+              "Basket stretcher — carrying a scoop or board is far safer inside a basket",
+              "Splints (vacuum or individual)",
+            ],
           },
         ],
       },
       {
-        title: "Advanced life support (if trained)",
+        title: "Critical fail items",
         blocks: [
           {
-            kind: "table",
-            head: ["Rhythm", "Drug"],
-            rows: [
-              ["Shockable (VF / pVT)", "Adrenaline 1 mg IV after the 3rd shock, then every 3–5 min. Amiodarone 300 mg after the 3rd shock; 150 mg after the 5th."],
-              ["Non-shockable (asystole / PEA)", "Adrenaline 1 mg IV as soon as possible, then every 3–5 min."],
+            kind: "list",
+            ordered: true,
+            items: [
+              "No AED available",
+              "No oxygen / BVM",
+              "No suction when required by the service level",
+              "Unable to identify emergency access / ambulance plan",
+              "Expired / unavailable emergency medication",
+              "Bag not accessible pitchside",
+              "Unable to activate EMS / ambulance",
+              "Unsafe medication administration",
             ],
-          },
-          {
-            kind: "text",
-            text: "Good compressions and early defibrillation matter most — do not let ALS distract from them. Reversible causes on the pitch: hypoxia, hypovolaemia, hypo/hyperthermia, tension pneumothorax.",
-          },
-          {
-            kind: "alert",
-            title: "Every minute counts",
-            text: "For every minute without return of circulation, the chance of a good outcome falls by up to 10% (FIFA).",
-          },
-          {
-            kind: "text",
-            text: "FIFA World Cup protocol (ALS-trained team): after the third shock and drugs, the Match Doctor decides when to extricate — ideally with a mechanical CPR device (e.g. LUCAS / AutoPulse) fitted first, so compressions are not interrupted. The workshop follows the same timing: extricate only after the 3rd shock (earlier if ROSC), using the manual 10-second stop-and-start carry when no mechanical CPR device is available — Step 5.",
           },
         ],
       },
     ],
-    source: "Station 5 handout, aligned with the FIFA Emergency Care Manual (2022) Ch.3.",
+    source: "Station 5 participant notes.",
   },
 ];
 

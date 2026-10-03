@@ -135,7 +135,7 @@ function PitchsidePage() {
               </a>
             ))}
           </div>
-          <p className="text-xs leading-snug text-muted">Details are in Stations 1, 3, 4 and 5.</p>
+          <p className="text-xs leading-snug text-muted">Details are in Stations 1, 2, 3 and 4.</p>
         </Section>
 
         <Section title="FIFA POSTERS AND FACTSHEETS">

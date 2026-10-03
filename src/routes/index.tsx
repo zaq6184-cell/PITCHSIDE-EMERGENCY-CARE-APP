@@ -82,10 +82,10 @@ function Home() {
             <PdfList
               items={[
                 ["Station 1 · FIFA PEAP (3 pages)", "/docs/HKL-Station-1-FIFA-PEAP-2026.pdf"],
-                ["Station 2 · Emergency care bag (7 pages)", "/docs/HKL-Station-2-Emergency-Care-Bag-2026.pdf"],
+                ["Station 2 · Cardiac arrest (2 pages)", "/docs/HKL-Station-2-Cardiac-Arrest-2026.pdf"],
                 ["Station 3 · Primary survey (5 pages)", "/docs/HKL-Station-3-Primary-Survey-2026.pdf"],
                 ["Station 4 · Immobilization (6 pages)", "/docs/HKL-Station-4-Immobilization-2026.pdf"],
-                ["Station 5 · Cardiac arrest (2 pages)", "/docs/HKL-Station-5-Cardiac-Arrest-2026.pdf"],
+                ["Station 5 · Emergency care bag (7 pages)", "/docs/HKL-Station-5-Emergency-Care-Bag-2026.pdf"],
               ]}
             />
           </div>
