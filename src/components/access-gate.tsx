@@ -18,6 +18,7 @@ type Gsi = {
     id: {
       initialize: (o: { client_id: string; callback: (r: { credential: string }) => void }) => void;
       renderButton: (el: HTMLElement, o: Record<string, string | number>) => void;
+      disableAutoSelect?: () => void;
     };
   };
 };
@@ -25,6 +26,8 @@ type Gsi = {
 /** Signs this device out of the app and shows the access screen again. */
 export function lockApp() {
   clearAccess();
+  // Stop Google from signing the same account straight back in on this device.
+  (window as unknown as { google?: Gsi }).google?.accounts.id.disableAutoSelect?.();
   window.dispatchEvent(new Event(LOCK_EVENT));
 }
 

@@ -7,6 +7,7 @@ import {
   ChevronRight,
   FileText,
   HeartPulse,
+  LogOut,
   Stethoscope,
   ClipboardList,
   PlayCircle,
@@ -122,12 +123,17 @@ function Home() {
           caption="FIFA PEAP 2025 official marks. May flip all aspects depending on site of injury and hazards."
           contain
         />
-        <p className="flex min-h-11 items-center justify-center gap-1.5 text-xs text-muted">
-          {accessName ? <span>Signed in as {accessName} ·</span> : null}
-          <button type="button" onClick={lockApp} className="min-h-11 font-semibold text-navy underline">
-            Lock the app on this device
+        <div className="flex flex-col items-center gap-2 pt-1">
+          {accessName ? <p className="text-xs text-muted">Signed in as {accessName}</p> : null}
+          <button
+            type="button"
+            onClick={lockApp}
+            className="inline-flex min-h-11 w-full max-w-[15rem] items-center justify-center gap-2 rounded-lg border border-navy px-4 font-display text-sm font-semibold tracking-wide text-navy transition-transform duration-150 ease-out active:scale-95"
+          >
+            <LogOut className="size-4" aria-hidden />
+            Sign out
           </button>
-        </p>
+        </div>
       </div>
     </AppShell>
   );

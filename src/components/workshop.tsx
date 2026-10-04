@@ -1,6 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, CalendarDays, ClipboardList, ListOrdered, Timer, Users } from "lucide-react";
+import {
+  BookOpen,
+  CalendarDays,
+  ClipboardList,
+  ListOrdered,
+  LogOut,
+  Timer,
+  Users,
+} from "lucide-react";
 import { useEffect } from "react";
+import { lockApp } from "@/components/access-gate";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
 
@@ -32,23 +41,33 @@ export function AppShell({
 
   return (
     <div className="min-h-dvh bg-bg text-ink">
-      <header className="sticky top-0 z-20 border-b-[3px] border-gold bg-navy px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-on-navy">
-        <p className="font-display text-[13px] font-bold tracking-[0.04em] text-on-navy">
-          {workshop.event}
-        </p>
-        <p className="mt-0.5 text-[11px] text-gold-soft">
-          {bag
-            ? "FIFA Medical Emergency Bag · Green brings this"
-            : guides
-              ? "FIFA / UEFA guideline films · needs a connection"
-              : topic
-                ? topic
-              : tab === "event"
-                ? "3–4 Oct 2026 · Hospital Tunku Azizah"
-                : tab === "stations"
-                  ? "Skill stations & simulation · Sunday 4 Oct"
-                : `${workshop.title} · Participant app`}
-        </p>
+      <header className="sticky top-0 z-20 flex items-center gap-2 border-b-[3px] border-gold bg-navy px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-on-navy">
+        <div className="min-w-0 flex-1">
+          <p className="font-display text-[13px] font-bold tracking-[0.04em] text-on-navy">
+            {workshop.event}
+          </p>
+          <p className="mt-0.5 text-[11px] text-gold-soft">
+            {bag
+              ? "FIFA Medical Emergency Bag · Green brings this"
+              : guides
+                ? "FIFA / UEFA guideline films · needs a connection"
+                : topic
+                  ? topic
+                  : tab === "event"
+                    ? "3–4 Oct 2026 · Hospital Tunku Azizah"
+                    : tab === "stations"
+                      ? "Skill stations & simulation · Sunday 4 Oct"
+                      : `${workshop.title} · Participant app`}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={lockApp}
+          className="-mr-1.5 flex min-h-11 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg px-2 text-[10px] font-semibold tracking-wide text-gold-soft transition-transform duration-150 ease-out active:scale-95"
+        >
+          <LogOut className="size-[18px] text-gold" aria-hidden />
+          Sign out
+        </button>
       </header>
       <main className="mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
         {children}
@@ -112,7 +131,12 @@ export function EventSubNav({ active }: { active: EventNavId }) {
           );
           if (t.id === "bag") {
             return (
-              <Link key={t.id} to="/bag" className={className} aria-current={active === t.id ? "page" : undefined}>
+              <Link
+                key={t.id}
+                to="/bag"
+                className={className}
+                aria-current={active === t.id ? "page" : undefined}
+              >
                 {t.label}
               </Link>
             );
@@ -134,13 +158,7 @@ export function EventSubNav({ active }: { active: EventNavId }) {
   );
 }
 
-export function Panel({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+export function Panel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <div className={cn("overflow-hidden rounded-xl bg-paper shadow-card", className)}>
       {children}
@@ -221,7 +239,10 @@ export function Note({ children }: { children: React.ReactNode }) {
 /** Horizontal "jump to" chips for long pages. Targets need an id and scroll-mt. */
 export function JumpChips({ items }: { items: { id: string; label: string }[] }) {
   return (
-    <nav aria-label="Jump to section" className="-mx-3.5 overflow-x-auto px-3.5 pb-0.5 [scrollbar-width:none]">
+    <nav
+      aria-label="Jump to section"
+      className="-mx-3.5 overflow-x-auto px-3.5 pb-0.5 [scrollbar-width:none]"
+    >
       <ul className="flex w-max gap-1.5">
         {items.map((it) => (
           <li key={it.id}>
