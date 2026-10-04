@@ -19,6 +19,8 @@ import { asset } from "@/lib/asset";
 
 export const Route = createFileRoute("/")({ component: Home });
 
+const FEEDBACK_FORM = "https://qrco.de/bh1kjg";
+
 function Home() {
   return (
     <AppShell tab="home">
@@ -26,6 +28,34 @@ function Home() {
         <Note>
           <span className="font-semibold text-navy">{workshop.rule}</span>
         </Note>
+        <Panel>
+          <div className="flex flex-col items-center gap-2.5 px-3.5 py-3.5 text-center">
+            <SectionLabel>FEEDBACK FORM & CERTIFICATE</SectionLabel>
+            <p className="text-sm leading-snug">
+              <span className="font-semibold text-navy">At the end of the session, scan this QR code</span> and fill in the
+              feedback form to get your certificate for the course.
+            </p>
+            <a href={FEEDBACK_FORM} target="_blank" rel="noopener noreferrer" className="block w-full max-w-[15rem]">
+              <img
+                src={asset("/img/feedback-qr.jpg")}
+                alt="QR code for the workshop feedback form (#SEFM26)"
+                width={833}
+                height={1080}
+                className="w-full rounded-lg"
+              />
+            </a>
+            <a
+              href={FEEDBACK_FORM}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 w-full max-w-[15rem] items-center justify-center gap-1 rounded-lg bg-navy px-4 font-display text-sm font-semibold tracking-wide text-on-navy transition-transform duration-150 ease-out active:scale-95"
+            >
+              Open the feedback form
+              <ChevronRight className="h-4 w-4 text-gold" aria-hidden />
+            </a>
+            <p className="text-xs leading-snug text-muted">On this phone? Tap the button instead of scanning.</p>
+          </div>
+        </Panel>
         <SectionLabel>TAP YOUR COLOUR</SectionLabel>
         <div className="grid grid-cols-2 gap-2.5">
           {workshop.roles.map((r) => (
