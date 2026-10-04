@@ -380,7 +380,7 @@ export const day2: Session[] = [
     start: "16:30",
     end: "17:00",
     topic: "Closing ceremony",
-    speakerId: "harikrishna",
+    speakerId: "alzamani",
     kind: "ceremony",
   },
 ];
