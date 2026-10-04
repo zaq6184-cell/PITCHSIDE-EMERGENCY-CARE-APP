@@ -5,7 +5,7 @@
  */
 
 /** Google Identity Services OAuth client ID (Web application). Empty = Google step is skipped. */
-export const GOOGLE_CLIENT_ID = "";
+export const GOOGLE_CLIENT_ID = "990074289489-llka0vnfqmmn5uflhdm8tb1p0tqbgsd1.apps.googleusercontent.com";
 
 const CODE_SALT = "hkl-fm-2026:";
 /** SHA-256 of CODE_SALT + access code — the code itself is not shipped. */
