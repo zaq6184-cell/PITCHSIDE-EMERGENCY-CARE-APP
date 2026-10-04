@@ -217,6 +217,19 @@ function BlockView({ b }: { b: Block }) {
           <p>{b.text}</p>
         </div>
       );
+    case "link":
+      return (
+        <Link
+          to={b.to}
+          className="flex min-h-11 items-center justify-between gap-2 rounded-lg border border-gold/60 bg-note px-3 py-2 text-sm leading-snug"
+        >
+          <span>
+            <span className="block font-display font-semibold tracking-wide text-navy">{b.label}</span>
+            {b.text ? <span className="block text-muted">{b.text}</span> : null}
+          </span>
+          <ChevronRight className="h-5 w-5 shrink-0 text-gold" aria-hidden />
+        </Link>
+      );
     case "video":
       return (
         <div className="-mx-3.5">

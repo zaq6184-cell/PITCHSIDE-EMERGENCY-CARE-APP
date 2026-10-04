@@ -13,6 +13,7 @@ export type Block =
   | { kind: "info"; title?: string; text: string }
   | { kind: "image"; src: string; alt: string; caption?: string }
   | { kind: "video"; clip: FifaClip }
+  | { kind: "link"; to: "/focus" | "/cspine"; label: string; text?: string }
   | {
       kind: "device";
       src: string;
@@ -698,6 +699,12 @@ export const stations: Station[] = [
           {
             kind: "alert",
             text: "Any score other than Alert mandates immediate removal from the field of play. Alert does NOT exclude concussion.",
+          },
+          {
+            kind: "link",
+            to: "/focus",
+            label: "Concussion assessment (FOCUS)",
+            text: "Suspected concussion? Follow FIFA's on-pitch assessment, step by step.",
           },
           {
             kind: "list",
