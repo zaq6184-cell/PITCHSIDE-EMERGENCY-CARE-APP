@@ -1406,14 +1406,7 @@ export const stations: Station[] = [
 
 export const simulation = {
   time: "2.00 PM – 4.30 PM",
-  note: "4 scenarios run simultaneously: 2 trauma + 2 cardiac arrest. Numbers are Groups 1–6.",
-  head: ["Session", "Trauma 1", "Trauma 2", "CA 1", "CA 2", "Observe"],
-  rows: [
-    ["2.00 – 2.30", "1", "2", "3", "4", "5 & 6"],
-    ["2.40 – 3.10", "5", "6", "1", "2", "3 & 4"],
-    ["3.20 – 3.50", "3", "4", "5", "6", "1 & 2"],
-  ],
-  closing: "4.00 – 4.30 · Debriefing & closing",
+  note: "4 scenarios run simultaneously: 2 trauma + 2 cardiac arrest.",
   scenarios: [
     {
       id: "trauma",

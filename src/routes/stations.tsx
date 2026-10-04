@@ -53,37 +53,6 @@ function Stations() {
           <div className="px-3.5 py-3.5">
             <p className="text-sm font-medium">{simulation.time}</p>
             <p className="mt-1 text-sm leading-snug text-muted">{simulation.note}</p>
-            <div className="-mx-3.5 mt-3 overflow-x-auto px-3.5">
-              <table className="w-full min-w-[20rem] border-collapse text-center text-sm">
-                <thead>
-                  <tr>
-                    {simulation.head.map((h) => (
-                      <th
-                        key={h}
-                        className="bg-navy px-1.5 py-1.5 font-display text-[11px] font-semibold tracking-wide text-on-navy first:rounded-l-md last:rounded-r-md"
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {simulation.rows.map((row) => (
-                    <tr key={row[0]} className="border-b border-line">
-                      {row.map((cell, i) => (
-                        <td
-                          key={i}
-                          className={i === 0 ? "whitespace-nowrap py-2 text-left text-xs text-muted" : "py-2 font-display font-semibold"}
-                        >
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-2 text-sm">{simulation.closing}</p>
           </div>
         </Panel>
 
