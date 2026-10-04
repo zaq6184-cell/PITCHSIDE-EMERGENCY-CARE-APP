@@ -11,6 +11,7 @@ import {
   ClipboardList,
   PlayCircle,
 } from "lucide-react";
+import { lockApp, useAccessName } from "@/components/access-gate";
 import { AppShell, HeroPhoto, Note, Panel, SectionLabel } from "@/components/workshop";
 import { programme } from "@/lib/programme";
 import { workshop } from "@/lib/workshop";
@@ -19,6 +20,7 @@ import { asset } from "@/lib/asset";
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
+  const accessName = useAccessName();
   return (
     <AppShell tab="home">
       <div className="flex flex-col gap-3.5">
@@ -120,6 +122,12 @@ function Home() {
           caption="FIFA PEAP 2025 official marks. May flip all aspects depending on site of injury and hazards."
           contain
         />
+        <p className="flex min-h-11 items-center justify-center gap-1.5 text-xs text-muted">
+          {accessName ? <span>Signed in as {accessName} ·</span> : null}
+          <button type="button" onClick={lockApp} className="min-h-11 font-semibold text-navy underline">
+            Lock the app on this device
+          </button>
+        </p>
       </div>
     </AppShell>
   );
