@@ -43,8 +43,18 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setState(readAccess() ? "open" : "locked");
     const lock = () => setState("locked");
+    // The sign-in expires after a day: re-check when the app comes back into view and once a minute.
+    const recheck = () => {
+      if (!readAccess()) lock();
+    };
+    const timer = window.setInterval(recheck, 60_000);
     window.addEventListener(LOCK_EVENT, lock);
-    return () => window.removeEventListener(LOCK_EVENT, lock);
+    document.addEventListener("visibilitychange", recheck);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener(LOCK_EVENT, lock);
+      document.removeEventListener("visibilitychange", recheck);
+    };
   }, []);
 
   if (state === "open") return <>{children}</>;
@@ -181,7 +191,9 @@ function GateForm({ onOpen }: { onOpen: () => void }) {
           {error}
         </p>
       ) : null}
-      <p className="mt-4 text-xs leading-snug text-muted">The security code was given out by the organisers at the workshop.</p>
+      <p className="mt-4 text-xs leading-snug text-muted">
+        The security code was given out by the organisers at the workshop. Sign-in lasts 1 day on this device.
+      </p>
     </div>
   );
 }

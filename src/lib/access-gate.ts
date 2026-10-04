@@ -11,6 +11,8 @@ const CODE_SALT = "hkl-fm-2026:";
 /** SHA-256 of CODE_SALT + access code — the code itself is not shipped. */
 const CODE_HASH = "e32128e6b9f364482d6e372a075965990816bbf95788bf2b11b2a4e530226606";
 const STORE_KEY = "hkl-access";
+/** A sign-in lasts one day; after that the access screen comes back. */
+const MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
 export type Access = { name: string; email?: string; at: string };
 
@@ -28,6 +30,11 @@ export function readAccess(): Access | null {
     const a = JSON.parse(raw) as Partial<Access>;
     if (typeof a.name !== "string" || !a.name) return null;
     if (GOOGLE_CLIENT_ID && !a.email) return null;
+    const age = Date.now() - Date.parse(a.at ?? "");
+    if (!(age >= 0 && age < MAX_AGE_MS)) {
+      clearAccess();
+      return null;
+    }
     return { name: a.name, email: a.email, at: a.at ?? "" };
   } catch {
     return null;
