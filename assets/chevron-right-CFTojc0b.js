@@ -1,1 +1,0 @@
-import{o as e}from"./asset-BJMtu6bA.js";var t=e(`chevron-right`,[[`path`,{d:`m9 18 6-6-6-6`,key:`mthhwq`}]]);export{t};
