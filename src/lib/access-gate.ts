@@ -14,6 +14,16 @@ const STORE_KEY = "hkl-access";
 /** A sign-in lasts one day; after that the access screen comes back. */
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
+/**
+ * Open-access window: until this moment the access screen is skipped and Home shows the
+ * feedback form. Afterwards both switch back by themselves. Set a past date to end it early.
+ */
+export const OPEN_UNTIL = "2026-10-06T13:00:00+08:00";
+
+export function isOpenAccess() {
+  return Date.now() < Date.parse(OPEN_UNTIL);
+}
+
 export type Access = { name: string; email?: string; at: string };
 
 export async function checkCode(code: string): Promise<boolean> {

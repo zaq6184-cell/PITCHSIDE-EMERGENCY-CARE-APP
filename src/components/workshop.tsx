@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 import { lockApp } from "@/components/access-gate";
+import { isOpenAccess } from "@/lib/access-gate";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
 
@@ -60,14 +61,16 @@ export function AppShell({
                       : `${workshop.title} · Participant app`}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={lockApp}
-          className="-mr-1.5 flex min-h-11 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg px-2 text-[10px] font-semibold tracking-wide text-gold-soft transition-transform duration-150 ease-out active:scale-95"
-        >
-          <LogOut className="size-[18px] text-gold" aria-hidden />
-          Sign out
-        </button>
+        {isOpenAccess() ? null : (
+          <button
+            type="button"
+            onClick={lockApp}
+            className="-mr-1.5 flex min-h-11 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg px-2 text-[10px] font-semibold tracking-wide text-gold-soft transition-transform duration-150 ease-out active:scale-95"
+          >
+            <LogOut className="size-[18px] text-gold" aria-hidden />
+            Sign out
+          </button>
+        )}
       </header>
       <main className="mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
         {children}
