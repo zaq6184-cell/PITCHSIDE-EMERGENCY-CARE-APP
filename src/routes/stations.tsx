@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, MapPin } from "lucide-react";
 import { LockedList } from "@/components/locked-list";
+import { isNewCode } from "@/lib/access-gate";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { simulation, stations } from "@/lib/stations";
 import { workshop } from "@/lib/workshop";
@@ -66,7 +67,7 @@ function Stations() {
               <p className="mt-3 font-display text-xs font-semibold tracking-[0.12em] text-navy">
                 EXPECTED INTERVENTIONS
               </p>
-              <LockedList payload={sc.locked} />
+              <LockedList payload={isNewCode() ? sc.lockedNext : sc.locked} />
             </div>
           </Panel>
         ))}

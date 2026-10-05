@@ -10,6 +10,13 @@ export const GOOGLE_CLIENT_ID = "990074289489-llka0vnfqmmn5uflhdm8tb1p0tqbgsd1.a
 const CODE_SALT = "hkl-fm-2026:";
 /** SHA-256 of CODE_SALT + access code — the code itself is not shipped. */
 const CODE_HASH = "e32128e6b9f364482d6e372a075965990816bbf95788bf2b11b2a4e530226606";
+/** The code that replaces it from CODE_SWITCH_AT, for this screen and the locked answer keys. */
+const NEXT_CODE_HASH = "3739a41e873e385b5e802a8a885fe3c2f6bb4bab31020c8be61968e89f2e1398";
+export const CODE_SWITCH_AT = "2026-10-06T13:00:00+08:00";
+
+export function isNewCode() {
+  return Date.now() >= Date.parse(CODE_SWITCH_AT);
+}
 const STORE_KEY = "hkl-access";
 /** A sign-in lasts one day; after that the access screen comes back. */
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
@@ -27,10 +34,13 @@ export function isOpenAccess() {
 export type Access = { name: string; email?: string; at: string };
 
 export async function checkCode(code: string): Promise<boolean> {
-  const bytes = new TextEncoder().encode(CODE_SALT + code.trim().toLowerCase());
+  let typed = code.trim().toLowerCase();
+  // The new code starts with "#"; accept it typed with or without.
+  if (isNewCode() && !typed.startsWith("#")) typed = "#" + typed;
+  const bytes = new TextEncoder().encode(CODE_SALT + typed);
   const digest = await crypto.subtle.digest("SHA-256", bytes);
   const hex = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
-  return hex === CODE_HASH;
+  return hex === (isNewCode() ? NEXT_CODE_HASH : CODE_HASH);
 }
 
 export function readAccess(): Access | null {

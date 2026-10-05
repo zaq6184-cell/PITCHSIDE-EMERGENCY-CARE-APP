@@ -28,6 +28,20 @@ async function unlock(payload: LockedPayload, password: string): Promise<string[
   return JSON.parse(new TextDecoder().decode(plain)) as string[];
 }
 
+/** Tries the password as typed, then trimmed, in upper case, and with a leading "#". */
+async function unlockAny(payload: LockedPayload, typed: string): Promise<[string[], string]> {
+  const t = typed.trim();
+  const tries = [...new Set([typed, t, t.toUpperCase(), "#" + t.replace(/^#/, "").toUpperCase()])];
+  for (const pw of tries) {
+    try {
+      return [await unlock(payload, pw), pw];
+    } catch {
+      // wrong variant — try the next
+    }
+  }
+  throw new Error("wrong password");
+}
+
 function readStored() {
   try {
     return sessionStorage.getItem(STORE_KEY) ?? "";
@@ -58,9 +72,10 @@ export function LockedList({ payload }: { payload: LockedPayload }) {
     setBusy(true);
     setError(false);
     try {
-      setItems(await unlock(payload, pw));
+      const [items, used] = await unlockAny(payload, pw);
+      setItems(items);
       try {
-        sessionStorage.setItem(STORE_KEY, pw);
+        sessionStorage.setItem(STORE_KEY, used);
         window.dispatchEvent(new Event(STORE_KEY));
       } catch {
         // storage unavailable — stays unlocked until the page closes
