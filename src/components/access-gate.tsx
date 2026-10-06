@@ -5,7 +5,6 @@ import {
   checkCode,
   clearAccess,
   GOOGLE_CLIENT_ID,
-  isOpenAccess,
   readAccess,
   readGoogleProfile,
   saveAccess,
@@ -46,12 +45,11 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<"checking" | "locked" | "open">("checking");
 
   useEffect(() => {
-    setState(isOpenAccess() || readAccess() ? "open" : "locked");
+    setState(readAccess() ? "open" : "locked");
     const lock = () => setState("locked");
-    // The sign-in expires after a day, and the open-access window ends: re-check when the app
-    // comes back into view and once a minute.
+    // The sign-in expires after a day: re-check when the app comes back into view and once a minute.
     const recheck = () => {
-      if (!isOpenAccess() && !readAccess()) lock();
+      if (!readAccess()) lock();
     };
     const timer = window.setInterval(recheck, 60_000);
     window.addEventListener(LOCK_EVENT, lock);

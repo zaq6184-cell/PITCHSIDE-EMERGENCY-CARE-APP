@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 import { lockApp } from "@/components/access-gate";
-import { isOpenAccess } from "@/lib/access-gate";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
 
@@ -42,12 +41,12 @@ export function AppShell({
 
   return (
     <div className="min-h-dvh bg-bg text-ink">
-      <header className="sticky top-0 z-20 flex items-center gap-2 border-b-[3px] border-gold bg-navy px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-on-navy">
-        <div className="min-w-0 flex-1">
-          <p className="font-display text-[13px] font-bold tracking-[0.04em] text-on-navy">
-            {workshop.event}
-          </p>
-          <p className="mt-0.5 text-[11px] text-gold-soft">
+      <header className="sticky top-0 z-20 border-b-[3px] border-gold bg-navy px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-on-navy">
+        <p className="font-display text-[13px] font-bold tracking-[0.04em] text-on-navy">
+          {workshop.event}
+        </p>
+        <div className="mt-0.5 flex items-center gap-2">
+          <p className="min-w-0 flex-1 text-[11px] text-gold-soft">
             {bag
               ? "FIFA Medical Emergency Bag · Green brings this"
               : guides
@@ -60,17 +59,15 @@ export function AppShell({
                       ? "Skill stations & simulation · Sunday 4 Oct"
                       : `${workshop.title} · Participant app`}
           </p>
-        </div>
-        {isOpenAccess() ? null : (
           <button
             type="button"
             onClick={lockApp}
-            className="-mr-1.5 flex min-h-11 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg px-2 text-[10px] font-semibold tracking-wide text-gold-soft transition-transform duration-150 ease-out active:scale-95"
+            className="-my-3.5 -mr-2 flex min-h-11 shrink-0 items-center gap-1 rounded-lg px-2 text-[11px] font-semibold tracking-wide text-gold transition-transform duration-150 ease-out active:scale-95"
           >
-            <LogOut className="size-[18px] text-gold" aria-hidden />
+            <LogOut className="size-3.5" aria-hidden />
             Sign out
           </button>
-        )}
+        </div>
       </header>
       <main className="mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
         {children}
