@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BagRouteImport } from './routes/bag'
 import { Route as CspineRouteImport } from './routes/cspine'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as DrillRouteImport } from './routes/drill'
 import { Route as EventRouteImport } from './routes/event'
 import { Route as FifaRouteImport } from './routes/fifa'
@@ -38,6 +39,11 @@ const BagRoute = BagRouteImport.update({
 const CspineRoute = CspineRouteImport.update({
   id: '/cspine',
   path: '/cspine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DrillRoute = DrillRouteImport.update({
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/drill': typeof DrillRoute
   '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/drill': typeof DrillRoute
   '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/drill': typeof DrillRoute
   '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/'
     | '/bag'
     | '/cspine'
+    | '/disclaimer'
     | '/drill'
     | '/event'
     | '/fifa'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/bag'
     | '/cspine'
+    | '/disclaimer'
     | '/drill'
     | '/event'
     | '/fifa'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/bag'
     | '/cspine'
+    | '/disclaimer'
     | '/drill'
     | '/event'
     | '/fifa'
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BagRoute: typeof BagRoute
   CspineRoute: typeof CspineRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   DrillRoute: typeof DrillRoute
   EventRoute: typeof EventRoute
   FifaRoute: typeof FifaRoute
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/cspine'
       fullPath: '/cspine'
       preLoaderRoute: typeof CspineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/drill': {
@@ -339,6 +359,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BagRoute: BagRoute,
   CspineRoute: CspineRoute,
+  DisclaimerRoute: DisclaimerRoute,
   DrillRoute: DrillRoute,
   EventRoute: EventRoute,
   FifaRoute: FifaRoute,

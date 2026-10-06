@@ -10,6 +10,7 @@ import {
   readGoogleProfile,
   saveAccess,
 } from "@/lib/access-gate";
+import { disclaimer } from "@/lib/disclaimer";
 
 const LOCK_EVENT = "hkl-access-lock";
 const GSI_SRC = "https://accounts.google.com/gsi/client";
@@ -70,6 +71,20 @@ export function AccessGate({ children }: { children: React.ReactNode }) {
           HKL'S SPORTS-EMERGENCY FOOTBALL MEDICINE WORKSHOP 2026
         </p>
         {state === "locked" ? <GateForm onOpen={() => setState("open")} /> : null}
+        {state === "locked" ? (
+          <details className="mt-4 text-xs leading-snug text-gold-soft">
+            <summary className="flex min-h-11 cursor-pointer items-center justify-center text-center">
+              <span>
+                {disclaimer.short} <span className="font-semibold underline">Read the disclaimer</span>
+              </span>
+            </summary>
+            <div className="flex flex-col gap-2 pb-2">
+              {disclaimer.paragraphs.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
+          </details>
+        ) : null}
       </div>
     </main>
   );
