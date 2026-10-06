@@ -1,4 +1,4 @@
-import { Lock } from "lucide-react";
+import { Eye, EyeOff, Lock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   type Access,
@@ -96,6 +96,7 @@ function GateForm({ onOpen }: { onOpen: () => void }) {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showCode, setShowCode] = useState(false);
   const button = useRef<HTMLDivElement>(null);
   const needGoogle = Boolean(GOOGLE_CLIENT_ID) && !google;
 
@@ -181,21 +182,33 @@ function GateForm({ onOpen }: { onOpen: () => void }) {
               required
             />
           </label>
-          <label className="flex flex-col gap-1 text-sm font-medium text-navy">
-            Security code
-            <input
-              className={field}
-              type="password"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              autoComplete="off"
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck={false}
-              maxLength={40}
-              required
-            />
-          </label>
+          <div className="flex flex-col gap-1 text-sm font-medium text-navy">
+            <label htmlFor="access-code">Security code</label>
+            <div className="relative">
+              <input
+                id="access-code"
+                className={`${field} pr-12`}
+                type={showCode ? "text" : "password"}
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                maxLength={40}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowCode((v) => !v)}
+                aria-label={showCode ? "Hide the code" : "Show the code"}
+                aria-pressed={showCode}
+                className="absolute inset-y-0 right-0 grid w-11 place-items-center rounded-r-lg text-muted"
+              >
+                {showCode ? <EyeOff className="size-5" aria-hidden /> : <Eye className="size-5" aria-hidden />}
+              </button>
+            </div>
+          </div>
           <button
             type="submit"
             disabled={busy}
