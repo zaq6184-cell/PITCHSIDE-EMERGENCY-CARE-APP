@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { lockApp, useAccessName } from "@/components/access-gate";
 import { isOpenAccess } from "@/lib/access-gate";
-import { disclaimer } from "@/lib/disclaimer";
+import { about, disclaimer } from "@/lib/disclaimer";
 import { AppShell, HeroPhoto, Note, Panel, SectionLabel } from "@/components/workshop";
 import { programme } from "@/lib/programme";
 import { workshop } from "@/lib/workshop";
@@ -159,12 +159,18 @@ function Home() {
           caption="FIFA PEAP 2025 official marks. May flip all aspects depending on site of injury and hazards."
           contain
         />
-        <p className="text-center text-xs leading-snug text-muted">
-          {disclaimer.short}{" "}
-          <Link to="/disclaimer" className="inline-flex min-h-11 items-center font-semibold text-navy underline">
-            Read the disclaimer
-          </Link>
-        </p>
+        <Panel>
+          <div id="about" className="flex scroll-mt-24 flex-col gap-2 px-3.5 py-3.5">
+            <SectionLabel>ABOUT THIS APP</SectionLabel>
+            <p className="text-sm leading-snug">{about}</p>
+            <p className="mt-1 font-display text-xs font-semibold tracking-wide text-navy">DISCLAIMER</p>
+            {disclaimer.paragraphs.map((p) => (
+              <p key={p} className="text-xs leading-snug text-muted">
+                {p}
+              </p>
+            ))}
+          </div>
+        </Panel>
         {open ? null : (
           <div className="flex flex-col items-center gap-2 pt-1">
             {accessName ? <p className="text-xs text-muted">Signed in as {accessName}</p> : null}

@@ -1,4 +1,7 @@
 /** The app's disclaimer: a one-line version for footers and the full text. */
+export const about =
+  "Participant app for HKL's Sports-Emergency Football Medicine Workshop 2026 (3–4 October 2026, Hospital Tunku Azizah): colour roles, skill stations, FIFA topics, the programme and films.";
+
 export const disclaimer = {
   short: "For education only. FIFA materials belong to FIFA.",
   paragraphs: [
