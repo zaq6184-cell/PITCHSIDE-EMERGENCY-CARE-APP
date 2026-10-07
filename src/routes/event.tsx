@@ -45,6 +45,7 @@ function EventPage() {
     <AppShell tab="event">
       <div className="flex flex-col gap-3.5">
         {tab === "programme" ? <Cover /> : null}
+        {tab === "programme" ? <LaunchVideo /> : null}
         <EventSubNav active={tab} />
         {tab === "programme" ? <ProgrammeView /> : null}
         {tab === "speakers" ? <SpeakersView /> : null}
@@ -74,6 +75,40 @@ function Cover() {
         </p>
       </figcaption>
     </figure>
+  );
+}
+
+const LAUNCH_VIDEO = "https://drive.google.com/file/d/1_y5n0agkWSYOzGejnHYlwFeJPNxJSMmE";
+
+function LaunchVideo() {
+  return (
+    <Panel>
+      <div className="px-3.5 pt-3.5">
+        <SectionLabel>EVENT LAUNCH VIDEO</SectionLabel>
+      </div>
+      <div className="relative mt-3 aspect-video bg-navy">
+        <iframe
+          src={`${LAUNCH_VIDEO}/preview`}
+          title="HKL's Sports-Emergency Football Medicine Workshop 2026 — event launch video"
+          className="absolute inset-0 h-full w-full"
+          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
+      </div>
+      <div className="px-3.5 pb-3 pt-2.5">
+        <p className="text-xs leading-snug text-muted">Tap play. Needs a connection.</p>
+        <a
+          href={`${LAUNCH_VIDEO}/view`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-navy underline-offset-2 hover:underline"
+        >
+          Not playing? Open it in Google Drive
+        </a>
+      </div>
+    </Panel>
   );
 }
 
