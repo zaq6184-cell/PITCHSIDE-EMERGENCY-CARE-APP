@@ -98,14 +98,16 @@ function LaunchVideo() {
         />
       </div>
       <div className="px-3.5 pb-3 pt-2.5">
-        <p className="text-xs leading-snug text-muted">Tap play. Needs a connection.</p>
+        <p className="text-xs leading-snug text-muted">
+          Needs a connection. On some phones the player above does not start — use the button instead.
+        </p>
         <a
           href={`${LAUNCH_VIDEO}/view`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-navy underline-offset-2 hover:underline"
+          className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-navy px-4 font-display text-sm font-semibold tracking-wide text-on-navy transition-transform duration-150 ease-out active:scale-95"
         >
-          Not playing? Open it in Google Drive
+          Play in Google Drive
         </a>
       </div>
     </Panel>
