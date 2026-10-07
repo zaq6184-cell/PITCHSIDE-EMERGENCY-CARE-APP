@@ -86,28 +86,25 @@ function LaunchVideo() {
       <div className="px-3.5 pt-3.5">
         <SectionLabel>EVENT LAUNCH VIDEO</SectionLabel>
       </div>
-      <div className="relative mt-3 aspect-video bg-navy">
-        <iframe
-          src={`${LAUNCH_VIDEO}/preview`}
-          title="HKL's Sports-Emergency Football Medicine Workshop 2026 — event launch video"
-          className="absolute inset-0 h-full w-full"
-          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="strict-origin-when-cross-origin"
-        />
-      </div>
+      <video
+        className="mt-3 block aspect-video w-full bg-navy"
+        controls
+        playsInline
+        preload="none"
+        poster={asset("/img/event/launch-poster.jpg")}
+        aria-label="HKL's Sports-Emergency Football Medicine Workshop 2026 — event launch video"
+      >
+        <source src={asset("/video/hkl-launch-2026.mp4")} type="video/mp4" />
+      </video>
       <div className="px-3.5 pb-3 pt-2.5">
-        <p className="text-xs leading-snug text-muted">
-          Needs a connection. On some phones the player above does not start — use the button instead.
-        </p>
+        <p className="text-xs leading-snug text-muted">2 min 35 s · about 45 MB. Tap play; needs a connection.</p>
         <a
           href={`${LAUNCH_VIDEO}/view`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-navy px-4 font-display text-sm font-semibold tracking-wide text-on-navy transition-transform duration-150 ease-out active:scale-95"
+          className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-navy underline-offset-2 hover:underline"
         >
-          Play in Google Drive
+          Watch the full-quality version in Google Drive
         </a>
       </div>
     </Panel>
