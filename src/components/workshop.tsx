@@ -43,7 +43,7 @@ export function AppShell({
                 : topic
                   ? topic
                   : tab === "stations"
-                    ? "Skill modules · study notes"
+                    ? "Lessons · study notes"
                     : workshop.title}
           </p>
         </div>
@@ -56,7 +56,7 @@ export function AppShell({
         aria-label="Primary"
       >
         <TabLink to="/" label="Roles" icon={Users} active={tab === "home"} />
-        <TabLink to="/stations" label="Skills" icon={ClipboardList} active={tab === "stations"} />
+        <TabLink to="/stations" label="Lessons" icon={ClipboardList} active={tab === "stations"} />
         <TabLink to="/drill" label="Drill" icon={ListOrdered} active={tab === "drill"} />
         <TabLink to="/timer" label="Dash" icon={Timer} active={tab === "timer"} />
         <TabLink to="/rules" label="Rules" icon={BookOpen} active={tab === "rules"} />
