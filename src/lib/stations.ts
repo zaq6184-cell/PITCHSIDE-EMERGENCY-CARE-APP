@@ -13,6 +13,7 @@ export type Block =
   | { kind: "info"; title?: string; text: string }
   | { kind: "image"; src: string; alt: string; caption?: string }
   | { kind: "video"; clip: FifaClip }
+  | { kind: "positions" }
   | { kind: "link"; to: "/focus" | "/cspine"; label: string; text?: string }
   | {
       kind: "device";
@@ -33,9 +34,6 @@ export type Station = {
   short: string;
   title: string;
   subtitle: string;
-  location?: string;
-  pic?: string;
-  equipment: { name: string; qty: string }[];
   sections: Section[];
   source: string;
 };
@@ -46,18 +44,6 @@ export const stations: Station[] = [
     short: "FIFA PEAP & roles",
     title: "FIFA Pre-Match Emergency Action Plan (PEAP)",
     subtitle: "Roles & responsibilities of team members, positioning & team ergonomics",
-    location: "Seminar Room 1 & 2",
-    equipment: [
-      { name: "Bib (different colours)", qty: "1 set" },
-      { name: "Medical bag (empty)", qty: "1" },
-      { name: "Oxygen bag / tank", qty: "1" },
-      { name: "Digital action cards", qty: "–" },
-      { name: "Full body manikin", qty: "1" },
-      { name: "Scoop stretcher", qty: "1" },
-      { name: "Basket stretcher", qty: "1" },
-      { name: "Cervical collar", qty: "1" },
-      { name: "AED (trainer)", qty: "1" },
-    ],
     sections: [
       {
         title: "The medical set piece",
@@ -69,10 +55,9 @@ export const stations: Station[] = [
           {
             kind: "list",
             items: [
-              "Team doctor enters first, followed by the Field of Play (FoP) medical team.",
-              "Match Doctor / Leader (Black) — leads the FoP medical team.",
-              "First-response FoP medical team: Red, Blue, White, Green and Orange.",
-              "Second-response FoP medical team: Yellow (First Aiders).",
+              "The team doctor enters first, followed by the rest of the medical team.",
+              "Team leader (Black) — leads, ideally hands-off.",
+              "Around the player: Orange (head), Red (chest), Blue (oxygen), White (scoop and splints) and Green (bag and AED).",
             ],
           },
         ],
@@ -96,7 +81,7 @@ export const stations: Station[] = [
               {
                 title: "R — Roles & positioning",
                 sub: "Who does what and where?",
-                lines: ["Assign Match Doctor + M1–M5 (first response)", "Assign second response (Yellow)", "Confirm positions", "Brief the team"],
+                lines: ["Assign the team leader and the five colour roles", "Brief any stretcher team the venue provides", "Confirm positions", "Brief the team"],
               },
               {
                 title: "E — Equipment",
@@ -151,21 +136,20 @@ export const stations: Station[] = [
             kind: "table",
             head: ["Role", "Position", "Main responsibility"],
             rows: [
-              ["Match Doctor / Leader (Black)", "Left flank, 2–3 m back; full view", "Hands off. Overall command, CPR/AED flow, calls the lift for extrication, ambulance/referee liaison."],
-              ["M1 Head (Orange)", "At head", "MILS, airway alignment; commands the log-roll / tilt count."],
-              ["M2 Chest (Red)", "Right chest", "ABCDE, continuous CPR 100–120/min, full recoil."],
-              ["M3 Oxygen (Blue)", "Right hip", "O2 15 L/min; takes PELVIS in log-roll; takes over compressions at 2 min."],
-              ["M4 Legs / Extrication (White)", "Right leg", "Extrication kit (trauma: scoop + basket; arrest: spinal board ± basket), splints; takes LEGS in log-roll."],
-              ["M5 Equipment (Green)", "Left head/shoulder", "AED, emergency bag, equipment to M2; CLEAR before shock; priority is timely, safe defibrillation."],
-              ["Second response (Yellow × 4)", "At the feet", "First Aiders. Wait beside the stretcher; lift and carry only on the Match Doctor's command."],
+              ["Team leader (Black)", "Player's left, level with the chest", "Hands off. Overall command, CPR/AED flow, calls any lift, ambulance and referee liaison."],
+              ["Head (Orange)", "At the head", "Manual in-line stabilisation and airway; i-gel and bag in cardiac arrest; commands the log roll."],
+              ["Chest (Red)", "Player's right, level with the chest", "A-c-B-C-D-E assessment and treatment; chest compressions 100–120/min with full recoil."],
+              ["Oxygen (Blue)", "Player's right, level with the pelvis", "Oxygen at 15 L/min; takes the PELVIS in the log roll; takes over compressions at 2 minutes."],
+              ["Scoop & splints (White)", "Player's right, level with the lower legs", "Brings the scoop and splints; takes the LEGS in the log roll; assists as directed."],
+              ["Equipment (Green)", "At the head, player's left", "FIFA bag and AED; hands equipment to Red; applies the AED and checks all clear before a shock."],
             ],
           },
           {
             kind: "defs",
             items: [
-              { term: "Match Doctor / Leader", text: "Black — leads the FoP medical team." },
-              { term: "First-response FoP medical team", text: "Red + Blue + White + Green + Orange (M1–M5)." },
-              { term: "Second-response FoP medical team", text: "Yellow — the First Aiders." },
+              { term: "Six roles", text: "Black, Orange, Red, Green, Blue and White — the colours on FIFA's PEAP poster." },
+              { term: "Smaller teams", text: "One person can cover more than one role if they are able to. Every role still has to be filled." },
+              { term: "Stretcher team", text: workshop.stretcherNote },
             ],
           },
           {
@@ -206,7 +190,7 @@ export const stations: Station[] = [
             kind: "list",
             items: [
               "At FIFA matches the FoP medical team sits to the left of Team A's bench, with the extrication kit set up beside the bench.",
-              "The Match Doctor leads the team and may call it into the “ready” position.",
+              "The team leader may call the team into the “ready” position.",
               "Ready: move along the touchline to the point closest to the incident and squat in your assigned position with the stretcher.",
               "Not needed: return to your seats, passing behind the team benches where possible.",
             ],
@@ -271,18 +255,17 @@ export const stations: Station[] = [
       {
         title: "Pitchside positioning & team ergonomics",
         blocks: [
+          { kind: "positions" },
           {
-            kind: "image",
-            src: asset("/img/stations/s1-positioning-v3.jpg"),
-            alt: "Positioning layout: coloured marks around the player, bags and AED at the head, first aiders at the feet, then the split scoop and the basket below the feet in line with the player",
-            caption: "Extrication kit below the feet, in line with the player (FIFA): split scoop (arrest: spinal board) between the feet and the basket; basket 2–3 lengths from the feet. May flip all aspects depending on site of injury and hazards.",
+            kind: "text",
+            text: "Extrication kit: below the feet, in line with the player. Basket 2–3 basket lengths from the feet; scoop taken out, opened and split, laid between the feet and the basket.",
           },
           {
             kind: "defs",
             items: [
               { term: "Equipment zone", text: "AED + O2 + emergency care bag at the player's head / left side." },
-              { term: "Extrication zone", text: "Below the player's feet, in line with the body (FIFA): basket 2–3 basket lengths from the feet; scoop (trauma) or spinal board (arrest) laid out between the feet and the basket. Kept back until required." },
-              { term: "Match Doctor", text: "Remain 2–3 m away with a full view. Keep the working area clean and uncluttered." },
+              { term: "Extrication zone", text: "Below the player's feet, in line with the body: basket 2–3 basket lengths from the feet, scoop opened out and split between the feet and the basket. Kept back until required." },
+              { term: "Team leader", text: "Hands-off, with a full view of the whole scene. Keep the working area clean and uncluttered." },
             ],
           },
         ],
@@ -294,7 +277,7 @@ export const stations: Station[] = [
           {
             kind: "list",
             items: [
-              "M1 commands a gentle 15–20 degree tilt.",
+              "Orange (the head) commands a gentle 15–20 degree tilt.",
               "Reconnect the scoop head first, then feet.",
               "Strap: Chest → Pelvis → Legs → Head.",
             ],
@@ -304,12 +287,12 @@ export const stations: Station[] = [
             items: [
               { term: "Medical kit (FIFA)", text: "FIFA bag + oxygen to one side of the head; one person hands out equipment." },
               { term: "Extrication kit (FIFA)", text: "Basket in line with the feet, 2–3 basket lengths away. Scoop out of the basket, extended and split between basket and player." },
-              { term: "Extrication team (yellow)", text: "Stand or kneel beside the scoop / basket facing the player; wait for the Match Doctor. One stays free to pass the scoop and slide the basket." },
+              { term: "Stretcher team, if the venue has one", text: "Stand or kneel beside the scoop and basket, facing the player, and wait for the team leader. One stays free to pass the scoop and slide the basket in." },
             ],
           },
           {
             kind: "text",
-            text: "Trauma: scoop stretcher + basket. Cardiac arrest: spinal board ± basket. The scoop / basket set piece above is for trauma; for an arrest in progress, log-roll onto the spinal board (± basket for the carry) — see Station 2.",
+            text: "The set piece above is for trauma. For a cardiac arrest in progress the player is moved on a long spinal board (a scoop can also be used) with the AED strapped on as one unit — see the cardiac arrest module.",
           },
           {
             kind: "list",
@@ -336,7 +319,7 @@ export const stations: Station[] = [
         title: "Closed-loop communication",
         blocks: [
           { kind: "remember", text: "NAME → COMMAND → REPEAT → CONFIRM" },
-          { kind: "text", text: "Example — Match Doctor: “M5, apply AED.” M5: “Applying AED.” M5: “AED attached.”" },
+          { kind: "text", text: "Example — Team leader: “Green, apply the AED.” Green: “Applying AED.” Green: “AED attached.”" },
         ],
       },
       {
@@ -346,45 +329,22 @@ export const stations: Station[] = [
             kind: "defs",
             items: [
               { term: "Before match", text: "M-CRET: Meet – Call – Position – Check – Train" },
-              { term: "Non-contact collapse", text: "SCA → CPR → AED. AED within 30 sec. Spinal board ± basket; Black calls the lift." },
+              { term: "Non-contact collapse", text: "SCA → CPR → AED the moment it arrives. The team leader calls any lift." },
               { term: "Leadership", text: "Hands off – eyes up. Command and confirm." },
-              { term: "Extrication (trauma)", text: "M1 commands. Tilt – Scoop – Strap – Basket." },
+              { term: "Extrication (trauma)", text: "Orange commands. Tilt – Scoop – Strap – Basket." },
             ],
           },
         ],
       },
     ],
-    source: "Station 1 notes based on FIFA Emergency Care Manual, Chapter 1.",
+    source: "FIFA Emergency Care Manual, Ch.1, and FIFA's PEAP poster.",
   },
   {
     id: "2",
     short: "Cardiac arrest",
     title: "Approach to Pitch-side Cardiac Arrest",
     subtitle: "Part 1 — BLS + AED · Part 2 — 10-second stop and start for ambulance transfer",
-    location: "Seminar Room 5 & 6",
-    equipment: [
-      { name: "CPR manikin", qty: "5" },
-      { name: "Airway manikin", qty: "1" },
-      { name: "AED trainer", qty: "5" },
-      { name: "BVM", qty: "5" },
-      { name: "LMA", qty: "1" },
-      { name: "OPA", qty: "1" },
-      { name: "Oxygen tank (dummy)", qty: "1" },
-      { name: "Spinal board", qty: "1" },
-      { name: "Spider strap", qty: "1" },
-      { name: "Mechanical CPR (AutoPulse by Zoll)", qty: "1" },
-    ],
     sections: [
-      {
-        title: "Workshop standard",
-        blocks: [
-          {
-            kind: "info",
-            title: "Follows the HKL SCA Colour Role Cards",
-            text: "First shock before the board. Then Orange (the head) controls the log roll; White + Yellow First Aiders slide in the spinal board; player + spinal board + AED move as one strapped unit (± basket for the carry). Blue takes over compressions from Red at 2 minutes (FIFA role card). First carry only after the 3rd shock (earlier if ROSC): ≤ 10 seconds on Black's “LIFT”, then board down and at least 2 minutes of compressions.",
-          },
-        ],
-      },
       {
         title: "Team member roles & equipment",
         blocks: [
@@ -403,12 +363,6 @@ export const stations: Station[] = [
       {
         title: "Step by step",
         blocks: [
-          {
-            kind: "image",
-            src: asset("/img/drill-sequence-v4.jpg"),
-            alt: "Six-panel drill: assess, airway + O2 + AED, first shock, spinal board, 10-second carry after the 3rd shock, continue",
-            caption: "The workshop drill in six pictures — tap to open full size. Same order as the steps below.",
-          },
           { kind: "video", clip: fifaOwnClips[0] },
           {
             kind: "steps",
@@ -442,8 +396,8 @@ export const stations: Station[] = [
           },
           {
             kind: "info",
-            title: "Oxygen at the shock — workshop rule",
-            text: "LMA / i-gel connected (closed circuit): leave the BVM and oxygen connected for the shock — no need to turn the O2 off. Face mask only (no LMA): Orange lifts the BVM off the face for the shock and replaces it straight after.",
+            title: "Oxygen at the shock",
+            text: "Before a shock, turn the oxygen off or disconnect it from the i-gel. Turning the flow off is preferred: disconnecting lets aerosol escape from the open end of the i-gel. Turn it back on straight after the shock.",
           },
         ],
       },
@@ -469,35 +423,18 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "FIFA World Cup protocol (ALS-trained team): after the third shock and drugs, the Match Doctor decides when to extricate — ideally with a mechanical CPR device (e.g. LUCAS / AutoPulse) fitted first, so compressions are not interrupted. The workshop follows the same timing: extricate only after the 3rd shock (earlier if ROSC), using the manual 10-second stop-and-start carry when no mechanical CPR device is available — Step 5.",
+            text: "Moving the player: the team leader decides when. A mechanical chest-compression device, fitted by a team trained on it, lets compressions continue during the move. Without one, use the 10-second stop-and-start carry. An ambulance coming onto the field to the player is always preferable.",
           },
         ],
       },
     ],
-    source: "Station 2 handout, aligned with the FIFA Emergency Care Manual (2022) Ch.3.",
+    source: "FIFA Emergency Care Manual, Ch.3.",
   },
   {
     id: "3",
     short: "Primary survey",
     title: "Approach to Pitch-side Injury Care",
     subtitle: "Focused primary survey vs complete primary survey",
-    location: "Seminar Room 4",
-    equipment: [
-      { name: "Full body manikin", qty: "1" },
-      { name: "Airway manikin", qty: "1" },
-      { name: "Nasopharyngeal airway (different sizes)", qty: "–" },
-      { name: "Oropharyngeal airway (different sizes)", qty: "–" },
-      { name: "BVM", qty: "1" },
-      { name: "i-gel / LMA", qty: "1" },
-      { name: "HFM", qty: "1" },
-      { name: "Portable suction", qty: "1" },
-      { name: "Yankauer", qty: "1" },
-      { name: "Pen torch", qty: "1" },
-      { name: "Gauze", qty: "4" },
-      { name: "Crepe bandage", qty: "4" },
-      { name: "Glue stitch", qty: "2" },
-      { name: "Nasal pack", qty: "2" },
-    ],
     sections: [
       {
         title: "Definition of primary survey",
@@ -649,7 +586,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Listen as you approach: gurgling / stridor = upper airway; wheeze = lower airway; coughing is reassuring. Watch the trend. Auscultation has no value inside a noisy stadium. No respiratory effort → cardiac arrest protocol (Station 2).",
+            text: "Listen as you approach: gurgling / stridor = upper airway; wheeze = lower airway; coughing is reassuring. Watch the trend. Auscultation has no value inside a noisy stadium. No respiratory effort → cardiac arrest protocol (skill module 2).",
           },
         ],
       },
@@ -726,32 +663,18 @@ export const stations: Station[] = [
         title: "E — Exposure & extrication",
         blocks: [
           { kind: "text", text: "Complete necessary exposure and safely extricate the player from the pitch." },
-          { kind: "remember", text: "TRAUMA: SCOOP STRETCHER + BASKET · CARDIAC ARREST: SPINAL BOARD ± BASKET" },
+          { kind: "remember", text: "EXTRICATION KIT BELOW THE FEET, IN LINE WITH THE PLAYER" },
           { kind: "text", text: "Set up below the feet (FIFA): basket in line with the player, 2–3 basket lengths from the feet; scoop out of the basket, extended and split, laid between the feet and the basket." },
         ],
       },
     ],
-    source: "Station 3 — Football Pitch-Side Primary Survey Protocol.",
+    source: "FIFA Emergency Care Manual, Ch.2.",
   },
   {
     id: "4",
     short: "Immobilization",
     title: "Immobilization",
     subtitle: "Collar, head immobilizer, spinal board, scoop, basket, splints and slings",
-    location: "Lobby",
-    pic: "PPP Fakhri / Sr Aznie",
-    equipment: [
-      { name: "Cervical collar", qty: "1" },
-      { name: "Head immobilizer", qty: "1" },
-      { name: "Spider strap", qty: "1" },
-      { name: "3-point strap", qty: "1" },
-      { name: "Spinal board", qty: "1" },
-      { name: "Scoop stretcher", qty: "1" },
-      { name: "Basket stretcher", qty: "1" },
-      { name: "Limb splints", qty: "1" },
-      { name: "Arm sling", qty: "1" },
-      { name: "T-shirt arm sling", qty: "1" },
-    ],
     sections: [
       {
         title: "Principles of immobilization",
@@ -863,7 +786,7 @@ export const stations: Station[] = [
             kind: "list",
             ordered: true,
             items: [
-              "The Match Doctor coordinates; maintain spinal alignment.",
+              "The team leader coordinates; maintain spinal alignment.",
               "Position the player centrally.",
               "Secure torso and pelvis before the head, then the legs.",
               "Straps snug enough to control movement without impairing breathing or circulation.",
@@ -874,14 +797,14 @@ export const stations: Station[] = [
           { kind: "remember", text: "BODY FIRST → LEGS → HEAD LAST → REASSESS" },
           {
             kind: "text",
-            text: "Trauma: scoop stretcher + basket. Cardiac arrest: spinal board ± basket. FIFA ECM: a scoop moves a trauma player only ~15° vs a 90° log roll; for cardiac arrest the rigid long board gives better compressions. A basket makes carrying a scoop or board safer.",
+            text: "A scoop moves a trauma player only about 15°, compared with a 90° log roll. For cardiac arrest a rigid long board may give better compressions. A basket makes carrying a scoop or board safer.",
           },
           {
             kind: "list",
             ordered: true,
             items: [
               "FIFA extrication order (suspected neck injury): size and fit the collar — check the mouth can still open.",
-              "Log roll onto the scoop (workshop trauma standard; FIFA allows a spine board) — Orange leads.",
+              "Move the player onto the scoop or spine board — Orange leads.",
               "Apply straps — the first, centre strap lined up with the sternum.",
               "Apply head blocks and fix them to the board, then tape.",
               "Only now can MILS be released.",
@@ -933,7 +856,7 @@ export const stations: Station[] = [
               "Position each half alongside with minimal movement.",
               "Connect head and foot ends securely.",
               "Check all locks before lifting.",
-              "Enough rescuers; lift on the Match Doctor's command.",
+              "Enough rescuers; lift on the team leader's command.",
               "Reassess after transfer.",
             ],
           },
@@ -1047,7 +970,7 @@ export const stations: Station[] = [
             kind: "device",
             src: asset("/img/s5/tshirt-sling.svg"),
             alt: "Two-step diagram: support the forearm across the chest, then fold the shirt hem up over it and secure at the collar",
-            credit: { by: "HKL workshop app", license: "Diagram", href: "" },
+            credit: { by: "This guide", license: "Diagram", href: "" },
           },
           {
             kind: "list",
@@ -1120,23 +1043,18 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Device-specific manufacturer instructions and the workshop's local clinical protocol take precedence where applicable.",
+            text: "Device-specific manufacturer instructions and your local clinical protocol take precedence where applicable.",
           },
         ],
       },
     ],
-    source: "Station 4 — Immobilization instructor quick reference & participant handout.",
+    source: "FIFA Emergency Care Manual (Ch.6 and skill zone) and the device manufacturers' instructions.",
   },
   {
     id: "5",
     short: "Emergency care bag",
     title: "Preparation of the Football Emergency Care Bag",
     subtitle: "Bag numbers, full equipment checklist, 11-compartment layout, critical fails",
-    location: "Seminar Room 3",
-    equipment: [
-      { name: "AFC medical bags", qty: "4" },
-      { name: "Full list of equipment and drugs", qty: "–" },
-    ],
     sections: [
       {
         title: "Session flow",
@@ -1400,37 +1318,9 @@ export const stations: Station[] = [
         ],
       },
     ],
-    source: "Station 5 participant notes.",
+    source: "FIFA Emergency Care Manual, Ch.10, and FIFA's Emergency Care Bag factsheet.",
   },
 ];
-
-export const simulation = {
-  time: "2.00 PM – 4.30 PM",
-  note: "4 scenarios run simultaneously: 2 trauma + 2 cardiac arrest.",
-  scenarios: [
-    {
-      id: "trauma",
-      title: "Trauma scenario",
-      story:
-        "Player X was tackled, fell and rolled over: suspected cervical spine injury and open fracture of the right tibia with active bleeding.",
-      locked: {
-        salt: "vcd77iElT5YbXUClJkLdNw==",
-        iv: "wyJPqcGQDbKKFbRb",
-        data: "hV5/gvvSo7aCh3892ubX/KsNBtFR9UJKoqHSOX+ombeBHqrXBgwbY/1E0N6M94WlCzq2Bf0cxJZk8aRRTSsaeUO94gIvgDIXe/Sd90rixuNubakZqJWvbc5MBWhtbrkhL38UaMAMzKZU7vdOtTCcjxglAne8JOKhg18k9fXtWB3tOrlbuOuchQiRq4aMaG/o7zbBwxx+OQhDyc1xyRklS7X0xnoFeDDoZz1lZM78qK2EX2kA0udJH4OJIXyYGNzAT7C25LlWf1ybdYHwRUc+Tw6km7qEuhs0NzMNlwpdY9zUJXVxG4t72/bXvGbjgAcMY9JyLbiLLhXvCTcEH+A4UvyCn6mPCY75CfY0wQuEqMyCJRSAO8EAj2WERYvlFs2/YvW/gKY3/C4K8MWNA/uJtnVblq47Mfq08ZOC1XqGZbW+Mj13t18HuvGgQZy2PMXj+SRRiKGC6A+7vdAsNdhTuzvfldSJVE8g/tO3GDwkQqP4zMLiNjea24PZmzlaTioIWnbWVRc4NHUf5DwQv/TGOGvxty5MCDSBSEG6OrvXW4zA3zuSElCQ2UqwPpq2QqVeNvr+O3ry70owp2nCiRgHQDvPu4iQiltqCq+mg/bEKtRdiVCCsYhFer8NgcJaDrMZKFKiLsW5gWz5LIZWj7vRaI++ZgfzqmEIsjcWeSIRBrRcjiA=",
-      },
-    },
-    {
-      id: "ca",
-      title: "Cardiac arrest scenario",
-      story: "Mid-game, a walking player suddenly collapses without contact with another player.",
-      locked: {
-        salt: "xU5GMUzDb+j7nkBFjJgViw==",
-        iv: "lej6wHf9KIVmQwdw",
-        data: "q5PsE/5JKWjEO/IjrwNAbqDypg0XLmvCWqo0zRRXr+LbZzxN2zZTFikS2glroH39PBqqD5xd6vdKpG183hnEH+q0pFHXPqQDmMQql8Q0pg559+vyJKe56tcho8/hLdii7JpHIZn/u/mLaDazI7GaEV1enAQI+a0UT69YnR0WcTN8X6jvhll65Yh3+Q3wxNzo4uZ6/uB42hMH69KKrxuSstrgqNn1lVwFskxyeVXW4tZ48/aQNGK2UY+C347GY84nH1ibPl9myO1Vo5Y47WLh2/OueYuaiXKmDfWE95Wt8d7eZfMV6zq5eiaOx2RYbat/rO22I3kHicp6Ud+S0Rn/pOlVTmFnJzCalKT+oMw6ZUOpvDrj6fE9gK80E2kfkvn2dMqjK3kB8CGegePg+vP2fVF5w4zqAV4QudOaXKaEGTSjtd31knxBfDcXCp1SEyIJ87YQJ6ROlVL2EIzYszgqfCFLyVLFzm2HFxk3ArAxsgn7XNLD6zrReD7ATKU+TrhNYY4nQ5Q1zvAhcMnLAeuftSZdN/3f5edkD+X3AsA7pZkykI5bT0cNLi/LQSTjctGjWfMAT/H2Z868Eca5uNiuHJBA8XnhLsc8l3sWMUSkMsR2BCcr2Cf70TpQEYlhIvca3dxQeTXJ3wOggcLaXfRukBDxzprDk4cwyMa/GFIh7R+GrMpDwa7R/c9k0nm8QiiXKCQf7CTuGP6a/E4LhCuoa7hKJXiIbgKl+By/MZakPG1u9lF4aIgAMXTvmTbuKm2NUXiZsimGacFaxpfcegs7BLQ2oBIyxYpsOtJLSfimrGu01ftLFUsUl7IoxKFjfnmrLxwqLgSRDncP137LHnycjAob8c0coPHtBCf+Tf3SJpcttY7iFDAHyaMkIZkh43sPSrSLKAUjh1H3kR10C8cG7jYG7oa1sOUPM06G6XJYtdGFzVMyRmnMOIXspu/KnYZX//SIb2Zv7BpmzLu4LtJTIKCc2jsVzUcxEQDtOukYWuCVthW1nn5wy3opXOESJQD5tddneeLfu2mcZSKi3wjuHa1wdDON4kc7mWGXPM8JUlmmhR4L4o3DWEMvN32BJ0pcRP0hl4xxfbFspEAn7fkq3dJCJZ50ikbQyuqKWrf/",
-      },
-    },
-  ],
-};
 
 const IDS: StationId[] = ["1", "2", "3", "4", "5"];
 

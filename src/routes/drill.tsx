@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PlayCircle } from "lucide-react";
-import { AppShell, HeroPhoto, Panel, RoleChip, SectionLabel } from "@/components/workshop";
+import { AppShell, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { workshop } from "@/lib/workshop";
-import { asset } from "@/lib/asset";
 
 export const Route = createFileRoute("/drill")({ component: Drill });
 
@@ -10,14 +9,10 @@ function Drill() {
   return (
     <AppShell tab="drill">
       <div className="flex flex-col gap-3.5">
-        <a href={asset("/img/drill-sequence-v4.jpg")} target="_blank" rel="noopener noreferrer" className="block">
-          <HeroPhoto
-            src={asset("/img/drill-sequence-v4.jpg")}
-            alt="Six-step pictorial sequence of the on-field SCA drill"
-            caption="Tap the picture to open it full size. Assess · airway + O2 + AED · first shock · spinal board · 3rd shock + 10-second dash · continue."
-            contain
-          />
-        </a>
+        <Note>
+          <span className="font-semibold text-navy">Sudden cardiac arrest — the team drill. </span>
+          Six steps, each tagged with the colours that act.
+        </Note>
         <Panel>
           <div className="px-3.5 py-2">
             {workshop.steps.map((step, i) => (
@@ -57,10 +52,15 @@ function Drill() {
             ))}
           </div>
         </Panel>
+        <Panel>
+          <div className="flex flex-col gap-2 px-3.5 py-3.5">
+            <SectionLabel>STRETCHER TEAM</SectionLabel>
+            <p className="text-sm leading-snug">{workshop.stretcherNote}</p>
+          </div>
+        </Panel>
         <SectionLabel>SEQUENCE</SectionLabel>
         <p className="text-xs leading-snug text-muted">
-          Assess → airway + O2 + AED → first shock → spinal board → 2nd shock → 3rd shock + 10-second dash → continue.
-          HKL colour roles, spinal-board carry, first shock before the board, first carry after the 3rd shock (earlier if ROSC).
+          Recognise → compressions → AED and shock → airway and oxygen → prepare the transfer → stop-and-start carry.
         </p>
         <Link to="/guides" className="block active:scale-[0.99]">
           <Panel>

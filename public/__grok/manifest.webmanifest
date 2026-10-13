@@ -1,13 +1,17 @@
 {
-  "name": "HKL Football Medicine 2026",
-  "short_name": "HKL SCA",
-  "description": "HKL Sports-Emergency Football Medicine Workshop 2026 — participant app",
+  "name": "Pitchside Emergency Care",
+  "short_name": "Pitchside Care",
+  "description": "Study guide to FIFA's medical set piece for football: colour roles, cardiac arrest, primary survey, cervical spine, concussion and the emergency bag.",
   "start_url": "../",
   "scope": "../",
   "display": "standalone",
   "background_color": "#f7f4ee",
   "theme_color": "#0b1f3a",
   "icons": [
-    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" }
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
   ]
 }

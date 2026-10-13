@@ -8,7 +8,7 @@ export const Route = createFileRoute("/guides")({ component: GuidesPage });
 
 function GuidesPage() {
   return (
-    <AppShell tab="home">
+    <AppShell tab="films">
       <div className="flex flex-col gap-5">
         <JumpChips
           items={[

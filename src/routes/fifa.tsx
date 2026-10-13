@@ -95,7 +95,7 @@ function FifaScaPage() {
             to="/drill"
             className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold"
           >
-            See the workshop team drill →
+            See the team drill →
           </Link>
         </Section>
 
@@ -169,7 +169,7 @@ function FifaScaPage() {
           <a href={FIFA_SCA_URL} target="_blank" rel="noopener noreferrer" className="underline">
             FIFA's Sudden cardiac arrest page
           </a>
-          . Infographics, videos and documents © FIFA, shown for workshop education; originals on FIFA's website.
+          . Infographics, films and documents © FIFA; the originals are on FIFA's website.
         </Note>
       </div>
     </AppShell>

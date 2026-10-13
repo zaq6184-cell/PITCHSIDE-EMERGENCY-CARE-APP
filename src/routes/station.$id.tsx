@@ -1,7 +1,8 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
-import { ArrowLeft, Box, ChevronLeft, ChevronRight, MapPin, X } from "lucide-react";
+import { ArrowLeft, Box, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState } from "react";
 import { FifaClipCard } from "@/components/fifa-video";
+import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { type Block, getStation, stations } from "@/lib/stations";
 
@@ -32,43 +33,16 @@ function StationPage() {
           className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold"
         >
           <ArrowLeft className="size-4" strokeWidth={2.4} />
-          All stations
+          All skill modules
         </Link>
         <Panel>
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">
-              STATION {s.id}
+              MODULE {s.id}
             </p>
             <h2 className="mt-0.5 font-display text-xl font-bold leading-tight">{s.title}</h2>
             <p className="mt-1 text-sm text-gold-soft">{s.subtitle}</p>
           </div>
-          {s.location || s.pic ? (
-            <div className="flex flex-wrap gap-x-4 gap-y-1 px-3.5 pt-3 text-xs text-muted">
-              {s.location ? (
-                <span className="flex items-center gap-1">
-                  <MapPin className="size-3" />
-                  {s.location}
-                </span>
-              ) : null}
-              {s.pic ? <span>PIC: {s.pic}</span> : null}
-            </div>
-          ) : null}
-          <details className="group px-3.5 py-3">
-            <summary className="flex min-h-9 cursor-pointer list-none items-center justify-between font-display text-xs font-semibold tracking-[0.14em] text-navy">
-              STATION EQUIPMENT ({s.equipment.length})
-              <ChevronRight className="size-4 text-gold transition-transform group-open:rotate-90" />
-            </summary>
-            <ul className="mt-1 divide-y divide-line">
-              {s.equipment.map((e) => (
-                <li key={e.name} className="flex items-baseline justify-between gap-3 py-1.5 text-sm">
-                  <span className="leading-snug">{e.name}</span>
-                  <span className="shrink-0 font-display text-xs font-semibold tracking-wide text-navy">
-                    {e.qty}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </details>
         </Panel>
 
         {s.sections.length > 5 ? (
@@ -88,7 +62,7 @@ function StationPage() {
           </section>
         ))}
 
-        <Note>Source: {s.source} Teaching aid only — follow local protocol.</Note>
+        <Note>Source: {s.source} Study aid only — follow FIFA's current documents and your local protocol.</Note>
 
         <div className="grid grid-cols-2 gap-2.5">
           {prev ? (
@@ -121,7 +95,7 @@ function StationPage() {
               to="/stations"
               className="flex min-h-11 items-center justify-end gap-1 rounded-lg bg-paper px-3 py-2 text-right text-sm shadow-card"
             >
-              <span className="truncate">Simulation</span>
+              <span className="truncate">All modules</span>
               <ChevronRight className="size-4 shrink-0 text-gold" />
             </Link>
           )}
@@ -229,6 +203,12 @@ function BlockView({ b }: { b: Block }) {
           </span>
           <ChevronRight className="h-5 w-5 shrink-0 text-gold" aria-hidden />
         </Link>
+      );
+    case "positions":
+      return (
+        <div className="-mx-3.5">
+          <PositionDiagram />
+        </div>
       );
     case "video":
       return (
@@ -343,7 +323,7 @@ function DeviceFigure({ b }: { b: Extract<Block, { kind: "device" }> }) {
               , {b.credit.license}, via Wikimedia Commons
             </>
           ) : (
-            <>Diagram drawn for this workshop app</>
+            <>Diagram drawn for this guide</>
           )}
         </span>
       </figcaption>

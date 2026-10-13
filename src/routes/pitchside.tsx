@@ -78,7 +78,7 @@ function PitchsidePage() {
         </Panel>
 
         <Section title="FIFA SKILL ZONE — 5 FILMS">
-          <p className="text-xs leading-snug text-muted">Tap a film to play it — needs a connection. Each film also appears in its matching station.</p>
+          <p className="text-xs leading-snug text-muted">Each film opens on FIFA's website.</p>
           <VideoList clips={fifaSkillList} />
         </Section>
 
@@ -119,7 +119,7 @@ function PitchsidePage() {
             <li><b>Entering the pitch:</b> only on the referee's stretcher signal — except a non-contact collapse, when the team runs on at once.</li>
             <li><b>Ready position:</b> move along the touchline level with the incident and squat with the stretcher.</li>
             <li><b>Kit:</b> two identical sets — basket, scoop or spine board, head blocks, collar, straps; AED; oxygen; splints.</li>
-            <li><b>SCA:</b> survival falls by up to 10% per minute. At FIFA matches (ALS team) extrication is considered after the 3rd shock and drugs, ideally with a mechanical CPR device; the workshop uses the same timing (earlier if ROSC) with the manual 10-second stop-and-start carry.</li>
+            <li><b>SCA:</b> survival falls by up to 10% per minute. A mechanical CPR device lets compressions continue during extrication; without one, use the 10-second stop-and-start carry.</li>
             <li><b>Neck injury:</b> collar → log roll onto the scoop → straps (centre strap on the sternum) → head blocks → tape → release MILS → basket, 6 people.</li>
             <li><b>Extremity fracture:</b> full A–E first; hands above and below; analgesia; clean and dress wounds; splint and recheck.</li>
           </ul>
@@ -135,7 +135,7 @@ function PitchsidePage() {
               </a>
             ))}
           </div>
-          <p className="text-xs leading-snug text-muted">Details are in Stations 1, 2, 3 and 4.</p>
+          <p className="text-xs leading-snug text-muted">Details are in skill modules 1 to 4.</p>
         </Section>
 
         <Section title="FIFA POSTERS AND FACTSHEETS">
@@ -204,7 +204,7 @@ function PitchsidePage() {
           <a href={FIFA_PITCHSIDE_PAGE} target="_blank" rel="noopener noreferrer" className="underline">
             FIFA's Pitchside emergency care page
           </a>
-          . Films, posters, photos and documents © FIFA, shown for workshop education.
+          . Films, posters, photos and documents © FIFA.
         </Note>
       </div>
     </AppShell>
