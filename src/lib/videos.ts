@@ -2,8 +2,6 @@ import { asset } from "@/lib/asset";
 
 export type FifaClip = {
   youtubeId: string;
-  /** Full embed URL for non-YouTube players (FIFA uses Uplynk). */
-  embed?: string;
   /** Page to open outside the app when the clip is not on YouTube. */
   watchUrl?: string;
   title: string;
@@ -18,7 +16,6 @@ export const FIFA_SCA_PAGE = "https://inside.fifa.com/health-and-medical/educati
 export const fifaOwnClips: FifaClip[] = [
   {
     youtubeId: "fifa-sca",
-    embed: "https://content.uplynk.com/player/7kQGMRbuIM4KrRhEROo58lea.html",
     watchUrl: FIFA_SCA_PAGE,
     title: "Sudden Cardiac Arrest — FIFA Medical Set Piece",
     source: "FIFA Medical",
@@ -28,7 +25,6 @@ export const fifaOwnClips: FifaClip[] = [
   },
   {
     youtubeId: "fifa-workshop",
-    embed: "https://content.uplynk.com/player/6vHDnO4q7DNQzCZCvwp9oCea.html",
     watchUrl: FIFA_SCA_PAGE,
     title: "FIFA Medical — post workshop",
     source: "FIFA Medical",
@@ -43,7 +39,6 @@ export const FIFA_PITCHSIDE_PAGE = "https://inside.fifa.com/health-and-medical/e
 /** FIFA Skill Zone films (Pitchside emergency care page), FIFA Uplynk player. */
 const skill = (id: string, key: string, title: string, duration: string, why: string): FifaClip => ({
   youtubeId: "fifa-skill-" + key,
-  embed: `https://content.uplynk.com/player/${id}.html`,
   watchUrl: FIFA_PITCHSIDE_PAGE,
   title,
   source: "FIFA Skill Zone",
@@ -66,7 +61,6 @@ export const FIFA_FOCUS_PAGE = "https://inside.fifa.com/health-and-medical/focus
 /** FIFA FOCUS on-pitch concussion assessment film (FIFA Uplynk player). */
 export const fifaFocusClip: FifaClip = {
   youtubeId: "fifa-focus",
-  embed: "https://content.uplynk.com/player/3xGvftSyb8AP8Ig7SXq15fea.html",
   watchUrl: FIFA_FOCUS_PAGE,
   title: "FOCUS — on-pitch concussion assessment",
   source: "FIFA Medical",

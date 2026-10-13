@@ -13,7 +13,7 @@ const setPiece: { title: string; note?: string; tasks: Task[] }[] = [
   {
     title: "Suspected cervical spine injury — cannot be ruled out clinically",
     tasks: [
-      ["black", "Match Doctor / Leader. Focus on good communication. Ensure the ambulance is called."],
+      ["black", "Team leader. Focus on good communication. Ensure the ambulance is called."],
       ["orange", "Immobilise the cervical spine (MILS)."],
       ["red", "A (c-spine) B C assessment."],
       ["green", "Bring the FIFA bag. Assist as directed by the Match Doctor."],
@@ -176,7 +176,7 @@ function CspinePage() {
             ))}
           </ol>
           <div className="rounded-lg border-l-4 border-navy bg-note px-2.5 py-2 text-sm leading-snug">
-            <p className="font-semibold text-navy">Workshop mnemonic — NSAID</p>
+            <p className="font-semibold text-navy">Mnemonic — NSAID</p>
             <p>
               Neurological deficit · Spinal midline tenderness · Altered mental status (GCS &lt; 15) · Intoxication
               (includes strong analgesics) · Distracting injury. Any one present → the spine cannot be cleared;
@@ -262,7 +262,7 @@ function CspinePage() {
               ["Chest (Red)", "One hand on the far shoulder, one on the hip."],
               ["Pelvis (Blue)", "One hand on the waist, the other under the knee."],
               ["Legs (White)", "One hand under the lower leg, the other under the ankle."],
-              ["Fifth person (Green / First Aiders)", "Places the scoop or board."],
+              ["Fifth person (Green)", "Places the scoop or board."],
             ].map(([t, d]) => (
               <div key={t} className="py-1.5">
                 <dt className="font-display text-xs font-semibold tracking-wide text-navy">{t}</dt>
@@ -288,7 +288,7 @@ function CspinePage() {
             />
           </a>
           <Note>
-            Workshop standard for trauma: scoop stretcher + basket, set up below the feet in line with the player —
+            For trauma: scoop stretcher and basket, set up below the feet in line with the player —
             basket 2–3 lengths away. A scoop moves the player only ~15° instead of a 90° log roll.
           </Note>
         </Section>
@@ -336,10 +336,10 @@ function CspinePage() {
 
         <Section title="RELATED IN THIS APP">
           <Link to="/station/$id" params={{ id: "3" }} className={more}>
-            Station 3 — primary survey (A: airway & cervical spine) →
+            Skill module 3 — primary survey (A: airway & cervical spine) →
           </Link>
           <Link to="/station/$id" params={{ id: "4" }} className={more}>
-            Station 4 — immobilization devices →
+            Skill module 4 — immobilisation devices →
           </Link>
           <Link to="/focus" className={more}>
             Concussion assessment (FOCUS) →
@@ -351,7 +351,7 @@ function CspinePage() {
           <a href={FIFA_PITCHSIDE_PAGE} target="_blank" rel="noopener noreferrer" className="underline">
             FIFA's Pitchside emergency care page
           </a>
-          . Film, poster and documents © FIFA, shown for workshop education. Follow local protocol.
+          . Film, poster and documents © FIFA. Follow FIFA's current documents and your local protocol.
         </Note>
       </div>
     </AppShell>

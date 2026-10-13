@@ -1,11 +1,10 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
-import { AccessGate } from "@/components/access-gate";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 import { asset } from "@/lib/asset";
 
-const APP_NAME = "HKL Football Medicine 2026";
+const APP_NAME = "Pitchside Emergency Care";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -19,7 +18,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Hospital Kuala Lumpur participant app for the Sports-Emergency Football Medicine Workshop 2026 — programme, skill stations, FIFA topics (cardiac arrest, concussion FOCUS, cervical spine), colour roles, drill and 10-second dash timer.",
+          "Study guide to FIFA's medical set piece for football: the six colour roles, sudden cardiac arrest, the primary survey, cervical spine injury, concussion (FOCUS) and the emergency care bag, with links to FIFA's films and documents.",
       },
       { name: "theme-color", content: "#0B1F3A" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
@@ -40,9 +39,7 @@ export const Route = createRootRoute({
       <body className="bg-bg text-ink">
         <PreviewHostBridge />
         <AuthProvider>
-          <AccessGate>
-            <Outlet />
-          </AccessGate>
+          <Outlet />
         </AuthProvider>
         <Scripts />
       </body>

@@ -1,26 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import {
-  BookOpen,
-  CalendarDays,
-  ClipboardList,
-  ListOrdered,
-  LogOut,
-  Timer,
-  Users,
-} from "lucide-react";
+import { BookOpen, ClipboardList, ListOrdered, PlayCircle, Timer, Users } from "lucide-react";
 import { useEffect } from "react";
-import { lockApp } from "@/components/access-gate";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
-
-export type EventNavId = "programme" | "speakers" | "venue" | "team" | "bag";
 
 export function AppShell({
   children,
   tab,
 }: {
   children: React.ReactNode;
-  tab: "home" | "stations" | "drill" | "timer" | "rules" | "event";
+  tab: "home" | "stations" | "drill" | "timer" | "rules" | "films";
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -48,25 +37,15 @@ export function AppShell({
         <div className="mt-0.5 flex items-center gap-2">
           <p className="min-w-0 flex-1 text-[11px] text-gold-soft">
             {bag
-              ? "FIFA Medical Emergency Bag · Green brings this"
+              ? "FIFA Emergency Care Bag · Green brings this"
               : guides
-                ? "FIFA / UEFA guideline films · needs a connection"
+                ? "Links to FIFA's films and downloads"
                 : topic
                   ? topic
-                  : tab === "event"
-                    ? "3–4 Oct 2026 · Hospital Tunku Azizah"
-                    : tab === "stations"
-                      ? "Skill stations & simulation · Sunday 4 Oct"
-                      : `${workshop.title} · Participant app`}
+                  : tab === "stations"
+                    ? "Skill modules · study notes"
+                    : workshop.title}
           </p>
-          <button
-            type="button"
-            onClick={lockApp}
-            className="-my-3.5 -mr-2 flex min-h-11 shrink-0 items-center gap-1 rounded-lg px-2 text-[11px] font-semibold tracking-wide text-gold transition-transform duration-150 ease-out active:scale-95"
-          >
-            <LogOut className="size-3.5" aria-hidden />
-            Sign out
-          </button>
         </div>
       </header>
       <main className="mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
@@ -77,11 +56,11 @@ export function AppShell({
         aria-label="Primary"
       >
         <TabLink to="/" label="Roles" icon={Users} active={tab === "home"} />
-        <TabLink to="/stations" label="Stations" icon={ClipboardList} active={tab === "stations"} />
+        <TabLink to="/stations" label="Skills" icon={ClipboardList} active={tab === "stations"} />
         <TabLink to="/drill" label="Drill" icon={ListOrdered} active={tab === "drill"} />
         <TabLink to="/timer" label="Dash" icon={Timer} active={tab === "timer"} />
         <TabLink to="/rules" label="Rules" icon={BookOpen} active={tab === "rules"} />
-        <TabLink to="/event" label="Event" icon={CalendarDays} active={tab === "event"} />
+        <TabLink to="/guides" label="Films" icon={PlayCircle} active={tab === "films"} />
       </nav>
     </div>
   );
@@ -93,7 +72,7 @@ function TabLink({
   icon: Icon,
   active,
 }: {
-  to: "/" | "/stations" | "/drill" | "/timer" | "/rules" | "/event";
+  to: "/" | "/stations" | "/drill" | "/timer" | "/rules" | "/guides";
   label: string;
   icon: typeof Users;
   active: boolean;
@@ -110,51 +89,6 @@ function TabLink({
       <Icon className="size-5" strokeWidth={active ? 2.4 : 1.8} />
       {label}
     </Link>
-  );
-}
-
-export function EventSubNav({ active }: { active: EventNavId }) {
-  const items: { id: EventNavId; label: string }[] = [
-    { id: "programme", label: "Prog" },
-    { id: "speakers", label: "Talks" },
-    { id: "venue", label: "Venue" },
-    { id: "team", label: "Team" },
-    { id: "bag", label: "Bag" },
-  ];
-  return (
-    <div className="-mx-3.5 bg-bg px-3.5 py-1.5">
-      <div className="grid grid-cols-5 gap-1 rounded-lg bg-paper p-1 shadow-card">
-        {items.map((t) => {
-          const className = cn(
-            "flex min-h-9 items-center justify-center rounded-md px-1 font-display text-[11px] font-semibold tracking-wide transition-colors duration-150",
-            active === t.id ? "bg-navy text-on-navy" : "text-muted",
-          );
-          if (t.id === "bag") {
-            return (
-              <Link
-                key={t.id}
-                to="/bag"
-                className={className}
-                aria-current={active === t.id ? "page" : undefined}
-              >
-                {t.label}
-              </Link>
-            );
-          }
-          return (
-            <Link
-              key={t.id}
-              to="/event"
-              search={{ tab: t.id as "programme" | "speakers" | "venue" | "team" }}
-              className={className}
-              aria-current={active === t.id ? "page" : undefined}
-            >
-              {t.label}
-            </Link>
-          );
-        })}
-      </div>
-    </div>
   );
 }
 

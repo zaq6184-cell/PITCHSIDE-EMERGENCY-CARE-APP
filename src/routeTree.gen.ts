@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BagRouteImport } from './routes/bag'
 import { Route as CspineRouteImport } from './routes/cspine'
 import { Route as DrillRouteImport } from './routes/drill'
-import { Route as EventRouteImport } from './routes/event'
 import { Route as FifaRouteImport } from './routes/fifa'
 import { Route as FocusRouteImport } from './routes/focus'
 import { Route as GuidesRouteImport } from './routes/guides'
@@ -22,7 +21,6 @@ import { Route as RulesRouteImport } from './routes/rules'
 import { Route as StationsRouteImport } from './routes/stations'
 import { Route as TimerRouteImport } from './routes/timer'
 import { Route as RoleIdRouteImport } from './routes/role.$id'
-import { Route as SpeakerIdRouteImport } from './routes/speaker.$id'
 import { Route as StationIdRouteImport } from './routes/station.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -43,11 +41,6 @@ const CspineRoute = CspineRouteImport.update({
 const DrillRoute = DrillRouteImport.update({
   id: '/drill',
   path: '/drill',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EventRoute = EventRouteImport.update({
-  id: '/event',
-  path: '/event',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FifaRoute = FifaRouteImport.update({
@@ -90,11 +83,6 @@ const RoleIdRoute = RoleIdRouteImport.update({
   path: '/role/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SpeakerIdRoute = SpeakerIdRouteImport.update({
-  id: '/speaker/$id',
-  path: '/speaker/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const StationIdRoute = StationIdRouteImport.update({
   id: '/station/$id',
   path: '/station/$id',
@@ -106,7 +94,6 @@ export interface FileRoutesByFullPath {
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
-  '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
@@ -115,7 +102,6 @@ export interface FileRoutesByFullPath {
   '/stations': typeof StationsRoute
   '/timer': typeof TimerRoute
   '/role/$id': typeof RoleIdRoute
-  '/speaker/$id': typeof SpeakerIdRoute
   '/station/$id': typeof StationIdRoute
 }
 export interface FileRoutesByTo {
@@ -123,7 +109,6 @@ export interface FileRoutesByTo {
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
-  '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
@@ -132,7 +117,6 @@ export interface FileRoutesByTo {
   '/stations': typeof StationsRoute
   '/timer': typeof TimerRoute
   '/role/$id': typeof RoleIdRoute
-  '/speaker/$id': typeof SpeakerIdRoute
   '/station/$id': typeof StationIdRoute
 }
 export interface FileRoutesById {
@@ -141,7 +125,6 @@ export interface FileRoutesById {
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
-  '/event': typeof EventRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
@@ -150,7 +133,6 @@ export interface FileRoutesById {
   '/stations': typeof StationsRoute
   '/timer': typeof TimerRoute
   '/role/$id': typeof RoleIdRoute
-  '/speaker/$id': typeof SpeakerIdRoute
   '/station/$id': typeof StationIdRoute
 }
 export interface FileRouteTypes {
@@ -160,7 +142,6 @@ export interface FileRouteTypes {
     | '/bag'
     | '/cspine'
     | '/drill'
-    | '/event'
     | '/fifa'
     | '/focus'
     | '/guides'
@@ -169,7 +150,6 @@ export interface FileRouteTypes {
     | '/stations'
     | '/timer'
     | '/role/$id'
-    | '/speaker/$id'
     | '/station/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -177,7 +157,6 @@ export interface FileRouteTypes {
     | '/bag'
     | '/cspine'
     | '/drill'
-    | '/event'
     | '/fifa'
     | '/focus'
     | '/guides'
@@ -186,7 +165,6 @@ export interface FileRouteTypes {
     | '/stations'
     | '/timer'
     | '/role/$id'
-    | '/speaker/$id'
     | '/station/$id'
   id:
     | '__root__'
@@ -194,7 +172,6 @@ export interface FileRouteTypes {
     | '/bag'
     | '/cspine'
     | '/drill'
-    | '/event'
     | '/fifa'
     | '/focus'
     | '/guides'
@@ -203,7 +180,6 @@ export interface FileRouteTypes {
     | '/stations'
     | '/timer'
     | '/role/$id'
-    | '/speaker/$id'
     | '/station/$id'
   fileRoutesById: FileRoutesById
 }
@@ -212,7 +188,6 @@ export interface RootRouteChildren {
   BagRoute: typeof BagRoute
   CspineRoute: typeof CspineRoute
   DrillRoute: typeof DrillRoute
-  EventRoute: typeof EventRoute
   FifaRoute: typeof FifaRoute
   FocusRoute: typeof FocusRoute
   GuidesRoute: typeof GuidesRoute
@@ -221,7 +196,6 @@ export interface RootRouteChildren {
   StationsRoute: typeof StationsRoute
   TimerRoute: typeof TimerRoute
   RoleIdRoute: typeof RoleIdRoute
-  SpeakerIdRoute: typeof SpeakerIdRoute
   StationIdRoute: typeof StationIdRoute
 }
 
@@ -253,13 +227,6 @@ declare module '@tanstack/react-router' {
       path: '/drill'
       fullPath: '/drill'
       preLoaderRoute: typeof DrillRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/event': {
-      id: '/event'
-      path: '/event'
-      fullPath: '/event'
-      preLoaderRoute: typeof EventRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fifa': {
@@ -318,13 +285,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoleIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/speaker/$id': {
-      id: '/speaker/$id'
-      path: '/speaker/$id'
-      fullPath: '/speaker/$id'
-      preLoaderRoute: typeof SpeakerIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/station/$id': {
       id: '/station/$id'
       path: '/station/$id'
@@ -340,7 +300,6 @@ const rootRouteChildren: RootRouteChildren = {
   BagRoute: BagRoute,
   CspineRoute: CspineRoute,
   DrillRoute: DrillRoute,
-  EventRoute: EventRoute,
   FifaRoute: FifaRoute,
   FocusRoute: FocusRoute,
   GuidesRoute: GuidesRoute,
@@ -349,7 +308,6 @@ const rootRouteChildren: RootRouteChildren = {
   StationsRoute: StationsRoute,
   TimerRoute: TimerRoute,
   RoleIdRoute: RoleIdRoute,
-  SpeakerIdRoute: SpeakerIdRoute,
   StationIdRoute: StationIdRoute,
 }
 export const routeTree = rootRouteImport

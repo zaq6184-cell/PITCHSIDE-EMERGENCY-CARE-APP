@@ -1,5 +1,6 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, Note, Panel, SayLine, SectionLabel } from "@/components/workshop";
 import { getRole, isRoleId } from "@/lib/workshop";
 import { FIFA_ROLE_CARDS_PDF, fifaRoleCards } from "@/lib/fifa-roles";
@@ -34,11 +35,7 @@ function RoleCard() {
             <h2 className="font-display text-2xl font-bold tracking-[0.08em]">{r.name}</h2>
             <p className="text-sm opacity-90">{r.role}</p>
           </div>
-          <img
-            src={r.photo}
-            alt={`${r.name} ${r.role} position`}
-            className="block max-h-80 w-full bg-cream object-contain"
-          />
+          <PositionDiagram highlight={r.id} />
           <div className="flex flex-col gap-3.5 px-3.5 py-3.5">
             <section>
               <SectionLabel>WHERE YOU STAND</SectionLabel>
@@ -76,7 +73,7 @@ function RoleCard() {
               If it is not your colour, do not reach in.
             </p>
             <Note>
-              <span className="font-semibold text-navy">FIFA: </span>
+              <span className="font-semibold text-navy">On the PEAP poster: </span>
               {r.fifa}
             </Note>
             {fifaRoleCards[r.id] ? <FifaCard id={r.id} /> : null}
@@ -99,7 +96,7 @@ function FifaCard({ id }: { id: keyof typeof fifaRoleCards }) {
   return (
     <section className="rounded-lg border border-line bg-cream px-3 py-3">
       <p className="font-display text-[11px] font-semibold tracking-[0.14em] text-navy">
-        FIFA OFFICIAL ROLE CARD (2025)
+        FROM FIFA'S ROLE CARD — SUMMARY
       </p>
       <p className="mt-1 text-sm font-medium leading-snug">{c.who}</p>
       {groups.map(([title, items]) =>
@@ -120,7 +117,7 @@ function FifaCard({ id }: { id: keyof typeof fifaRoleCards }) {
         rel="noopener noreferrer"
         className="mt-2 inline-flex min-h-9 items-center text-xs font-medium text-navy underline underline-offset-2"
       >
-        FIFA role cards (PDF) · © FIFA
+        Open FIFA's role cards (PDF, on FIFA's website)
       </a>
     </section>
   );

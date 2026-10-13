@@ -37,7 +37,7 @@ function Rules() {
               className="mt-2 inline-flex min-h-11 items-center gap-2 font-display text-sm font-semibold tracking-wide text-gold"
             >
               <PlayCircle className="size-4" strokeWidth={2.2} />
-              Watch FIFA / UEFA films
+              FIFA films and downloads
             </Link>
           </div>
         </Panel>

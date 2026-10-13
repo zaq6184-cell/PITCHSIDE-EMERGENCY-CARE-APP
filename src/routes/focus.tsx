@@ -9,7 +9,7 @@ import { FIFA_FOCUS_PAGE, fifaFocusClip } from "@/lib/videos";
 export const Route = createFileRoute("/focus")({ component: FocusPage });
 
 /** watch = lower threshold for concern + continue; sub = substitute + assess off the pitch. */
-/** step = a workshop action between FIFA's domains, not an assessment item. */
+/** step = a practical action between FIFA's domains, not an assessment item. */
 type Outcome = "watch" | "sub" | "step";
 type Domain = { domain: string; outcome: Outcome; lead: string; items?: string[] };
 type Stage = { id: string; where: string; when: string; domains: Domain[] };
@@ -171,7 +171,7 @@ const downloads: [string, string, string][] = [
 function OutcomeIcon({ outcome }: { outcome: Outcome }) {
   if (outcome === "step") {
     return (
-      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-navy text-gold" title="Workshop step">
+      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-navy text-gold" title="Added step">
         <ArrowUp className="size-3.5" strokeWidth={2.6} />
       </span>
     );
@@ -297,7 +297,7 @@ function FocusPage() {
             ))}
           </ol>
           <Note>
-            ACVPU = Alert, Confusion (new), Voice, Pain, Unresponsive. “Sit the player up” is a workshop step added
+            ACVPU = Alert, Confusion (new), Voice, Pain, Unresponsive. “Sit the player up” is a practical step added by this guide
             between FIFA's cervical spine and symptoms domains; it is not on FIFA's card.
           </Note>
         </Section>
@@ -374,7 +374,7 @@ function FocusPage() {
             params={{ id: "3" }}
             className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold"
           >
-            Station 3 — primary survey (D: disability) →
+            Skill module 3 — primary survey (D: disability) →
           </Link>
         </Section>
 
@@ -383,7 +383,7 @@ function FocusPage() {
           <a href={FIFA_FOCUS_PAGE} target="_blank" rel="noopener noreferrer" className="underline">
             FIFA's FOCUS page
           </a>{" "}
-          and the FOCUS lanyard (April 2026). Film, card and documents © FIFA, shown for workshop education.
+          and the FOCUS lanyard (April 2026). Film, card and documents © FIFA.
         </Note>
       </div>
     </AppShell>

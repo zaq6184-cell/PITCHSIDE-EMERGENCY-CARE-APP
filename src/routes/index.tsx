@@ -3,40 +3,38 @@ import {
   Bone,
   Brain,
   BriefcaseMedical,
-  CalendarDays,
   ChevronRight,
-  FileText,
-  HeartPulse,
-  LogOut,
-  Stethoscope,
   ClipboardList,
+  ExternalLink,
+  HeartPulse,
+  ListOrdered,
   PlayCircle,
+  Stethoscope,
 } from "lucide-react";
-import { lockApp, useAccessName } from "@/components/access-gate";
-import { about, disclaimer } from "@/lib/disclaimer";
+import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, HeroPhoto, Note, Panel, SectionLabel } from "@/components/workshop";
-import { programme } from "@/lib/programme";
-import { workshop } from "@/lib/workshop";
 import { asset } from "@/lib/asset";
+import { about, disclaimer } from "@/lib/disclaimer";
+import { fifaDownloads } from "@/lib/fifa-links";
+import { workshop } from "@/lib/workshop";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
-  const accessName = useAccessName();
   return (
     <AppShell tab="home">
       <div className="flex flex-col gap-3.5">
         <Note>
           <span className="font-semibold text-navy">{workshop.rule}</span>
         </Note>
-        <SectionLabel>TAP YOUR COLOUR</SectionLabel>
+        <SectionLabel>TAP A COLOUR</SectionLabel>
         <div className="grid grid-cols-2 gap-2.5">
           {workshop.roles.map((r) => (
             <Link
               key={r.id}
               to="/role/$id"
               params={{ id: r.id }}
-              className={`flex min-h-[4.75rem] flex-col items-center justify-center rounded-lg px-2 py-4 text-center transition-transform duration-150 ease-out active:scale-95${r.id === "yellow" ? " col-span-2" : ""}`}
+              className="flex min-h-[4.75rem] flex-col items-center justify-center rounded-lg px-2 py-4 text-center transition-transform duration-150 ease-out active:scale-95"
               style={{
                 backgroundColor: r.color,
                 color: r.text,
@@ -44,89 +42,92 @@ function Home() {
               }}
             >
               <span className="font-display text-xl font-bold tracking-[0.1em]">{r.name}</span>
-              <span className="mt-1 text-[11px] font-medium opacity-90">
-                {r.id === "yellow" ? "× 4 First Aiders · second response" : r.role}
-              </span>
+              <span className="mt-1 text-[11px] font-medium opacity-90">{r.role}</span>
             </Link>
           ))}
         </div>
         <Note>If it is not your colour, do not reach in.</Note>
+
         <Panel>
-          <div className="px-3.5 py-3.5">
-            <SectionLabel>FIELD OF PLAY (FoP) MEDICAL TEAM</SectionLabel>
-            <dl className="mt-2 flex flex-col divide-y divide-line text-sm leading-snug">
-              {[
-                ["Match Doctor / Leader", "Black — leads the FoP medical team."],
-                ["First-response team", "Red + Blue + White + Green + Orange."],
-                ["Second-response team", "Yellow — the First Aiders."],
-              ].map(([t, d]) => (
-                <div key={t} className="py-1.5">
-                  <dt className="font-display text-xs font-semibold tracking-wide text-navy">{t}</dt>
-                  <dd>{d}</dd>
-                </div>
-              ))}
-            </dl>
+          <div className="px-3.5 pt-3.5">
+            <SectionLabel>WHERE EACH COLOUR SITS</SectionLabel>
           </div>
-        </Panel>
-        <Panel>
-          <div className="px-3.5 py-3.5">
-            <SectionLabel>PRINTABLE HKL CARDS & HANDOUTS (PDF)</SectionLabel>
-            <p className="mt-2 text-xs leading-snug text-muted">
-              Updated: Blue takes over compressions at 2 min · White = spinal board ± basket · first carry after the 3rd shock (earlier if ROSC) · LMA connected: oxygen stays on for shocks.
-            </p>
-            <PdfList
-              items={[
-                ["Colour role cards (A4, 10 cards)", "/docs/HKL-SCA-Colour-Role-Cards-2026.pdf"],
-                ["Pictorial participant card (2 pages)", "/docs/HKL-SCA-Pictorial-Participant-Card-2026.pdf"],
-                ["On-field colour reference (2 pages)", "/docs/HKL-SCA-OnField-Colour-Reference-2026.pdf"],
-              ]}
-            />
-            <p className="mt-3 font-display text-[11px] font-semibold tracking-[0.12em] text-navy">STATION HANDOUTS</p>
-            <PdfList
-              items={[
-                ["Station 1 · FIFA PEAP (3 pages)", "/docs/HKL-Station-1-FIFA-PEAP-2026.pdf"],
-                ["Station 2 · Cardiac arrest (2 pages)", "/docs/HKL-Station-2-Cardiac-Arrest-2026.pdf"],
-                ["Station 3 · Primary survey (5 pages)", "/docs/HKL-Station-3-Primary-Survey-2026.pdf"],
-                ["Station 4 · Immobilization (6 pages)", "/docs/HKL-Station-4-Immobilization-2026.pdf"],
-                ["Station 5 · Emergency care bag (7 pages)", "/docs/HKL-Station-5-Emergency-Care-Bag-2026.pdf"],
-              ]}
-            />
+          <div className="mt-3">
+            <PositionDiagram />
           </div>
+          <ul className="flex flex-col divide-y divide-line px-3.5 py-2 text-sm leading-snug">
+            <li className="py-1.5">
+              <span className="font-semibold text-navy">At the head: </span>Orange, with Green beside the bag and AED on the
+              player's left.
+            </li>
+            <li className="py-1.5">
+              <span className="font-semibold text-navy">Player's right: </span>Red at the chest, Blue at the pelvis, White at the
+              lower legs.
+            </li>
+            <li className="py-1.5">
+              <span className="font-semibold text-navy">Player's left: </span>Black, the team leader, level with the chest.
+            </li>
+          </ul>
         </Panel>
         <HeroPhoto
-          src={asset("/img/stations/positions-aerial-v3.jpg")}
-          alt="Team positions around the collapsed player: Orange and Green at the head, Red chest, Blue right hip, White right leg, Black left flank, four Yellow First Aiders at the feet; below the feet, in line with the player, the split scoop stretcher and then the basket stretcher"
-          caption="FIFA PEAP 2025 positions. Orange, Red, Blue and White on the player's RIGHT. Green at the head on the LEFT. Black on the LEFT flank. Yellow First Aiders at the FEET. Extrication kit below the feet, in line with the player (FIFA): split scoop, then the basket 2–3 lengths away (arrest: spinal board ± basket)."
+          src={asset("/img/stations/positions-aerial-v4.jpg")}
+          alt="Six people kneeling around a player lying on the pitch: Orange and Green at the head, Red, Blue and White down the player's right side, Black on the player's left"
+          caption="The same six positions seen from above. Illustration."
           contain
-          tall
         />
+        <Panel>
+          <div className="flex flex-col gap-2 px-3.5 py-3.5">
+            <SectionLabel>STRETCHER TEAM</SectionLabel>
+            <p className="text-sm leading-snug">{workshop.stretcherNote}</p>
+          </div>
+        </Panel>
+
         <SectionLabel>FIFA TOPICS</SectionLabel>
         <Tiles
           items={[
-            { to: "/fifa", icon: HeartPulse, title: "Sudden cardiac arrest", sub: "Signs · emergency steps · videos · official downloads", wide: true },
-            { to: "/focus", icon: Brain, title: "Concussion assessment (FOCUS)", sub: "11 domains · FIFA video · lanyard card · PDFs", wide: true },
-            { to: "/cspine", icon: Bone, title: "Cervical spine injury", sub: "FIFA film · set piece by colour · collar · log roll", wide: true },
-            { to: "/pitchside", icon: Stethoscope, title: "Pitchside emergency care", sub: "5 Skill Zone films · set-piece protocols · role cards · bag", wide: true },
+            { to: "/fifa", icon: HeartPulse, title: "Sudden cardiac arrest", sub: "Signs · emergency steps · FIFA's films and downloads", wide: true },
+            { to: "/focus", icon: Brain, title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain", wide: true },
+            { to: "/cspine", icon: Bone, title: "Cervical spine injury", sub: "Set piece by colour · collar · log roll", wide: true },
+            { to: "/pitchside", icon: Stethoscope, title: "Pitchside emergency care", sub: "Set-piece protocols · role cards · bag", wide: true },
           ]}
         />
-        <SectionLabel>WORKSHOP</SectionLabel>
+        <SectionLabel>STUDY</SectionLabel>
         <Tiles
           items={[
-            { to: "/stations", icon: ClipboardList, title: "Skill stations", sub: "Stations 1–5 + simulation" },
-            { to: "/event", icon: CalendarDays, title: "Programme", sub: `${programme.datesLabel}` },
+            { to: "/stations", icon: ClipboardList, title: "Skill modules", sub: "PEAP · arrest · survey · immobilisation · bag" },
+            { to: "/drill", icon: ListOrdered, title: "Team drill", sub: "Cardiac arrest in six steps" },
             { to: "/bag", icon: BriefcaseMedical, title: "Emergency bag", sub: "FIFA packing list" },
-            { to: "/guides", icon: PlayCircle, title: "Films", sub: "SCA · Skill Zone · concussion · airway" },
+            { to: "/guides", icon: PlayCircle, title: "Films", sub: "Links to FIFA's films" },
           ]}
         />
-        <HeroPhoto
-          src={asset("/img/stations/peap-marks.jpg")}
-          alt="FIFA PEAP 2025 official position marks around the player"
-          caption="FIFA PEAP 2025 official marks. May flip all aspects depending on site of injury and hazards."
-          contain
-        />
+
+        <Panel>
+          <div className="px-3.5 py-3.5">
+            <SectionLabel>FIFA'S OFFICIAL DOCUMENTS</SectionLabel>
+            <p className="mt-2 text-xs leading-snug text-muted">
+              These open on FIFA's own website. They are FIFA's documents and the authoritative source.
+            </p>
+            <ul className="mt-2 flex flex-col divide-y divide-line">
+              {fifaDownloads.map((d) => (
+                <li key={d.href}>
+                  <a
+                    href={d.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-navy"
+                  >
+                    <span className="min-w-0 flex-1">{d.label}</span>
+                    <ExternalLink className="size-4 shrink-0 text-gold" aria-hidden />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Panel>
+
         <Panel>
           <div id="about" className="flex scroll-mt-24 flex-col gap-2 px-3.5 py-3.5">
-            <SectionLabel>ABOUT THIS APP</SectionLabel>
+            <SectionLabel>ABOUT THIS GUIDE</SectionLabel>
             <p className="text-sm leading-snug">{about}</p>
             <p className="mt-1 font-display text-xs font-semibold tracking-wide text-navy">DISCLAIMER</p>
             {disclaimer.paragraphs.map((p) => (
@@ -136,44 +137,13 @@ function Home() {
             ))}
           </div>
         </Panel>
-        <div className="flex flex-col items-center gap-2 pt-1">
-          {accessName ? <p className="text-xs text-muted">Signed in as {accessName}</p> : null}
-          <button
-            type="button"
-            onClick={lockApp}
-            className="inline-flex min-h-11 w-full max-w-[15rem] items-center justify-center gap-2 rounded-lg border border-navy px-4 font-display text-sm font-semibold tracking-wide text-navy transition-transform duration-150 ease-out active:scale-95"
-          >
-            <LogOut className="size-4" aria-hidden />
-            Sign out
-          </button>
-        </div>
       </div>
     </AppShell>
   );
 }
 
-function PdfList({ items }: { items: [string, string][] }) {
-  return (
-    <ul className="mt-2 flex flex-col divide-y divide-line">
-      {items.map(([t, h]) => (
-        <li key={h}>
-          <a
-            href={asset(h)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-navy"
-          >
-            <FileText className="size-4 shrink-0 text-gold" />
-            {t}
-          </a>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/event" | "/bag" | "/guides";
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides";
   icon: typeof HeartPulse;
   title: string;
   sub: string;
@@ -190,11 +160,11 @@ function Tiles({ items }: { items: Tile[] }) {
               <span className="grid size-9 shrink-0 place-items-center rounded-full bg-navy text-gold">
                 <t.icon className="size-[18px]" strokeWidth={2} />
               </span>
-              <div>
-                <p className="font-display text-xs font-semibold tracking-[0.12em] text-navy">{t.title.toUpperCase()}</p>
-                <p className="mt-0.5 text-xs leading-snug text-muted">{t.sub}</p>
-              </div>
-              {t.wide ? <ChevronRight className="ml-auto size-5 shrink-0 text-gold" /> : null}
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-sm font-semibold tracking-wide text-navy">{t.title}</span>
+                <span className="mt-0.5 block text-xs leading-snug text-muted">{t.sub}</span>
+              </span>
+              {t.wide ? <ChevronRight className="size-5 shrink-0 text-gold" aria-hidden /> : null}
             </div>
           </Panel>
         </Link>

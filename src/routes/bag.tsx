@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
-import { AppShell, EventSubNav, Note, Panel, SectionLabel } from "@/components/workshop";
+import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { aedTravel, bag, filterBagGroups } from "@/lib/bag";
 
 export const Route = createFileRoute("/bag")({ component: BagPage });
@@ -12,9 +12,8 @@ function BagPage() {
   const searching = q.trim().length > 0;
 
   return (
-    <AppShell tab="event">
+    <AppShell tab="stations">
       <div className="flex flex-col gap-3.5">
-        <EventSubNav active="bag" />
         <figure className="overflow-hidden rounded-xl bg-paper shadow-card">
           <img
             src={bag.photos.afc.src}
@@ -22,8 +21,7 @@ function BagPage() {
             className="block max-h-80 w-full object-cover object-center"
           />
           <figcaption className="px-3.5 py-2.5 text-xs leading-snug text-muted">
-            AFC pitchside bag at the workshop. Contents below follow the FIFA Medical Emergency Bag
-            factsheet.
+            A pitchside emergency bag laid open. Contents below follow FIFA's Emergency Care Bag factsheet.
           </figcaption>
         </figure>
 
