@@ -11,10 +11,10 @@ function Stations() {
     <AppShell tab="stations">
       <div className="flex flex-col gap-3.5">
         <Note>
-          <span className="font-semibold text-navy">Five skill modules. </span>
+          <span className="font-semibold text-navy">Five lessons. </span>
           Study notes for each part of the pitchside response, in the order a team would train them.
         </Note>
-        <SectionLabel>SKILL MODULES</SectionLabel>
+        <SectionLabel>LESSONS</SectionLabel>
         {stations.map((s) => (
           <Link key={s.id} to="/station/$id" params={{ id: s.id }} className="block active:scale-[0.99]">
             <Panel>
@@ -24,7 +24,7 @@ function Stations() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="font-display text-xs font-semibold tracking-[0.14em] text-navy">
-                    MODULE {s.id} · {s.short.toUpperCase()}
+                    LESSON {s.id} · {s.short.toUpperCase()}
                   </p>
                   <p className="text-sm leading-snug">
                     {s.title.toLowerCase() === s.short.toLowerCase() ? s.subtitle : s.title}

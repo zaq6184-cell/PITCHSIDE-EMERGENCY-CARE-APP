@@ -336,10 +336,10 @@ function CspinePage() {
 
         <Section title="RELATED IN THIS APP">
           <Link to="/station/$id" params={{ id: "3" }} className={more}>
-            Skill module 3 — primary survey (A: airway & cervical spine) →
+            Lesson 3 — primary survey (A: airway & cervical spine) →
           </Link>
           <Link to="/station/$id" params={{ id: "4" }} className={more}>
-            Skill module 4 — immobilisation devices →
+            Lesson 4 — immobilisation devices →
           </Link>
           <Link to="/focus" className={more}>
             Concussion assessment (FOCUS) →

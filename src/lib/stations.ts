@@ -292,7 +292,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "The set piece above is for trauma. For a cardiac arrest in progress the player is moved on a long spinal board (a scoop can also be used) with the AED strapped on as one unit — see the cardiac arrest module.",
+            text: "The set piece above is for trauma. For a cardiac arrest in progress the player is moved on a long spinal board (a scoop can also be used) with the AED strapped on as one unit — see the cardiac arrest lesson.",
           },
           {
             kind: "list",
@@ -586,7 +586,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Listen as you approach: gurgling / stridor = upper airway; wheeze = lower airway; coughing is reassuring. Watch the trend. Auscultation has no value inside a noisy stadium. No respiratory effort → cardiac arrest protocol (skill module 2).",
+            text: "Listen as you approach: gurgling / stridor = upper airway; wheeze = lower airway; coughing is reassuring. Watch the trend. Auscultation has no value inside a noisy stadium. No respiratory effort → cardiac arrest protocol (lesson 2).",
           },
         ],
       },

@@ -94,7 +94,7 @@ function Home() {
         <SectionLabel>STUDY</SectionLabel>
         <Tiles
           items={[
-            { to: "/stations", icon: ClipboardList, title: "Skill modules", sub: "PEAP · arrest · survey · immobilisation · bag" },
+            { to: "/stations", icon: ClipboardList, title: "Lessons", sub: "PEAP · arrest · survey · immobilisation · bag" },
             { to: "/drill", icon: ListOrdered, title: "Team drill", sub: "Cardiac arrest in six steps" },
             { to: "/bag", icon: BriefcaseMedical, title: "Emergency bag", sub: "FIFA packing list" },
             { to: "/guides", icon: PlayCircle, title: "Films", sub: "Links to FIFA's films" },
