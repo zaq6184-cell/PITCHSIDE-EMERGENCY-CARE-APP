@@ -32,11 +32,11 @@ function Stage({ selected, onSelect, step }: { selected?: RoleId; onSelect?: (id
   const [ok, setOk] = useState<boolean | null>(null);
   useEffect(() => setOk(canRender3D()), []);
   const flat = <PositionDiagram highlight={selected} />;
-  if (!ok) return ok === false ? flat : <div className="aspect-[4/5] w-full bg-navy sm:aspect-video" />;
+  if (!ok) return ok === false ? flat : <div className="aspect-square w-full bg-navy sm:aspect-video" />;
   return (
     <Safe fallback={flat}>
-      <Suspense fallback={<div className="aspect-[4/5] w-full bg-navy sm:aspect-video" />}>
-        <Scene3D selected={selected} onSelect={onSelect} step={step} className="aspect-[4/5] w-full bg-navy sm:aspect-video" />
+      <Suspense fallback={<div className="aspect-square w-full bg-navy sm:aspect-video" />}>
+        <Scene3D selected={selected} onSelect={onSelect} step={step} className="aspect-square w-full bg-navy sm:aspect-video" />
       </Suspense>
     </Safe>
   );

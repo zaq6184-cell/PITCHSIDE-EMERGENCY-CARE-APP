@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { BookOpen, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users } from "lucide-react";
 import { useEffect } from "react";
+import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
 
@@ -30,40 +31,45 @@ export function AppShell({
 
   return (
     <div className="min-h-dvh bg-bg text-ink">
-      <header className="sticky top-0 z-20 border-b-[3px] border-gold bg-navy px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-on-navy">
-        <p className="font-display text-[13px] font-bold tracking-[0.04em] text-on-navy">
-          {workshop.event}
-        </p>
-        <div className="mt-0.5 flex items-center gap-2">
-          <p className="min-w-0 flex-1 text-[11px] text-gold-soft">
-            {bag
-              ? "FIFA Emergency Care Bag · Green brings this"
-              : guides
-                ? "Links to FIFA's films and downloads"
-                : topic
-                  ? topic
-                  : tab === "about"
-                    ? "About the app"
-                    : tab === "stations"
-                    ? "Skill modules · study notes"
-                    : workshop.title}
-          </p>
+      <header className="sticky top-0 z-20 border-b-[3px] border-gold bg-gradient-to-r from-navy to-navy-2 px-3.5 pb-2.5 pt-[max(0.6rem,env(safe-area-inset-top))] text-on-navy">
+        <div className="mx-auto flex w-full max-w-xl items-center gap-2.5">
+          <Link to="/" aria-label="Home" className="shrink-0 transition-transform duration-150 ease-out active:scale-95">
+            <img src={asset("/brand/logo-mark.svg")} alt="" width={36} height={36} className="size-9 rounded-full" />
+          </Link>
+          <div className="min-w-0">
+            <p className="font-display text-[15px] font-bold leading-tight tracking-[0.06em] text-on-navy">{workshop.event}</p>
+            <p className="truncate text-[11px] leading-snug text-gold-soft">
+              {bag
+                ? "FIFA Emergency Care Bag · Green brings this"
+                : guides
+                  ? "Links to FIFA's films and downloads"
+                  : topic
+                    ? topic
+                    : tab === "about"
+                      ? "About the app"
+                      : tab === "stations"
+                        ? "Skill modules · study notes"
+                        : workshop.title}
+            </p>
+          </div>
         </div>
       </header>
       <main className="mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
         {children}
       </main>
       <nav
-        className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-7 border-t border-line bg-paper pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1.5"
+        className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-paper/95 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-4px_16px_-8px_rgba(11,31,58,0.25)] backdrop-blur"
         aria-label="Primary"
       >
-        <TabLink to="/" label="Roles" icon={Users} active={tab === "home"} />
-        <TabLink to="/stations" label="Skills" icon={ClipboardList} active={tab === "stations"} />
-        <TabLink to="/drill" label="Drill" icon={ListOrdered} active={tab === "drill"} />
-        <TabLink to="/timer" label="Dash" icon={Timer} active={tab === "timer"} />
-        <TabLink to="/rules" label="Rules" icon={BookOpen} active={tab === "rules"} />
-        <TabLink to="/guides" label="Films" icon={PlayCircle} active={tab === "films"} />
-        <TabLink to="/about" label="About" icon={Info} active={tab === "about"} />
+        <div className="mx-auto grid w-full max-w-xl grid-cols-7">
+          <TabLink to="/" label="Roles" icon={Users} active={tab === "home"} />
+          <TabLink to="/stations" label="Skills" icon={ClipboardList} active={tab === "stations"} />
+          <TabLink to="/drill" label="Drill" icon={ListOrdered} active={tab === "drill"} />
+          <TabLink to="/timer" label="Dash" icon={Timer} active={tab === "timer"} />
+          <TabLink to="/rules" label="Rules" icon={BookOpen} active={tab === "rules"} />
+          <TabLink to="/guides" label="Films" icon={PlayCircle} active={tab === "films"} />
+          <TabLink to="/about" label="About" icon={Info} active={tab === "about"} />
+        </div>
       </nav>
     </div>
   );
@@ -89,7 +95,14 @@ function TabLink({
       )}
       aria-current={active ? "page" : undefined}
     >
-      <Icon className="size-5" strokeWidth={active ? 2.4 : 1.8} />
+      <span
+        className={cn(
+          "grid h-7 w-10 place-items-center rounded-full transition-colors duration-200",
+          active ? "bg-navy text-gold" : "text-muted",
+        )}
+      >
+        <Icon className="size-[18px]" strokeWidth={active ? 2.4 : 1.8} />
+      </span>
       {label}
     </Link>
   );
@@ -97,7 +110,7 @@ function TabLink({
 
 export function Panel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("overflow-hidden rounded-xl bg-paper shadow-card", className)}>
+    <div className={cn("animate-rise overflow-hidden rounded-xl bg-paper shadow-card", className)}>
       {children}
     </div>
   );
@@ -107,7 +120,7 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <h3 className="font-display text-xs font-semibold tracking-[0.14em] text-navy">
       {children}
-      <span className="mt-1 block h-0.5 w-9 bg-gold" aria-hidden="true" />
+      <span className="mt-1 block h-[3px] w-8 rounded-full bg-gold" aria-hidden="true" />
     </h3>
   );
 }

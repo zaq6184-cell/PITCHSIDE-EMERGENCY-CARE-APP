@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { PositionDiagram } from "@/components/position-diagram";
+import { roleIcons } from "@/components/role-icon";
 import { RoleExplorer3D } from "@/components/set-piece-3d";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
@@ -46,22 +47,30 @@ function Home() {
         </Note>
         <SectionLabel>TAP A COLOUR</SectionLabel>
         <div className="grid grid-cols-2 gap-2.5">
-          {workshop.roles.map((r) => (
-            <Link
-              key={r.id}
-              to="/role/$id"
-              params={{ id: r.id }}
-              className="flex min-h-[4.75rem] flex-col items-center justify-center rounded-lg px-2 py-4 text-center transition-transform duration-150 ease-out active:scale-95"
-              style={{
-                backgroundColor: r.color,
-                color: r.text,
-                boxShadow: r.id === "white" ? "inset 0 0 0 1px rgba(11,31,58,0.22)" : undefined,
-              }}
-            >
-              <span className="font-display text-xl font-bold tracking-[0.1em]">{r.name}</span>
-              <span className="mt-1 text-[11px] font-medium opacity-90">{r.role}</span>
-            </Link>
-          ))}
+          {workshop.roles.map((r) => {
+            const Icon = roleIcons[r.id];
+            return (
+              <Link
+                key={r.id}
+                to="/role/$id"
+                params={{ id: r.id }}
+                className="relative flex min-h-[5.5rem] flex-col justify-end overflow-hidden rounded-xl px-3 pb-2.5 pt-3 transition-transform duration-150 ease-out active:scale-95"
+                style={{
+                  backgroundColor: r.color,
+                  backgroundImage: "linear-gradient(150deg, rgba(255,255,255,0.16), rgba(0,0,0,0.14))",
+                  color: r.text,
+                  boxShadow:
+                    r.id === "white"
+                      ? "inset 0 0 0 1px rgba(11,31,58,0.22), 0 6px 14px -8px rgba(11,31,58,0.35)"
+                      : `0 8px 16px -8px ${r.color}`,
+                }}
+              >
+                <Icon className="absolute right-2.5 top-2.5 size-9 opacity-30" strokeWidth={1.6} aria-hidden />
+                <span className="font-display text-xl font-bold leading-none tracking-[0.1em]">{r.name}</span>
+                <span className="mt-1 text-[11px] font-medium leading-tight opacity-90">{r.role}</span>
+              </Link>
+            );
+          })}
         </div>
         <Note>If it is not your colour, do not reach in.</Note>
 
@@ -104,19 +113,19 @@ function Home() {
         <SectionLabel>FIFA TOPICS</SectionLabel>
         <Tiles
           items={[
-            { to: "/fifa", icon: HeartPulse, title: "Sudden cardiac arrest", sub: "Signs · emergency steps · FIFA's films and downloads", wide: true },
-            { to: "/focus", icon: Brain, title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain", wide: true },
-            { to: "/cspine", icon: Bone, title: "Cervical spine injury", sub: "Set piece by colour · collar · log roll", wide: true },
-            { to: "/pitchside", icon: Stethoscope, title: "Pitchside emergency care", sub: "Set-piece protocols · role cards · bag", wide: true },
+            { to: "/fifa", icon: HeartPulse, tint: "#FBE9E7", ink: "#C0392B", title: "Sudden cardiac arrest", sub: "Signs · emergency steps · FIFA's films and downloads", wide: true },
+            { to: "/focus", icon: Brain, tint: "#EFE8F7", ink: "#6B3FA0", title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain", wide: true },
+            { to: "/cspine", icon: Bone, tint: "#E4EFF8", ink: "#1F6AA5", title: "Cervical spine injury", sub: "Set piece by colour · collar · log roll", wide: true },
+            { to: "/pitchside", icon: Stethoscope, tint: "#E3F2E8", ink: "#1E8A4C", title: "Pitchside emergency care", sub: "Set-piece protocols · role cards · bag", wide: true },
           ]}
         />
         <SectionLabel>STUDY</SectionLabel>
         <Tiles
           items={[
-            { to: "/stations", icon: ClipboardList, title: "Skill modules", sub: "PEAP · arrest · survey · immobilisation · bag" },
-            { to: "/drill", icon: ListOrdered, title: "Team drill", sub: "Cardiac arrest in six steps" },
-            { to: "/bag", icon: BriefcaseMedical, title: "Emergency bag", sub: "FIFA packing list" },
-            { to: "/guides", icon: PlayCircle, title: "Films", sub: "Links to FIFA's films" },
+            { to: "/stations", icon: ClipboardList, tint: "#F6EFD6", ink: "#8A6D10", title: "Skill modules", sub: "PEAP · arrest · survey · immobilisation · bag" },
+            { to: "/drill", icon: ListOrdered, tint: "#FBE9E7", ink: "#C0392B", title: "Team drill", sub: "Cardiac arrest in six steps" },
+            { to: "/bag", icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1E8A4C", title: "Emergency bag", sub: "FIFA packing list" },
+            { to: "/guides", icon: PlayCircle, tint: "#E4EFF8", ink: "#1F6AA5", title: "Films", sub: "Links to FIFA's films" },
           ]}
         />
 
@@ -260,6 +269,8 @@ function IntroHero() {
 type Tile = {
   to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides";
   icon: typeof HeartPulse;
+  tint: string;
+  ink: string;
   title: string;
   sub: string;
   wide?: boolean;
@@ -272,8 +283,11 @@ function Tiles({ items }: { items: Tile[] }) {
         <Link key={t.to} to={t.to} className={`block active:scale-[0.98]${t.wide ? " col-span-2" : ""}`}>
           <Panel className="h-full">
             <div className={`flex h-full gap-2 px-3 py-3${t.wide ? " flex-row items-center gap-3" : " flex-col"}`}>
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-navy text-gold">
-                <t.icon className="size-[18px]" strokeWidth={2} />
+              <span
+                className="grid size-10 shrink-0 place-items-center rounded-xl"
+                style={{ backgroundColor: t.tint, color: t.ink }}
+              >
+                <t.icon className="size-5" strokeWidth={2} />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block font-display text-sm font-semibold tracking-wide text-navy">{t.title}</span>
