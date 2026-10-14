@@ -17,6 +17,7 @@ import { Route as DrillRouteImport } from './routes/drill'
 import { Route as FifaRouteImport } from './routes/fifa'
 import { Route as FocusRouteImport } from './routes/focus'
 import { Route as GuidesRouteImport } from './routes/guides'
+import { Route as InstallRouteImport } from './routes/install'
 import { Route as PitchsideRouteImport } from './routes/pitchside'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as RulesRouteImport } from './routes/rules'
@@ -65,6 +66,11 @@ const GuidesRoute = GuidesRouteImport.update({
   path: '/guides',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InstallRoute = InstallRouteImport.update({
+  id: '/install',
+  path: '/install',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PitchsideRoute = PitchsideRouteImport.update({
   id: '/pitchside',
   path: '/pitchside',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
+  '/install': typeof InstallRoute
   '/pitchside': typeof PitchsideRoute
   '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
+  '/install': typeof InstallRoute
   '/pitchside': typeof PitchsideRoute
   '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
+  '/install': typeof InstallRoute
   '/pitchside': typeof PitchsideRoute
   '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/fifa'
     | '/focus'
     | '/guides'
+    | '/install'
     | '/pitchside'
     | '/quiz'
     | '/rules'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/fifa'
     | '/focus'
     | '/guides'
+    | '/install'
     | '/pitchside'
     | '/quiz'
     | '/rules'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/fifa'
     | '/focus'
     | '/guides'
+    | '/install'
     | '/pitchside'
     | '/quiz'
     | '/rules'
@@ -216,6 +228,7 @@ export interface RootRouteChildren {
   FifaRoute: typeof FifaRoute
   FocusRoute: typeof FocusRoute
   GuidesRoute: typeof GuidesRoute
+  InstallRoute: typeof InstallRoute
   PitchsideRoute: typeof PitchsideRoute
   QuizRoute: typeof QuizRoute
   RulesRoute: typeof RulesRoute
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/install': {
+      id: '/install'
+      path: '/install'
+      fullPath: '/install'
+      preLoaderRoute: typeof InstallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pitchside': {
       id: '/pitchside'
       path: '/pitchside'
@@ -344,6 +364,7 @@ const rootRouteChildren: RootRouteChildren = {
   FifaRoute: FifaRoute,
   FocusRoute: FocusRoute,
   GuidesRoute: GuidesRoute,
+  InstallRoute: InstallRoute,
   PitchsideRoute: PitchsideRoute,
   QuizRoute: QuizRoute,
   RulesRoute: RulesRoute,

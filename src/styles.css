@@ -170,6 +170,12 @@
   }
 }
 
+@media print {
+  .reveal {
+    animation: none;
+  }
+}
+
 /* page background: two slow floodlight glows and faint mowing stripes, behind the cards */
 .ambient {
   z-index: 0;

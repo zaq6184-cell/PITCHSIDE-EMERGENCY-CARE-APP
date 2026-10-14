@@ -3,6 +3,8 @@ import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 import { asset } from "@/lib/asset";
+import { useEffect } from "react";
+import { installBootScript, registerServiceWorker } from "@/lib/install";
 import { themeBootScript } from "@/lib/theme";
 
 const APP_NAME = "Pitchside Emergency Care";
@@ -24,12 +26,16 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#0B1F3A" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-title", content: "Pitchside" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "application-name", content: "Pitchside" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: asset("/favicon.svg") },
+      { rel: "icon", type: "image/png", sizes: "64x64", href: asset("/icons/favicon-64.png") },
       { rel: "stylesheet", href: appCss },
-      { rel: "manifest", href: asset("/__grok/manifest.webmanifest") },
-      { rel: "apple-touch-icon", href: asset("/__grok/icon-180.png") },
+      { rel: "manifest", href: asset("/manifest.webmanifest") },
+      { rel: "apple-touch-icon", sizes: "180x180", href: asset("/icons/apple-touch-icon.png") },
     ],
   }),
   component: () => (
@@ -37,9 +43,11 @@ export const Route = createRootRoute({
       <head>
         <HeadContent />
         <ScriptOnce>{themeBootScript}</ScriptOnce>
+        <ScriptOnce>{installBootScript}</ScriptOnce>
       </head>
       <body className="bg-bg text-ink">
         <PreviewHostBridge />
+        <PwaRegister />
         <AuthProvider>
           <Outlet />
         </AuthProvider>
@@ -48,3 +56,9 @@ export const Route = createRootRoute({
     </html>
   ),
 });
+
+/** Offline use and installing: the service worker is registered in the published site only. */
+function PwaRegister() {
+  useEffect(() => registerServiceWorker(), []);
+  return null;
+}

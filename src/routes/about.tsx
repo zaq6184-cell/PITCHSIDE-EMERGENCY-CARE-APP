@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronRight, Download } from "lucide-react";
 import { SoundSettings } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { AppShell, JumpChips, Panel, SectionLabel } from "@/components/workshop";
@@ -62,6 +62,20 @@ function About() {
             <SoundSettings />
           </div>
         </Panel>
+        <Link to="/install" className="block active:scale-[0.99]">
+          <Panel>
+            <div className="flex items-center gap-3 px-3.5 py-3">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gold text-on-gold">
+                <Download className="size-5" aria-hidden />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-sm font-semibold tracking-wide text-heading">Install the app</span>
+                <span className="block text-xs leading-snug text-muted">Phone, tablet or computer — and save it for offline use</span>
+              </span>
+              <ChevronRight className="size-5 shrink-0 text-gold" aria-hidden />
+            </div>
+          </Panel>
+        </Link>
         <JumpChips items={sections.map((s) => ({ id: s.id, label: s.chip }))} />
         {sections.map((s) => (
           <section key={s.id} id={s.id} className="scroll-mt-24">
