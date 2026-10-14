@@ -73,7 +73,7 @@ function RoleCard() {
             <h1 className="font-display text-[1.7rem] font-bold leading-none tracking-[0.08em]">{r.name}</h1>
             <p className="mt-1 text-sm font-medium">{r.role}</p>
           </div>
-          <PositionDiagram highlight={r.id} />
+          <PositionDiagram highlight={r.id} linkRoles />
           <div className="flex flex-col gap-3.5 px-3.5 py-3.5">
             <section>
               <SectionLabel>WHERE YOU STAND</SectionLabel>

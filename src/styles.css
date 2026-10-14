@@ -100,6 +100,38 @@
   outline-color: rgba(255, 255, 255, 0.08);
 }
 
+/* tappable colour discs in the position diagram: brighten on hover, gold ring on keyboard focus, press in */
+.disc-link {
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.disc-link > g {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 150ms ease-out,
+    transform 120ms ease-out;
+}
+
+.disc-link:hover > g[opacity="0.3"],
+.disc-link:focus-visible > g[opacity="0.3"] {
+  opacity: 0.8;
+}
+
+.disc-link:active > g {
+  transform: scale(0.92);
+}
+
+.disc-link .disc-focus {
+  stroke: transparent;
+}
+
+.disc-link:focus-visible .disc-focus {
+  stroke: var(--color-gold);
+}
+
 /* install page: this device's guide comes first and is marked, from the data-platform set before the
    first paint (installBootScript), so the list never jumps once the app starts */
 .install-guide-badge,
