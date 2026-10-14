@@ -20,6 +20,17 @@ function Drill() {
         <Panel>
           <DrillPlayer3D step={step} onStep={setStep} />
         </Panel>
+        <Link to="/timer" hash="cpr-trainer" className="block active:scale-[0.99]">
+          <div className="reveal flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#a32a20] to-[#d8443a] px-3.5 py-3 text-white shadow-card">
+            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/15">
+              <PlayCircle className="size-5" aria-hidden />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-display text-sm font-bold tracking-wide">Practise the compression rhythm</span>
+              <span className="block text-xs text-white/85">Tap-along trainer: 100–120 a minute, 30:2 or continuous</span>
+            </span>
+          </div>
+        </Link>
         <Panel>
           <div className="px-3.5 py-2">
             {workshop.steps.map((st, i) => (

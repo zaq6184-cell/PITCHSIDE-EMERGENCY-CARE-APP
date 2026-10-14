@@ -5,6 +5,7 @@ import { InstallHeaderButton, OfflineBanner } from "@/components/install-app";
 import { SoundButton } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { asset } from "@/lib/asset";
+import { setTransitionDirection } from "@/lib/gestures";
 import { say, tap } from "@/lib/sound";
 import { syncThemeColor } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -19,8 +20,8 @@ export function AppShell({
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
+  // the router puts new pages at the top and Back where you were; this only keeps the bar colour right
   useEffect(() => {
-    window.scrollTo(0, 0);
     syncThemeColor();
   }, [pathname]);
 
@@ -45,7 +46,7 @@ export function AppShell({
         <span className="ambient-b" />
         <span className="ambient-lines" />
       </div>
-      <header className="sticky top-0 z-20 border-b-[3px] border-gold bg-gradient-to-r from-navy to-navy-2 px-3.5 dark:from-[#0e1d35] dark:to-[#16305a] pb-2.5 pt-[max(0.6rem,env(safe-area-inset-top))] text-on-navy">
+      <header style={{ viewTransitionName: "app-header" }} className="sticky top-0 z-20 border-b-[3px] border-gold bg-gradient-to-r from-navy to-navy-2 px-3.5 dark:from-[#0e1d35] dark:to-[#16305a] pb-2.5 pt-[max(0.6rem,env(safe-area-inset-top))] text-on-navy">
         <div className="mx-auto flex w-full max-w-xl items-center gap-2.5">
           <Link to="/" aria-label="Home" className="shrink-0 transition-transform duration-150 ease-out active:scale-95">
             <img src={asset("/brand/logo-mark.svg")} alt="" width={36} height={36} className="size-9 rounded-full" />
@@ -74,42 +75,54 @@ export function AppShell({
         </div>
       </header>
       <OfflineBanner />
-      <main className="relative z-[1] mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
+      <main style={{ viewTransitionName: "main-content" }} className="relative z-[1] mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
         {children}
       </main>
       <nav
+        style={{ viewTransitionName: "app-nav" }}
         className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-paper/95 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-4px_16px_-8px_rgba(11,31,58,0.25)] backdrop-blur"
         aria-label="Primary"
       >
         <div className="mx-auto grid w-full max-w-xl grid-cols-7">
-          <TabLink to="/" label="Roles" icon={Users} active={tab === "home"} />
-          <TabLink to="/stations" label="Skills" icon={ClipboardList} active={tab === "stations"} />
-          <TabLink to="/drill" label="Drill" icon={ListOrdered} active={tab === "drill"} />
-          <TabLink to="/timer" label="Dash" icon={Timer} active={tab === "timer"} />
-          <TabLink to="/rules" label="Rules" icon={BookOpen} active={tab === "rules"} />
-          <TabLink to="/guides" label="Films" icon={PlayCircle} active={tab === "films"} />
-          <TabLink to="/about" label="About" icon={Info} active={tab === "about"} />
+          {TABS.map((t, i) => (
+            <TabLink key={t.to} {...t} active={tab === t.tab} dir={i > TABS.findIndex((k) => k.tab === tab) ? "forward" : "back"} />
+          ))}
         </div>
       </nav>
     </div>
   );
 }
 
+const TABS = [
+  { to: "/", tab: "home", label: "Roles", icon: Users },
+  { to: "/stations", tab: "stations", label: "Skills", icon: ClipboardList },
+  { to: "/drill", tab: "drill", label: "Drill", icon: ListOrdered },
+  { to: "/timer", tab: "timer", label: "Dash", icon: Timer },
+  { to: "/rules", tab: "rules", label: "Rules", icon: BookOpen },
+  { to: "/guides", tab: "films", label: "Films", icon: PlayCircle },
+  { to: "/about", tab: "about", label: "About", icon: Info },
+] as const;
+
 function TabLink({
   to,
   label,
   icon: Icon,
   active,
+  dir,
 }: {
-  to: "/" | "/stations" | "/drill" | "/timer" | "/rules" | "/guides" | "/about";
+  to: (typeof TABS)[number]["to"];
   label: string;
   icon: typeof Users;
   active: boolean;
+  dir: "forward" | "back";
 }) {
   return (
     <Link
       to={to}
-      onClick={tap}
+      onClick={() => {
+        tap();
+        if (!active) setTransitionDirection(dir);
+      }}
       className={cn(
         "flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 text-[10.5px] font-semibold tracking-wide",
         active ? "text-heading" : "text-muted",
@@ -117,6 +130,7 @@ function TabLink({
       aria-current={active ? "page" : undefined}
     >
       <span
+        style={active ? { viewTransitionName: "nav-pill" } : undefined}
         className={cn(
           "grid h-7 w-10 place-items-center rounded-full transition-colors duration-200",
           active ? "bg-navy text-gold" : "text-muted",

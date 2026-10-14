@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { CprTrainer } from "@/components/cpr-trainer";
 import { DashTimer } from "@/components/dash-timer";
 import { AppShell, Panel, SayLine, SectionLabel } from "@/components/workshop";
 import { workshop } from "@/lib/workshop";
@@ -15,6 +16,17 @@ function TimerPage() {
           </div>
           <DashTimer />
         </Panel>
+        <section id="cpr-trainer" className="scroll-mt-24">
+          <Panel>
+            <div className="px-3.5 pb-2 pt-4">
+              <SectionLabel>CPR RHYTHM TRAINER</SectionLabel>
+              <p className="mt-2 text-sm leading-snug text-muted">
+                Tap the red button as if compressing. The rate shows live — keep it between 100 and 120 a minute.
+              </p>
+            </div>
+            <CprTrainer />
+          </Panel>
+        </section>
         <Panel>
           <div className="flex flex-col gap-2 px-3.5 py-3.5">
             <SectionLabel>DASH RULES</SectionLabel>

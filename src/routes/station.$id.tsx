@@ -1,10 +1,12 @@
-import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Box, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState } from "react";
 import { FifaClipCard } from "@/components/fifa-video";
 import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
+import { setTransitionDirection, useSwipe } from "@/lib/gestures";
 import { moduleCover } from "@/lib/module-covers";
+import { haptic } from "@/lib/sound";
 import { type Block, getStation, stations } from "@/lib/stations";
 
 export const Route = createFileRoute("/station/$id")({ component: StationPage });
@@ -20,16 +22,24 @@ const shortTitle = (t: string) => {
 
 function StationPage() {
   const { id } = Route.useParams();
+  const navigate = useNavigate();
   const s = getStation(id);
-  if (!s) return <Navigate to="/stations" />;
-  const i = stations.indexOf(s);
+  const i = s ? stations.indexOf(s) : -1;
   const prev = stations[i - 1];
   const next = stations[i + 1];
+  const swipe = useSwipe<HTMLDivElement>((d) => {
+    const to = d === "left" ? next : prev;
+    if (!to) return;
+    haptic(10);
+    setTransitionDirection(d === "left" ? "forward" : "back");
+    void navigate({ to: "/station/$id", params: { id: to.id } });
+  });
+  if (!s) return <Navigate to="/stations" />;
   const cover = moduleCover(s.id);
 
   return (
     <AppShell tab="stations">
-      <div className="flex flex-col gap-3">
+      <div ref={swipe} className="flex flex-col gap-3">
         <Link
           to="/stations"
           className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold"
@@ -46,7 +56,7 @@ function StationPage() {
                   alt={cover.alt}
                   width={1280}
                   height={720}
-                  className="kenburns block aspect-video w-full object-cover outline-none"
+                  className="kenburns img-in block aspect-video w-full object-cover outline-none"
                 />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-navy to-transparent" />
                 <p className="absolute right-2 top-2 z-[1] rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">
@@ -86,6 +96,7 @@ function StationPage() {
             <Link
               to="/station/$id"
               params={{ id: prev.id }}
+              onClick={() => setTransitionDirection("back")}
               className="flex min-h-11 items-center gap-1 rounded-lg bg-paper px-3 py-2 text-sm shadow-card"
             >
               <ChevronLeft className="size-4 shrink-0 text-gold" />
@@ -100,6 +111,7 @@ function StationPage() {
             <Link
               to="/station/$id"
               params={{ id: next.id }}
+              onClick={() => setTransitionDirection("forward")}
               className="flex min-h-11 items-center justify-end gap-1 rounded-lg bg-paper px-3 py-2 text-right text-sm shadow-card"
             >
               <span className="truncate">
