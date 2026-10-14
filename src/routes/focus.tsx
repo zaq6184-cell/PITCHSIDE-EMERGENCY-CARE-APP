@@ -165,8 +165,8 @@ const resources = [
 const downloads: [string, string, string][] = [
   ["FOCUS lanyard — print version, April 2026", asset("/docs/FIFA-FOCUS-Concussion-Lanyard-April-2026.pdf"), "PDF"],
   ["FOCUS — frequently asked questions", "https://digitalhub.fifa.com/asset/c316e283-fe17-405e-b625-1fdbe1061df8/FIFA-Focus-FAQ-s.pdf", "PDF"],
-  ["FIFA Medical Concussion Protocol — elite", "https://digitalhub.fifa.com/asset/b6bc9c16-b211-47f4-b5e0-3e929df9115c/Medical-concussion-protocol-Elite_EN_Final.pdf", "PDF"],
-  ["FIFA Medical Concussion Protocol — non-elite", "https://digitalhub.fifa.com/m/a78bb271b8035ab/original/Medical-Concussion-Protocol-non-elite_EN_Final.pdf", "PDF"],
+  ["FIFA Concussion Protocol for Medical Staff (elite)", "https://digitalhub.fifa.com/asset/b6bc9c16-b211-47f4-b5e0-3e929df9115c/Medical-concussion-protocol-Elite_EN_Final.pdf", "PDF"],
+  ["FIFA Concussion Protocol for Grassroots Football (non-elite)", "https://digitalhub.fifa.com/m/a78bb271b8035ab/original/Medical-Concussion-Protocol-non-elite_EN_Final.pdf", "PDF"],
   ["FOCUS — international consensus recommendations (JAMA Neurology)", "https://jamanetwork.com/journals/jamaneurology/fullarticle/2851047", "Paper"],
   ["Concussion: Suspect and Protect (FIFA campaign)", "https://inside.fifa.com/campaigns/concussion", "Web"],
 ];
@@ -366,7 +366,7 @@ function FocusPage() {
           <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm leading-snug marker:text-muted">
             <li>Symptom-limited daily activity, such as a short walk.</li>
             <li>Light aerobic exercise, up to about 70% of maximum heart rate.</li>
-            <li>Football-specific exercises alone, with no contact and no heavy resistance.</li>
+            <li>Football-specific exercises one-to-one (player and coach), with no contact and no heavy resistance.</li>
             <li>Non-contact training drills in a small group; only easy heading with a soft ball.</li>
             <li>Drills with controlled contact, and heading with a normal ball in a controlled setting.</li>
             <li>Full-contact team training, after medical clearance.</li>

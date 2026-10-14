@@ -19,9 +19,9 @@ const setPiece: { title: string; note?: string; tasks: Task[] }[] = [
       ["black", "Team leader. Focus on good communication. Ensure the ambulance is called."],
       ["orange", "Immobilise the cervical spine (MILS)."],
       ["red", "A (c-spine) B C assessment."],
-      ["green", "Bring the FIFA bag. Assist as directed by the Match Doctor."],
+      ["green", "Bring the FIFA bag. Assist as directed by the team leader."],
       ["blue", "Bring oxygen."],
-      ["white", "Bring the scoop and splints. Assist as directed by the Match Doctor."],
+      ["white", "Bring the scoop and splints. Assist as directed by the team leader."],
     ],
   },
   {
