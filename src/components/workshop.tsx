@@ -161,10 +161,10 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="font-display text-xs font-semibold tracking-[0.14em] text-heading">
+    <h2 className="font-display text-xs font-semibold tracking-[0.14em] text-heading">
       {children}
       <span className="mt-1 block h-[3px] w-8 rounded-full bg-gold" aria-hidden="true" />
-    </h3>
+    </h2>
   );
 }
 

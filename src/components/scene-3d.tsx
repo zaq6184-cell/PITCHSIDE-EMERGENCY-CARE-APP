@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { asset } from "@/lib/asset";
 import { getSoundPrefs, startAmbience, stopAmbience, subscribeSound } from "@/lib/sound";
-import type { RoleId } from "@/lib/workshop";
+import { type RoleId, workshop } from "@/lib/workshop";
 
 /**
  * Real-time 3D set piece, built from original shapes: a floodlit stadium, a footballer lying on the
@@ -283,13 +283,8 @@ function Figure({ spot, selected, dim, step, onSelect }: { spot: Spot; selected:
     m.current[k] = el;
   };
 
-  const acting =
-    (step === 1 && (spot.id === "red" || spot.id === "black")) ||
-    (step === 2 && spot.id === "red") ||
-    (step === 3 && (spot.id === "green" || spot.id === "red")) ||
-    (step === 4 && (spot.id === "orange" || spot.id === "blue")) ||
-    (step === 5 && (spot.id === "white" || spot.id === "orange" || spot.id === "blue" || spot.id === "black")) ||
-    (step === 6 && (spot.id === "black" || spot.id === "green"));
+  // the colours tagged on this drill step (the same chips as the step list under the scene)
+  const acting = step > 0 && (workshop.steps[step - 1]?.who ?? []).includes(spot.id);
 
   const shoulder = useMemo(() => [new THREE.Vector3(), new THREE.Vector3()], []);
   const elbow = useMemo(() => [new THREE.Vector3(), new THREE.Vector3()], []);
@@ -688,6 +683,7 @@ function grassTexture() {
 function Stadium() {
   const stripes = useMemo(() => Array.from({ length: 14 }, (_, i) => i), []);
   const grass = useMemo(() => (typeof document === "undefined" ? null : grassTexture()), []);
+  useEffect(() => () => grass?.dispose(), [grass]);
   return (
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
@@ -728,6 +724,7 @@ function Backdrop() {
     t.anisotropy = 4;
     return t;
   }, []);
+  useEffect(() => () => tex?.dispose(), [tex]);
   const R = 30;
   const H = (Math.PI * R * 878) / 2048; // one copy of the photo spans half the circle
   const horizon = 0.86; // how far down the photo the pitch meets the stands

@@ -236,7 +236,7 @@ export const workshop = {
         "Then put the player down and give at least 2 minutes of compressions before the next carry.",
         "Repeat until the player is inside the ambulance. Continue CPR en route.",
         "Destination: a hospital with 24/7 coronary angiography, agreed before the match.",
-        "ALS if trained: adrenaline 1 mg IV after the 3rd shock, then every 3–5 min; amiodarone 300 mg after the 3rd shock.",
+        "ALS if trained: adrenaline 1 mg IV after the 3rd shock (as soon as possible if non-shockable), then every 3–5 min; amiodarone 300 mg after the 3rd shock, 150 mg after the 5th.",
       ],
     },
   ] as Step[],

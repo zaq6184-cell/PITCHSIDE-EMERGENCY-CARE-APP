@@ -18,6 +18,8 @@ const PAGES = `pec-pages-${VERSION}`;
 const ASSETS = `pec-assets-${VERSION}`;
 const MEDIA_CACHE = "pec-media";
 const SHELL_KEY = new URL("__shell__", BASE).href;
+const META = "pec-meta";
+const PREVIOUS_KEY = new URL("__previous-assets__", BASE).href;
 
 const abs = (p) => new URL(p, BASE).href;
 
@@ -63,9 +65,15 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
+      // keep one version back: a page opened before this update may still ask for its old code files
+      const meta = await caches.open(META);
+      const prevRes = await meta.match(PREVIOUS_KEY);
+      const previous = prevRes ? await prevRes.text() : "";
+      const keep = new Set([PAGES, ASSETS, MEDIA_CACHE, META, previous === ASSETS ? "" : previous]);
       for (const key of await caches.keys()) {
-        if (key.startsWith("pec-") && key !== PAGES && key !== ASSETS && key !== MEDIA_CACHE) await caches.delete(key);
+        if (key.startsWith("pec-") && !keep.has(key)) await caches.delete(key);
       }
+      await meta.put(PREVIOUS_KEY, new Response(ASSETS));
       await self.clients.claim();
       ensureShell();
     })(),
@@ -110,7 +118,7 @@ async function page(request) {
 
 async function cacheFirst(request, name) {
   const cache = await caches.open(name);
-  const hit = await cache.match(request, { ignoreSearch: true });
+  const hit = (await cache.match(request, { ignoreSearch: true })) || (await caches.match(request, { ignoreSearch: true }));
   if (hit) return hit;
   const res = await fetch(request);
   if (res.ok && res.status === 200) cache.put(request, res.clone());

@@ -285,7 +285,7 @@ function CspinePage() {
           <a href={asset("/img/fifa/onfield/extrication-setup.jpg")} target="_blank" rel="noopener noreferrer">
             <img
               src={asset("/img/fifa/onfield/extrication-setup.jpg")}
-              alt="FIFA extrication set-up: bag and oxygen at the head, scoop between the feet and the basket, basket 2-3 lengths from the feet"
+              alt="FIFA extrication set-up: bag and oxygen at the head, scoop between the feet and the basket, basket 2–3 lengths from the feet"
               loading="lazy"
               className="block max-h-80 w-full rounded-lg border border-line bg-white object-contain"
             />
