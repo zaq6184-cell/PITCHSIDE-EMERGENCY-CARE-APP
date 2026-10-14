@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ExternalLink, Play } from "lucide-react";
 import { Note, Panel, SectionLabel } from "@/components/workshop";
 import { cn } from "@/lib/utils";
-import { fifaClips, fifaDocs, fifaSkillList, skillClips, type FifaClip } from "@/lib/videos";
+import { FIFA_EMBEDS_ENABLED, fifaClips, fifaDocs, fifaSkillList, skillClips, type FifaClip } from "@/lib/videos";
 
 type SkillClip = (typeof skillClips)[number];
 
@@ -115,7 +115,8 @@ export function VideoList({ clips }: { clips: FifaClip[] }) {
               watchUrl={c.watchUrl ?? `https://www.youtube.com/watch?v=${c.youtubeId}`}
               watchLabel={c.watchUrl ? "Watch on FIFA's website" : "Watch on YouTube"}
               summary={c.why}
-              playHere={!isFifaFilm(c)}
+              embed={fifaPlayer(c)}
+              playHere={!isFifaFilm(c) || Boolean(fifaPlayer(c))}
             />
           </li>
         ))}
@@ -130,6 +131,7 @@ export function VideoList({ clips }: { clips: FifaClip[] }) {
  */
 function VideoRow({
   id,
+  embed,
   title,
   source,
   duration,
@@ -140,6 +142,7 @@ function VideoRow({
   children,
 }: {
   id: string;
+  embed?: string;
   title: string;
   source: string;
   duration?: string;
@@ -193,7 +196,7 @@ function VideoRow({
       {playHere && open ? (
         <div className="relative -mx-3 mt-3 aspect-video bg-navy">
           <iframe
-            src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`}
+            src={embed ?? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`}
             title={`${title} — ${source}`}
             className="absolute inset-0 h-full w-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -218,6 +221,8 @@ function VideoRow({
 }
 
 /** FIFA's own films stay as links, whether FIFA shows them on its site or on YouTube. */
+/** FIFA's player address for a film — only once embedding FIFA's films has been switched on. */
+const fifaPlayer = (c: { embed?: string }) => (FIFA_EMBEDS_ENABLED ? c.embed : undefined);
 const isFifaFilm = (c: { watchUrl?: string; source: string }) => Boolean(c.watchUrl) || /\bFIFA\b/.test(c.source);
 
 const watchTarget = (clip: FifaClip) => clip.watchUrl ?? `https://www.youtube.com/watch?v=${clip.youtubeId}`;
@@ -225,6 +230,23 @@ const watchText = (clip: FifaClip) => (clip.watchUrl ? "Watch on FIFA's website"
 
 /** Single-film card (used inside the skill modules): a link to the film on its owner's site. */
 export function FifaClipCard({ clip }: { clip: FifaClip }) {
+  if (fifaPlayer(clip)) {
+    return (
+      <Panel>
+        <VideoRow
+          id={clip.youtubeId}
+          embed={fifaPlayer(clip)}
+          title={clip.title}
+          source={clip.source}
+          duration={clip.duration}
+          watchUrl={watchTarget(clip)}
+          watchLabel={watchText(clip)}
+          summary={clip.why}
+          playHere
+        />
+      </Panel>
+    );
+  }
   return (
     <Panel>
       <a
