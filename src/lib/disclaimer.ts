@@ -18,7 +18,7 @@ export const aboutApp = {
     "It is meant for doctors, paramedics, physiotherapists, first aiders and anyone else who may be part of a pitchside medical team, to learn the roles and rehearse them before they are needed.",
   ],
   developers: [
-    "Developed by the Emergency and Orthopaedics team of Hospital Kuala Lumpur, in collaboration with AFC Malaysia.",
+    "Developed by the Emergency and Orthopaedics team of Hospital Kuala Lumpur, in collaboration with the Asian Football Confederation (AFC).",
   ],
   copyright: [
     "FIFA's protocols, documents, images and films are the property of FIFA and remain under FIFA's copyright. FIFA's films and documents are linked to on FIFA's own website; they are not copied into this app.",
