@@ -259,7 +259,7 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
                 <Icon className="size-5 shrink-0 opacity-80" aria-hidden />
                 <span className="min-w-0">
                   <span className="block font-display text-sm font-bold tracking-[0.08em]">{r.name}</span>
-                  <span className="block truncate text-[10.5px] leading-tight opacity-90">{r.role}</span>
+                  <span className="block truncate text-[10.5px] font-medium leading-tight">{r.role}</span>
                 </span>
                 {isAnswer ? <Check className="absolute right-2 top-2 size-5" strokeWidth={3} aria-hidden /> : null}
                 {isWrongPick ? <X className="absolute right-2 top-2 size-5" strokeWidth={3} aria-hidden /> : null}
@@ -269,7 +269,7 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
         </div>
         {answered && role ? (
           <div className="caption-in flex flex-col gap-2" aria-live="polite">
-            <p className={cn("rounded-lg px-3 py-2 text-sm leading-snug", right ? "bg-[#1E8A4C]/12 text-ink" : "bg-danger/10 text-ink")}>
+            <p className={cn("rounded-lg px-3 py-2 text-sm leading-snug", right ? "bg-[#1A7F45]/12 text-ink" : "bg-danger/10 text-ink")}>
               <span className="font-semibold">{right ? "Correct. " : "Not quite. "}</span>
               {right ? "" : "It's "}
               <span className="font-semibold">{role.name}</span> — {role.role}.{" "}
@@ -393,7 +393,7 @@ function PlaceTheTeam() {
                     strokeDasharray={chip ? undefined : "5 4"}
                   />
                   {chip ? <RoleDisc id={chip} x={m.x} y={m.y} /> : null}
-                  {ok ? <circle cx={m.x + 19} cy={m.y - 19} r="9" fill="#1E8A4C" /> : null}
+                  {ok ? <circle cx={m.x + 19} cy={m.y - 19} r="9" fill="#1A7F45" /> : null}
                   {ok ? <path d={`M${m.x + 14.5} ${m.y - 19} l3 3 l5.5 -6`} stroke="#fff" strokeWidth="2.4" fill="none" /> : null}
                   {bad ? <circle cx={m.x + 19} cy={m.y - 19} r="9" fill="#C0392B" /> : null}
                   {bad ? <path d={`M${m.x + 15.5} ${m.y - 22.5} l7 7 m0 -7 l-7 7`} stroke="#fff" strokeWidth="2.4" /> : null}

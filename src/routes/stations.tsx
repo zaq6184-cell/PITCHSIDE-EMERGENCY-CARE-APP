@@ -15,7 +15,7 @@ const moduleLook: Record<string, { icon: typeof Users; tint: string; ink: string
   "2": { icon: HeartPulse, tint: "#FBE9E7", ink: "#C0392B" },
   "3": { icon: Stethoscope, tint: "#E4EFF8", ink: "#1F6AA5" },
   "4": { icon: Bandage, tint: "#EFE8F7", ink: "#6B3FA0" },
-  "5": { icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1E8A4C" },
+  "5": { icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1A7F45" },
 };
 
 function ModuleBadge({ id }: { id: string }) {

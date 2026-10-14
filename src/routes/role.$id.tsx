@@ -71,7 +71,7 @@ function RoleCard() {
           >
             <RoleIcon className="absolute -right-1 -top-2 size-20 opacity-25" strokeWidth={1.4} aria-hidden />
             <h1 className="font-display text-[1.7rem] font-bold leading-none tracking-[0.08em]">{r.name}</h1>
-            <p className="mt-1 text-sm opacity-90">{r.role}</p>
+            <p className="mt-1 text-sm font-medium">{r.role}</p>
           </div>
           <PositionDiagram highlight={r.id} />
           <div className="flex flex-col gap-3.5 px-3.5 py-3.5">

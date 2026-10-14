@@ -215,8 +215,8 @@ export function InstallNow() {
   if (!s.ready) return null;
   if (s.installed)
     return (
-      <p className="flex items-center gap-2 rounded-xl bg-[#1E8A4C]/12 px-3.5 py-3 text-sm font-medium text-ink">
-        <Check className="size-5 text-[#1E8A4C]" strokeWidth={3} aria-hidden />
+      <p className="flex items-center gap-2 rounded-xl bg-[#1A7F45]/12 px-3.5 py-3 text-sm font-medium text-ink">
+        <Check className="size-5 text-[#1A7F45]" strokeWidth={3} aria-hidden />
         Installed — you are using the app.
       </p>
     );

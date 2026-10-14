@@ -69,7 +69,7 @@ export function CprTrainer() {
   };
 
   const tone =
-    status === "good" ? "text-[#1E8A4C] dark:text-[#4cc47f]" : status === "idle" ? "text-heading" : "text-danger";
+    status === "good" ? "text-[#1A7F45] dark:text-[#4cc47f]" : status === "idle" ? "text-heading" : "text-danger";
 
   return (
     <div className="flex flex-col items-center gap-3 px-3.5 pb-4 pt-1 text-center">
