@@ -70,7 +70,7 @@ export const workshop = {
         "Decide when and how the player is moved, and call each lift.",
       ],
       say: [
-        "Cardiac arrest. Ambulance is being called now.",
+        "Cardiac arrest. Please alert the ambulance.",
         "Green, AED on as soon as it is here.",
         "Ready to lift. On three. One, two, three, LIFT.",
       ],
