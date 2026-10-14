@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ExternalLink, Play } from "lucide-react";
+import { ExternalLink, Play, X } from "lucide-react";
 import { Note, Panel, SectionLabel } from "@/components/workshop";
 import { cn } from "@/lib/utils";
 import { FIFA_EMBEDS_ENABLED, fifaClips, fifaDocs, fifaSkillList, skillClips, type FifaClip } from "@/lib/videos";
@@ -125,6 +125,31 @@ export function VideoList({ clips }: { clips: FifaClip[] }) {
   );
 }
 
+/** Big gold play button: the one thing on a film row that should catch the eye. */
+function PlayDisc() {
+  return (
+    <span className="grid size-12 shrink-0 place-items-center rounded-full bg-gold text-on-gold shadow-[0_6px_14px_-6px_rgba(0,0,0,0.55)] ring-4 ring-gold/25">
+      <Play className="size-6 translate-x-0.5" fill="currentColor" strokeWidth={0} aria-hidden />
+    </span>
+  );
+}
+
+/** Says what a tap does: plays the film here, closes it, or opens the owner's site. */
+function ActionPill({ kind }: { kind: "play" | "close" | "open" }) {
+  const Icon = kind === "play" ? Play : kind === "close" ? X : ExternalLink;
+  return (
+    <span
+      className={cn(
+        "inline-flex min-h-9 shrink-0 items-center gap-1 rounded-full px-3 font-display text-xs font-semibold tracking-wide",
+        kind === "open" ? "border border-line text-muted" : "border-2 border-gold text-heading",
+      )}
+    >
+      <Icon className="size-3.5" fill={kind === "play" ? "currentColor" : "none"} strokeWidth={kind === "play" ? 0 : 2.2} aria-hidden />
+      {kind === "play" ? "Play" : kind === "close" ? "Close" : "Open"}
+    </span>
+  );
+}
+
 /**
  * Film row. FIFA's films are never embedded: the row links to the FIFA page that shows them.
  * Films from other publishers play here in YouTube's own player, loaded only when tapped.
@@ -156,9 +181,7 @@ function VideoRow({
   const [open, setOpen] = useState(false);
   const head = (
     <>
-      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-navy text-gold">
-        <Play className="size-4 translate-x-px" fill="currentColor" strokeWidth={0} />
-      </span>
+      <PlayDisc />
       <span className="min-w-0 flex-1">
         <span className="block font-display text-[13px] font-semibold leading-tight tracking-wide text-heading">{title}</span>
         <span className="mt-0.5 block text-[11px] text-muted">
@@ -179,7 +202,7 @@ function VideoRow({
           className="flex w-full items-center gap-3 text-left active:opacity-80"
         >
           {head}
-          <ChevronDown className={cn("size-4 shrink-0 text-gold transition-transform", open && "rotate-180")} aria-hidden />
+          <ActionPill kind={open ? "close" : "play"} />
         </button>
       ) : (
         <a
@@ -190,7 +213,7 @@ function VideoRow({
           className="flex items-center gap-3 active:opacity-80"
         >
           {head}
-          <ExternalLink className="size-4 shrink-0 text-gold" aria-hidden />
+          <ActionPill kind="open" />
         </a>
       )}
       {playHere && open ? (
@@ -205,7 +228,7 @@ function VideoRow({
           />
         </div>
       ) : null}
-      <div className="mt-2 pl-[3.25rem]">
+      <div className="mt-2 pl-[3.75rem]">
         {children ?? <p className="text-sm leading-snug">{summary}</p>}
         <a
           href={watchUrl}
@@ -255,16 +278,14 @@ export function FifaClipCard({ clip }: { clip: FifaClip }) {
         rel="noopener noreferrer"
         className="flex items-center gap-3 px-3.5 py-3 active:opacity-80"
       >
-        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-navy text-gold">
-          <Play className="size-5 translate-x-px" fill="currentColor" strokeWidth={0} />
-        </span>
+        <PlayDisc />
         <span className="min-w-0 flex-1">
           <span className="block font-display text-sm font-semibold tracking-wide text-heading">{clip.title}</span>
           <span className="mt-0.5 block text-[11px] text-muted">
             {clip.source} · {clip.duration}
           </span>
         </span>
-        <ExternalLink className="size-4 shrink-0 text-gold" aria-hidden />
+        <ActionPill kind="open" />
       </a>
       <div className="px-3.5 pb-3">
         <p className="text-sm leading-snug">{clip.why}</p>
