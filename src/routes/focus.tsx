@@ -224,6 +224,7 @@ function FocusPage() {
             { id: "focus-video", label: "Video" },
             { id: "focus-protocol", label: "The 11 domains" },
             { id: "focus-card", label: "Lanyard card" },
+            { id: "focus-after", label: "Afterwards" },
             { id: "focus-resources", label: "FIFA resources" },
           ]}
         />
@@ -324,6 +325,62 @@ function FocusPage() {
           >
             <FileText className="size-4" />
             Open the print PDF
+          </a>
+        </Section>
+
+        <Section id="focus-after" title="AFTER A SUSPECTED CONCUSSION">
+          <p className="text-sm leading-snug">
+            What FIFA's Concussion Protocol for Medical Staff (August 2024) asks for once a player has been removed.
+            Concussion is a clinical diagnosis: a normal scan does not rule it out.
+          </p>
+          <ul className="flex list-disc flex-col gap-1.5 pl-5 text-sm leading-snug marker:text-gold">
+            <li>
+              <b>No return the same day.</b> A player with a suspected concussion does not go back on that day.
+            </li>
+            <li>
+              <b>Red flags</b> — signs of a life-threatening problem or of bleeding in or around the brain: emergency
+              management and consider immediate transfer to hospital.
+            </li>
+            <li>
+              <b>Yellow flags</b> — any neurological or orthopaedic impairment, or the doctor is in doubt: remove from
+              football and examine further, with a specialist if needed.
+            </li>
+            <li>
+              <b>CT scan on the day</b> is recommended for any of: GCS below 13 (or below 15 after two hours),
+              suspected skull fracture, more than one episode of vomiting, a seizure after the injury, loss of
+              consciousness, persistent memory loss for events after the injury, or a focal neurological deficit.
+            </li>
+            <li>
+              <b>72 hours of observation</b> by the team doctor, with a daily check, because symptoms can appear late.
+              Avoid medication that could mask or worsen symptoms until a more serious injury is ruled out.
+            </li>
+            <li>
+              <b>Before leaving the venue, and before any flight,</b> re-examine for new or worsening signs.
+            </li>
+          </ul>
+          <p className="font-display text-xs font-semibold tracking-wide text-navy">GRADUATED RETURN TO FOOTBALL</p>
+          <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm leading-snug marker:text-muted">
+            <li>Symptom-limited daily activity, such as a short walk.</li>
+            <li>Light aerobic exercise, up to about 70% of maximum heart rate.</li>
+            <li>Football-specific exercises alone, with no contact and no heavy resistance.</li>
+            <li>Non-contact training drills in a small group; only easy heading with a soft ball.</li>
+            <li>Drills with controlled contact, and heading with a normal ball in a controlled setting.</li>
+            <li>Full-contact team training, after medical clearance.</li>
+            <li>Return to match play.</li>
+          </ol>
+          <Note>
+            Each stage needs at least one session and lasts at least 24 hours. If symptoms return, rest until they
+            settle (at least 24 hours) and go back to the last symptom-free stage. The doctor re-examines the player
+            before stage 1 and again before stage 6, and clearance rests on medical grounds only. Be more cautious
+            with younger players and after repeated concussions.
+          </Note>
+          <a
+            href="https://digitalhub.fifa.com/asset/b6bc9c16-b211-47f4-b5e0-3e929df9115c/Medical-concussion-protocol-Elite_EN_Final.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center text-sm font-medium text-navy underline underline-offset-2"
+          >
+            Read FIFA's Concussion Protocol for Medical Staff (PDF, on FIFA's website)
           </a>
         </Section>
 

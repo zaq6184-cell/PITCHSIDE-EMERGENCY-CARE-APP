@@ -35,7 +35,7 @@ export const workshop = {
   sources: [
     "FIFA Pre-Match Emergency Action Plan (PEAP) — poster and role colours",
     "FIFA Emergency Care Manual — Ch.1 roles & set piece, Ch.2 primary survey, Ch.3 cardiac arrest, Ch.10 FIFA Emergency Care Bag",
-    "FIFA Medical Set Piece protocols — sudden cardiac arrest, cervical spine injury, on-field interventions",
+    "FIFA Medical Set Piece — Protocols for on-field interventions during matches (Version 3, March 2025), with the sudden cardiac arrest and cervical spine protocols",
     "ERC 2021 Basic & Advanced Life Support guidelines (as reproduced in the FIFA manual)",
   ],
   timings: [
@@ -43,7 +43,7 @@ export const workshop = {
     { tag: "≤ 10 s", text: "Signs of life: look for chest movement and feel the carotid pulse together." },
     { tag: "5–6 cm", text: "Compressions mid-chest, 100–120/min, full recoil." },
     { tag: "AED now", text: "Apply the AED the moment it arrives — do not wait for the current 30-count to end." },
-    { tag: "Hands-off", text: "Everyone clear for analysis and shock. Turn the oxygen off (preferred) or disconnect it before the shock." },
+    { tag: "Hands-off", text: "Everyone clear for analysis and shock. Oxygen removed before the shock — unless it is on a closed loop such as an LMA (i-gel)." },
     { tag: "No pulse check", text: "After a shock, restart compressions at once." },
     { tag: "30:2", text: "Until an i-gel is in. Face mask + OPA/NPA is a two-person technique." },
     { tag: "Every 10th", text: "With an i-gel: continuous compressions, one breath every 10th compression (~10/min)." },
@@ -122,11 +122,11 @@ export const workshop = {
       do: [
         "Bring the oxygen cylinder onto the pitch.",
         "Oxygen at 15 L/min: to the trauma mask (trauma) or to the bag-valve reservoir (cardiac arrest).",
-        "Before a shock: turn the oxygen off (preferred) or disconnect it. Turn it back on straight after.",
+        "Before a shock: with an i-gel / LMA in place (a closed loop) the oxygen can stay connected. With a face mask only, take the mask and oxygen away for the shock and replace them straight after.",
         "Take the PELVIS in the log roll and help with the straps.",
         "Be ready to take over chest compressions from Red at the 2-minute rhythm check.",
       ],
-      say: ["Oxygen connected, 15 litres.", "Oxygen off — clear to shock.", "Pelvis ready."],
+      say: ["Oxygen connected, 15 litres.", "Oxygen clear.", "Pelvis ready."],
     },
     {
       id: "white",
@@ -158,7 +158,7 @@ export const workshop = {
       do: [
         "Bring the FIFA bag and the AED and open them at the head.",
         "Cardiac arrest: apply the AED as soon as it arrives — do not wait for the 30-count. Pads: below the right collarbone, and below the left armpit on the mid-axillary line.",
-        "Before every shock: check that everyone is clear and the oxygen is off or disconnected.",
+        "Before every shock: check that everyone is clear and that oxygen is removed — unless it is on a closed loop (i-gel / LMA).",
         "Trauma: hand the right equipment to the right person at the right time. Know where everything is in the bag.",
         "During a carry: count the 10 seconds out loud.",
       ],
@@ -196,7 +196,7 @@ export const workshop = {
       who: ["green", "red", "blue"],
       lines: [
         "Green applies the AED as soon as it arrives — do not wait for the current 30-count. Red keeps compressing while the pads go on.",
-        "Analysis: hands off. Shock advised: oxygen off (preferred) or disconnected, Green checks that everyone is clear, then shocks.",
+        "Analysis: hands off. Shock advised: Green checks that everyone is clear and that oxygen is removed (it can stay on a closed loop such as an i-gel), then shocks.",
         "After the shock: no pulse check. Restart compressions at once.",
         "Rhythm check every 2 minutes; swap the person compressing.",
       ],
@@ -219,10 +219,11 @@ export const workshop = {
       time: "Planned before kick-off",
       who: ["black", "orange", "white", "blue"],
       lines: [
+        "FIFA's protocol: after the third shock and medications, the team leader considers extricating the player.",
         "Best: the ambulance comes onto the field to the player. Agree this before the match.",
         "Otherwise: log roll on Orange's count — Red chest, Blue pelvis, White legs — onto a long spinal board (a scoop can also be used).",
         "Strap the player, the board and the AED together as one unit.",
-        "A mechanical chest-compression device, if the team is trained on it, allows transfer without interrupting CPR.",
+        "A mechanical chest-compression device, where available and the team is trained on it, is fitted before the move so compressions are barely interrupted.",
       ],
     },
     {
@@ -244,14 +245,15 @@ export const workshop = {
     "Three things decide the outcome: recognising the arrest, early good-quality chest compressions, and early safe defibrillation.",
     "Airway is not the first priority in adult cardiac arrest: compressions and the AED first, then the i-gel (FIFA's adjunct of choice).",
     "With an i-gel: continuous compressions, ~10 breaths/min (every 10th compression). Face mask + OPA/NPA: 30:2, two people.",
-    "Before a shock the person shocking checks that everyone is clear. Oxygen is turned off or disconnected; turning it off is preferred.",
+    "Before a shock the person shocking checks that everyone is clear and that oxygen is removed — unless it is on a closed loop such as an LMA (FIFA on-field protocols, 2025). The 2022 manual's older advice was to turn the oxygen off or disconnect it.",
     "After a shock: no pulse check — restart CPR immediately. Rhythm check every 2 minutes.",
-    "Transfer: player, long spinal board (or scoop) and AED strapped as one unit. CPR interrupted no more than 10 s per carry, then at least 2 minutes of compressions. An ambulance coming to the player is always preferable.",
+    "Transfer: player, long spinal board (or scoop) and AED strapped as one unit. CPR interrupted no more than 10 s per carry, then at least 2 minutes of compressions. An ambulance coming to the player is always preferable. Extrication is considered after the third shock and medications, at the team leader's discretion.",
     "ALS if trained: adrenaline 1 mg IV after the 3rd shock (shockable) or as soon as possible (non-shockable), every 3–5 min; amiodarone 300 mg after the 3rd shock, 150 mg after the 5th.",
     "Reversible causes (4 Hs & 4 Ts) — only once compressions, AED and airway are running: hypoxia, hypovolaemia, hypo/hyperthermia and tension pneumothorax are the pitchside ones.",
     "Destination: a hospital with 24/7 coronary angiography, agreed before the match.",
   ],
   dashRules: [
+    "Extrication is considered after the third shock and medications; the team leader decides.",
     "Carry only on the team leader's command, and never for more than 10 seconds — count out loud.",
     "At “Ten seconds!”: player down, compressions at once.",
     "At least 2 minutes of compressions before the next carry.",

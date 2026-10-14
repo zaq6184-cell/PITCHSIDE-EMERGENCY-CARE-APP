@@ -397,7 +397,7 @@ export const stations: Station[] = [
           {
             kind: "info",
             title: "Oxygen at the shock",
-            text: "Before a shock, turn the oxygen off or disconnect it from the i-gel. Turning the flow off is preferred: disconnecting lets aerosol escape from the open end of the i-gel. Turn it back on straight after the shock.",
+            text: "FIFA's 2025 on-field protocol: remove oxygen before the shock, unless it is on a closed loop such as an LMA (i-gel) — then it can stay connected. With a face mask only, take the mask and oxygen away for the shock and replace them straight after. The 2022 manual's older advice was to turn the oxygen off or disconnect it.",
           },
         ],
       },
@@ -419,16 +419,16 @@ export const stations: Station[] = [
           {
             kind: "alert",
             title: "Every minute counts",
-            text: "Every minute without CPR and defibrillation lowers the chance of survival. A fall of up to 10% per minute is widely quoted in resuscitation teaching; the figure is not from the FIFA manual.",
+            text: "For every minute without return of circulation, the chance of a good outcome falls by up to 10% (FIFA on-field protocols).",
           },
           {
             kind: "text",
-            text: "Moving the player: the team leader decides when. A mechanical chest-compression device, fitted by a team trained on it, lets compressions continue during the move. Without one, use the 10-second stop-and-start carry. An ambulance coming onto the field to the player is always preferable.",
+            text: "Moving the player: FIFA's protocol is that after the third shock and medications, extrication is considered at the team leader's discretion. A mechanical chest-compression device, where available and the team is trained on it, is fitted first so compressions are barely interrupted. Without one, use the 10-second stop-and-start carry. An ambulance coming onto the field to the player is always preferable.",
           },
         ],
       },
     ],
-    source: "FIFA Emergency Care Manual, Ch.3.",
+    source: "FIFA on-field protocols (Version 3, March 2025) and the FIFA Emergency Care Manual, Ch.3. Where the two differ, the newer protocols are followed.",
   },
   {
     id: "3",
@@ -563,7 +563,7 @@ export const stations: Station[] = [
           {
             kind: "defs",
             items: [
-              { term: "FIFA — clearing the cervical spine (all 7 needed)", text: "1 No midline tenderness · 2 GCS 15 · 3 No distracting injury · 4 No neurology · 5 No concerning mechanism (e.g. fall onto the head, axial load) · 6 Active rotation of 45° to each side · 7 No intoxication." },
+              { term: "FIFA — clearing the cervical spine (all needed)", text: "1 No midline tenderness · 2 GCS 15 · 3 No distracting injury · 4 No neurology · 5 No concerning mechanism (e.g. fall onto the head, axial load) · 6 Active rotation of 45° to each side. The manual adds a seventh: no intoxication." },
             ],
           },
         ],
@@ -935,6 +935,7 @@ export const stations: Station[] = [
               "Analgesia — FIFA suggests inhaled methoxyflurane where available.",
               "Wounds: clean thoroughly, cover with saline-soaked swabs and dress.",
               "Apply the splint, then recheck circulation and neurology.",
+              "Open fracture (a wound over or near the break): refer to hospital; early antibiotics are advisable.",
               "Extricate — or, if there is no neck injury and the player can help, assist them into the basket stretcher.",
             ],
           },

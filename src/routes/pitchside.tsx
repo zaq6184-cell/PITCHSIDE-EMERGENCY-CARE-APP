@@ -119,7 +119,7 @@ function PitchsidePage() {
             <li><b>Entering the pitch:</b> only on the referee's stretcher signal — except a non-contact collapse, when the team runs on at once.</li>
             <li><b>Ready position:</b> move along the touchline level with the incident and squat with the stretcher.</li>
             <li><b>Kit:</b> two identical sets — basket, scoop or spine board, head blocks, collar, straps; AED; oxygen; splints.</li>
-            <li><b>SCA:</b> survival falls by up to 10% per minute. A mechanical CPR device lets compressions continue during extrication; without one, use the 10-second stop-and-start carry.</li>
+            <li><b>SCA:</b> the chance of a good outcome falls by up to 10% per minute. After the third shock and medications the team leader considers extrication, with a mechanical CPR device fitted first where available; without one, use the 10-second stop-and-start carry.</li>
             <li><b>Neck injury:</b> collar → log roll onto the scoop → straps (centre strap on the sternum) → head blocks → tape → release MILS → basket, 6 people.</li>
             <li><b>Extremity fracture:</b> full A–E first; hands above and below; analgesia; clean and dress wounds; splint and recheck.</li>
           </ul>

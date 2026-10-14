@@ -56,6 +56,11 @@ export const fifaSca = {
   screening: [
     "Cardiac screening is mandatory before FIFA competitions: medical history, examination and an ECG, with further tests if needed.",
     "Youth players: start at about 12 years and repeat every 2–4 years — personal and family history, focused examination and a resting 12-lead ECG.",
+    "FIFA's screening form asks about symptoms at rest or on exercise — chest pain or tightness, sudden palpitations, unexplained breathlessness, and unexplained collapse, seizure or fainting — and about medication and known heart disease.",
+    "Family history counts if it happened before the age of 50: sudden or unexplained death or cardiac arrest, unexplained collapse, inherited heart disease, a sport restriction for a heart condition, or a cardiac procedure such as an implanted defibrillator.",
+    "Examination: blood pressure in both arms and heart rate after five minutes lying at rest, heart murmurs, and features of Marfan syndrome.",
+    "Resting 12-lead ECG, lying down after at least five minutes of quiet rest, read against the international criteria for athletes. If in any doubt, ask a cardiologist experienced with athletes.",
+    "Echocardiography is an optional extra, only where high-quality imaging and expert interpretation are available; it helps to detect coronary artery anomalies and aortic disease.",
     "No screening programme gives complete protection: early CPR, a prompt AED and an emergency plan give the best chance of survival.",
   ],
   infographics: [
