@@ -196,7 +196,7 @@ export function InstallGuides() {
           <p className="flex items-center gap-2 font-display text-sm font-semibold tracking-wide text-heading">
             <g.icon className="size-4 text-gold-ink" aria-hidden />
             {g.title}
-            <span className="install-guide-badge ml-auto rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold tracking-wider text-on-gold">
+            <span className="install-guide-badge ml-auto shrink-0 whitespace-nowrap rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold tracking-wider text-on-gold">
               THIS DEVICE
             </span>
           </p>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FifaClipCard } from "@/components/fifa-video";
 import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
+import { imageSize } from "@/lib/asset";
 import { setTransitionDirection, useSwipe } from "@/lib/gestures";
 import { moduleCover } from "@/lib/module-covers";
 import { haptic } from "@/lib/sound";
@@ -257,7 +258,7 @@ function BlockView({ b }: { b: Block }) {
       return (
         <figure className="-mx-3.5">
           <a href={b.src} target="_blank" rel="noopener noreferrer">
-            <img src={b.src} alt={b.alt} loading="lazy" className="block max-h-[28rem] w-full bg-matte object-contain" />
+            <img src={b.src} alt={b.alt} {...imageSize(b.src)} loading="lazy" className="block max-h-[28rem] w-full bg-matte object-contain" />
           </a>
           {b.caption ? (
             <figcaption className="px-3.5 pt-2 text-xs leading-snug text-muted">{b.caption}</figcaption>
@@ -322,7 +323,7 @@ function DeviceFigure({ b }: { b: Extract<Block, { kind: "device" }> }) {
           />
         </div>
       ) : (
-        <img src={b.src} alt={b.alt} loading="lazy" className="block max-h-72 w-full bg-white object-contain" />
+        <img src={b.src} alt={b.alt} {...imageSize(b.src)} loading="lazy" className="block max-h-72 w-full bg-white object-contain" />
       )}
       <figcaption className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3.5 pt-2">
         {b.model ? (
