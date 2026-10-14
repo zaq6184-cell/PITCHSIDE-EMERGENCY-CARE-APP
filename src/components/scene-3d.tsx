@@ -11,14 +11,21 @@ import type { RoleId } from "@/lib/workshop";
  */
 type Spot = { id: RoleId; color: string; x: number; z: number; face: number };
 
+/**
+ * Turn a figure so it faces a point on the player. A figure's front (arms, lean) is its local -z;
+ * rotating by θ about y points that front along (-sin θ, -cos θ), so θ = atan2(-dx, -dz).
+ */
+const facing = (x: number, z: number, tx: number, tz: number) => Math.atan2(-(tx - x), -(tz - z));
+
 // Player's right is -x (viewer's left when looking from the feet towards the head).
+// Player lies along z: head at z ≈ -1.0, chest ≈ -0.5, pelvis ≈ 0.1, legs ≈ 0.8.
 const SPOTS: Spot[] = [
-  { id: "orange", color: "#E36B12", x: -0.1, z: -1.95, face: 0 },
-  { id: "green", color: "#1E8A4C", x: 1.0, z: -1.55, face: -0.9 },
-  { id: "red", color: "#C0392B", x: -1.15, z: -0.55, face: Math.PI / 2 },
-  { id: "blue", color: "#1F6AA5", x: -1.2, z: 0.35, face: Math.PI / 2 },
-  { id: "white", color: "#F4F4F1", x: -1.15, z: 1.3, face: Math.PI / 2 },
-  { id: "black", color: "#1C1C1C", x: 1.35, z: -0.3, face: -Math.PI / 2 },
+  { id: "orange", color: "#E36B12", x: -0.05, z: -1.8, face: facing(-0.05, -1.8, 0, -1.02) }, // holds the head
+  { id: "green", color: "#1E8A4C", x: 1.0, z: -1.55, face: facing(1.0, -1.55, 0.2, -0.75) }, // bag and AED, towards the chest
+  { id: "red", color: "#C0392B", x: -1.15, z: -0.55, face: facing(-1.15, -0.55, 0, -0.5) }, // chest
+  { id: "blue", color: "#1F6AA5", x: -1.2, z: 0.35, face: facing(-1.2, 0.35, 0, 0.15) }, // pelvis
+  { id: "white", color: "#F4F4F1", x: -1.15, z: 1.3, face: facing(-1.15, 1.3, 0, 0.9) }, // lower legs
+  { id: "black", color: "#1C1C1C", x: 1.35, z: -0.3, face: facing(1.35, -0.3, 0, -0.4) }, // level with the chest
 ];
 
 const SKIN = "#C68E6A";
