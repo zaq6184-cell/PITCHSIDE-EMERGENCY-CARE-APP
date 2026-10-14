@@ -163,10 +163,20 @@
   animation: pec-rise 0.45s var(--ease-out-smooth) both;
 }
 
+/* while scrolling the card only slides — no fading, so text near the screen edge stays fully readable */
+@keyframes pec-slide {
+  from {
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .reveal {
-      animation: pec-rise linear both;
+      animation: pec-slide linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 32%;
     }
