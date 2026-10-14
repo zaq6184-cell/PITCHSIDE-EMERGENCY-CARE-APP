@@ -61,7 +61,7 @@ export function SoundSettings({ tone = "card" }: { tone?: "card" | "panel" }) {
         <Music className={cn("size-5 shrink-0", tone === "panel" ? "text-gold" : "text-gold-ink")} aria-hidden />
         <div className="min-w-0 flex-1">
           <p className={cn("font-display text-sm font-semibold tracking-wide", head)}>Background music</p>
-          <p className={cn("text-xs leading-snug", sub)}>A calm loop while you study</p>
+          <p className={cn("text-xs leading-snug", sub)}>Suits each page: calm, drill tempo or quiz. Silent on Tools</p>
         </div>
         <Switch on={p.music} label="Background music" onChange={(v) => setSoundPrefs({ music: v })} />
       </div>
@@ -113,7 +113,7 @@ export function SoundButton() {
         >
           <SoundSettings tone="panel" />
           <p className="mt-1 border-t border-white/10 pt-2 text-[11px] leading-snug text-on-navy/60">
-            Off by default. Saved on this device only. Voices on the role pages play when you tap them.
+            On by default; it starts with your first tap. Switch either one off here — saved on this device only.
           </p>
         </div>
       ) : null}

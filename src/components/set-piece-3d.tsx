@@ -226,7 +226,8 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
       for (const id of drillCallouts[step] ?? []) {
         if (cancelled) return;
         if (id.startsWith("sfx:")) {
-          sfx(id.slice(4) as SfxName, 0.6);
+          const name = id.slice(4) as SfxName;
+          sfx(name, name === "siren" ? 0.35 : 0.6);
           await wait(1400);
           continue;
         }

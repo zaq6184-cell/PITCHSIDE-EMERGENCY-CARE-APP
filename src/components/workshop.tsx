@@ -6,10 +6,23 @@ import { SoundButton } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { asset } from "@/lib/asset";
 import { setTransitionDirection } from "@/lib/gestures";
-import { say, tap } from "@/lib/sound";
+import { type MusicScene, say, setMusicScene, tap } from "@/lib/sound";
 import { syncThemeColor } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
+
+/**
+ * Music for each page: the calm theme on Home and the role pages, the drill at CPR tempo (110 a minute),
+ * an upbeat loop for the games, a study loop for reading — and none on Tools, where the CPR beat and the
+ * carry timer need to be heard on their own.
+ */
+function musicFor(pathname: string): MusicScene {
+  if (pathname.startsWith("/timer")) return "none";
+  if (pathname.startsWith("/drill")) return "drill";
+  if (pathname.startsWith("/quiz")) return "quiz";
+  if (pathname === "/" || pathname.startsWith("/role") || pathname.startsWith("/about") || pathname.startsWith("/install")) return "theme";
+  return "study";
+}
 
 export function AppShell({
   children,
@@ -26,6 +39,10 @@ export function AppShell({
   // the router puts new pages at the top and Back where you were; this only keeps the bar colour right
   useEffect(() => {
     syncThemeColor();
+  }, [pathname]);
+
+  useEffect(() => {
+    setMusicScene(musicFor(pathname));
   }, [pathname]);
 
   const bag = pathname.startsWith("/bag");
