@@ -6,7 +6,10 @@ import { AppShell, JumpChips, Panel, SectionLabel } from "@/components/workshop"
 import { asset } from "@/lib/asset";
 import { aboutApp, disclaimer } from "@/lib/disclaimer";
 
-export const Route = createFileRoute("/about")({ component: About });
+export const Route = createFileRoute("/about")({
+  component: About,
+  head: () => ({ meta: [{ title: "About the app · Pitchside Emergency Care" }] }),
+});
 
 const sections: { id: string; chip: string; title: string; paragraphs: string[] }[] = [
   { id: "about-purpose", chip: "Purpose", title: "PURPOSE OF THE APP", paragraphs: aboutApp.purpose },
@@ -22,7 +25,7 @@ function About() {
       <div className="flex flex-col gap-3.5">
         <Link
           to="/"
-          className="inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold"
+          className="inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold-ink"
         >
           <ArrowLeft className="size-4" strokeWidth={2.4} />
           Home
@@ -72,7 +75,7 @@ function About() {
                 <span className="block font-display text-sm font-semibold tracking-wide text-heading">Install the app</span>
                 <span className="block text-xs leading-snug text-muted">Phone, tablet or computer — and save it for offline use</span>
               </span>
-              <ChevronRight className="size-5 shrink-0 text-gold" aria-hidden />
+              <ChevronRight className="size-5 shrink-0 text-gold-ink" aria-hidden />
             </div>
           </Panel>
         </Link>

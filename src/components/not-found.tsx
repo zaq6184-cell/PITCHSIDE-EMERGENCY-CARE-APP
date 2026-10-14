@@ -4,7 +4,7 @@ import { AppShell, Panel, SectionLabel } from "@/components/workshop";
 /** Shown for an address that is not a page of the app. */
 export function NotFound() {
   return (
-    <AppShell tab="home">
+    <AppShell tab="home" heading="Page not found">
       <Panel>
         <div className="flex flex-col gap-2 px-3.5 py-3.5">
           <SectionLabel>PAGE NOT FOUND</SectionLabel>

@@ -9,6 +9,8 @@
   --color-navy-2: #123056;
   --color-gold: #c9a227;
   --color-gold-soft: #d4c9a8;
+  /* gold for text and icons on light cards (4.6:1 on cream); bright gold stays for navy */
+  --color-gold-ink: #876a0f;
   --color-cream: #f4f1ea;
   --color-bg: #f7f4ee;
   --color-ink: #1b1b1b;
@@ -61,6 +63,7 @@
   --color-navy-2: #22427a;
   --color-gold: #d4ae36;
   --color-gold-soft: #cfc4a2;
+  --color-gold-ink: #d4ae36;
   --color-cream: #15233a;
   --color-bg: #070e1a;
   --color-ink: #e6ebf2;

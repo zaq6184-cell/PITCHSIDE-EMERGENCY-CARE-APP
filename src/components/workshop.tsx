@@ -14,9 +14,12 @@ import { getRole, type RoleId, workshop } from "@/lib/workshop";
 export function AppShell({
   children,
   tab,
+  heading,
 }: {
   children: React.ReactNode;
   tab: "home" | "stations" | "drill" | "timer" | "rules" | "films" | "about";
+  /** The page's main heading for screen readers, when the page shows none of its own. */
+  heading?: string;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -35,6 +38,10 @@ export function AppShell({
       ["/pitchside", "FIFA Health & Medical · pitchside emergency care"],
       ["/quiz", "Test yourself · quiz and positions game"],
       ["/install", "Install the app · phone, tablet, computer"],
+      ["/drill", "Cardiac arrest drill · step by step in 3D"],
+      ["/timer", "10-second carry timer · CPR rhythm trainer"],
+      ["/rules", "Golden rules · FIFA key points"],
+      ["/role", "Colour roles · FIFA PEAP positions"],
     ] as const
   ).find(([p]) => pathname.startsWith(p))?.[1];
 
@@ -76,6 +83,7 @@ export function AppShell({
       </header>
       <OfflineBanner />
       <main style={{ viewTransitionName: "main-content" }} className="relative z-[1] mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
+        {heading ? <h1 className="sr-only">{heading}</h1> : null}
         {children}
       </main>
       <nav
@@ -97,7 +105,7 @@ const TABS = [
   { to: "/", tab: "home", label: "Roles", icon: Users },
   { to: "/stations", tab: "stations", label: "Skills", icon: ClipboardList },
   { to: "/drill", tab: "drill", label: "Drill", icon: ListOrdered },
-  { to: "/timer", tab: "timer", label: "Dash", icon: Timer },
+  { to: "/timer", tab: "timer", label: "Tools", icon: Timer },
   { to: "/rules", tab: "rules", label: "Rules", icon: BookOpen },
   { to: "/guides", tab: "films", label: "Films", icon: PlayCircle },
   { to: "/about", tab: "about", label: "About", icon: Info },

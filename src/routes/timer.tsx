@@ -4,15 +4,18 @@ import { DashTimer } from "@/components/dash-timer";
 import { AppShell, Panel, SayLine, SectionLabel } from "@/components/workshop";
 import { workshop } from "@/lib/workshop";
 
-export const Route = createFileRoute("/timer")({ component: TimerPage });
+export const Route = createFileRoute("/timer")({
+  component: TimerPage,
+  head: () => ({ meta: [{ title: "Carry timer and CPR trainer · Pitchside Emergency Care" }] }),
+});
 
 function TimerPage() {
   return (
-    <AppShell tab="timer">
+    <AppShell tab="timer" heading="Carry timer and CPR rhythm trainer">
       <div className="flex flex-col gap-3.5">
         <Panel>
           <div className="px-3.5 pt-4">
-            <SectionLabel>10-SECOND DASH</SectionLabel>
+            <SectionLabel>10-SECOND CARRY TIMER</SectionLabel>
           </div>
           <DashTimer />
         </Panel>
@@ -29,7 +32,7 @@ function TimerPage() {
         </section>
         <Panel>
           <div className="flex flex-col gap-2 px-3.5 py-3.5">
-            <SectionLabel>DASH RULES</SectionLabel>
+            <SectionLabel>CARRY RULES</SectionLabel>
             <ul className="flex flex-col gap-1.5">
               {workshop.dashRules.map((line) => (
                 <li key={line} className="text-sm leading-snug">

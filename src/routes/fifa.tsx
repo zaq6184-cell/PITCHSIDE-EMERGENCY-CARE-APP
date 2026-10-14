@@ -5,7 +5,10 @@ import { fifaOwnClips } from "@/lib/videos";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { FIFA_SCA_URL, fifaSca } from "@/lib/fifa-sca";
 
-export const Route = createFileRoute("/fifa")({ component: FifaScaPage });
+export const Route = createFileRoute("/fifa")({
+  component: FifaScaPage,
+  head: () => ({ meta: [{ title: "Sudden cardiac arrest · Pitchside Emergency Care" }] }),
+});
 
 function List({ items, ordered }: { items: string[]; ordered?: boolean }) {
   const cls = "flex flex-col gap-1.5 pl-5 text-sm leading-snug";
@@ -42,7 +45,7 @@ function FifaScaPage() {
         <Panel>
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">FIFA HEALTH & MEDICAL</p>
-            <h2 className="mt-0.5 font-display text-xl font-bold leading-tight">Sudden cardiac arrest</h2>
+            <h1 className="mt-0.5 font-display text-xl font-bold leading-tight">Sudden cardiac arrest</h1>
             <p className="mt-1 text-sm text-gold-soft">Key points from FIFA's official page, with its videos and downloads.</p>
           </div>
           <div className="px-3.5 py-3">
@@ -75,7 +78,7 @@ function FifaScaPage() {
           </div>
           <Link
             to="/guides"
-            className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold"
+            className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink"
           >
             More films: Heart Heroes United, CPR and airway skills →
           </Link>
@@ -93,7 +96,7 @@ function FifaScaPage() {
           </div>
           <Link
             to="/drill"
-            className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold"
+            className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink"
           >
             See the team drill →
           </Link>
@@ -141,7 +144,7 @@ function FifaScaPage() {
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
-                  <FileText className="size-4 shrink-0 text-gold" />
+                  <FileText className="size-4 shrink-0 text-gold-ink" />
                   <span className="flex-1">{d.title}</span>
                   <span className="shrink-0 rounded-full bg-cream px-2 py-0.5 font-display text-[10px] font-semibold tracking-wide text-muted">
                     {d.kind}

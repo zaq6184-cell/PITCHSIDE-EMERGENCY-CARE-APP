@@ -5,7 +5,10 @@ import { moduleCover } from "@/lib/module-covers";
 import { stations } from "@/lib/stations";
 import { workshop } from "@/lib/workshop";
 
-export const Route = createFileRoute("/stations")({ component: Stations });
+export const Route = createFileRoute("/stations")({
+  component: Stations,
+  head: () => ({ meta: [{ title: "Skill modules · Pitchside Emergency Care" }] }),
+});
 
 const moduleLook: Record<string, { icon: typeof Users; tint: string; ink: string }> = {
   "1": { icon: Users, tint: "#F6EFD6", ink: "#8A6D10" },
@@ -51,7 +54,7 @@ function ModuleCover({ id }: { id: string }) {
 
 function Stations() {
   return (
-    <AppShell tab="stations">
+    <AppShell tab="stations" heading="Skill modules">
       <div className="flex flex-col gap-3.5">
         <Note>
           <span className="font-semibold text-heading">Five skill modules. </span>
@@ -72,7 +75,7 @@ function Stations() {
                     {s.title.toLowerCase() === s.short.toLowerCase() ? s.subtitle : s.title}
                   </p>
                 </div>
-                <ChevronRight className="size-5 shrink-0 text-gold" />
+                <ChevronRight className="size-5 shrink-0 text-gold-ink" />
               </div>
             </Panel>
           </Link>

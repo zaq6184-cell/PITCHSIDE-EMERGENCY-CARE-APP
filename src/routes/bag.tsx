@@ -4,7 +4,10 @@ import { useMemo, useState } from "react";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { aedTravel, bag, filterBagGroups } from "@/lib/bag";
 
-export const Route = createFileRoute("/bag")({ component: BagPage });
+export const Route = createFileRoute("/bag")({
+  component: BagPage,
+  head: () => ({ meta: [{ title: "FIFA Emergency Care Bag · Pitchside Emergency Care" }] }),
+});
 
 function BagPage() {
   const [q, setQ] = useState("");
@@ -12,7 +15,7 @@ function BagPage() {
   const searching = q.trim().length > 0;
 
   return (
-    <AppShell tab="stations">
+    <AppShell tab="stations" heading="FIFA Emergency Care Bag">
       <div className="flex flex-col gap-3.5">
         <figure className="overflow-hidden rounded-xl bg-paper shadow-card">
           <img

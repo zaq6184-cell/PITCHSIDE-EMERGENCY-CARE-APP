@@ -6,7 +6,10 @@ import { asset } from "@/lib/asset";
 import { FIFA_PITCHSIDE_PAGE, type FifaClip, fifaSkillClips, skillClips } from "@/lib/videos";
 import type { RoleId } from "@/lib/workshop";
 
-export const Route = createFileRoute("/cspine")({ component: CspinePage });
+export const Route = createFileRoute("/cspine")({
+  component: CspinePage,
+  head: () => ({ meta: [{ title: "Cervical spine injury · Pitchside Emergency Care" }] }),
+});
 
 type Task = [RoleId, string];
 const setPiece: { title: string; note?: string; tasks: Task[] }[] = [
@@ -120,7 +123,7 @@ function Section({ id, title, children }: { id?: string; title: string; children
 
 const bullets = "flex list-disc flex-col gap-1.5 pl-5 text-sm leading-snug marker:text-gold";
 const numbered = "flex list-decimal flex-col gap-1.5 pl-5 text-sm leading-snug marker:font-semibold marker:text-heading";
-const more = "inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold";
+const more = "inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink";
 
 function CspinePage() {
   return (
@@ -129,7 +132,7 @@ function CspinePage() {
         <Panel>
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">FIFA MEDICAL SET PIECE</p>
-            <h2 className="mt-0.5 font-display text-xl font-bold leading-tight">Cervical spine injury</h2>
+            <h1 className="mt-0.5 font-display text-xl font-bold leading-tight">Cervical spine injury</h1>
             <p className="mt-1 text-sm text-gold-soft">
               The colour-coded protocol, the FIFA film, collar, log roll and extrication — in one place.
             </p>
@@ -326,7 +329,7 @@ function CspinePage() {
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
-                  <FileText className="size-4 shrink-0 text-gold" />
+                  <FileText className="size-4 shrink-0 text-gold-ink" />
                   <span>{t}</span>
                 </a>
               </li>

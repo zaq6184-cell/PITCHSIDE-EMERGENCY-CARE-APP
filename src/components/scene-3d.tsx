@@ -556,16 +556,16 @@ function Kit({ step }: { step: number }) {
       {/* emergency bag at the head, the AED open beside Green */}
       <mesh position={[1.3, 0.16, -1.6]} rotation={[0, 0.5, 0]} castShadow>
         <boxGeometry args={[0.62, 0.32, 0.42]} />
-        <meshStandardMaterial color="#F2C811" roughness={0.6} />
+        <meshStandardMaterial color="#22406e" roughness={0.75} />
       </mesh>
       <group position={[1.02, 0, -0.6]} rotation={[0, -0.3, 0]}>
         <mesh position={[0, 0.08, 0]} castShadow>
           <boxGeometry args={[0.34, 0.16, 0.28]} />
-          <meshStandardMaterial ref={aed} color="#3FA9B8" emissive="#FFD34D" emissiveIntensity={0.05} roughness={0.5} />
+          <meshStandardMaterial ref={aed} color="#F2C811" emissive="#FFD34D" emissiveIntensity={0.05} roughness={0.5} />
         </mesh>
         <mesh position={[0, 0.22, -0.14]} rotation={[-0.35, 0, 0]} castShadow>
           <boxGeometry args={[0.34, 0.26, 0.03]} />
-          <meshStandardMaterial color="#2c8a97" roughness={0.5} />
+          <meshStandardMaterial color="#d6ad10" roughness={0.5} />
         </mesh>
       </group>
       {/* AED pads on the chest: below the right collarbone, and on the left side */}

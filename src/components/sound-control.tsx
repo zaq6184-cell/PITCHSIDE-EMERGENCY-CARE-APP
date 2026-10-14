@@ -43,7 +43,7 @@ export function SoundSettings({ tone = "card" }: { tone?: "card" | "panel" }) {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-3 py-1">
-        <Volume2 className={cn("size-5 shrink-0", tone === "panel" ? "text-gold" : "text-gold")} aria-hidden />
+        <Volume2 className={cn("size-5 shrink-0", tone === "panel" ? "text-gold" : "text-gold-ink")} aria-hidden />
         <div className="min-w-0 flex-1">
           <p className={cn("font-display text-sm font-semibold tracking-wide", head)}>Sound effects & voices</p>
           <p className={cn("text-xs leading-snug", sub)}>Team call-outs, CPR rhythm, whistle, quiz sounds</p>
@@ -58,7 +58,7 @@ export function SoundSettings({ tone = "card" }: { tone?: "card" | "panel" }) {
         />
       </div>
       <div className="flex items-center gap-3 py-1">
-        <Music className="size-5 shrink-0 text-gold" aria-hidden />
+        <Music className={cn("size-5 shrink-0", tone === "panel" ? "text-gold" : "text-gold-ink")} aria-hidden />
         <div className="min-w-0 flex-1">
           <p className={cn("font-display text-sm font-semibold tracking-wide", head)}>Background music</p>
           <p className={cn("text-xs leading-snug", sub)}>A calm loop while you study</p>

@@ -6,12 +6,15 @@ import { DrillPlayer3D } from "@/components/set-piece-3d";
 import { cn } from "@/lib/utils";
 import { workshop } from "@/lib/workshop";
 
-export const Route = createFileRoute("/drill")({ component: Drill });
+export const Route = createFileRoute("/drill")({
+  component: Drill,
+  head: () => ({ meta: [{ title: "Cardiac arrest team drill · Pitchside Emergency Care" }] }),
+});
 
 function Drill() {
   const [step, setStep] = useState(1);
   return (
-    <AppShell tab="drill">
+    <AppShell tab="drill" heading="Sudden cardiac arrest team drill">
       <div className="flex flex-col gap-3.5">
         <Note>
           <span className="font-semibold text-heading">Sudden cardiac arrest — the team drill. </span>
