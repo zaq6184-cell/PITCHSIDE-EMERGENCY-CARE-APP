@@ -2,7 +2,9 @@
 
 A free, phone-first study guide to pitchside emergency care in football, built around FIFA's medical set piece: the six colour roles, sudden cardiac arrest, the primary survey, cervical spine injury, concussion assessment and the emergency care bag.
 
-**Open on a phone:** [https://zaq6184-cell.github.io/hkl-football-medicine-2026/](https://zaq6184-cell.github.io/hkl-football-medicine-2026/)
+**Open on a phone:** [https://zaq6184-cell.github.io/PITCHSIDE-EMERGENCY-CARE-APP/](https://zaq6184-cell.github.io/PITCHSIDE-EMERGENCY-CARE-APP/)
+
+Developed by the Sports-Emergency Football Medicine team, HKL.
 
 It installs as an app on phones and computers, works offline once saved, and has a dark mode. Sound is off until you turn it on.
 
