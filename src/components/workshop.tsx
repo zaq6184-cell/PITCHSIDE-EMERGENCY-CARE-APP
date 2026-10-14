@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, ClipboardList, ListOrdered, PlayCircle, Timer, Users } from "lucide-react";
+import { BookOpen, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users } from "lucide-react";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
@@ -9,7 +9,7 @@ export function AppShell({
   tab,
 }: {
   children: React.ReactNode;
-  tab: "home" | "stations" | "drill" | "timer" | "rules" | "films";
+  tab: "home" | "stations" | "drill" | "timer" | "rules" | "films" | "about";
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -42,7 +42,9 @@ export function AppShell({
                 ? "Links to FIFA's films and downloads"
                 : topic
                   ? topic
-                  : tab === "stations"
+                  : tab === "about"
+                    ? "About the app"
+                    : tab === "stations"
                     ? "Skill modules · study notes"
                     : workshop.title}
           </p>
@@ -52,7 +54,7 @@ export function AppShell({
         {children}
       </main>
       <nav
-        className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-6 border-t border-line bg-paper pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1.5"
+        className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-7 border-t border-line bg-paper pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1.5"
         aria-label="Primary"
       >
         <TabLink to="/" label="Roles" icon={Users} active={tab === "home"} />
@@ -61,6 +63,7 @@ export function AppShell({
         <TabLink to="/timer" label="Dash" icon={Timer} active={tab === "timer"} />
         <TabLink to="/rules" label="Rules" icon={BookOpen} active={tab === "rules"} />
         <TabLink to="/guides" label="Films" icon={PlayCircle} active={tab === "films"} />
+        <TabLink to="/about" label="About" icon={Info} active={tab === "about"} />
       </nav>
     </div>
   );
@@ -72,7 +75,7 @@ function TabLink({
   icon: Icon,
   active,
 }: {
-  to: "/" | "/stations" | "/drill" | "/timer" | "/rules" | "/guides";
+  to: "/" | "/stations" | "/drill" | "/timer" | "/rules" | "/guides" | "/about";
   label: string;
   icon: typeof Users;
   active: boolean;
@@ -81,7 +84,7 @@ function TabLink({
     <Link
       to={to}
       className={cn(
-        "flex min-h-11 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold tracking-wide",
+        "flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 text-[10.5px] font-semibold tracking-wide",
         active ? "text-navy" : "text-muted",
       )}
       aria-current={active ? "page" : undefined}
