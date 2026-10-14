@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { countTick, say, sfx } from "@/lib/sound";
 import { DASH_SECONDS } from "@/lib/workshop";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ export function DashTimer() {
   const [running, setRunning] = useState(false);
   const [remaining, setRemaining] = useState(DASH_SECONDS);
   const startedAt = useRef<number | null>(null);
+  const lastSecond = useRef(DASH_SECONDS);
   const finished = remaining <= 0;
 
   useEffect(() => {
@@ -27,9 +29,16 @@ export function DashTimer() {
       if (start == null) return;
       const left = Math.max(0, DASH_SECONDS - (Date.now() - start) / 1000);
       setRemaining(left);
+      const sec = Math.ceil(left);
+      if (sec !== lastSecond.current) {
+        lastSecond.current = sec;
+        if (sec > 0) countTick(false);
+      }
       if (left <= 0) {
         setRunning(false);
         vibrate([80, 60, 160]);
+        countTick(true);
+        void say("green-3");
         return;
       }
       raf = requestAnimationFrame(tick);
@@ -43,6 +52,8 @@ export function DashTimer() {
   const progress = remaining / DASH_SECONDS;
 
   function start() {
+    sfx("whistle", 0.5);
+    lastSecond.current = DASH_SECONDS;
     startedAt.current = Date.now();
     setRemaining(DASH_SECONDS);
     setRunning(true);

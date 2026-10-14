@@ -35,14 +35,17 @@ function ModuleCover({ id }: { id: string }) {
   const cover = moduleCover(id);
   if (!cover) return null;
   return (
-    <img
-      src={cover.small}
-      alt=""
-      width={720}
-      height={405}
-      loading={id === "1" ? "eager" : "lazy"}
-      className="block aspect-[12/5] w-full object-cover object-[50%_72%] outline-none"
-    />
+    <div className="overflow-hidden">
+      <img
+        src={cover.small}
+        alt=""
+        width={720}
+        height={405}
+        loading={id === "1" ? "eager" : "lazy"}
+        className="kenburns block aspect-[12/5] w-full object-cover object-[50%_72%] outline-none"
+        style={{ animationDelay: `-${Number(id) * 5}s` }}
+      />
+    </div>
   );
 }
 

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { SoundSettings } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { AppShell, JumpChips, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
@@ -54,6 +55,11 @@ function About() {
               </p>
             </div>
             <ThemeSwitch label="Dark mode" />
+          </div>
+        </Panel>
+        <Panel>
+          <div className="px-3.5 py-2">
+            <SoundSettings />
           </div>
         </Panel>
         <JumpChips items={sections.map((s) => ({ id: s.id, label: s.chip }))} />

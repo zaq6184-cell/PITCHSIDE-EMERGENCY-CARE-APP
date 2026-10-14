@@ -69,8 +69,8 @@ function RoleCard() {
             </section>
             <section className="flex flex-col gap-1.5">
               <SectionLabel>WHAT YOU SAY</SectionLabel>
-              {r.say.map((line) => (
-                <SayLine key={line} text={`“${line}”`} />
+              {r.say.map((line, i) => (
+                <SayLine key={line} text={`“${line}”`} voice={`${r.id}-${i + 1}`} />
               ))}
             </section>
             <p className="rounded-lg bg-navy px-2.5 py-2 text-center font-display text-xs font-semibold tracking-wide text-gold">

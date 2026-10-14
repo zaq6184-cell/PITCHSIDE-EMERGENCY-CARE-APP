@@ -18,6 +18,7 @@ import { Route as FifaRouteImport } from './routes/fifa'
 import { Route as FocusRouteImport } from './routes/focus'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as PitchsideRouteImport } from './routes/pitchside'
+import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as StationsRouteImport } from './routes/stations'
 import { Route as TimerRouteImport } from './routes/timer'
@@ -69,6 +70,11 @@ const PitchsideRoute = PitchsideRouteImport.update({
   path: '/pitchside',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RulesRoute = RulesRouteImport.update({
   id: '/rules',
   path: '/rules',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
   '/pitchside': typeof PitchsideRoute
+  '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
   '/stations': typeof StationsRoute
   '/timer': typeof TimerRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
   '/pitchside': typeof PitchsideRoute
+  '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
   '/stations': typeof StationsRoute
   '/timer': typeof TimerRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
   '/pitchside': typeof PitchsideRoute
+  '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
   '/stations': typeof StationsRoute
   '/timer': typeof TimerRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/focus'
     | '/guides'
     | '/pitchside'
+    | '/quiz'
     | '/rules'
     | '/stations'
     | '/timer'
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/focus'
     | '/guides'
     | '/pitchside'
+    | '/quiz'
     | '/rules'
     | '/stations'
     | '/timer'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/focus'
     | '/guides'
     | '/pitchside'
+    | '/quiz'
     | '/rules'
     | '/stations'
     | '/timer'
@@ -205,6 +217,7 @@ export interface RootRouteChildren {
   FocusRoute: typeof FocusRoute
   GuidesRoute: typeof GuidesRoute
   PitchsideRoute: typeof PitchsideRoute
+  QuizRoute: typeof QuizRoute
   RulesRoute: typeof RulesRoute
   StationsRoute: typeof StationsRoute
   TimerRoute: typeof TimerRoute
@@ -277,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PitchsideRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rules': {
       id: '/rules'
       path: '/rules'
@@ -325,6 +345,7 @@ const rootRouteChildren: RootRouteChildren = {
   FocusRoute: FocusRoute,
   GuidesRoute: GuidesRoute,
   PitchsideRoute: PitchsideRoute,
+  QuizRoute: QuizRoute,
   RulesRoute: RulesRoute,
   StationsRoute: StationsRoute,
   TimerRoute: TimerRoute,

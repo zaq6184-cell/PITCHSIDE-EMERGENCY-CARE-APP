@@ -143,6 +143,256 @@
   }
 }
 
+/* ------------------------------------------------------------------ motion */
+@keyframes pec-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* cards rise in as they scroll into view (where the browser supports scroll-driven animation) */
+.reveal {
+  animation: pec-rise 0.45s var(--ease-out-smooth) both;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: pec-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 32%;
+    }
+  }
+}
+
+/* page background: two slow floodlight glows and faint mowing stripes, behind the cards */
+.ambient {
+  z-index: 0;
+}
+
+.ambient-a,
+.ambient-b {
+  position: absolute;
+  width: 90vmax;
+  height: 90vmax;
+  border-radius: 9999px;
+  will-change: transform;
+}
+
+.ambient-a {
+  left: -32vmax;
+  top: -38vmax;
+  background: radial-gradient(closest-side, rgba(201, 162, 39, 0.13), transparent);
+  animation: drift-a 38s ease-in-out infinite alternate;
+}
+
+.ambient-b {
+  right: -38vmax;
+  bottom: -42vmax;
+  background: radial-gradient(closest-side, rgba(31, 106, 165, 0.12), transparent);
+  animation: drift-b 46s ease-in-out infinite alternate;
+}
+
+.ambient-lines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(11, 31, 58, 0.022) 0 72px, transparent 72px 144px);
+}
+
+:root[data-theme="dark"] .ambient-a {
+  background: radial-gradient(closest-side, rgba(212, 174, 54, 0.1), transparent);
+}
+
+:root[data-theme="dark"] .ambient-b {
+  background: radial-gradient(closest-side, rgba(60, 130, 220, 0.18), transparent);
+}
+
+:root[data-theme="dark"] .ambient-lines {
+  background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.018) 0 72px, transparent 72px 144px);
+}
+
+@keyframes drift-a {
+  to {
+    transform: translate3d(26vmax, 34vmax, 0) scale(1.15);
+  }
+}
+
+@keyframes drift-b {
+  to {
+    transform: translate3d(-30vmax, -28vmax, 0) scale(1.1);
+  }
+}
+
+/* pictures that slowly push in and drift (module headers and covers) */
+.kenburns {
+  animation: kenburns 26s ease-in-out infinite alternate;
+  transform-origin: 50% 65%;
+  will-change: transform;
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.14) translate3d(-2.5%, -1.5%, 0);
+  }
+}
+
+/* floodlight shimmer over a picture */
+.flare {
+  position: relative;
+}
+
+.flare::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(38% 34% at 24% 10%, rgba(255, 246, 214, 0.32), transparent 70%),
+    radial-gradient(30% 28% at 78% 8%, rgba(255, 246, 214, 0.22), transparent 70%);
+  mix-blend-mode: screen;
+  animation: flare 6s ease-in-out infinite;
+}
+
+@keyframes flare {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+/* a light sweep across a tile now and then */
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.26) 50%, transparent 62%);
+  transform: translateX(-130%);
+  animation: shine 8s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes shine {
+  0%,
+  72% {
+    transform: translateX(-130%);
+  }
+  88%,
+  100% {
+    transform: translateX(130%);
+  }
+}
+
+.float-y {
+  animation: float-y 4.5s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes float-y {
+  50% {
+    transform: translateY(-4px) rotate(-4deg);
+  }
+}
+
+.animate-pop {
+  animation: pop 0.22s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  transform-origin: top right;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(-4px);
+  }
+}
+
+.caption-in {
+  animation: caption-in 0.35s var(--ease-out-smooth) both;
+}
+
+@keyframes caption-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+
+/* speaker button while a call-out plays */
+.sound-wave {
+  animation: sound-wave 0.9s ease-in-out infinite;
+}
+
+@keyframes sound-wave {
+  50% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--color-gold) 25%, transparent);
+  }
+}
+
+/* CPR rhythm heart: one beat per compression at 110/min */
+.cpr-beat {
+  animation: cpr-beat 0.545s ease-out infinite;
+}
+
+@keyframes cpr-beat {
+  0% {
+    transform: scale(1);
+  }
+  18% {
+    transform: scale(1.22);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* quiz celebration */
+.confetti-piece {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: confetti 1.2s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+@keyframes confetti {
+  from {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(var(--x), var(--y)) rotate(var(--r));
+    opacity: 0;
+  }
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
