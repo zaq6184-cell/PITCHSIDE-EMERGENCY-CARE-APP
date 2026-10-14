@@ -12,7 +12,8 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { PositionDiagram } from "@/components/position-diagram";
-import { AppShell, HeroPhoto, Note, Panel, SectionLabel } from "@/components/workshop";
+import { RoleExplorer3D } from "@/components/set-piece-3d";
+import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
 import { about, aboutApp, disclaimer } from "@/lib/disclaimer";
 import { fifaDownloads } from "@/lib/fifa-links";
@@ -64,11 +65,19 @@ function Home() {
 
         <Panel>
           <div className="px-3.5 pt-3.5">
-            <SectionLabel>WHERE EACH COLOUR SITS</SectionLabel>
+            <SectionLabel>THE SET PIECE IN 3D</SectionLabel>
           </div>
           <div className="mt-3">
-            <PositionDiagram />
+            <RoleExplorer3D />
           </div>
+          <details className="border-t border-line px-3.5 py-1">
+            <summary className="flex min-h-11 cursor-pointer items-center font-display text-xs font-semibold tracking-wide text-navy">
+              Show the flat diagram
+            </summary>
+            <div className="-mx-3.5 pb-2">
+              <PositionDiagram />
+            </div>
+          </details>
           <ul className="flex flex-col divide-y divide-line px-3.5 py-2 text-sm leading-snug">
             <li className="py-1.5">
               <span className="font-semibold text-navy">At the head: </span>Orange, with Green beside the bag and AED on the
@@ -83,12 +92,6 @@ function Home() {
             </li>
           </ul>
         </Panel>
-        <HeroPhoto
-          src={asset("/img/stations/positions-aerial-v4.jpg")}
-          alt="Six people kneeling around a player lying on the pitch: Orange and Green at the head, Red, Blue and White down the player's right side, Black on the player's left"
-          caption="The same six positions seen from above. Illustration."
-          contain
-        />
         <Panel>
           <div className="flex flex-col gap-2 px-3.5 py-3.5">
             <SectionLabel>STRETCHER TEAM</SectionLabel>
