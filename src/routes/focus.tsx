@@ -6,7 +6,10 @@ import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 import { FIFA_FOCUS_PAGE, fifaFocusClip } from "@/lib/videos";
 
-export const Route = createFileRoute("/focus")({ component: FocusPage });
+export const Route = createFileRoute("/focus")({
+  component: FocusPage,
+  head: () => ({ meta: [{ title: "Concussion assessment (FOCUS) · Pitchside Emergency Care" }] }),
+});
 
 /** watch = lower threshold for concern + continue; sub = substitute + assess off the pitch. */
 /** step = a practical action between FIFA's domains, not an assessment item. */
@@ -207,7 +210,7 @@ function FocusPage() {
         <Panel>
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">FIFA HEALTH & MEDICAL</p>
-            <h2 className="mt-0.5 font-display text-xl font-bold leading-tight">Concussion assessment protocol (FOCUS)</h2>
+            <h1 className="mt-0.5 font-display text-xl font-bold leading-tight">Concussion assessment protocol (FOCUS)</h1>
             <p className="mt-1 text-sm text-gold-soft">
               Football-Specific Standardised On-Pitch Concussion Assessment Protocol.
             </p>
@@ -321,7 +324,7 @@ function FocusPage() {
             href={asset("/docs/FIFA-FOCUS-Concussion-Lanyard-April-2026.pdf")}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center gap-2 font-display text-sm font-semibold tracking-wide text-gold"
+            className="inline-flex min-h-11 items-center gap-2 font-display text-sm font-semibold tracking-wide text-gold-ink"
           >
             <FileText className="size-4" />
             Open the print PDF
@@ -411,7 +414,7 @@ function FocusPage() {
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
-                  <FileText className="size-4 shrink-0 text-gold" />
+                  <FileText className="size-4 shrink-0 text-gold-ink" />
                   <span className="flex-1">{t}</span>
                   <span className="shrink-0 rounded-full bg-cream px-2 py-0.5 font-display text-[10px] font-semibold tracking-wide text-muted">
                     {kind}
@@ -423,13 +426,13 @@ function FocusPage() {
         </Section>
 
         <Section title="RELATED IN THIS GUIDE">
-          <Link to="/cspine" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold">
+          <Link to="/cspine" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink">
             Cervical spine injury — FIFA set piece →
           </Link>
           <Link
             to="/station/$id"
             params={{ id: "3" }}
-            className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold"
+            className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink"
           >
             Skill module 3 — primary survey (D: disability) →
           </Link>

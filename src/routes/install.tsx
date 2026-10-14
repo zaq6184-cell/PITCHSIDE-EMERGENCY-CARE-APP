@@ -4,12 +4,15 @@ import { InstallGuides, InstallNow, OfflineSave, useInstall } from "@/components
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
 
-export const Route = createFileRoute("/install")({ component: InstallPage });
+export const Route = createFileRoute("/install")({
+  component: InstallPage,
+  head: () => ({ meta: [{ title: "Install the app · Pitchside Emergency Care" }] }),
+});
 
 const PERKS = [
   "Opens full screen from its own icon, like any app.",
   "Works offline at the pitch once saved — no signal needed.",
-  "Long-press the icon (Android, computers) for shortcuts: drill, carry timer, quiz, modules.",
+  "Shortcuts to the drill, carry timer, quiz and modules: long-press the icon on Android, or right-click it on a computer.",
   "Updates itself whenever you are online. No app store, no account, nothing collected.",
 ];
 
@@ -19,7 +22,7 @@ function InstallPage() {
   return (
     <AppShell tab="about">
       <div className="flex flex-col gap-3.5">
-        <Link to="/" className="inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold">
+        <Link to="/" className="inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold-ink">
           <ArrowLeft className="size-4" strokeWidth={2.4} />
           Home
         </Link>
@@ -35,7 +38,7 @@ function InstallPage() {
             <ul className="flex flex-col gap-1.5">
               {PERKS.map((p) => (
                 <li key={p} className="flex gap-2 text-sm leading-snug">
-                  <Check className="mt-0.5 size-4 shrink-0 text-gold" strokeWidth={3} aria-hidden />
+                  <Check className="mt-0.5 size-4 shrink-0 text-gold-ink" strokeWidth={3} aria-hidden />
                   {p}
                 </li>
               ))}
@@ -65,7 +68,7 @@ function InstallPage() {
           <div className="flex flex-col gap-2.5 px-3.5 py-3.5">
             <SectionLabel>USE IT WITHOUT A SIGNAL</SectionLabel>
             <p className="flex gap-2 text-sm leading-snug">
-              <WifiOff className="mt-0.5 size-4 shrink-0 text-gold" aria-hidden />
+              <WifiOff className="mt-0.5 size-4 shrink-0 text-gold-ink" aria-hidden />
               Every page and the 3D drill are saved on this device automatically. Pictures, sounds and films are saved as you open them — or all at once here.
             </p>
             <OfflineSave />

@@ -171,7 +171,7 @@ function Home() {
                     className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-heading"
                   >
                     <span className="min-w-0 flex-1">{d.label}</span>
-                    <ExternalLink className="size-4 shrink-0 text-gold" aria-hidden />
+                    <ExternalLink className="size-4 shrink-0 text-gold-ink" aria-hidden />
                   </a>
                 </li>
               ))}
@@ -195,7 +195,7 @@ function Home() {
                     className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-heading"
                   >
                     <span className="min-w-0 flex-1">{label}</span>
-                    <ChevronRight className="size-4 shrink-0 text-gold" aria-hidden />
+                    <ChevronRight className="size-4 shrink-0 text-gold-ink" aria-hidden />
                   </a>
                 </li>
               ))}
@@ -225,7 +225,7 @@ function Home() {
             <p className="text-xs leading-snug text-muted">{disclaimer.short}</p>
             <Link
               to="/about"
-              className="inline-flex min-h-11 items-center gap-1 font-display text-sm font-semibold tracking-wide text-gold"
+              className="inline-flex min-h-11 items-center gap-1 font-display text-sm font-semibold tracking-wide text-gold-ink"
             >
               Purpose, developers, disclaimer, copyright and use of AI
               <ChevronRight className="size-4" aria-hidden />
@@ -326,7 +326,7 @@ function Tiles({ items }: { items: Tile[] }) {
                 <span className="block font-display text-sm font-semibold tracking-wide text-heading">{t.title}</span>
                 <span className="mt-0.5 block text-xs leading-snug text-muted">{t.sub}</span>
               </span>
-              {t.wide ? <ChevronRight className="size-5 shrink-0 text-gold" aria-hidden /> : null}
+              {t.wide ? <ChevronRight className="size-5 shrink-0 text-gold-ink" aria-hidden /> : null}
             </div>
           </Panel>
         </Link>

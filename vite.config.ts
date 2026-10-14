@@ -217,7 +217,9 @@ export default defineConfig(({ command, isPreview }) => ({
             // Auto-registers server/middleware/* (the PWA install page +
             // manifest + head-tag middleware). Nitro v3 defaults serverDir to
             // false, so removing this silently unwires /?install=1 on deploys.
-            serverDir: "./server",
+            // The static GitHub Pages build skips it: it would inject the app
+            // builder's third-party script and overwrite this site's own share tags.
+            serverDir: githubPages ? false : "./server",
           }),
         ]
       : []),

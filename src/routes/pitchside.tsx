@@ -5,7 +5,10 @@ import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
 import { FIFA_PITCHSIDE_PAGE, fifaSkillList } from "@/lib/videos";
 
-export const Route = createFileRoute("/pitchside")({ component: PitchsidePage });
+export const Route = createFileRoute("/pitchside")({
+  component: PitchsidePage,
+  head: () => ({ meta: [{ title: "Pitchside emergency care · Pitchside Emergency Care" }] }),
+});
 
 const posters = [
   {
@@ -65,7 +68,7 @@ function PitchsidePage() {
         <Panel>
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">FIFA HEALTH & MEDICAL</p>
-            <h2 className="mt-0.5 font-display text-xl font-bold leading-tight">Pitchside emergency care</h2>
+            <h1 className="mt-0.5 font-display text-xl font-bold leading-tight">Pitchside emergency care</h1>
             <p className="mt-1 text-sm text-gold-soft">
               FIFA's Skill Zone films, set-piece protocols, role cards and the emergency care bag.
             </p>
@@ -92,7 +95,7 @@ function PitchsidePage() {
             FIFA's <b>role cards</b> give each member one colour and one set of tasks. Ideally one card per person; in a small team one
             person may hold more than one role if competent to do both.
           </p>
-          <Link to="/" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold">
+          <Link to="/" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink">
             Open your colour — each role page now shows FIFA's official card →
           </Link>
         </Section>
@@ -103,10 +106,10 @@ function PitchsidePage() {
             anyone else's. FIFA's toolkit gives colour-coded protocols for on-field interventions, sudden cardiac arrest and cervical
             spine injury — the colours match the PEAP roles.
           </p>
-          <Link to="/cspine" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold">
+          <Link to="/cspine" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink">
             Cervical spine injury — set piece by colour →
           </Link>
-          <Link to="/focus" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold">
+          <Link to="/focus" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink">
             Concussion assessment (FOCUS) →
           </Link>
         </Section>
@@ -176,7 +179,7 @@ function PitchsidePage() {
               </a>
             ))}
           </div>
-          <Link to="/bag" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold">
+          <Link to="/bag" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink">
             Full bag packing list →
           </Link>
         </Section>
@@ -191,7 +194,7 @@ function PitchsidePage() {
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
-                  <FileText className="size-4 shrink-0 text-gold" />
+                  <FileText className="size-4 shrink-0 text-gold-ink" />
                   <span>{t}</span>
                 </a>
               </li>

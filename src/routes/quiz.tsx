@@ -9,7 +9,10 @@ import { haptic, say, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { type RoleId, workshop } from "@/lib/workshop";
 
-export const Route = createFileRoute("/quiz")({ component: QuizPage });
+export const Route = createFileRoute("/quiz")({
+  component: QuizPage,
+  head: () => ({ meta: [{ title: "Test yourself · Pitchside Emergency Care" }] }),
+});
 
 type Mode = "who" | "place";
 
@@ -19,7 +22,7 @@ function QuizPage() {
     if (window.location.hash === "#place") setMode("place");
   }, []);
   return (
-    <AppShell tab="home">
+    <AppShell tab="home" heading="Test yourself">
       <div className="flex flex-col gap-3.5">
         <Note>
           <span className="font-semibold text-heading">Test yourself. </span>
@@ -205,7 +208,7 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
           <p className="font-display text-xs font-semibold tracking-[0.14em] text-muted">
             QUESTION {i + 1} OF {round.length}
           </p>
-          <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">SCORE {score}</p>
+          <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold-ink">SCORE {score}</p>
         </div>
         <div className="h-1.5 overflow-hidden rounded-full bg-line" aria-hidden="true">
           <div className="h-full rounded-full bg-gold transition-[width] duration-500 ease-out" style={{ width: `${((i + (answered ? 1 : 0)) / round.length) * 100}%` }} />

@@ -57,7 +57,7 @@ export function InstallCard() {
       <div className="flex items-center gap-3 px-3.5 py-3.5 pr-10">
         <img src={asset("/icons/maskable-192.png")} alt="" width={56} height={56} className="size-14 shrink-0 rounded-2xl shadow-card outline-none" />
         <div className="min-w-0 flex-1">
-          <p className="font-display text-[11px] font-semibold tracking-[0.16em] text-gold">GET THE APP</p>
+          <p className="font-display text-[11px] font-semibold tracking-[0.16em] text-gold-ink">GET THE APP</p>
           <p className="font-display text-base font-bold leading-tight text-heading">Install on your phone or computer</p>
           <p className="mt-0.5 text-xs leading-snug text-muted">Opens full screen from your home screen and works offline at the pitch. Free, no account.</p>
         </div>
@@ -188,7 +188,7 @@ export function InstallGuides() {
   const card = (g: (typeof GUIDES)[number], highlight: boolean) => (
     <div key={g.id} className={cn("rounded-xl px-3.5 py-3", highlight ? "border-2 border-gold bg-note" : "border border-line bg-paper")}>
       <p className="flex items-center gap-2 font-display text-sm font-semibold tracking-wide text-heading">
-        <g.icon className="size-4 text-gold" aria-hidden />
+        <g.icon className="size-4 text-gold-ink" aria-hidden />
         {g.title}
         {highlight ? <span className="ml-auto rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold tracking-wider text-on-gold">THIS DEVICE</span> : null}
       </p>

@@ -150,7 +150,7 @@ export function RoleExplorer3D() {
             <Link
               to="/role/$id"
               params={{ id: role.id }}
-              className="mt-1 inline-flex min-h-10 items-center gap-1 font-display text-sm font-semibold tracking-wide text-gold"
+              className="mt-1 inline-flex min-h-10 items-center gap-1 font-display text-sm font-semibold tracking-wide text-gold-ink"
             >
               Open the {role.name.toLowerCase()} role
               <ChevronRight className="size-4" aria-hidden />
@@ -270,7 +270,7 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
         <Caption c={caption} />
       </div>
       <div ref={swipe}>
-      <div className="flex items-center gap-1.5 px-3.5 pt-3">
+      <div className="flex items-center gap-1 px-3.5 pt-3 min-[400px]:gap-1.5">
         {steps.map((s) => (
           <button
             key={s.n}
@@ -282,7 +282,7 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
             aria-label={`Step ${s.n}: ${s.title}`}
             aria-current={s.n === step ? "step" : undefined}
             className={cn(
-              "grid size-10 shrink-0 place-items-center rounded-full font-display text-sm font-bold transition-all duration-200 active:scale-95",
+              "grid size-8 shrink-0 place-items-center rounded-full font-display text-sm font-bold transition-all duration-200 active:scale-95 min-[360px]:size-9 min-[400px]:size-10",
               s.n === step ? "scale-110 bg-navy text-gold shadow-[0_6px_14px_-6px_rgba(0,0,0,0.5)]" : "bg-note text-heading",
             )}
           >
@@ -296,10 +296,11 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
             setAuto((v) => !v);
           }}
           aria-pressed={auto}
-          className="ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-full bg-gold px-3.5 font-display text-xs font-semibold tracking-wide text-on-gold transition-transform duration-150 active:scale-95"
+          aria-label={auto ? "Pause" : "Play all steps"}
+          className="ml-auto inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 rounded-full bg-gold px-2.5 font-display text-xs font-semibold tracking-wide text-on-gold transition-transform duration-150 active:scale-95 min-[400px]:px-3.5"
         >
           {auto ? <Pause className="size-3.5" aria-hidden /> : <Play className="size-3.5" aria-hidden />}
-          {auto ? "Pause" : "Play all"}
+          <span className="max-[399px]:sr-only">{auto ? "Pause" : "Play all"}</span>
         </button>
       </div>
       <div className="mx-3.5 mt-2.5 h-1 overflow-hidden rounded-full bg-line" aria-hidden="true">
@@ -309,7 +310,7 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
         <span className="font-semibold text-heading">{cur.title}. </span>
         {cur.lines[0]}
       </p>
-      <p className="px-3.5 pb-3.5 text-[11px] text-muted">Swipe here for the next step.</p>
+      <p className="px-3.5 pb-3.5 text-[11px] text-muted pointer-fine:hidden">Swipe here for the next step.</p>
       </div>
     </div>
   );

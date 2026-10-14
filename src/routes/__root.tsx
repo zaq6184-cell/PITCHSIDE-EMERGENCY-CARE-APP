@@ -8,6 +8,10 @@ import { installBootScript, registerServiceWorker } from "@/lib/install";
 import { themeBootScript } from "@/lib/theme";
 
 const APP_NAME = "Pitchside Emergency Care";
+const DESCRIPTION =
+  "Study guide to FIFA's medical set piece for football: the six colour roles, sudden cardiac arrest, the primary survey, cervical spine injury, concussion (FOCUS) and the emergency care bag, with links to FIFA's films and documents.";
+/** Public address of the site, for link previews (set VITE_SITE_URL when it moves). */
+const SITE_URL = (import.meta.env.VITE_SITE_URL as string | undefined) ?? "https://zaq6184-cell.github.io/hkl-football-medicine-2026/";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -18,11 +22,21 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1, viewport-fit=cover",
       },
       { title: APP_NAME },
-      {
-        name: "description",
-        content:
-          "Study guide to FIFA's medical set piece for football: the six colour roles, sudden cardiac arrest, the primary survey, cervical spine injury, concussion (FOCUS) and the emergency care bag, with links to FIFA's films and documents.",
-      },
+      { name: "description", content: DESCRIPTION },
+      // link previews (WhatsApp, Facebook, X, LinkedIn…)
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: APP_NAME },
+      { property: "og:title", content: `${APP_NAME} — FIFA medical set piece study guide` },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:image", content: new URL("og.jpg", SITE_URL).href },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Pitchside Emergency Care — the six colour roles of FIFA's medical set piece" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: APP_NAME },
+      { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: new URL("og.jpg", SITE_URL).href },
       { name: "theme-color", content: "#0B1F3A" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "mobile-web-app-capable", content: "yes" },

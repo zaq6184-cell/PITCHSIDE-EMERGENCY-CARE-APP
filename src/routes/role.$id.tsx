@@ -9,7 +9,13 @@ import { haptic } from "@/lib/sound";
 import { getRole, isRoleId, workshop } from "@/lib/workshop";
 import { FIFA_ROLE_CARDS_PDF, fifaRoleCards } from "@/lib/fifa-roles";
 
-export const Route = createFileRoute("/role/$id")({ component: RoleCard });
+export const Route = createFileRoute("/role/$id")({
+  component: RoleCard,
+  head: ({ params }) => {
+    const r = isRoleId(params.id) ? getRole(params.id) : undefined;
+    return { meta: [{ title: r ? `${r.name.charAt(0)}${r.name.slice(1).toLowerCase()} · ${r.role} · Pitchside Emergency Care` : "Pitchside Emergency Care" }] };
+  },
+});
 
 function RoleCard() {
   const { id } = Route.useParams();
@@ -35,7 +41,7 @@ function RoleCard() {
       <div ref={swipe} className="flex flex-col gap-3">
         <Link
           to="/"
-          className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold"
+          className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold-ink"
         >
           <ArrowLeft className="size-4" strokeWidth={2.4} />
           All colours
@@ -64,7 +70,7 @@ function RoleCard() {
             }}
           >
             <RoleIcon className="absolute -right-1 -top-2 size-20 opacity-25" strokeWidth={1.4} aria-hidden />
-            <h2 className="font-display text-[1.7rem] font-bold leading-none tracking-[0.08em]">{r.name}</h2>
+            <h1 className="font-display text-[1.7rem] font-bold leading-none tracking-[0.08em]">{r.name}</h1>
             <p className="mt-1 text-sm opacity-90">{r.role}</p>
           </div>
           <PositionDiagram highlight={r.id} />
@@ -79,7 +85,7 @@ function RoleCard() {
               {r.id === "green" ? (
                 <Link
                   to="/bag"
-                  className="mt-2 inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold"
+                  className="mt-2 inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink"
                 >
                   Full FIFA bag list
                 </Link>
@@ -117,7 +123,7 @@ function RoleCard() {
             onClick={() => go(prev, "back")}
             className="flex min-h-11 items-center gap-1.5 rounded-lg bg-paper px-3 py-2 text-left text-sm shadow-card active:scale-[0.98]"
           >
-            <ChevronLeft className="size-4 shrink-0 text-gold" aria-hidden />
+            <ChevronLeft className="size-4 shrink-0 text-gold-ink" aria-hidden />
             <span className="size-3 shrink-0 rounded-full ring-1 ring-black/15" style={{ background: prev.color }} aria-hidden />
             <span className="truncate">{prev.name}</span>
           </button>
@@ -128,10 +134,10 @@ function RoleCard() {
           >
             <span className="truncate">{next.name}</span>
             <span className="size-3 shrink-0 rounded-full ring-1 ring-black/15" style={{ background: next.color }} aria-hidden />
-            <ChevronRight className="size-4 shrink-0 text-gold" aria-hidden />
+            <ChevronRight className="size-4 shrink-0 text-gold-ink" aria-hidden />
           </button>
         </div>
-        <p className="text-center text-[11px] text-muted">Swipe left or right for the next colour.</p>
+        <p className="text-center text-[11px] text-muted pointer-fine:hidden">Swipe left or right for the next colour.</p>
       </div>
     </AppShell>
   );

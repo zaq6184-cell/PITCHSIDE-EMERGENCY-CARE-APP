@@ -3,11 +3,14 @@ import { PlayCircle } from "lucide-react";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { workshop } from "@/lib/workshop";
 
-export const Route = createFileRoute("/rules")({ component: Rules });
+export const Route = createFileRoute("/rules")({
+  component: Rules,
+  head: () => ({ meta: [{ title: "Golden rules · Pitchside Emergency Care" }] }),
+});
 
 function Rules() {
   return (
-    <AppShell tab="rules">
+    <AppShell tab="rules" heading="Golden rules">
       <div className="flex flex-col gap-3.5">
         <Panel>
           <div className="px-3.5 py-3.5">
@@ -34,7 +37,7 @@ function Rules() {
             ))}
             <Link
               to="/guides"
-              className="mt-2 inline-flex min-h-11 items-center gap-2 font-display text-sm font-semibold tracking-wide text-gold"
+              className="mt-2 inline-flex min-h-11 items-center gap-2 font-display text-sm font-semibold tracking-wide text-gold-ink"
             >
               <PlayCircle className="size-4" strokeWidth={2.2} />
               FIFA films and downloads

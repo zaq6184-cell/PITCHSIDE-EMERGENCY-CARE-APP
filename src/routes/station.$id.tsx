@@ -9,7 +9,13 @@ import { moduleCover } from "@/lib/module-covers";
 import { haptic } from "@/lib/sound";
 import { type Block, getStation, stations } from "@/lib/stations";
 
-export const Route = createFileRoute("/station/$id")({ component: StationPage });
+export const Route = createFileRoute("/station/$id")({
+  component: StationPage,
+  head: ({ params }) => {
+    const st = getStation(params.id);
+    return { meta: [{ title: st ? `Module ${st.id} · ${st.short} · Pitchside Emergency Care` : "Pitchside Emergency Care" }] };
+  },
+});
 
 const slug = (t: string) =>
   "s-" + t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -42,7 +48,7 @@ function StationPage() {
       <div ref={swipe} className="flex flex-col gap-3">
         <Link
           to="/stations"
-          className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold"
+          className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold-ink"
         >
           <ArrowLeft className="size-4" strokeWidth={2.4} />
           All skill modules
@@ -66,7 +72,7 @@ function StationPage() {
             ) : null}
             <div className={cover ? "px-3.5 pb-3.5" : "px-3.5 py-3"}>
               <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">MODULE {s.id}</p>
-              <h2 className="mt-0.5 font-display text-[1.45rem] font-bold leading-tight">{s.title}</h2>
+              <h1 className="mt-0.5 font-display text-[1.45rem] font-bold leading-tight">{s.title}</h1>
               <p className="mt-1 text-sm text-gold-soft">{s.subtitle}</p>
             </div>
           </div>
@@ -99,7 +105,7 @@ function StationPage() {
               onClick={() => setTransitionDirection("back")}
               className="flex min-h-11 items-center gap-1 rounded-lg bg-paper px-3 py-2 text-sm shadow-card"
             >
-              <ChevronLeft className="size-4 shrink-0 text-gold" />
+              <ChevronLeft className="size-4 shrink-0 text-gold-ink" />
               <span className="truncate">
                 {prev.id} · {prev.short}
               </span>
@@ -117,7 +123,7 @@ function StationPage() {
               <span className="truncate">
                 {next.id} · {next.short}
               </span>
-              <ChevronRight className="size-4 shrink-0 text-gold" />
+              <ChevronRight className="size-4 shrink-0 text-gold-ink" />
             </Link>
           ) : (
             <Link
@@ -125,7 +131,7 @@ function StationPage() {
               className="flex min-h-11 items-center justify-end gap-1 rounded-lg bg-paper px-3 py-2 text-right text-sm shadow-card"
             >
               <span className="truncate">All modules</span>
-              <ChevronRight className="size-4 shrink-0 text-gold" />
+              <ChevronRight className="size-4 shrink-0 text-gold-ink" />
             </Link>
           )}
         </div>
@@ -230,7 +236,7 @@ function BlockView({ b }: { b: Block }) {
             <span className="block font-display font-semibold tracking-wide text-heading">{b.label}</span>
             {b.text ? <span className="block text-muted">{b.text}</span> : null}
           </span>
-          <ChevronRight className="h-5 w-5 shrink-0 text-gold" aria-hidden />
+          <ChevronRight className="h-5 w-5 shrink-0 text-gold-ink" aria-hidden />
         </Link>
       );
     case "positions":

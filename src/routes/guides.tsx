@@ -4,11 +4,14 @@ import { FifaSkillZoneList, FifaVideoList, SkillVideoList, VideoList } from "@/c
 import { AppShell, JumpChips, SectionLabel } from "@/components/workshop";
 import { fifaFocusClip } from "@/lib/videos";
 
-export const Route = createFileRoute("/guides")({ component: GuidesPage });
+export const Route = createFileRoute("/guides")({
+  component: GuidesPage,
+  head: () => ({ meta: [{ title: "Films · Pitchside Emergency Care" }] }),
+});
 
 function GuidesPage() {
   return (
-    <AppShell tab="films">
+    <AppShell tab="films" heading="Films">
       <div className="flex flex-col gap-5">
         <JumpChips
           items={[
