@@ -610,55 +610,6 @@ function Kit({ step }: { step: number }) {
   );
 }
 
-/** The ambulance drives onto the pitch for the transfer (FIFA: best if it comes to the player). */
-function Ambulance({ step }: { step: number }) {
-  const g = useRef<THREE.Group>(null);
-  const blue = useRef<THREE.MeshStandardMaterial>(null);
-  useFrame(({ clock }, dt) => {
-    const t = clock.elapsedTime;
-    if (g.current) {
-      const target = step >= 5 ? 2.9 : 13;
-      g.current.position.x += (target - g.current.position.x) * Math.min(1, dt * 0.8);
-    }
-    if (blue.current) blue.current.emissiveIntensity = step >= 5 ? (Math.sin(t * 14) > 0 ? 3 : 0.2) : 0.1;
-  });
-  return (
-    <group ref={g} position={[13, 0, -3.1]} rotation={[0, -Math.PI / 2, 0]}>
-      <mesh position={[0, 0.78, 0.35]} castShadow>
-        <boxGeometry args={[1.25, 1.2, 2.3]} />
-        <meshStandardMaterial color="#f5f6f8" roughness={0.4} />
-      </mesh>
-      <mesh position={[0, 0.6, -1.15]} castShadow>
-        <boxGeometry args={[1.2, 0.85, 0.85]} />
-        <meshStandardMaterial color="#f5f6f8" roughness={0.4} />
-      </mesh>
-      <mesh position={[0, 0.82, -1.58]}>
-        <boxGeometry args={[1.05, 0.38, 0.02]} />
-        <meshStandardMaterial color="#1b2633" roughness={0.1} metalness={0.4} />
-      </mesh>
-      <mesh position={[0, 0.62, 0.35]}>
-        <boxGeometry args={[1.27, 0.14, 2.32]} />
-        <meshStandardMaterial color="#E36B12" roughness={0.5} />
-      </mesh>
-      <mesh position={[0, 1.42, 0.0]}>
-        <boxGeometry args={[0.7, 0.08, 0.2]} />
-        <meshStandardMaterial ref={blue} color="#2f6bff" emissive="#4d7dff" emissiveIntensity={0.1} />
-      </mesh>
-      {[
-        [-0.62, -0.9],
-        [0.62, -0.9],
-        [-0.62, 0.95],
-        [0.62, 0.95],
-      ].map(([x, z]) => (
-        <mesh key={`${x}${z}`} position={[x, 0.22, z]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.22, 0.22, 0.14, 16]} />
-          <meshStandardMaterial color="#121316" roughness={0.8} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
 // ------------------------------------------------------------------ the stadium
 function grassTexture() {
   const c = document.createElement("canvas");
@@ -852,7 +803,6 @@ export default function Scene3D({
         <directionalLight position={[0, 4, 9]} intensity={0.35} color="#ffe2b8" />
         <Rig autoRotate={!still} angle={angle} dragging={dragging} />
         <Stadium />
-        <Ambulance step={step} />
         <Player step={step} />
         <Kit step={step} />
         {SPOTS.map((s) => (

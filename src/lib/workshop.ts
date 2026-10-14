@@ -260,9 +260,9 @@ export const workshop = {
     "Repeat until the player is inside the ambulance.",
     "An ambulance coming onto the field to the player is always preferable to carrying.",
   ],
-  /** The current PEAP poster has six roles and no separate stretcher team. */
+  /** The current PEAP poster has six roles and no separate extrication team. */
   stretcherNote:
-    "The current FIFA PEAP shows six roles: Black, Orange, Red, Green, Blue and White. Earlier versions also marked a separate stretcher team in yellow, usually four bearers provided by the stadium. Some venues and teaching centres still use one. If yours does, include them in the pre-match plan: they wait beside the scoop and basket, facing the player, and join only when the team leader calls them — to help with a log roll or to carry.",
+    "The current FIFA PEAP shows six roles: Black, Orange, Red, Green, Blue and White. Earlier versions also marked a separate extrication team in yellow, usually four first aiders provided by the stadium. Some venues and teaching centres still use one. If yours does, include them in the pre-match plan: they wait beside the scoop and basket, facing the player, and join only when the team leader calls them — to help with a log roll or to carry.",
   disclaimer:
     "Study aid summarising FIFA's published emergency care guidance. Not a substitute for formal training, current life support certification or your local protocols.",
 } as const;

@@ -130,7 +130,7 @@ function Home() {
         </Panel>
         <Panel>
           <div className="flex flex-col gap-2 px-3.5 py-3.5">
-            <SectionLabel>STRETCHER TEAM</SectionLabel>
+            <SectionLabel>EXTRICATION TEAM</SectionLabel>
             <p className="text-sm leading-snug">{workshop.stretcherNote}</p>
           </div>
         </Panel>
