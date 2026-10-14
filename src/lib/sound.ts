@@ -1,36 +1,35 @@
 import { asset } from "@/lib/asset";
 
 /**
- * Sound for the guide: effects, spoken call-outs, a CPR rhythm click, stadium ambience and a music loop.
- * Everything is OFF until the person turns it on (choice kept on this device only). Files load only when
- * first needed. Voices tapped directly (a speaker button) play even when effects are off.
+ * Sound for the guide: effects, spoken call-outs, a CPR rhythm click, stadium ambience and music that suits
+ * each page. Everything is ON by default; browsers only allow sound after the first tap or key press, so it
+ * starts then. Either switch remembers the person's choice on this device only. Files load when first needed.
  */
-export type SfxName = "whistle" | "correct" | "wrong" | "whoosh" | "cheer" | "shock";
+export type SfxName = "whistle" | "correct" | "wrong" | "whoosh" | "cheer" | "shock" | "siren";
 export type SoundPrefs = { sfx: boolean; music: boolean };
+/** The music for a page: Home's theme, a calm study loop, the drill at CPR tempo, the quiz — or none (Tools). */
+export type MusicScene = "theme" | "study" | "drill" | "quiz" | "none";
 
 const KEY = "pec-sound";
-const OFF: SoundPrefs = { sfx: false, music: false };
-let prefs: SoundPrefs = OFF;
+const DEFAULTS: SoundPrefs = { sfx: true, music: true };
+let prefs: SoundPrefs = DEFAULTS;
 let loaded = false;
+let unlocked = false;
 const listeners = new Set<() => void>();
+
+// the first of these that the browser counts as a real interaction lets sound start
+const UNLOCK_EVENTS = ["pointerdown", "pointerup", "touchend", "click", "keydown"] as const;
 
 function load() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
   try {
     const v = JSON.parse(localStorage.getItem(KEY) || "{}") as Partial<SoundPrefs>;
-    prefs = { sfx: Boolean(v.sfx), music: Boolean(v.music) };
+    prefs = { sfx: v.sfx ?? DEFAULTS.sfx, music: v.music ?? DEFAULTS.music };
   } catch {
-    prefs = OFF;
+    prefs = DEFAULTS;
   }
-  // a saved "music on" can only start after the first tap (browsers block autoplay with sound)
-  if (prefs.music) {
-    const kick = () => {
-      applyMusic();
-      window.removeEventListener("pointerdown", kick);
-    };
-    window.addEventListener("pointerdown", kick);
-  }
+  for (const type of UNLOCK_EVENTS) window.addEventListener(type, unlock, true);
   document.addEventListener("visibilitychange", () => {
     applyMusic();
     if (document.visibilityState !== "visible") {
@@ -38,13 +37,35 @@ function load() {
       stopVoice();
     }
   });
+  // fetch the music once the page itself has loaded; some browsers (an installed app, a site visited
+  // often) then even allow it to start before the first tap
+  const warm = () =>
+    window.setTimeout(() => {
+      musicReady = true;
+      applyMusic();
+    }, 800);
+  if (document.readyState === "complete") warm();
+  else window.addEventListener("load", warm, { once: true });
+}
+
+function unlock() {
+  const c = ctx();
+  musicReady = true;
+  applyMusic();
+  const done = () => {
+    if (unlocked) return;
+    unlocked = true;
+    for (const type of UNLOCK_EVENTS) window.removeEventListener(type, unlock, true);
+  };
+  if (c?.state === "running") done();
+  else c?.resume().then(() => c.state === "running" && done(), () => {});
 }
 
 export const getSoundPrefs = (): SoundPrefs => {
   load();
   return prefs;
 };
-export const getServerSoundPrefs = (): SoundPrefs => OFF;
+export const getServerSoundPrefs = (): SoundPrefs => DEFAULTS;
 
 export function subscribeSound(l: () => void) {
   listeners.add(l);
@@ -82,7 +103,7 @@ function ctx() {
     if (!AC) return null;
     ac = new AC();
   }
-  if (ac.state === "suspended") void ac.resume();
+  if (ac.state === "suspended") void ac.resume().catch(() => {});
   return ac;
 }
 
@@ -178,10 +199,13 @@ export function startMetronome(bpm = 110, force = false) {
   };
   schedule();
   metro = window.setInterval(schedule, 30);
+  duck(1); // the beat must stay clear of the music
 }
 export function stopMetronome() {
-  if (metro != null) window.clearInterval(metro);
+  if (metro == null) return;
+  window.clearInterval(metro);
   metro = null;
+  duck(-1);
 }
 
 // ------------------------------------------------------------------ spoken call-outs
@@ -192,11 +216,19 @@ export function say(id: string, force = false): Promise<void> {
   stopVoice();
   const el = new Audio(asset(`/audio/voice/${id}.mp3`));
   voiceEl = el;
+  duck(1); // music steps back while someone speaks
   return new Promise((resolve) => {
-    el.onended = () => resolve();
-    el.onerror = () => resolve();
-    el.onpause = () => resolve();
-    el.play().catch(() => resolve());
+    let over = false;
+    const end = () => {
+      if (over) return;
+      over = true;
+      duck(-1);
+      resolve();
+    };
+    el.onended = end;
+    el.onerror = end;
+    el.onpause = end;
+    el.play().catch(end);
   });
 }
 export function stopVoice() {
@@ -207,47 +239,124 @@ export function stopVoice() {
 }
 
 // ------------------------------------------------------------------ loops: stadium ambience and music
-function fade(el: HTMLAudioElement, to: number, ms: number, done?: () => void) {
-  const from = el.volume;
-  const t0 = performance.now();
-  const step = () => {
-    const k = Math.min(1, (performance.now() - t0) / ms);
-    el.volume = from + (to - from) * k;
-    if (k < 1) requestAnimationFrame(step);
-    else done?.();
-  };
-  requestAnimationFrame(step);
+// Loops play through Web Audio gain nodes, because iPhones ignore an audio element's own volume.
+type Loop = { el: HTMLAudioElement; gain: GainNode | null; fade: number };
+
+function makeLoop(path: string): Loop {
+  const el = new Audio(asset(path));
+  el.loop = true;
+  el.preload = "auto";
+  const loop: Loop = { el, gain: null, fade: 0 };
+  const c = ctx();
+  try {
+    if (c) {
+      const gain = c.createGain();
+      gain.gain.value = 0;
+      c.createMediaElementSource(el).connect(gain).connect(c.destination);
+      loop.gain = gain;
+    }
+  } catch {
+    loop.gain = null;
+  }
+  if (!loop.gain) el.volume = 0;
+  return loop;
 }
 
-let ambEl: HTMLAudioElement | null = null;
+/** Glide a loop to a level; `done` runs only if no newer glide replaced this one. */
+function ramp(loop: Loop, to: number, ms: number, done?: () => void) {
+  const id = ++loop.fade;
+  if (loop.gain && ac) {
+    const g = loop.gain.gain;
+    g.cancelScheduledValues(ac.currentTime);
+    g.setTargetAtTime(to, ac.currentTime, Math.max(0.01, ms / 3000));
+  } else {
+    const from = loop.el.volume;
+    const t0 = performance.now();
+    const step = () => {
+      if (loop.fade !== id) return;
+      const k = Math.min(1, (performance.now() - t0) / ms);
+      loop.el.volume = Math.max(0, Math.min(1, from + (to - from) * k));
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  if (done) window.setTimeout(() => loop.fade === id && done(), ms);
+}
+
+/** Stop a loop at once (the page went to the background, where timers and frames are slowed). */
+function halt(loop: Loop) {
+  ++loop.fade;
+  loop.el.pause();
+  if (loop.gain && ac) {
+    loop.gain.gain.cancelScheduledValues(ac.currentTime);
+    loop.gain.gain.setValueAtTime(0, ac.currentTime);
+  } else loop.el.volume = 0;
+}
+
+let amb: Loop | null = null;
 export function startAmbience() {
   if (!getSoundPrefs().sfx) return;
-  if (!ambEl) {
-    ambEl = new Audio(asset("/audio/sfx/crowd.mp3"));
-    ambEl.loop = true;
-    ambEl.volume = 0;
-  }
-  ambEl.play().then(() => ambEl && fade(ambEl, 0.22, 900)).catch(() => {});
+  amb ??= makeLoop("/audio/sfx/crowd.mp3");
+  const loop = amb;
+  loop.el.play().then(() => ramp(loop, 0.22, 900), () => {});
 }
 export function stopAmbience() {
-  const el = ambEl;
-  if (el && !el.paused) fade(el, 0, 500, () => el.pause());
+  const loop = amb;
+  if (loop && !loop.el.paused) ramp(loop, 0, 500, () => loop.el.pause());
 }
 
-let musicEl: HTMLAudioElement | null = null;
+const TRACKS: Record<Exclude<MusicScene, "none">, string> = {
+  theme: "/audio/music/theme.mp3",
+  study: "/audio/music/study.mp3",
+  drill: "/audio/music/drill.mp3",
+  quiz: "/audio/music/quiz.mp3",
+};
+const MUSIC_VOLUME = 0.28;
+let scene: MusicScene = "theme";
+let musicReady = false; // set once the page has loaded or the person has tapped
+let ducks = 0; // voices and the CPR beat lower the music
+let holds = 0; // a playing film pauses it
+const players = new Map<string, Loop>();
+
+const musicLevel = () => (ducks > 0 ? MUSIC_VOLUME * 0.25 : MUSIC_VOLUME);
+
 function applyMusic() {
   if (typeof window === "undefined") return;
-  const want = prefs.music && document.visibilityState === "visible";
-  if (want) {
-    if (!musicEl) {
-      musicEl = new Audio(asset("/audio/music/theme.mp3"));
-      musicEl.loop = true;
-      musicEl.volume = 0;
+  const hidden = document.visibilityState !== "visible";
+  const want = prefs.music && scene !== "none" && holds === 0 && !hidden;
+  for (const [track, loop] of players) {
+    if ((!want || track !== scene) && !loop.el.paused) {
+      if (hidden) halt(loop);
+      else ramp(loop, 0, 700, () => loop.el.pause());
     }
-    const el = musicEl;
-    el.play().then(() => fade(el, 0.3, 1500)).catch(() => {});
-  } else if (musicEl && !musicEl.paused) {
-    const el = musicEl;
-    fade(el, 0, 700, () => el.pause());
   }
+  if (!want || scene === "none" || !musicReady) return;
+  let loop = players.get(scene);
+  if (!loop) {
+    loop = makeLoop(TRACKS[scene]);
+    players.set(scene, loop);
+  }
+  const current = loop;
+  if (current.el.paused) current.el.play().then(() => ramp(current, musicLevel(), 1500), () => {});
+  else ramp(current, musicLevel(), 400);
+}
+
+function duck(change: number) {
+  ducks = Math.max(0, ducks + change);
+  const loop = scene === "none" ? undefined : players.get(scene);
+  if (loop && !loop.el.paused) ramp(loop, musicLevel(), change > 0 ? 250 : 900);
+}
+
+/** Switch the music to suit the page (crossfades; each track resumes where it left off). */
+export function setMusicScene(next: MusicScene) {
+  load();
+  if (next === scene) return;
+  scene = next;
+  applyMusic();
+}
+
+/** Pause the music while something else is playing sound (a film); call again with false to resume. */
+export function holdMusic(on: boolean) {
+  holds = Math.max(0, holds + (on ? 1 : -1));
+  applyMusic();
 }

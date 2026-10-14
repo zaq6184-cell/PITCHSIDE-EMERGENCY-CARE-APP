@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExternalLink, Play, X } from "lucide-react";
 import { Note, Panel, SectionLabel } from "@/components/workshop";
+import { holdMusic } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { FIFA_EMBEDS_ENABLED, fifaClips, fifaDocs, fifaSkillList, skillClips, type FifaClip } from "@/lib/videos";
 
@@ -180,6 +181,12 @@ function VideoRow({
   children?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  // the background music pauses while a film plays here
+  useEffect(() => {
+    if (!open) return;
+    holdMusic(true);
+    return () => holdMusic(false);
+  }, [open]);
   const head = (
     <>
       <PlayDisc />
