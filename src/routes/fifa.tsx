@@ -3,6 +3,7 @@ import { FileText } from "lucide-react";
 import { FifaClipCard } from "@/components/fifa-video";
 import { fifaOwnClips } from "@/lib/videos";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
+import { imageSize } from "@/lib/asset";
 import { FIFA_SCA_URL, fifaSca } from "@/lib/fifa-sca";
 
 export const Route = createFileRoute("/fifa")({
@@ -107,7 +108,7 @@ function FifaScaPage() {
           <div className="flex flex-col gap-3">
             {fifaSca.infographics.map((g) => (
               <a key={g.src} href={g.src} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
-                <img src={g.src} alt={g.title} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
+                <img src={g.src} alt={g.title} {...imageSize(g.src)} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
                 <span className="block border-t border-line px-3 py-2">
                   <span className="block text-sm font-semibold text-heading">{g.title}</span>
                   <span className="block text-xs leading-snug text-muted">{g.note}</span>

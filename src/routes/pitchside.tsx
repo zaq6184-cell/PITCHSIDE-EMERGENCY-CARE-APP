@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { VideoList } from "@/components/fifa-video";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
-import { asset } from "@/lib/asset";
+import { asset, imageSize } from "@/lib/asset";
 import { FIFA_PITCHSIDE_PAGE, fifaSkillList } from "@/lib/videos";
 
 export const Route = createFileRoute("/pitchside")({
@@ -152,7 +152,7 @@ function PitchsidePage() {
                 rel="noopener noreferrer"
                 className="block overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]"
               >
-                <img src={g.src} alt={g.title} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
+                <img src={g.src} alt={g.title} {...imageSize(g.src)} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
                 <span className="block border-t border-line px-3 py-2">
                   <span className="block text-sm font-semibold text-heading">{g.title}</span>
                   <span className="block text-xs leading-snug text-muted">{g.note}</span>

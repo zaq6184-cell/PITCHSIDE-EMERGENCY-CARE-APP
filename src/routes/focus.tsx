@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUp, Eye, FileText, RefreshCw } from "lucide-react";
 import { FifaClipCard } from "@/components/fifa-video";
 import { AppShell, JumpChips, Note, Panel, SectionLabel } from "@/components/workshop";
-import { asset } from "@/lib/asset";
+import { asset, imageSize } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 import { FIFA_FOCUS_PAGE, fifaFocusClip } from "@/lib/videos";
 
@@ -314,6 +314,7 @@ function FocusPage() {
                 <img
                   src={asset(`/img/fifa/focus/lanyard-${n}.jpg`)}
                   alt={`FIFA FOCUS lanyard card, side ${n}`}
+                  {...imageSize(`/img/fifa/focus/lanyard-${n}.jpg`)}
                   loading="lazy"
                   className="block w-full rounded-lg border border-line bg-white"
                 />

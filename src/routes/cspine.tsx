@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { FifaClipCard, VideoList } from "@/components/fifa-video";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
-import { asset } from "@/lib/asset";
+import { asset, imageSize } from "@/lib/asset";
 import { FIFA_PITCHSIDE_PAGE, type FifaClip, fifaSkillClips, skillClips } from "@/lib/videos";
 import type { RoleId } from "@/lib/workshop";
 
@@ -237,6 +237,7 @@ function CspinePage() {
           <img
             src={asset("/img/s5/collar.jpg")}
             alt="Adjustable extrication cervical collar fitted on an adult, side view"
+            {...imageSize("/img/s5/collar.jpg")}
             loading="lazy"
             className="-mx-3.5 block max-h-64 w-[calc(100%+1.75rem)] max-w-none bg-white object-contain"
           />
@@ -286,6 +287,7 @@ function CspinePage() {
             <img
               src={asset("/img/fifa/onfield/extrication-setup.jpg")}
               alt="FIFA extrication set-up: bag and oxygen at the head, scoop between the feet and the basket, basket 2–3 lengths from the feet"
+              {...imageSize("/img/fifa/onfield/extrication-setup.jpg")}
               loading="lazy"
               className="block max-h-80 w-full rounded-lg border border-line bg-white object-contain"
             />
@@ -313,6 +315,7 @@ function CspinePage() {
             <img
               src={asset("/img/fifa/cspine-protocol-v2.jpg")}
               alt="FIFA Medical Set-Piece protocol for cervical spine injury: colour-coded tasks from assessment to extrication"
+              {...imageSize("/img/fifa/cspine-protocol-v2.jpg")}
               loading="lazy"
               className="block max-h-[30rem] w-full bg-white object-contain"
             />
