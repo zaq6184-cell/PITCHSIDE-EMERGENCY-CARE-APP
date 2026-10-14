@@ -74,6 +74,7 @@ export const fifaClips: FifaClip[] = [
   ...fifaOwnClips,
   {
     youtubeId: "j-ZLHeQXFi8",
+    watchUrl: FIFA_SCA_PAGE,
     title: "Heart Heroes United",
     source: "FIFA Health Education",
     duration: "2:44",
