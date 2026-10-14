@@ -11,7 +11,7 @@ const APP_NAME = "Pitchside Emergency Care";
 const DESCRIPTION =
   "Study guide to FIFA's medical set piece for football: the six colour roles, sudden cardiac arrest, the primary survey, cervical spine injury, concussion (FOCUS) and the emergency care bag, with links to FIFA's films and documents.";
 /** Public address of the site, for link previews (set VITE_SITE_URL when it moves). */
-const SITE_URL = (import.meta.env.VITE_SITE_URL as string | undefined) ?? "https://zaq6184-cell.github.io/hkl-football-medicine-2026/";
+const SITE_URL = (import.meta.env.VITE_SITE_URL as string | undefined) ?? "https://zaq6184-cell.github.io/PITCHSIDE-EMERGENCY-CARE-APP/";
 
 export const Route = createRootRoute({
   head: () => ({
