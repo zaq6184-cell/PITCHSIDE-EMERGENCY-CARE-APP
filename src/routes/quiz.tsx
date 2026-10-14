@@ -37,9 +37,11 @@ function QuizPage() {
           ).map(([m, label, Icon]) => (
             <button
               key={m}
+              id={`tab-${m}`}
               type="button"
               role="tab"
               aria-selected={mode === m}
+              aria-controls="quiz-panel"
               onClick={() => {
                 tap();
                 setMode(m);
@@ -55,7 +57,9 @@ function QuizPage() {
             </button>
           ))}
         </div>
-        {mode === "who" ? <WhoDoesWhat onPlace={() => setMode("place")} /> : <PlaceTheTeam />}
+        <div id="quiz-panel" role="tabpanel" aria-labelledby={`tab-${mode}`}>
+          {mode === "who" ? <WhoDoesWhat onPlace={() => setMode("place")} /> : <PlaceTheTeam />}
+        </div>
       </div>
     </AppShell>
   );

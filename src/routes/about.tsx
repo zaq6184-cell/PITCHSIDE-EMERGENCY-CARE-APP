@@ -37,14 +37,14 @@ function About() {
               alt="Pitchside Emergency Care — set-piece study guide"
               width={1600}
               height={512}
-              className="block h-auto w-full max-w-[18rem] dark:hidden"
+              className="block h-auto w-full max-w-[18rem] outline-none dark:hidden"
             />
             <img
               src={asset("/brand/logo-horizontal-dark.png")}
               alt="Pitchside Emergency Care — set-piece study guide"
               width={1600}
               height={512}
-              className="hidden h-auto w-full max-w-[18rem] rounded-lg dark:block"
+              className="hidden h-auto w-full max-w-[18rem] rounded-lg outline-none dark:block"
             />
             <h1 className="mt-3 font-display text-xl font-bold tracking-wide text-heading">About the app</h1>
           </div>

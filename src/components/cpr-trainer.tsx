@@ -1,5 +1,5 @@
 import { HeartPulse, RotateCcw } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSoundPrefs } from "@/components/sound-control";
 import { haptic, startMetronome, stopMetronome, tapClick } from "@/lib/sound";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ export function CprTrainer() {
   const [beat, setBeat] = useState(0);
   const [guide, setGuide] = useState(false);
   const [idle, setIdle] = useState(true);
+  const lastPress = useRef(0);
 
   // the steady 110/min guide click (plays even with effects off — it was switched on here)
   useEffect(() => {
@@ -48,6 +49,7 @@ export function CprTrainer() {
 
   const press = () => {
     const now = performance.now();
+    lastPress.current = now;
     setIdle(false);
     setTaps((t) => {
       const last = t[t.length - 1];
@@ -138,6 +140,10 @@ export function CprTrainer() {
             e.preventDefault();
             if (!e.repeat) press();
           }
+        }}
+        onClick={() => {
+          // screen readers activate with a click and no pointer press
+          if (performance.now() - lastPress.current > 1000) press();
         }}
         aria-label="Compress — tap in rhythm"
         className="relative grid size-44 touch-manipulation select-none place-items-center rounded-full bg-gradient-to-br from-[#d8443a] to-[#a32a20] text-white shadow-[0_18px_36px_-14px_rgba(192,57,43,0.75)] outline-none ring-gold/60 focus-visible:ring-4"

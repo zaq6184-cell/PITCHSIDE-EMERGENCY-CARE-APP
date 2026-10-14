@@ -47,7 +47,6 @@ function Home() {
         <Note>
           <span className="font-semibold text-heading">{workshop.rule}</span>
         </Note>
-        <InstallCard />
         <SectionLabel>TAP A COLOUR</SectionLabel>
         <div className="grid grid-cols-2 gap-2.5">
           {workshop.roles.map((r, i) => {
@@ -98,6 +97,7 @@ function Home() {
             </div>
           </div>
         </Link>
+        <InstallCard />
 
         <Panel>
           <div id="set-piece-3d" className="scroll-mt-24 px-3.5 pt-3.5">
@@ -210,14 +210,14 @@ function Home() {
               alt="Pitchside Emergency Care — set-piece study guide"
               width={1600}
               height={512}
-              className="mb-1 block h-auto w-full max-w-[17rem] dark:hidden"
+              className="mb-1 block h-auto w-full max-w-[17rem] outline-none dark:hidden"
             />
             <img
               src={asset("/brand/logo-horizontal-dark.png")}
               alt="Pitchside Emergency Care — set-piece study guide"
               width={1600}
               height={512}
-              className="mb-1 hidden h-auto w-full max-w-[17rem] rounded-lg dark:block"
+              className="mb-1 hidden h-auto w-full max-w-[17rem] rounded-lg outline-none dark:block"
             />
             <SectionLabel>ABOUT THE APP</SectionLabel>
             <p className="text-sm leading-snug">{about}</p>

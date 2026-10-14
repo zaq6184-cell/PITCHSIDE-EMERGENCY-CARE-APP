@@ -304,7 +304,7 @@ export const stations: Station[] = [
           {
             kind: "image",
             src: asset("/img/fifa/onfield/extrication-setup.jpg"),
-            alt: "FIFA extrication set-up: bag and oxygen at the head, board or scoop between player and basket, basket 2-3 lengths from the feet",
+            alt: "FIFA extrication set-up: bag and oxygen at the head, board or scoop between player and basket, basket 2–3 lengths from the feet",
             caption: "Extrication set-up: 1 bag + oxygen left of the head · 2 basket 2–3 lengths from the feet · 3 scoop / board laid out between them. FIFA Medical Set Piece — Protocols for on-field interventions (v3, March 2025). © FIFA",
           },
           {

@@ -48,6 +48,10 @@ export const Route = createRootRoute({
       { rel: "icon", type: "image/svg+xml", href: asset("/favicon.svg") },
       { rel: "icon", type: "image/png", sizes: "64x64", href: asset("/icons/favicon-64.png") },
       { rel: "stylesheet", href: appCss },
+      // the three fonts every page opens with: loading them early stops text reflowing when they arrive
+      { rel: "preload", as: "font", type: "font/woff2", href: asset("/fonts/f5.woff2"), crossOrigin: "anonymous" },
+      { rel: "preload", as: "font", type: "font/woff2", href: asset("/fonts/f2.woff2"), crossOrigin: "anonymous" },
+      { rel: "preload", as: "font", type: "font/woff2", href: asset("/fonts/f26.woff2"), crossOrigin: "anonymous" },
       { rel: "manifest", href: asset("/manifest.webmanifest") },
       { rel: "apple-touch-icon", sizes: "180x180", href: asset("/icons/apple-touch-icon.png") },
     ],
@@ -73,6 +77,32 @@ export const Route = createRootRoute({
 
 /** Offline use and installing: the service worker is registered in the published site only. */
 function PwaRegister() {
-  useEffect(() => registerServiceWorker(), []);
+  useEffect(() => {
+    registerServiceWorker();
+    // After an update, a page that was already open may ask for a code file that no longer exists:
+    // reload once to pick up the new version instead of showing an error.
+    const onMissingChunk = (e: Event) => {
+      e.preventDefault();
+      try {
+        if (sessionStorage.getItem("pec-reloaded")) return;
+        sessionStorage.setItem("pec-reloaded", "1");
+      } catch {
+        // storage blocked: still reload once
+      }
+      window.location.reload();
+    };
+    window.addEventListener("vite:preloadError", onMissingChunk);
+    const settle = window.setTimeout(() => {
+      try {
+        sessionStorage.removeItem("pec-reloaded");
+      } catch {
+        // storage blocked
+      }
+    }, 15000);
+    return () => {
+      window.removeEventListener("vite:preloadError", onMissingChunk);
+      window.clearTimeout(settle);
+    };
+  }, []);
   return null;
 }

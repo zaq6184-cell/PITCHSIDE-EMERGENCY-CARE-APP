@@ -21,10 +21,10 @@ function BagPage() {
           <img
             src={bag.photos.afc.src}
             alt={bag.photos.afc.alt}
-            className="block max-h-80 w-full object-cover object-center"
+            className="block max-h-80 w-full object-cover object-[50%_28%]"
           />
           <figcaption className="px-3.5 py-2.5 text-xs leading-snug text-muted">
-            A pitchside emergency bag laid open. Contents below follow FIFA's Emergency Care Bag factsheet.
+            A pitchside emergency bag, packed and closed. The contents below follow FIFA's Emergency Care Bag factsheet.
           </figcaption>
         </figure>
 

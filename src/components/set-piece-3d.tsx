@@ -51,17 +51,41 @@ function Loading3D() {
 }
 
 function Stage({ selected, onSelect, step }: { selected?: RoleId; onSelect?: (id: RoleId) => void; step?: number }) {
-  // 3D only in the browser, and only where the device can draw it
+  // 3D only in the browser, only where the device can draw it, and only once it is near the screen
+  const box = useRef<HTMLDivElement>(null);
   const [ok, setOk] = useState<boolean | null>(null);
+  const [near, setNear] = useState(false);
   useEffect(() => setOk(canRender3D()), []);
+  useEffect(() => {
+    const el = box.current;
+    if (!el || !("IntersectionObserver" in window)) return setNear(true);
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "100px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   const flat = <PositionDiagram highlight={selected} />;
-  if (!ok) return ok === false ? flat : <Loading3D />;
   return (
-    <Safe fallback={flat}>
-      <Suspense fallback={<Loading3D />}>
-        <Scene3D selected={selected} onSelect={onSelect} step={step} className="aspect-square w-full bg-navy sm:aspect-video" />
-      </Suspense>
-    </Safe>
+    <div ref={box}>
+      {ok === false ? (
+        flat
+      ) : !ok || !near ? (
+        <Loading3D />
+      ) : (
+        <Safe fallback={flat}>
+          <Suspense fallback={<Loading3D />}>
+            <Scene3D selected={selected} onSelect={onSelect} step={step} className="aspect-square w-full bg-navy sm:aspect-video" />
+          </Suspense>
+        </Safe>
+      )}
+    </div>
   );
 }
 

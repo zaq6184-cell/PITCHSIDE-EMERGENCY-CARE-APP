@@ -205,9 +205,9 @@ export const skillClips: SkillClip[] = [
     ],
   },
   {
-    youtubeId: "RkkE3eGcIU0",
-    title: "Portable suction (Yankauer)",
-    source: "Diesel Therapy Academy",
+    youtubeId: "4rifH8nB48o",
+    title: "Portable suction: setting up and using it",
+    source: "Rallypoint EMS NREMT Demos",
     fifa: [
       "Suction and oxygen at 15 L/min must both be available pitchside.",
       "Use for blood, secretions or vomit as part of airway management — before moving on to breathing.",
