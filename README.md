@@ -1,21 +1,21 @@
-# HKL Football Medicine 2026
+# Pitchside Emergency Care
 
-Participant app for **HKL's Sports-Emergency Football Medicine Workshop 2026** — on-field sudden cardiac arrest (SCA) management at Hospital Tunku Azizah, 3–4 October 2026.
+A free, phone-first study guide to pitchside emergency care in football, built around FIFA's medical set piece: the six colour roles, sudden cardiac arrest, the primary survey, cervical spine injury, concussion assessment and the emergency care bag.
 
 **Open on a phone:** [https://zaq6184-cell.github.io/hkl-football-medicine-2026/](https://zaq6184-cell.github.io/hkl-football-medicine-2026/)
 
-Mobile-first. Colour roles, 6-step drill, 10-second dash timer, programme book, FIFA emergency bag list, and official FIFA/UEFA guideline films.
+It installs as an app on phones and computers, works offline once saved, and has a dark mode. Sound is off until you turn it on.
 
-## Features
+## What is in it
 
-- **Roles** — Black, Orange, Red, Blue, White, Green + Yellow first aiders: stand, bring, do, say, FIFA PEAP note
-- **Stations** — skill stations 1–5 (PEAP, emergency care bag, primary survey, cardiac arrest, immobilization) with equipment lists, plus the simulation rotation and scenarios
-- **Drill** — 6-step SCA sequence
-- **Dash** — 10-second movement timer
-- **Rules** — workshop timings vs FIFA notes
-- **Event** — programme, speakers, venue, committee
-- **Bag** — FIFA Medical Emergency Bag packing list and AED travel rules
-- **Films** — official FIFA / UEFA / U.S. Soccer SCA videos (needs a connection)
+- **Roles** — Black, Orange, Red, Blue, White and Green: where to stand, what to bring, what to do and what to say
+- **Skills** — five modules: FIFA PEAP and roles, cardiac arrest, primary survey, immobilisation, emergency care bag
+- **Drill** — the cardiac arrest drill in six steps, with a 3D team to watch or step through
+- **Tools** — 10-second carry timer and a CPR rhythm trainer (100–120 per minute)
+- **Rules** — the golden rules at a glance
+- **Films** — links to FIFA's films, and films from other publishers (UEFA Medical, U.S. Soccer, airway skills) that play in the app
+- **Test yourself** — a role quiz and a "place the team" game
+- Also: FIFA Emergency Care Bag list and AED travel, sudden cardiac arrest, pitchside care, cervical spine injury and FIFA FOCUS concussion pages
 
 ## Run locally
 
@@ -28,17 +28,17 @@ Open [http://localhost:8080](http://localhost:8080).
 
 ```bash
 npm run typecheck
-npm run build
+npm test
 ```
 
-Public site (GitHub Pages): `npm run build:pages` then publish `.output/public`.
+Public site (GitHub Pages): `npm run build:pages`; in `.output/public` copy `_shell.html` to `404.html` (and to `index.html` if it is missing) and add an empty `.nojekyll`; run `npm run sw` to write the service worker; then publish `.output/public` to the `gh-pages` branch. After adding or changing pictures in `public/img`, run `npm run image-sizes`.
 
 ## Stack
 
-TanStack Start (React), Tailwind CSS v4, Vite.
+TanStack Start (React), Tailwind CSS v4, Vite, three.js for the 3D team.
 
-No login. Medical copy is bundled from the workshop script — do not invent protocol.
+No login and nothing collected. The clinical content follows FIFA's published documents; do not invent protocol.
 
 ## Licence
 
-Workshop materials for HKL / AFC participants. FIFA PEAP, bag factsheet, and films remain with their owners.
+The original material (summaries, diagrams, logo and title cards) may be used free of charge for non-commercial teaching, with credit. FIFA's protocols, documents, images and films belong to FIFA; other films belong to their publishers. This guide is not affiliated with or endorsed by FIFA.

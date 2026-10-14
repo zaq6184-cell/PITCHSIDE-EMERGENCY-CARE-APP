@@ -36,7 +36,7 @@ export const bag = {
     },
   ],
   photos: {
-    afc: { src: asset("/img/bag/afc-bag.jpg"), alt: "A navy pitchside emergency bag, packed and closed" },
+    packed: { src: asset("/img/bag/pitchside-bag.jpg"), alt: "A navy pitchside emergency bag, packed and closed" },
     closed: { src: asset("/img/bag/fifa-closed.jpg"), alt: "FIFA Medical Emergency Bag closed" },
     open: { src: asset("/img/bag/fifa-open.jpg"), alt: "FIFA Medical Emergency Bag folded open" },
     trays: { src: asset("/img/bag/fifa-trays.jpg"), alt: "Labelled trays inside the FIFA emergency bag" },
