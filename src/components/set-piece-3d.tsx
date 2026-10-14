@@ -4,8 +4,9 @@ import { Component, lazy, type ReactNode, Suspense, useEffect, useRef, useState 
 import { PositionDiagram } from "@/components/position-diagram";
 import { useSoundPrefs } from "@/components/sound-control";
 import { RoleChip } from "@/components/workshop";
-import { say, setSoundPrefs, sfx, type SfxName, startMetronome, stopMetronome, stopVoice, tap } from "@/lib/sound";
+import { haptic, say, setSoundPrefs, sfx, type SfxName, startMetronome, stopMetronome, stopVoice, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
+import { useSwipe } from "@/lib/gestures";
 import { type Callout, callouts, drillCallouts } from "@/lib/voice";
 import { type RoleId, workshop } from "@/lib/workshop";
 
@@ -31,15 +32,33 @@ function canRender3D() {
   }
 }
 
+/** While the 3D team loads: a shimmer and the six colours bouncing. */
+function Loading3D() {
+  const dots = ["#1C1C1C", "#E36B12", "#C0392B", "#1F6AA5", "#F4F4F1", "#1E8A4C"];
+  return (
+    <div className="relative grid aspect-square w-full place-items-center overflow-hidden bg-navy sm:aspect-video" role="status" aria-label="Loading the 3D scene">
+      <div className="shimmer absolute inset-0" aria-hidden="true" />
+      <div className="relative flex flex-col items-center gap-3">
+        <div className="flex gap-2" aria-hidden="true">
+          {dots.map((d, i) => (
+            <span key={d} className="dot-bounce size-3 rounded-full ring-1 ring-white/30" style={{ background: d, "--d": `${i * 0.1}s` } as React.CSSProperties} />
+          ))}
+        </div>
+        <p className="font-display text-xs font-semibold tracking-[0.16em] text-gold">LOADING THE 3D TEAM</p>
+      </div>
+    </div>
+  );
+}
+
 function Stage({ selected, onSelect, step }: { selected?: RoleId; onSelect?: (id: RoleId) => void; step?: number }) {
   // 3D only in the browser, and only where the device can draw it
   const [ok, setOk] = useState<boolean | null>(null);
   useEffect(() => setOk(canRender3D()), []);
   const flat = <PositionDiagram highlight={selected} />;
-  if (!ok) return ok === false ? flat : <div className="aspect-square w-full bg-navy sm:aspect-video" />;
+  if (!ok) return ok === false ? flat : <Loading3D />;
   return (
     <Safe fallback={flat}>
-      <Suspense fallback={<div className="aspect-square w-full bg-navy sm:aspect-video" />}>
+      <Suspense fallback={<Loading3D />}>
         <Scene3D selected={selected} onSelect={onSelect} step={step} className="aspect-square w-full bg-navy sm:aspect-video" />
       </Suspense>
     </Safe>
@@ -164,6 +183,13 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
     autoRef.current = auto;
     onStepRef.current = onStep;
   });
+  const swipe = useSwipe<HTMLDivElement>((dir) => {
+    const next = dir === "left" ? Math.min(steps.length, step + 1) : Math.max(1, step - 1);
+    if (next !== step) {
+      haptic(10);
+      onStep(next);
+    }
+  });
 
   // each step: a whoosh, then the call-outs in order (spoken if sound is on, always captioned)
   useEffect(() => {
@@ -243,6 +269,7 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
         </div>
         <Caption c={caption} />
       </div>
+      <div ref={swipe}>
       <div className="flex items-center gap-1.5 px-3.5 pt-3">
         {steps.map((s) => (
           <button
@@ -278,10 +305,12 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
       <div className="mx-3.5 mt-2.5 h-1 overflow-hidden rounded-full bg-line" aria-hidden="true">
         <div className="h-full rounded-full bg-gold transition-[width] duration-700 ease-out" style={{ width: `${(step / steps.length) * 100}%` }} />
       </div>
-      <p className="px-3.5 pb-3.5 pt-2.5 text-sm leading-snug" aria-live="polite">
+      <p key={step} className="caption-in px-3.5 pb-1 pt-2.5 text-sm leading-snug" aria-live="polite">
         <span className="font-semibold text-heading">{cur.title}. </span>
         {cur.lines[0]}
       </p>
+      <p className="px-3.5 pb-3.5 text-[11px] text-muted">Swipe here for the next step.</p>
+      </div>
     </div>
   );
 }

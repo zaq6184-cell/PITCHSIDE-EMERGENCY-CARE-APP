@@ -12,5 +12,9 @@ export function getRouter() {
     defaultErrorComponent: AppErrorComponent,
     defaultNotFoundComponent: NotFound,
     scrollRestoration: true,
+    // smooth cross-fades between pages (where the browser supports view transitions)
+    defaultViewTransition: true,
+    // start loading a page's code as soon as a finger or pointer reaches for its link
+    defaultPreload: "intent",
   });
 }

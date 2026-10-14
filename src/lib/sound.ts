@@ -142,6 +142,21 @@ export function tap() {
   tick(720, 0.05, 0.05);
 }
 
+/** A short, soft click for each tap on the CPR trainer. */
+export function tapClick() {
+  tick(1300, 0.07, 0.04);
+}
+
+/** A tiny vibration on phones that support it (Android); quiet when sound effects are off. */
+export function haptic(pattern: number | number[]) {
+  if (typeof navigator === "undefined" || !getSoundPrefs().sfx) return;
+  try {
+    navigator.vibrate?.(pattern);
+  } catch {
+    // not supported
+  }
+}
+
 export function countTick(last = false) {
   if (!getSoundPrefs().sfx) return;
   tick(last ? 1180 : 940, 0.09, last ? 0.16 : 0.08);
@@ -149,8 +164,8 @@ export function countTick(last = false) {
 
 // ------------------------------------------------------------------ CPR rhythm, 110 per minute
 let metro: number | null = null;
-export function startMetronome(bpm = 110) {
-  if (!getSoundPrefs().sfx || metro != null) return;
+export function startMetronome(bpm = 110, force = false) {
+  if ((!force && !getSoundPrefs().sfx) || metro != null) return;
   const c = ctx();
   if (!c) return;
   const gap = 60 / bpm;

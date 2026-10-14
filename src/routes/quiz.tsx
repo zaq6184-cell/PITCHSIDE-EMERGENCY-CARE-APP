@@ -5,7 +5,7 @@ import { Confetti } from "@/components/confetti";
 import { DiagramBase, MARKS, PositionDiagram, RoleDisc } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
-import { say, sfx, tap } from "@/lib/sound";
+import { haptic, say, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { type RoleId, workshop } from "@/lib/workshop";
 
@@ -182,8 +182,10 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
       setScore((v) => v + 1);
       setBurst((v) => v + 1);
       sfx("correct");
+      haptic(15);
     } else {
       sfx("wrong", 0.45);
+      haptic([30, 40, 30]);
     }
   };
 

@@ -272,7 +272,7 @@ export function OfflineSave() {
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-navy font-display text-sm font-semibold tracking-wide text-gold active:scale-95 disabled:opacity-60"
         >
           <CloudDownload className="size-4" aria-hidden />
-          {st.busy ? "Saving…" : "Save everything for offline (about 11 MB)"}
+          {st.busy ? "Saving…" : "Save everything for offline (about 12 MB)"}
         </button>
       ) : null}
     </div>

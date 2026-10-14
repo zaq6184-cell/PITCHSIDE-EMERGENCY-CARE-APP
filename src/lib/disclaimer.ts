@@ -29,6 +29,7 @@ export const aboutApp = {
     "Artificial intelligence was used in building this app: an AI assistant (Claude, by Anthropic) helped to write the software, draft the plain-language summaries, and draw the diagram, logo and title cards. The 3D set piece was built this way too.",
     "The short intro film at the top of Home is an AI-generated illustration (made with Higgsfield). It shows no real people or real event, and one bib was recoloured afterwards so that the six colours match the roles in this app.",
     "The header pictures of the five skill modules are AI-generated illustrations too (made with Higgsfield): equipment laid on an imaginary floodlit pitch, with no people and no real brands. They set the scene only — for how the equipment is used, follow the module text and FIFA's documents.",
+    "The picture at the top of each role page and the stadium behind the 3D team are AI-generated too (Higgsfield). The role pictures were checked against FIFA's PEAP positions and basic technique, and mirrored where needed so each colour is on the correct side; they show no real people.",
     "The music, the sound effects and the spoken call-outs were generated with ElevenLabs. The call-outs speak only the \"What you say\" lines from this guide's role cards, in synthetic voices. Sound is off until you turn it on.",
     "The content was checked against FIFA's published documents, and the developers remain responsible for it. AI tools can make mistakes: if something here differs from FIFA's documents, follow FIFA's documents.",
   ],

@@ -1,6 +1,7 @@
 import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { asset } from "@/lib/asset";
 import { getSoundPrefs, startAmbience, stopAmbience, subscribeSound } from "@/lib/sound";
 import type { RoleId } from "@/lib/workshop";
 
@@ -684,71 +685,9 @@ function grassTexture() {
   return tex;
 }
 
-function glowTexture() {
-  const c = document.createElement("canvas");
-  c.width = c.height = 128;
-  const x = c.getContext("2d");
-  if (!x) return null;
-  const g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
-  g.addColorStop(0, "rgba(255,250,230,1)");
-  g.addColorStop(0.25, "rgba(255,240,200,0.5)");
-  g.addColorStop(1, "rgba(255,240,200,0)");
-  x.fillStyle = g;
-  x.fillRect(0, 0, 128, 128);
-  return new THREE.CanvasTexture(c);
-}
-
-const CROWD = ["#e8e6e1", "#1d3d6b", "#c9a227", "#7b8794", "#a33a2d", "#2f4f3a", "#d8c9a8", "#343a46"];
-
-function Crowd() {
-  const ref = useRef<THREE.InstancedMesh>(null);
-  const seats = useMemo(() => {
-    const out: { p: THREE.Vector3; r: number }[] = [];
-    const stands = [
-      { o: v(0, 0, -24), r: 0, w: 58 },
-      { o: v(-27, 0, -2), r: Math.PI / 2, w: 42 },
-      { o: v(27, 0, -2), r: -Math.PI / 2, w: 42 },
-    ];
-    for (const s of stands) {
-      for (let row = 0; row < 4; row++) {
-        for (let x = -s.w / 2; x < s.w / 2; x += 0.62) {
-          if (Math.random() < 0.18) continue; // empty seats
-          const local = v(x + (Math.random() - 0.5) * 0.15, row * 1.3 - 0.45 + 0.35, -row * 1.5 + 0.3);
-          local.applyAxisAngle(UP, s.r).add(s.o);
-          out.push({ p: local, r: s.r });
-        }
-      }
-    }
-    return out;
-  }, []);
-  useEffect(() => {
-    const mesh = ref.current;
-    if (!mesh) return;
-    const o = new THREE.Object3D();
-    const col = new THREE.Color();
-    seats.forEach((s, i) => {
-      o.position.copy(s.p);
-      o.rotation.set(0, s.r, 0);
-      o.scale.set(1, 0.85 + Math.random() * 0.3, 1);
-      o.updateMatrix();
-      mesh.setMatrixAt(i, o.matrix);
-      mesh.setColorAt(i, col.set(CROWD[Math.floor(Math.random() * CROWD.length)]));
-    });
-    mesh.instanceMatrix.needsUpdate = true;
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }, [seats]);
-  return (
-    <instancedMesh ref={ref} args={[undefined, undefined, seats.length]}>
-      <capsuleGeometry args={[0.16, 0.32, 3, 6]} />
-      <meshStandardMaterial roughness={0.9} />
-    </instancedMesh>
-  );
-}
-
 function Stadium() {
   const stripes = useMemo(() => Array.from({ length: 14 }, (_, i) => i), []);
   const grass = useMemo(() => (typeof document === "undefined" ? null : grassTexture()), []);
-  const glow = useMemo(() => (typeof document === "undefined" ? null : glowTexture()), []);
   return (
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
@@ -770,82 +709,54 @@ function Stadium() {
         <planeGeometry args={[60, 0.12]} />
         <meshBasicMaterial color="#F4F4F1" />
       </mesh>
-      {/* plain advertising boards (no text) in front of the stands */}
-      {[
-        { p: [0, 0.45, -20.5], r: 0, w: 56 },
-        { p: [-23.5, 0.45, -2], r: Math.PI / 2, w: 40 },
-        { p: [23.5, 0.45, -2], r: -Math.PI / 2, w: 40 },
-      ].map((b, i) => (
-        <group key={i} position={b.p as [number, number, number]} rotation={[0, b.r, 0]}>
-          <mesh>
-            <boxGeometry args={[b.w, 0.9, 0.12]} />
-            <meshStandardMaterial color="#0f2747" emissive="#163a6b" emissiveIntensity={0.6} roughness={0.6} />
-          </mesh>
-          <mesh position={[0, 0.3, 0.07]}>
-            <boxGeometry args={[b.w, 0.08, 0.02]} />
-            <meshStandardMaterial color="#c9a227" emissive="#c9a227" emissiveIntensity={0.8} />
-          </mesh>
-        </group>
-      ))}
-      {/* stands on three sides */}
-      {[
-        { p: [0, 2.2, -24], r: 0, w: 60 },
-        { p: [-27, 2.2, -2], r: Math.PI / 2, w: 44 },
-        { p: [27, 2.2, -2], r: -Math.PI / 2, w: 44 },
-      ].map((s, i) => (
-        <group key={i} position={s.p as [number, number, number]} rotation={[0, s.r, 0]}>
-          {[0, 1, 2, 3].map((row) => (
-            <mesh key={row} position={[0, row * 1.3 - 1.4, -row * 1.5]}>
-              <boxGeometry args={[s.w, 1.3, 1.6]} />
-              <meshStandardMaterial color={row % 2 ? "#17335C" : "#0F2747"} roughness={0.9} />
-            </mesh>
-          ))}
-          <mesh position={[0, 4.6, -5.4]} rotation={[0.25, 0, 0]}>
-            <boxGeometry args={[s.w, 0.15, 3.2]} />
-            <meshStandardMaterial color="#0b1a30" roughness={0.8} />
-          </mesh>
-        </group>
-      ))}
-      <Crowd />
-      {/* floodlights with a soft glow */}
-      {[
-        [-22, -22],
-        [22, -22],
-        [-22, 14],
-        [22, 14],
-      ].map(([x, z]) => (
-        <group key={`${x}${z}`} position={[x, 0, z]}>
-          <mesh position={[0, 6, 0]}>
-            <cylinderGeometry args={[0.14, 0.2, 12, 8]} />
-            <meshStandardMaterial color="#5B6470" />
-          </mesh>
-          <mesh position={[0, 12.3, 0]} rotation={[0.5, Math.atan2(-x, -z), 0]}>
-            <boxGeometry args={[2.6, 1.2, 0.3]} />
-            <meshStandardMaterial color="#FFFFFF" emissive="#FFF6D6" emissiveIntensity={2.2} />
-          </mesh>
-          {glow ? (
-            <sprite position={[0, 12.3, 0]} scale={[9, 9, 1]}>
-              <spriteMaterial map={glow} transparent depthWrite={false} blending={THREE.AdditiveBlending} opacity={0.75} />
-            </sprite>
-          ) : null}
-        </group>
-      ))}
+      <Backdrop />
     </group>
+  );
+}
+
+/**
+ * A night stadium all around (AI-generated photo, mirrored so the join is seamless), on a cylinder
+ * far behind the team. The photo's pitch edge sits at ground level, so the real grass meets it.
+ */
+function Backdrop() {
+  const tex = useMemo(() => {
+    if (typeof document === "undefined") return null;
+    const t = new THREE.TextureLoader().load(asset("/img/3d/stadium.jpg"));
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.wrapS = THREE.MirroredRepeatWrapping;
+    t.repeat.set(2, 1);
+    t.anisotropy = 4;
+    return t;
+  }, []);
+  const R = 30;
+  const H = (Math.PI * R * 878) / 2048; // one copy of the photo spans half the circle
+  const horizon = 0.86; // how far down the photo the pitch meets the stands
+  if (!tex) return null;
+  return (
+    <mesh position={[0, H / 2 - H * (1 - horizon), 0]}>
+      <cylinderGeometry args={[R, R, H, 96, 1, true]} />
+      <meshBasicMaterial map={tex} side={THREE.BackSide} fog={false} toneMapped={false} />
+    </mesh>
   );
 }
 
 function Rig({ autoRotate, angle, dragging }: { autoRotate: boolean; angle: React.RefObject<number>; dragging: React.RefObject<boolean> }) {
   const { camera, size } = useThree();
   const sway = useRef(0);
+  // opening shot: starts low and wide on the stadium, then cranes up to the working view
+  const intro = useRef(autoRotate ? 0 : 1);
   useFrame((_, dt) => {
     // A slow sway either side of the viewer's angle, so the layout stays readable (player's right on the left).
     if (autoRotate && !dragging.current) sway.current += dt;
-    const a = angle.current + Math.sin(sway.current * 0.22) * 0.42;
+    if (intro.current < 1) intro.current = dragging.current ? 1 : Math.min(1, intro.current + dt / 2.6);
+    const k = ease(intro.current);
+    const a = angle.current + Math.sin(sway.current * 0.22) * 0.42 + (1 - k) * 0.6;
     // pull back on tall, narrow screens so the whole team stays in view
     const narrow = size.width / size.height < 0.95;
-    const r = narrow ? 5.0 : 4.7;
-    camera.position.set(Math.sin(a) * r, narrow ? 3.3 : 2.6, Math.cos(a) * r + 0.45);
-    camera.lookAt(0, 0.5, -0.1);
+    const r = (narrow ? 5.0 : 4.7) + (1 - k) * 4.5;
+    const y = (narrow ? 3.3 : 2.6) * k + 1.1 * (1 - k);
+    camera.position.set(Math.sin(a) * r, y, Math.cos(a) * r + 0.45);
+    camera.lookAt(0, 0.5 + (1 - k) * 2.2, -0.1);
   });
   return null;
 }
