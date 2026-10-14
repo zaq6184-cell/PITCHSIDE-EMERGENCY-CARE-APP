@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Check, CloudDownload, Download, Laptop, MoreVertical, Share, Smartphone, SquarePlus, WifiOff, X } from "lucide-react";
+import { ArrowDown, Check, CloudDownload, Download, Laptop, MoreVertical, Share, Smartphone, SquarePlus, WifiOff, X } from "lucide-react";
 import { type ReactNode, useEffect, useState, useSyncExternalStore } from "react";
 import { asset } from "@/lib/asset";
 import {
@@ -180,47 +180,62 @@ const GUIDES: { id: Platform; title: string; icon: typeof Smartphone; steps: Rea
   },
 ];
 
-/** Step-by-step install instructions; the reader's own device comes first. */
+/**
+ * Step-by-step install instructions; the reader's own device comes first, marked "This device".
+ * CSS does that before the first paint (see .install-guide-badge in styles.css); once the app runs the
+ * list is put in the same order for screen readers, so nothing on screen moves.
+ */
 export function InstallGuides() {
   const s = useInstall();
-  const mine = GUIDES.find((g) => g.id === s.platform);
-  const others = GUIDES.filter((g) => g !== mine);
-  const card = (g: (typeof GUIDES)[number], highlight: boolean) => (
-    <div key={g.id} className={cn("rounded-xl px-3.5 py-3", highlight ? "border-2 border-gold bg-note" : "border border-line bg-paper")}>
-      <p className="flex items-center gap-2 font-display text-sm font-semibold tracking-wide text-heading">
-        <g.icon className="size-4 text-gold-ink" aria-hidden />
-        {g.title}
-        {highlight ? <span className="ml-auto rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold tracking-wider text-on-gold">THIS DEVICE</span> : null}
-      </p>
-      <ol className="mt-2.5 flex flex-col gap-2">
-        {g.steps.map((st, i) => (
-          <Step key={i} n={i + 1}>
-            {st}
-          </Step>
-        ))}
-      </ol>
-    </div>
-  );
+  const mine = s.ready ? GUIDES.find((g) => g.id === s.platform) : undefined;
+  const ordered = mine ? [mine, ...GUIDES.filter((g) => g !== mine)] : GUIDES;
   return (
-    <div className="flex flex-col gap-2.5">
-      {s.ready && mine ? card(mine, true) : null}
-      {(s.ready ? others : GUIDES).map((g) => card(g, false))}
+    <div id="install-steps" tabIndex={-1} className="flex scroll-mt-24 flex-col gap-2.5 outline-none">
+      {ordered.map((g) => (
+        <div key={g.id} data-guide={g.id} className="rounded-xl border border-line bg-paper px-3.5 py-3">
+          <p className="flex items-center gap-2 font-display text-sm font-semibold tracking-wide text-heading">
+            <g.icon className="size-4 text-gold-ink" aria-hidden />
+            {g.title}
+            <span className="install-guide-badge ml-auto rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold tracking-wider text-on-gold">
+              THIS DEVICE
+            </span>
+          </p>
+          <ol className="mt-2.5 flex flex-col gap-2">
+            {g.steps.map((st, i) => (
+              <Step key={i} n={i + 1}>
+                {st}
+              </Step>
+            ))}
+          </ol>
+        </div>
+      ))}
     </div>
   );
 }
 
-/** Big install button / installed state, for the install page. */
+/**
+ * Big install button / installed state, for the install page. The slot is filled from the first paint
+ * (with a jump to this device's steps), so the page does not shift when the browser offers an install.
+ */
 export function InstallNow() {
   const s = useInstall();
-  if (!s.ready) return null;
-  if (s.installed)
+  if (s.ready && s.installed)
     return (
-      <p className="flex items-center gap-2 rounded-xl bg-[#1A7F45]/12 px-3.5 py-3 text-sm font-medium text-ink">
+      <p className="flex min-h-12 items-center gap-2 rounded-xl bg-[#1A7F45]/12 px-3.5 text-sm font-medium text-ink">
         <Check className="size-5 text-[#1A7F45]" strokeWidth={3} aria-hidden />
         Installed — you are using the app.
       </p>
     );
-  if (!s.canPrompt) return null;
+  if (!s.ready || !s.canPrompt)
+    return (
+      <a
+        href="#install-steps"
+        className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border-2 border-gold font-display text-base font-semibold tracking-wide text-heading active:scale-[0.98]"
+      >
+        <ArrowDown className="size-5" aria-hidden />
+        Steps for this device
+      </a>
+    );
   return (
     <button
       type="button"

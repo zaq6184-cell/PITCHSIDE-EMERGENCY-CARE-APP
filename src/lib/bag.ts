@@ -163,13 +163,12 @@ export const bagGroups: BagGroup[] = [
 export const aedTravel = {
   device: "Philips HeartStart FRx AED with carry case",
   rules: [
-    "The FRx is a portable medical electronic device. Carry it as hand luggage only — it contains a lithium battery, and lithium batteries must not go in checked baggage.",
+    "The FRx is a portable medical electronic device. With its battery in, it goes in hand luggage only — it contains a lithium battery, and lithium batteries must not go in checked baggage.",
     "The red carry case lets you take the AED as hand luggage, separate from the FIFA Medical Emergency Bag.",
     "Preferred: AED + case as hand luggage. If you must check the AED, first remove the lithium battery from the back (green tab). The battery stays in your hand luggage; the AED can then be checked.",
     "The AED is fully off only when the battery is out. See page 16 of the FRx user manual for removal and insertion.",
     "A Material Safety Data Sheet (MSDS) is included with the AED if check-in staff ask for it.",
-    "Lithium metal content is 5.04 g per battery (limit 8 g). That is acceptable as carry-on and does not need extra clearance.",
-    "Confirm with your airline before you fly.",
+    "Lithium metal content is 5.04 g per battery. Air-safety rules (ICAO/IATA) allow a medical device battery over 2 g, up to 8 g, only with the airline's approval — ask for it when you book, and confirm again before you fly.",
   ],
 };
 
