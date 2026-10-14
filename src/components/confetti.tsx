@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-const COLOURS = ["#1C1C1C", "#E36B12", "#C0392B", "#1F6AA5", "#F4F4F1", "#1E8A4C", "#C9A227"];
+const COLOURS = ["#1C1C1C", "#E36B12", "#C0392B", "#1F6AA5", "#F4F4F1", "#1A7F45", "#C9A227"];
 
 /** A burst of confetti in the six role colours plus gold. Remount (change `key`) to play again. */
 export function Confetti({ count = 26, spread = 1 }: { count?: number; spread?: number }) {

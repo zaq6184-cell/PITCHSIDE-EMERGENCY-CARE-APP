@@ -6,8 +6,8 @@ import type { RoleId } from "@/lib/workshop";
  * Red / Blue / White down the player's right, Black on the player's left.
  */
 export const MARKS: { id: RoleId; label: string; x: number; y: number; fill: string; ink: string; where: string }[] = [
-  { id: "orange", label: "Orange", x: 112, y: 46, fill: "#E36B12", ink: "#FFFFFF", where: "at the head" },
-  { id: "green", label: "Green", x: 212, y: 34, fill: "#1E8A4C", ink: "#FFFFFF", where: "at the head on the player's left, by the bag and AED" },
+  { id: "orange", label: "Orange", x: 112, y: 46, fill: "#E36B12", ink: "#0B1F3A", where: "at the head" },
+  { id: "green", label: "Green", x: 212, y: 34, fill: "#1A7F45", ink: "#FFFFFF", where: "at the head on the player's left, by the bag and AED" },
   { id: "red", label: "Red", x: 62, y: 150, fill: "#C0392B", ink: "#FFFFFF", where: "player's right, level with the chest" },
   { id: "blue", label: "Blue", x: 50, y: 226, fill: "#1F6AA5", ink: "#FFFFFF", where: "player's right, level with the pelvis" },
   { id: "white", label: "White", x: 62, y: 304, fill: "#FFFFFF", ink: "#1C1C1C", where: "player's right, level with the lower legs" },

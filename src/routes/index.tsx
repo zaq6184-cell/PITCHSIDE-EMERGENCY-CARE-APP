@@ -72,7 +72,7 @@ function Home() {
               >
                 <Icon className="float-y absolute right-2.5 top-2.5 size-9 opacity-30" strokeWidth={1.6} aria-hidden />
                 <span className="font-display text-xl font-bold leading-none tracking-[0.1em]">{r.name}</span>
-                <span className="mt-1 text-[11px] font-medium leading-tight opacity-90">{r.role}</span>
+                <span className="mt-1 text-[11px] font-medium leading-tight">{r.role}</span>
               </Link>
             );
           })}
@@ -141,7 +141,7 @@ function Home() {
             { to: "/fifa", icon: HeartPulse, tint: "#FBE9E7", ink: "#C0392B", title: "Sudden cardiac arrest", sub: "Signs · emergency steps · FIFA's films and downloads", wide: true },
             { to: "/focus", icon: Brain, tint: "#EFE8F7", ink: "#6B3FA0", title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain", wide: true },
             { to: "/cspine", icon: Bone, tint: "#E4EFF8", ink: "#1F6AA5", title: "Cervical spine injury", sub: "Set piece by colour · collar · log roll", wide: true },
-            { to: "/pitchside", icon: Stethoscope, tint: "#E3F2E8", ink: "#1E8A4C", title: "Pitchside emergency care", sub: "Set-piece protocols · role cards · bag", wide: true },
+            { to: "/pitchside", icon: Stethoscope, tint: "#E3F2E8", ink: "#1A7F45", title: "Pitchside emergency care", sub: "Set-piece protocols · role cards · bag", wide: true },
           ]}
         />
         <SectionLabel>STUDY</SectionLabel>
@@ -149,7 +149,7 @@ function Home() {
           items={[
             { to: "/stations", icon: ClipboardList, tint: "#F6EFD6", ink: "#8A6D10", title: "Skill modules", sub: "PEAP · arrest · survey · immobilisation · bag" },
             { to: "/drill", icon: ListOrdered, tint: "#FBE9E7", ink: "#C0392B", title: "Team drill", sub: "Cardiac arrest in six steps" },
-            { to: "/bag", icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1E8A4C", title: "Emergency bag", sub: "FIFA packing list" },
+            { to: "/bag", icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1A7F45", title: "Emergency bag", sub: "FIFA packing list" },
             { to: "/guides", icon: PlayCircle, tint: "#E4EFF8", ink: "#1F6AA5", title: "Films", sub: "Links to FIFA's films" },
             { to: "/quiz", icon: Gamepad2, tint: "#F6EFD6", ink: "#8A6D10", title: "Test yourself", sub: "Quiz · place the team", wide: true },
           ]}

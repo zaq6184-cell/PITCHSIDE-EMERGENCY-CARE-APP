@@ -34,7 +34,7 @@ function canRender3D() {
 
 /** While the 3D team loads: a shimmer and the six colours bouncing. */
 function Loading3D() {
-  const dots = ["#1C1C1C", "#E36B12", "#C0392B", "#1F6AA5", "#F4F4F1", "#1E8A4C"];
+  const dots = ["#1C1C1C", "#E36B12", "#C0392B", "#1F6AA5", "#F4F4F1", "#1A7F45"];
   return (
     <div className="relative grid aspect-square w-full place-items-center overflow-hidden bg-navy sm:aspect-video" role="status" aria-label="Loading the 3D scene">
       <div className="shimmer absolute inset-0" aria-hidden="true" />
