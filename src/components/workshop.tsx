@@ -1,7 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { BookOpen, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users } from "lucide-react";
 import { useEffect } from "react";
+import { ThemeSwitch } from "@/components/theme-switch";
 import { asset } from "@/lib/asset";
+import { syncThemeColor } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
 
@@ -16,6 +18,7 @@ export function AppShell({
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    syncThemeColor();
   }, [pathname]);
 
   const bag = pathname.startsWith("/bag");
@@ -31,7 +34,7 @@ export function AppShell({
 
   return (
     <div className="min-h-dvh bg-bg text-ink">
-      <header className="sticky top-0 z-20 border-b-[3px] border-gold bg-gradient-to-r from-navy to-navy-2 px-3.5 pb-2.5 pt-[max(0.6rem,env(safe-area-inset-top))] text-on-navy">
+      <header className="sticky top-0 z-20 border-b-[3px] border-gold bg-gradient-to-r from-navy to-navy-2 px-3.5 dark:from-[#0e1d35] dark:to-[#16305a] pb-2.5 pt-[max(0.6rem,env(safe-area-inset-top))] text-on-navy">
         <div className="mx-auto flex w-full max-w-xl items-center gap-2.5">
           <Link to="/" aria-label="Home" className="shrink-0 transition-transform duration-150 ease-out active:scale-95">
             <img src={asset("/brand/logo-mark.svg")} alt="" width={36} height={36} className="size-9 rounded-full" />
@@ -52,6 +55,7 @@ export function AppShell({
                         : workshop.title}
             </p>
           </div>
+          <ThemeSwitch className="-my-1.5 -mr-1.5 ml-auto" />
         </div>
       </header>
       <main className="mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
@@ -91,7 +95,7 @@ function TabLink({
       to={to}
       className={cn(
         "flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 text-[10.5px] font-semibold tracking-wide",
-        active ? "text-navy" : "text-muted",
+        active ? "text-heading" : "text-muted",
       )}
       aria-current={active ? "page" : undefined}
     >
@@ -118,7 +122,7 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="font-display text-xs font-semibold tracking-[0.14em] text-navy">
+    <h3 className="font-display text-xs font-semibold tracking-[0.14em] text-heading">
       {children}
       <span className="mt-1 block h-[3px] w-8 rounded-full bg-gold" aria-hidden="true" />
     </h3>
@@ -130,7 +134,10 @@ export function RoleChip({ id }: { id: RoleId }) {
   if (!r) return null;
   return (
     <span
-      className="inline-flex items-center rounded-full px-2 py-0.5 font-display text-[11px] font-semibold tracking-wide"
+      className={cn(
+        "inline-flex items-center rounded-full px-2 py-0.5 font-display text-[11px] font-semibold tracking-wide",
+        r.id === "black" && "dark:outline dark:outline-1 dark:outline-white/30",
+      )}
       style={{
         backgroundColor: r.color,
         color: r.text,
@@ -164,7 +171,7 @@ export function HeroPhoto({
         className={cn(
           "block w-full",
           tall ? "max-h-[36rem]" : "max-h-80",
-          contain ? "bg-cream object-contain" : "object-cover object-center",
+          contain ? "bg-matte object-contain" : "object-cover object-center",
         )}
       />
       {caption ? (
@@ -198,7 +205,7 @@ export function JumpChips({ items }: { items: { id: string; label: string }[] })
           <li key={it.id}>
             <a
               href={`#${it.id}`}
-              className="inline-flex min-h-9 items-center whitespace-nowrap rounded-full border border-line bg-paper px-3 font-display text-[11px] font-semibold tracking-wide text-navy shadow-card active:bg-cream"
+              className="inline-flex min-h-9 items-center whitespace-nowrap rounded-full border border-line bg-paper px-3 font-display text-[11px] font-semibold tracking-wide text-heading shadow-card active:bg-cream"
             >
               {it.label}
             </a>

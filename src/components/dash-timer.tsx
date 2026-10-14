@@ -72,7 +72,7 @@ export function DashTimer() {
             cy="64"
             r={RADIUS}
             fill="none"
-            className={hot ? "stroke-danger" : "stroke-navy"}
+            className={hot ? "stroke-danger" : "stroke-heading"}
             strokeWidth="8"
             strokeLinecap="round"
             strokeDasharray={CIRC}
@@ -85,7 +85,7 @@ export function DashTimer() {
         <p
           className={cn(
             "font-display text-7xl font-bold leading-none tabular-nums tracking-tight",
-            hot ? "text-danger" : "text-navy",
+            hot ? "text-danger" : "text-heading",
           )}
           aria-live="assertive"
           aria-atomic="true"
@@ -94,7 +94,7 @@ export function DashTimer() {
         </p>
       </div>
 
-      <p className="mt-3 min-h-6 font-display text-sm font-semibold tracking-[0.12em] text-navy">
+      <p className="mt-3 min-h-6 font-display text-sm font-semibold tracking-[0.12em] text-heading">
         {finished ? "BOARD DOWN — CPR ON" : running ? "CARRY WINDOW" : "READY"}
       </p>
       <p className="mt-2 max-w-xs text-sm leading-snug text-muted">
@@ -112,7 +112,7 @@ export function DashTimer() {
         <button
           type="button"
           onClick={reset}
-          className="h-12 flex-1 rounded-md border border-navy bg-paper font-display text-base font-semibold tracking-[0.08em] text-navy transition-transform duration-150 ease-out active:scale-95"
+          className="h-12 flex-1 rounded-md border border-heading bg-paper font-display text-base font-semibold tracking-[0.08em] text-heading transition-transform duration-150 ease-out active:scale-95"
         >
           Reset
         </button>

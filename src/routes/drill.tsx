@@ -14,7 +14,7 @@ function Drill() {
     <AppShell tab="drill">
       <div className="flex flex-col gap-3.5">
         <Note>
-          <span className="font-semibold text-navy">Sudden cardiac arrest — the team drill. </span>
+          <span className="font-semibold text-heading">Sudden cardiac arrest — the team drill. </span>
           Six steps, each tagged with the colours that act. Watch each step in 3D, or play them all.
         </Note>
         <Panel>
@@ -40,7 +40,7 @@ function Drill() {
                   aria-label={`Show step ${st.n} in 3D`}
                   className={cn(
                     "grid size-9 shrink-0 place-items-center rounded-full font-display text-sm font-bold transition-transform duration-150 active:scale-95",
-                    st.n === step ? "bg-gold text-navy" : "bg-navy text-gold",
+                    st.n === step ? "bg-gold text-on-gold" : "bg-navy text-gold",
                   )}
                 >
                   {st.n}
@@ -84,7 +84,7 @@ function Drill() {
                 <PlayCircle className="size-5" strokeWidth={2} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="font-display text-xs font-semibold tracking-[0.14em] text-navy">
+                <p className="font-display text-xs font-semibold tracking-[0.14em] text-heading">
                   FIFA GUIDELINE FILMS
                 </p>
                 <p className="text-sm leading-snug">Watch official SCA, CPR and AED films</p>

@@ -147,11 +147,11 @@ function PitchsidePage() {
                 href={g.src}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block overflow-hidden rounded-lg border border-line bg-white active:scale-[0.99]"
+                className="block overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]"
               >
-                <img src={g.src} alt={g.title} loading="lazy" className="block max-h-96 w-full object-contain" />
+                <img src={g.src} alt={g.title} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
                 <span className="block border-t border-line px-3 py-2">
-                  <span className="block text-sm font-semibold text-navy">{g.title}</span>
+                  <span className="block text-sm font-semibold text-heading">{g.title}</span>
                   <span className="block text-xs leading-snug text-muted">{g.note}</span>
                 </span>
               </a>
@@ -189,7 +189,7 @@ function PitchsidePage() {
                   href={h}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-navy"
+                  className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
                   <FileText className="size-4 shrink-0 text-gold" />
                   <span>{t}</span>

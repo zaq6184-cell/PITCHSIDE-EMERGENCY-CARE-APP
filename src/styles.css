@@ -1,6 +1,9 @@
 @import "./fonts.css";
 @import "tailwindcss";
 
+/* dark: utilities follow the in-app switch (data-theme on <html>), not the phone setting */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme {
   --color-navy: #0b1f3a;
   --color-navy-2: #123056;
@@ -16,6 +19,10 @@
   --color-note: #eef3f8;
   --color-on-navy: #f7f4ee;
   --color-on-gold: #0b1f3a;
+  /* headings and links on cards; light in dark mode */
+  --color-heading: #0b1f3a;
+  /* mat behind pictures: stays light in both themes */
+  --color-matte: #f4f1ea;
 
   --font-display: "Barlow Condensed", "Arial Narrow", "Franklin Gothic Medium", sans-serif;
   --font-sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -43,6 +50,51 @@
       transform: none;
     }
   }
+}
+
+/*
+ * Dark mode: each token keeps its job and is re-tuned for a dark page.
+ * The six role colours are teaching content and never change.
+ */
+:root[data-theme="dark"] {
+  --color-navy: #1a3460;
+  --color-navy-2: #22427a;
+  --color-gold: #d4ae36;
+  --color-gold-soft: #cfc4a2;
+  --color-cream: #15233a;
+  --color-bg: #070e1a;
+  --color-ink: #e6ebf2;
+  --color-muted: #9cabbf;
+  --color-line: #26364f;
+  --color-paper: #0e192b;
+  --color-danger: #e5594b;
+  --color-note: #13213a;
+  --color-heading: #e2eaf6;
+}
+
+:root[data-theme="dark"] .shadow-card {
+  --tw-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"],
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #app {
+  color-scheme: only dark;
+}
+
+/* icon chip: set --tint (pastel) and --ink (hue) inline */
+.tint-chip {
+  background-color: var(--tint);
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .tint-chip {
+  background-color: color-mix(in srgb, var(--ink) 28%, transparent);
+  color: color-mix(in srgb, var(--ink) 50%, white);
+}
+
+:root[data-theme="dark"] img {
+  outline-color: rgba(255, 255, 255, 0.08);
 }
 
 @layer base {

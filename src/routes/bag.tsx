@@ -29,7 +29,7 @@ function BagPage() {
           <div className="px-3.5 py-3.5">
             <SectionLabel>FIFA MEDICAL EMERGENCY BAG</SectionLabel>
             <p className="mt-2 text-sm leading-snug">{bag.blurb}</p>
-            <p className="mt-2 text-sm font-medium text-navy">{bag.greenNote}</p>
+            <p className="mt-2 text-sm font-medium text-heading">{bag.greenNote}</p>
             <p className="mt-2 text-xs leading-snug text-muted">{bag.shell}</p>
           </div>
         </Panel>
@@ -57,13 +57,13 @@ function BagPage() {
           <img
             src={bag.photos.trays.src}
             alt={bag.photos.trays.alt}
-            className="block w-full object-contain bg-cream"
+            className="block w-full object-contain bg-matte"
           />
           <div className="flex flex-col gap-3 px-3.5 py-3.5">
             <SectionLabel>HOW IT OPENS</SectionLabel>
             {bag.layout.map((row) => (
               <div key={row.side}>
-                <p className="font-display text-xs font-semibold tracking-[0.12em] text-navy">{row.side}</p>
+                <p className="font-display text-xs font-semibold tracking-[0.12em] text-heading">{row.side}</p>
                 <p className="mt-1 text-sm leading-snug">{row.text}</p>
               </div>
             ))}
@@ -78,7 +78,7 @@ function BagPage() {
             onChange={(e) => setQ(e.target.value)}
             placeholder="Find an item — i-gel, amiodarone, collar…"
             aria-label="Find a bag item"
-            className="h-11 w-full rounded-lg border border-line bg-paper pl-9 pr-3 text-sm text-ink shadow-card outline-none placeholder:text-muted focus:border-navy"
+            className="h-11 w-full rounded-lg border border-line bg-paper pl-9 pr-3 text-sm text-ink shadow-card outline-none placeholder:text-muted focus:border-heading"
           />
         </label>
 
@@ -95,7 +95,7 @@ function BagPage() {
                     <li key={it.name} className="flex items-baseline justify-between gap-3 py-1.5 text-sm">
                       <span className="leading-snug">{it.name}</span>
                       {it.qty ? (
-                        <span className="shrink-0 font-display text-xs font-semibold tracking-wide text-navy">
+                        <span className="shrink-0 font-display text-xs font-semibold tracking-wide text-heading">
                           {it.qty}
                         </span>
                       ) : null}
@@ -113,7 +113,7 @@ function BagPage() {
           <img
             src={bag.photos.aed.src}
             alt={bag.photos.aed.alt}
-            className="mx-auto block max-h-44 object-contain bg-cream p-4"
+            className="mx-auto block max-h-44 object-contain bg-matte p-4"
           />
           <div className="px-3.5 py-3.5">
             <SectionLabel>PHILIPS HEARTSTART FRX — TRAVEL</SectionLabel>
@@ -135,7 +135,7 @@ function BagPage() {
             <img
               src={bag.photos.battery.src}
               alt={bag.photos.battery.alt}
-              className="max-h-44 w-full bg-cream object-contain p-3"
+              className="max-h-44 w-full bg-matte object-contain p-3"
             />
           </div>
           <p className="px-3.5 py-2 text-[11px] leading-snug text-muted">
@@ -149,7 +149,7 @@ function BagPage() {
             <p className="mt-2 text-sm leading-snug">
               Re-order: {bag.contact.name}
               <br />
-              <a href={`mailto:${bag.contact.email}`} className="font-medium text-navy">
+              <a href={`mailto:${bag.contact.email}`} className="font-medium text-heading">
                 {bag.contact.email}
               </a>
               <br />
@@ -157,7 +157,7 @@ function BagPage() {
                 href={bag.contact.web}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-navy"
+                className="font-medium text-heading"
               >
                 promotemedical.com
               </a>

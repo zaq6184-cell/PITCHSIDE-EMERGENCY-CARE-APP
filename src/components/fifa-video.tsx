@@ -25,7 +25,7 @@ export function FifaVideoList() {
                   href={d.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-medium leading-snug text-navy underline-offset-2 hover:underline"
+                  className="text-sm font-medium leading-snug text-heading underline-offset-2 hover:underline"
                 >
                   {d.label}
                 </a>
@@ -89,7 +89,7 @@ export function SkillVideoList() {
 function SkillPoints({ clip }: { clip: SkillClip }) {
   return (
     <>
-      <p className="font-display text-[11px] font-semibold tracking-[0.12em] text-navy">FIFA ECM KEY POINTS</p>
+      <p className="font-display text-[11px] font-semibold tracking-[0.12em] text-heading">FIFA ECM KEY POINTS</p>
       <ul className="mt-1 flex list-disc flex-col gap-1 pl-4 text-sm leading-snug marker:text-gold">
         {clip.fifa.map((line) => (
           <li key={line}>{line}</li>
@@ -160,7 +160,7 @@ function VideoRow({
         <Play className="size-4 translate-x-px" fill="currentColor" strokeWidth={0} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block font-display text-[13px] font-semibold leading-tight tracking-wide text-navy">{title}</span>
+        <span className="block font-display text-[13px] font-semibold leading-tight tracking-wide text-heading">{title}</span>
         <span className="mt-0.5 block text-[11px] text-muted">
           {source}
           {duration ? ` · ${duration}` : ""}
@@ -211,7 +211,7 @@ function VideoRow({
           href={watchUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-navy underline underline-offset-2"
+          className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-heading underline underline-offset-2"
         >
           {watchLabel}
         </a>
@@ -259,7 +259,7 @@ export function FifaClipCard({ clip }: { clip: FifaClip }) {
           <Play className="size-5 translate-x-px" fill="currentColor" strokeWidth={0} />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block font-display text-sm font-semibold tracking-wide text-navy">{clip.title}</span>
+          <span className="block font-display text-sm font-semibold tracking-wide text-heading">{clip.title}</span>
           <span className="mt-0.5 block text-[11px] text-muted">
             {clip.source} · {clip.duration}
           </span>
@@ -272,7 +272,7 @@ export function FifaClipCard({ clip }: { clip: FifaClip }) {
           href={watchTarget(clip)}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-navy underline underline-offset-2"
+          className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-heading underline underline-offset-2"
         >
           {watchText(clip)}
         </a>

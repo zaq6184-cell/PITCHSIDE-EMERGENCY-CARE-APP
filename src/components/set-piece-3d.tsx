@@ -65,6 +65,7 @@ export function RoleExplorer3D() {
             className={cn(
               "min-h-9 rounded-full px-3 font-display text-xs font-semibold tracking-wide transition-transform duration-150 active:scale-95",
               sel === r.id ? "ring-2 ring-gold ring-offset-2 ring-offset-paper" : "",
+              r.id === "black" && "dark:outline dark:outline-1 dark:outline-white/30",
             )}
             style={{ backgroundColor: r.color, color: r.text, boxShadow: r.id === "white" ? "inset 0 0 0 1px rgba(11,31,58,0.25)" : undefined }}
           >
@@ -75,7 +76,7 @@ export function RoleExplorer3D() {
       <div className="px-3.5 pb-3.5 pt-3" aria-live="polite">
         {role ? (
           <div className="rounded-lg bg-note px-3 py-2.5">
-            <p className="font-display text-sm font-semibold tracking-wide text-navy">
+            <p className="font-display text-sm font-semibold tracking-wide text-heading">
               {role.name} · {role.role}
             </p>
             <p className="mt-1 text-sm leading-snug">{role.stand}</p>
@@ -127,7 +128,7 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
             aria-current={s.n === step ? "step" : undefined}
             className={cn(
               "grid size-10 shrink-0 place-items-center rounded-full font-display text-sm font-bold transition-transform duration-150 active:scale-95",
-              s.n === step ? "bg-navy text-gold" : "bg-note text-navy",
+              s.n === step ? "bg-navy text-gold" : "bg-note text-heading",
             )}
           >
             {s.n}
@@ -137,14 +138,14 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
           type="button"
           onClick={() => setAuto((v) => !v)}
           aria-pressed={auto}
-          className="ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-full bg-gold px-3.5 font-display text-xs font-semibold tracking-wide text-navy transition-transform duration-150 active:scale-95"
+          className="ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-full bg-gold px-3.5 font-display text-xs font-semibold tracking-wide text-on-gold transition-transform duration-150 active:scale-95"
         >
           {auto ? <Pause className="size-3.5" aria-hidden /> : <Play className="size-3.5" aria-hidden />}
           {auto ? "Pause" : "Play all"}
         </button>
       </div>
       <p className="px-3.5 pb-3.5 pt-2.5 text-sm leading-snug" aria-live="polite">
-        <span className="font-semibold text-navy">{cur.title}. </span>
+        <span className="font-semibold text-heading">{cur.title}. </span>
         {cur.lines[0]}
       </p>
     </div>

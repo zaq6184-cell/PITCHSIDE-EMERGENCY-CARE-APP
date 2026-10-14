@@ -181,7 +181,7 @@ function OutcomeIcon({ outcome }: { outcome: Outcome }) {
       <RefreshCw className="size-3.5" strokeWidth={2.4} />
     </span>
   ) : (
-    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-gold text-navy" title="Continue assessment">
+    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-gold text-on-gold" title="Continue assessment">
       <Eye className="size-3.5" strokeWidth={2.4} />
     </span>
   );
@@ -263,7 +263,7 @@ function FocusPage() {
                   <span className="grid size-6 shrink-0 place-items-center self-center rounded-full bg-navy font-display text-xs font-bold text-gold">
                     {i + 1}
                   </span>
-                  <p className="font-display text-sm font-semibold tracking-wide text-navy">{st.where.toUpperCase()}</p>
+                  <p className="font-display text-sm font-semibold tracking-wide text-heading">{st.where.toUpperCase()}</p>
                   <p className="text-xs text-muted">{st.when}</p>
                 </div>
                 <div className="mt-1.5 flex flex-col gap-1.5">
@@ -275,12 +275,12 @@ function FocusPage() {
                         d.outcome === "sub"
                           ? "border-danger bg-danger/10"
                           : d.outcome === "step"
-                            ? "border-navy bg-note"
+                            ? "border-heading bg-note"
                             : "border-gold bg-gold/15",
                       )}
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="font-display text-xs font-semibold tracking-wide text-navy">{d.domain}</p>
+                        <p className="font-display text-xs font-semibold tracking-wide text-heading">{d.domain}</p>
                         <p className="text-sm leading-snug">{d.lead}</p>
                         {d.items ? (
                           <ul className="mt-0.5 flex list-disc flex-col gap-0.5 pl-4 text-sm leading-snug marker:text-muted">
@@ -358,7 +358,7 @@ function FocusPage() {
               <b>Before leaving the venue, and before any flight,</b> re-examine for new or worsening signs.
             </li>
           </ul>
-          <p className="font-display text-xs font-semibold tracking-wide text-navy">GRADUATED RETURN TO FOOTBALL</p>
+          <p className="font-display text-xs font-semibold tracking-wide text-heading">GRADUATED RETURN TO FOOTBALL</p>
           <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm leading-snug marker:text-muted">
             <li>Symptom-limited daily activity, such as a short walk.</li>
             <li>Light aerobic exercise, up to about 70% of maximum heart rate.</li>
@@ -378,7 +378,7 @@ function FocusPage() {
             href="https://digitalhub.fifa.com/asset/b6bc9c16-b211-47f4-b5e0-3e929df9115c/Medical-concussion-protocol-Elite_EN_Final.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center text-sm font-medium text-navy underline underline-offset-2"
+            className="inline-flex min-h-11 items-center text-sm font-medium text-heading underline underline-offset-2"
           >
             Read FIFA's Concussion Protocol for Medical Staff (PDF, on FIFA's website)
           </a>
@@ -392,11 +392,11 @@ function FocusPage() {
                 href={r.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-lg border border-line bg-white p-2 active:scale-[0.99]"
+                className="flex items-center gap-3 rounded-lg border border-line bg-paper p-2 active:scale-[0.99]"
               >
                 <img src={r.img} alt="" loading="lazy" className="h-16 w-20 shrink-0 rounded object-cover" />
                 <span className="min-w-0">
-                  <span className="block text-sm font-semibold leading-snug text-navy">{r.title}</span>
+                  <span className="block text-sm font-semibold leading-snug text-heading">{r.title}</span>
                   <span className="block text-xs leading-snug text-muted">{r.note}</span>
                 </span>
               </a>
@@ -409,7 +409,7 @@ function FocusPage() {
                   href={h}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-navy"
+                  className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
                   <FileText className="size-4 shrink-0 text-gold" />
                   <span className="flex-1">{t}</span>

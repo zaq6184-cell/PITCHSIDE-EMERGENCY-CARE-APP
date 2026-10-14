@@ -10,7 +10,7 @@ export const Route = createFileRoute("/fifa")({ component: FifaScaPage });
 function List({ items, ordered }: { items: string[]; ordered?: boolean }) {
   const cls = "flex flex-col gap-1.5 pl-5 text-sm leading-snug";
   return ordered ? (
-    <ol className={`${cls} list-decimal marker:font-semibold marker:text-navy`}>
+    <ol className={`${cls} list-decimal marker:font-semibold marker:text-heading`}>
       {items.map((t) => (
         <li key={t}>{t}</li>
       ))}
@@ -58,7 +58,7 @@ function FifaScaPage() {
                   {i + 1}
                 </span>
                 <div>
-                  <p className="text-sm font-semibold text-navy">{s.title}</p>
+                  <p className="text-sm font-semibold text-heading">{s.title}</p>
                   <p className="text-sm leading-snug">{s.text}</p>
                 </div>
               </div>
@@ -83,8 +83,8 @@ function FifaScaPage() {
 
         <Section title="EMERGENCY STEPS">
           <List items={fifaSca.steps} ordered />
-          <div className="rounded-lg border-l-4 border-navy bg-note px-2.5 py-2 text-sm leading-snug">
-            <p className="font-semibold text-navy">Bystander steps vs the medical team</p>
+          <div className="rounded-lg border-l-4 border-heading bg-note px-2.5 py-2 text-sm leading-snug">
+            <p className="font-semibold text-heading">Bystander steps vs the medical team</p>
             <p>
               These are FIFA's steps for anyone on the scene (hands-only CPR). The Field of Play (FoP) medical team follows the
               colour-role drill: 30:2 with a face mask until an i-gel is in, then continuous compressions with a breath
@@ -103,10 +103,10 @@ function FifaScaPage() {
           <p className="text-xs leading-snug text-muted">Tap a picture to open it full size and zoom in.</p>
           <div className="flex flex-col gap-3">
             {fifaSca.infographics.map((g) => (
-              <a key={g.src} href={g.src} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-lg border border-line bg-white active:scale-[0.99]">
-                <img src={g.src} alt={g.title} loading="lazy" className="block max-h-96 w-full object-contain" />
+              <a key={g.src} href={g.src} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
+                <img src={g.src} alt={g.title} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
                 <span className="block border-t border-line px-3 py-2">
-                  <span className="block text-sm font-semibold text-navy">{g.title}</span>
+                  <span className="block text-sm font-semibold text-heading">{g.title}</span>
                   <span className="block text-xs leading-snug text-muted">{g.note}</span>
                 </span>
               </a>
@@ -121,8 +121,8 @@ function FifaScaPage() {
 
         <Section title="PREVENT AND PREPARE">
           <List items={fifaSca.prevention} />
-          <div className="rounded-lg border-l-4 border-navy bg-note px-2.5 py-2 text-sm leading-snug">
-            <p className="font-semibold text-navy">FIFA Medical Set Piece</p>
+          <div className="rounded-lg border-l-4 border-heading bg-note px-2.5 py-2 text-sm leading-snug">
+            <p className="font-semibold text-heading">FIFA Medical Set Piece</p>
             <p>{fifaSca.setPiece}</p>
           </div>
         </Section>
@@ -139,7 +139,7 @@ function FifaScaPage() {
                   href={d.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-navy"
+                  className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
                   <FileText className="size-4 shrink-0 text-gold" />
                   <span className="flex-1">{d.title}</span>
@@ -150,14 +150,14 @@ function FifaScaPage() {
               </li>
             ))}
           </ul>
-          <p className="font-display text-[11px] font-semibold tracking-[0.12em] text-navy">READ MORE</p>
+          <p className="font-display text-[11px] font-semibold tracking-[0.12em] text-heading">READ MORE</p>
           {fifaSca.reading.map((r) => (
             <a
               key={r.href}
               href={r.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm leading-snug text-navy underline underline-offset-2"
+              className="text-sm leading-snug text-heading underline underline-offset-2"
             >
               {r.title}
             </a>
