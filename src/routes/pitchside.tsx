@@ -11,7 +11,7 @@ const posters = [
   {
     src: asset("/img/fifa/peap.jpg"),
     title: "FIFA Pre-Match Emergency Action Plan (PEAP)",
-    note: "Fill in before every match: venue, hospital, Match Doctor and a name for each colour.",
+    note: "Fill in before every match: venue, hospital, team leader and a name for each colour.",
   },
   {
     src: asset("/img/fifa/set-piece.jpg"),
@@ -73,7 +73,7 @@ function PitchsidePage() {
           <ul className="flex list-disc flex-col gap-1.5 px-3.5 py-3 pl-8 text-sm leading-snug marker:text-gold">
             <li>Every collapse or injury is assessed the same structured way — the medical version of a “set piece”.</li>
             <li>The same framework applies in training, warm-up and matches.</li>
-            <li>FIFA's Emergency Care Manual holds the full protocols (the source for this app).</li>
+            <li>FIFA's Emergency Care Manual holds the full protocols (the main source for this guide).</li>
           </ul>
         </Panel>
 

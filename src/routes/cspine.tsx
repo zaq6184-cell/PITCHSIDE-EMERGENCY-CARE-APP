@@ -294,7 +294,7 @@ function CspinePage() {
         </Section>
 
         <Section id="cs-films" title="MORE FILMS">
-          <p className="text-xs leading-snug text-muted">Assessment, set-up, collar, log roll and scoop. Tap a film to play it.</p>
+          <p className="text-xs leading-snug text-muted">Assessment, set-up, collar, log roll and scoop. Each film opens on its owner's website.</p>
           <div className="-mx-3.5">
             <VideoList clips={moreFilms} />
           </div>
@@ -334,7 +334,7 @@ function CspinePage() {
           </ul>
         </Section>
 
-        <Section title="RELATED IN THIS APP">
+        <Section title="RELATED IN THIS GUIDE">
           <Link to="/station/$id" params={{ id: "3" }} className={more}>
             Skill module 3 — primary survey (A: airway & cervical spine) →
           </Link>

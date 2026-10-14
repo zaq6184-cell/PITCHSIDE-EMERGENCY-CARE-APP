@@ -342,7 +342,7 @@ export const stations: Station[] = [
   {
     id: "2",
     short: "Cardiac arrest",
-    title: "Approach to Pitch-side Cardiac Arrest",
+    title: "Approach to Pitchside Cardiac Arrest",
     subtitle: "Part 1 — BLS + AED · Part 2 — 10-second stop and start for ambulance transfer",
     sections: [
       {
@@ -433,7 +433,7 @@ export const stations: Station[] = [
   {
     id: "3",
     short: "Primary survey",
-    title: "Approach to Pitch-side Injury Care",
+    title: "Approach to Pitchside Injury Care",
     subtitle: "Focused primary survey vs complete primary survey",
     sections: [
       {
@@ -525,7 +525,7 @@ export const stations: Station[] = [
               "Suction bleeding, secretions or vomitus while evaluating the gag reflex with the suction catheter.",
               "Adjuncts: OPA if the gag reflex is absent; consider an NPA if a gag reflex is present (best tolerated). NPA: relative contraindication with suspected base-of-skull fracture.",
               "High-flow oxygen via BVM or non-rebreather mask at 15 L/min — as soon as it arrives; do not wait for the survey to finish.",
-              "Advanced: consider an i-gel LMA pitch-side in cardiac arrest; intubation / RSI later at the medical base, ambulance or hospital.",
+              "Advanced: consider an i-gel LMA pitchside in cardiac arrest; intubation / RSI later at the medical base, ambulance or hospital.",
             ],
           },
           {
@@ -574,7 +574,7 @@ export const stations: Station[] = [
           { kind: "video", clip: fifaSkillClips.handsOn },
           {
             kind: "text",
-            text: "Pitch-side breathing assessment is limited — use a focused “hands-on 1, 2, 3” approach.",
+            text: "Pitchside breathing assessment is limited — use a focused “hands-on 1, 2, 3” approach.",
           },
           {
             kind: "defs",
@@ -672,23 +672,23 @@ export const stations: Station[] = [
   },
   {
     id: "4",
-    short: "Immobilization",
-    title: "Immobilization",
-    subtitle: "Collar, head immobilizer, spinal board, scoop, basket, splints and slings",
+    short: "Immobilisation",
+    title: "Immobilisation",
+    subtitle: "Collar, head immobiliser, spinal board, scoop, basket, splints and slings",
     sections: [
       {
-        title: "Principles of immobilization",
+        title: "Principles of immobilisation",
         blocks: [
           {
             kind: "list",
             items: [
-              "Prioritise life-threatening problems before immobilization.",
+              "Prioritise life-threatening problems before immobilisation.",
               "Use MILS when cervical spine injury is suspected.",
               "Choose the device by suspected injury, player condition, environment and extraction plan.",
               "Minimise unnecessary movement during assessment, transfer and extrication.",
               "Explain the procedure to the player; coordinate all movement with one clear leader.",
-              "Assess distal circulation, sensation and movement before and after limb immobilization.",
-              "Reassess ABC and neurological status after immobilization and after every transfer.",
+              "Assess distal circulation, sensation and movement before and after limb immobilisation.",
+              "Reassess ABC and neurological status after immobilisation and after every transfer.",
             ],
           },
           { kind: "remember", text: "ASSESS → STABILISE → IMMOBILISE → SECURE → REASSESS" },
@@ -740,12 +740,12 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "Head immobilizer",
+        title: "Head immobiliser",
         blocks: [
           {
             kind: "device",
             src: asset("/img/s5/head.jpg"),
-            alt: "Head immobilizer: orange lateral head blocks with forehead and chin straps on a board, ear opening visible",
+            alt: "Head immobiliser: orange lateral head blocks with forehead and chin straps on a board, ear opening visible",
             credit: { by: "Stefan Schumacher", license: "CC BY-SA 4.0", href: "https://commons.wikimedia.org/wiki/File:Elk_paramedics_stretcher_Grey.jpg" },
             model: { uid: "1216e5d1e494433d92d36517337444ce", name: "Spine board kit", by: "Guardiano" },
           },
@@ -976,7 +976,7 @@ export const stations: Station[] = [
             kind: "list",
             ordered: true,
             items: [
-              "Use when no conventional sling is available or rapid pitch-side support is needed.",
+              "Use when no conventional sling is available or rapid pitchside support is needed.",
               "Support the arm against the torso.",
               "Use the lower part of the player's shirt to support the forearm.",
               "Secure without restricting breathing or circulation.",
@@ -988,7 +988,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "Pitch-side scenarios",
+        title: "Pitchside scenarios",
         blocks: [
           {
             kind: "cards",
@@ -1038,7 +1038,7 @@ export const stations: Station[] = [
               "Straps too loose or too tight.",
               "Moving a suspected fracture to get a 'normal' position.",
               "Not checking CSM before and after splinting.",
-              "Not reassessing ABC and neurology after immobilization or transfer.",
+              "Not reassessing ABC and neurology after immobilisation or transfer.",
             ],
           },
           {
@@ -1196,7 +1196,7 @@ export const stations: Station[] = [
       {
         title: "Heat / environmental emergencies",
         blocks: [
-          { kind: "text", text: "For football in Malaysia this is a mandatory module." },
+          { kind: "text", text: "Essential wherever football is played in heat and humidity." },
           {
             kind: "list",
             items: [
@@ -1221,7 +1221,7 @@ export const stations: Station[] = [
           {
             kind: "alert",
             title: "Follow local authority",
-            text: "Drugs and quantities must follow the event medical director’s standing orders, prescriber authority, Malaysian regulations, formulary and local SOP. Do not place prescription medicines into a generic football bag without an approved medication protocol.",
+            text: "Drugs and quantities must follow the event medical director’s standing orders, prescriber authority, national regulations, formulary and local SOP. Do not place prescription medicines into a generic football bag without an approved medication protocol.",
           },
           {
             kind: "table",
