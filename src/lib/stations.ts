@@ -337,7 +337,7 @@ export const stations: Station[] = [
         ],
       },
     ],
-    source: "FIFA Emergency Care Manual, Ch.1, and FIFA's PEAP poster.",
+    source: "FIFA Emergency Care Manual, Ch.1; FIFA's PEAP poster; and FIFA's protocols for on-field interventions during matches (tournament team size, timings and bench position).",
   },
   {
     id: "2",
@@ -419,7 +419,7 @@ export const stations: Station[] = [
           {
             kind: "alert",
             title: "Every minute counts",
-            text: "For every minute without return of circulation, the chance of a good outcome falls by up to 10% (FIFA).",
+            text: "Every minute without CPR and defibrillation lowers the chance of survival. A fall of up to 10% per minute is widely quoted in resuscitation teaching; the figure is not from the FIFA manual.",
           },
           {
             kind: "text",
@@ -563,7 +563,7 @@ export const stations: Station[] = [
           {
             kind: "defs",
             items: [
-              { term: "FIFA — clearing the cervical spine (all 6 needed)", text: "1 No midline tenderness · 2 GCS 15 · 3 No distracting injury · 4 No neurology · 5 No concerning mechanism (e.g. fall onto the head, axial load) · 6 Active rotation of 45° to each side." },
+              { term: "FIFA — clearing the cervical spine (all 7 needed)", text: "1 No midline tenderness · 2 GCS 15 · 3 No distracting injury · 4 No neurology · 5 No concerning mechanism (e.g. fall onto the head, axial load) · 6 Active rotation of 45° to each side · 7 No intoxication." },
             ],
           },
         ],
@@ -614,7 +614,7 @@ export const stations: Station[] = [
               "Utilise a scoop stretcher to minimise movement during handling (~15° tilt vs a 90° log roll onto a board).",
               "Capillary refill centrally: press the sternum for 5 seconds; skin should pink up within 2 seconds. A normal CRT does not exclude bleeding.",
               "On-pitch BP has almost no value — measure it off the pitch with a properly fitted cuff.",
-              "SBP estimator: a palpable radial pulse indicates a minimum systolic BP of approximately 80–90 mmHg. FIFA caution: studies differ, so treat this as a rough guide only. An ABSENT radial pulse is extremely concerning — think cardiac arrest.",
+              "Radial pulse: it relates to blood pressure, but studies differ and no single pressure figure can be attached to it. An ABSENT radial pulse is extremely concerning — think cardiac arrest.",
               "Check blood glucose in any confused or collapsed player.",
             ],
           },
@@ -668,7 +668,7 @@ export const stations: Station[] = [
         ],
       },
     ],
-    source: "FIFA Emergency Care Manual, Ch.2.",
+    source: "FIFA Emergency Care Manual, Ch.2. The 5-second scan and the NSAID and CCTVR memory aids are practical additions, not from the manual.",
   },
   {
     id: "4",
@@ -1048,34 +1048,16 @@ export const stations: Station[] = [
         ],
       },
     ],
-    source: "FIFA Emergency Care Manual (Ch.6 and skill zone) and the device manufacturers' instructions.",
+    source: "FIFA Emergency Care Manual: collar sizing, log roll and the extrication set piece. The step lists for each device and the sling techniques are general practical guidance; always follow the manufacturer's instructions.",
   },
   {
     id: "5",
     short: "Emergency care bag",
     title: "Preparation of the Football Emergency Care Bag",
-    subtitle: "Bag numbers, full equipment checklist, 11-compartment layout, critical fails",
+    subtitle: "FIFA's standard bag, plus a fuller local checklist, layout and critical fails",
     sections: [
       {
-        title: "Session flow",
-        blocks: [
-          {
-            kind: "list",
-            ordered: true,
-            items: [
-              "Introduction — pitchside emergency preparedness and quick access to emergency equipment; contexts (single match, tournament) and number of bags required.",
-              "Emergency bag setup — recommended number and types of bags per pitch or tournament; accessibility of the AED and bags.",
-              "Equipment walkthrough — compartments and key categories; function checks (AED operation, oxygen cylinder pressure).",
-              "Bag layout — the 11-compartment layout for rapid access and clear labelling.",
-              "Practical — “Prepare and check a fully equipped Football Emergency Care Bag before a match.”",
-              "Critical safety failures — no AED, expired medication, inaccessible bag; emergency access plans and EMS communication.",
-              "Q&A and wrap-up.",
-            ],
-          },
-        ],
-      },
-      {
-        title: "Recommended standard",
+        title: "How many bags — local planning guide",
         blocks: [
           {
             kind: "table",
@@ -1100,7 +1082,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "A. Airway",
+        title: "Local checklist · A. Airway",
         blocks: [
           {
             kind: "table",
@@ -1120,7 +1102,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "B. Breathing / oxygen",
+        title: "Local checklist · B. Breathing / oxygen",
         blocks: [
           {
             kind: "table",
@@ -1145,7 +1127,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "C. Circulation / cardiac",
+        title: "Local checklist · C. Circulation / cardiac",
         blocks: [
           {
             kind: "table",
@@ -1176,7 +1158,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "Diagnostic equipment (minimum)",
+        title: "Local checklist · Diagnostics",
         blocks: [
           {
             kind: "list",
@@ -1194,7 +1176,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "Heat / environmental emergencies",
+        title: "Local checklist · Heat / environment",
         blocks: [
           { kind: "text", text: "Essential wherever football is played in heat and humidity." },
           {
@@ -1240,7 +1222,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "Bag layout — 11 labelled compartments",
+        title: "One way to lay out a local bag — 11 compartments",
         blocks: [
           {
             kind: "defs",
@@ -1261,7 +1243,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "FIFA Emergency Care Bag (FECB 2022)",
+        title: "FIFA's standard bag (FECB 2022) — the minimum",
         blocks: [
           {
             kind: "text",
@@ -1318,7 +1300,7 @@ export const stations: Station[] = [
         ],
       },
     ],
-    source: "FIFA Emergency Care Manual, Ch.10, and FIFA's Emergency Care Bag factsheet.",
+    source: "FIFA's standard bag: FIFA Emergency Care Manual, Ch.10. The bag-number guide, the longer local checklist, the 11-compartment layout and the critical-fail list are practical additions that go beyond FIFA's minimum.",
   },
 ];
 
