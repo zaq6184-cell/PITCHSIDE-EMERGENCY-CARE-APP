@@ -17,7 +17,7 @@ export type FifaRoleCard = {
 
 export const fifaRoleCards: Partial<Record<RoleId, FifaRoleCard>> = {
   black: {
-    who: "The overall team leader, in charge of decision-making for the player (usually the FIFA Match Doctor).",
+    who: "The overall team leader, in charge of decision-making for the player.",
     general: [
       "Stay hands-off — leave assessments and interventions to the team unless exceptional circumstances require it.",
       "Lead every member and make sure each is doing their role.",

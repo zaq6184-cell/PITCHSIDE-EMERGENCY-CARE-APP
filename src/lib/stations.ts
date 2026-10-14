@@ -71,7 +71,7 @@ export const stations: Station[] = [
               {
                 title: "M — Meeting",
                 sub: "Who is involved?",
-                lines: ["Home team doctor", "Visiting team doctor", "Stadium medical officer", "Pitchside paramedics"],
+                lines: ["Home team doctor", "Visiting team doctor", "Venue medical officer", "Pitchside paramedics"],
               },
               {
                 title: "C — Contacts",
@@ -81,7 +81,7 @@ export const stations: Station[] = [
               {
                 title: "R — Roles & positioning",
                 sub: "Who does what and where?",
-                lines: ["Assign the team leader and the five colour roles", "Brief any stretcher team the venue provides", "Confirm positions", "Brief the team"],
+                lines: ["Assign the team leader and the five colour roles", "Brief any extrication team the venue provides", "Confirm positions", "Brief the team"],
               },
               {
                 title: "E — Equipment",
@@ -104,8 +104,8 @@ export const stations: Station[] = [
           {
             kind: "defs",
             items: [
-              { term: "FIFA — before the tournament", text: "The whole Field of Play medical team trains in the FIFA set piece with the Match Doctor 5–7 days before the first match, on the standard FIFA equipment." },
-              { term: "FIFA — on matchday", text: "Between 2 hours and 1 hour before kick-off the team runs moulages (simulations) of the most critical scenarios, led by the Match Doctor." },
+              { term: "FIFA — before the tournament", text: "The whole medical team trains in the FIFA set piece with the team leader 5–7 days before the first match, on the standard FIFA equipment." },
+              { term: "FIFA — on matchday", text: "Between 2 hours and 1 hour before kick-off the team runs moulages (simulations) of the most critical scenarios, led by the team leader." },
               { term: "FIFA — everywhere", text: "Use and rehearse the PEAP in all football settings — training sessions as well as matches — adapted to the site and the expertise available." },
               { term: "How often", text: "Practise the emergency plan at least once a year with everyone likely to respond, and review it briefly with the home and visiting medical staff before each competition." },
               { term: "How to rehearse", text: "Hands-on and scenario-based, at different places in the venue: sudden cardiac arrest, head and neck injury, heat stroke and limb injuries. Record when, where, who took part and which scenarios." },
@@ -130,7 +130,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "Field of Play medical team",
+        title: "Medical team members",
         blocks: [
           {
             kind: "table",
@@ -149,7 +149,7 @@ export const stations: Station[] = [
             items: [
               { term: "Six roles", text: "Black, Orange, Red, Green, Blue and White — the colours on FIFA's PEAP poster." },
               { term: "Smaller teams", text: "One person can cover more than one role if they are able to. Every role still has to be filled." },
-              { term: "Stretcher team", text: workshop.stretcherNote },
+              { term: "Extrication team", text: workshop.stretcherNote },
             ],
           },
           {
@@ -167,13 +167,13 @@ export const stations: Station[] = [
             items: [
               "The referee assesses the incident.",
               "If needed, the referee signals the team doctor onto the pitch.",
-              "Only then, if needed, the referee calls the Field of Play (FoP) medical team — both hands held as if carrying a stretcher.",
+              "Only then, if needed, the referee calls the medical team — both hands held as if carrying a stretcher.",
             ],
           },
           {
             kind: "alert",
             title: "Exception: non-contact collapse",
-            text: "A player who collapses without contact is treated as sudden cardiac arrest — the FoP medical team runs on without waiting for the referee's signal.",
+            text: "A player who collapses without contact is treated as sudden cardiac arrest — the medical team runs on without waiting for the referee's signal.",
           },
           {
             kind: "image",
@@ -189,7 +189,7 @@ export const stations: Station[] = [
           {
             kind: "list",
             items: [
-              "At FIFA matches the FoP medical team sits to the left of Team A's bench, with the extrication kit set up beside the bench.",
+              "At FIFA matches the medical team sits to the left of Team A's bench, with the extrication kit set up beside the bench.",
               "The team leader may call the team into the “ready” position.",
               "Ready: move along the touchline to the point closest to the incident and squat in your assigned position with the stretcher.",
               "Not needed: return to your seats, passing behind the team benches where possible.",
@@ -205,14 +205,14 @@ export const stations: Station[] = [
             kind: "image",
             src: asset("/img/fifa/onfield/bench.jpg"),
             alt: "Pitch diagram showing the medical team seated left of Team A's bench, with two basket stretchers in front",
-            caption: "Where the FoP medical team sits. FIFA Medical Set Piece — Protocols for on-field interventions (v3, March 2025). © FIFA",
+            caption: "Where the medical team sits. FIFA Medical Set Piece — Protocols for on-field interventions (v3, March 2025). © FIFA",
           },
           {
             kind: "defs",
             items: [
-              { term: "FIFA Field of Play (FoP) medical team", text: "8–9 members: one emergency physician experienced in out-of-hospital care plus paramedics / health professionals doing BLS and ALS, with 2–3 reserves. The same team works every match at a venue." },
-              { term: "Training", text: "The whole team trains in the FIFA set piece with the FIFA Match Doctor 5–7 days before the first match, on the standard FIFA equipment." },
-              { term: "FIFA Match Doctor", text: "Sits with and leads the team, reviews injury mechanisms on a replay device (often with a remote injury spotter), makes their own assessment, calls the ready position, and enters for potentially serious injury or concussion — then directs when the team comes on with the equipment." },
+              { term: "Medical team at FIFA matches", text: "8–9 members: one emergency physician experienced in out-of-hospital care plus paramedics / health professionals doing BLS and ALS, with 2–3 reserves. The same team works every match at a venue." },
+              { term: "Training", text: "The whole team trains in the FIFA set piece with the team leader 5–7 days before the first match, on the standard FIFA equipment." },
+              { term: "Team leader", text: "Sits with and leads the team, reviews injury mechanisms on a replay device (often with a remote injury spotter), makes their own assessment, calls the ready position, and enters for potentially serious injury or concussion — then directs when the team comes on with the equipment." },
             ],
           },
         ],
@@ -224,7 +224,7 @@ export const stations: Station[] = [
             kind: "defs",
             items: [
               { term: "Kick-off −2 h", text: "Team present, equipment checked; player medical centre staffed." },
-              { term: "−2 h to −1 h", text: "Moulages (simulations) of the most critical scenarios, led by the Match Doctor." },
+              { term: "−2 h to −1 h", text: "Moulages (simulations) of the most critical scenarios, led by the team leader." },
               { term: "Half-time · cool-down", text: "Medical team always present." },
               { term: "Post-match", text: "Medical centre staff stay until the last player has left the stadium." },
             ],
@@ -287,7 +287,7 @@ export const stations: Station[] = [
             items: [
               { term: "Medical kit (FIFA)", text: "FIFA bag + oxygen to one side of the head; one person hands out equipment." },
               { term: "Extrication kit (FIFA)", text: "Basket in line with the feet, 2–3 basket lengths away. Scoop out of the basket, extended and split between basket and player." },
-              { term: "Stretcher team, if the venue has one", text: "Stand or kneel beside the scoop and basket, facing the player, and wait for the team leader. One stays free to pass the scoop and slide the basket in." },
+              { term: "Extrication team, if the venue has one", text: "Stand or kneel beside the scoop and basket, facing the player, and wait for the team leader. One stays free to pass the scoop and slide the basket in." },
             ],
           },
           {
@@ -310,8 +310,8 @@ export const stations: Station[] = [
           {
             kind: "image",
             src: asset("/img/fifa/onfield/equipment.jpg"),
-            alt: "FIFA Field of Play medical team equipment laid out: basket stretcher with scoop, collar and straps",
-            caption: "FIFA FoP medical team equipment. FIFA Medical Set Piece — Protocols for on-field interventions (v3, March 2025). © FIFA",
+            alt: "Medical team equipment at FIFA matches laid out: basket stretcher with scoop, collar and straps",
+            caption: "Medical team equipment at FIFA matches. FIFA Medical Set Piece — Protocols for on-field interventions (v3, March 2025). © FIFA",
           },
         ],
       },

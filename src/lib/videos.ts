@@ -60,7 +60,7 @@ const skill = (id: string, key: string, title: string, duration: string, why: st
 });
 
 export const fifaSkillClips = {
-  sideline: skill("7Ipqao9VK4pRn1294aX1kwea", "sideline", "Moving along the sideline and ready position", "1:22", "Where the FoP medical team waits and moves along the touchline so it can enter the pitch at once."),
+  sideline: skill("7Ipqao9VK4pRn1294aX1kwea", "sideline", "Moving along the sideline and ready position", "1:22", "Where the medical team waits and moves along the touchline so it can enter the pitch at once."),
   setup: skill("6ikTihPp82JfeC0WakY7Iwea", "setup", "Setting up of equipment", "1:28", "How the team lays out the bag, oxygen and extrication kit around the player as per the FIFA Medical Set Piece."),
   handsOn: skill("4D7uAwh5oWenZsj9nDSYwEea", "hands-on", "Hands On 1, 2, 3", "4:02", "Red runs a full A–E assessment of an injured player: 1 observation, 2 hands on 3 places."),
   cspine: skill("7Q5Z6j1CIaSAHvIXDgmDt9ea", "cspine", "Cervical spine injury", "8:09", "The full colour-coded set piece for a suspected neck injury: MILS, assessment, collar, log roll or scoop and extrication."),
