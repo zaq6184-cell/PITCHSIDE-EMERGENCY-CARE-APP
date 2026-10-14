@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { ThemeSwitch } from "@/components/theme-switch";
 import { AppShell, JumpChips, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
 import { aboutApp, disclaimer } from "@/lib/disclaimer";
@@ -32,9 +33,27 @@ function About() {
               alt="Pitchside Emergency Care — set-piece study guide"
               width={1600}
               height={512}
-              className="block h-auto w-full max-w-[18rem]"
+              className="block h-auto w-full max-w-[18rem] dark:hidden"
             />
-            <h1 className="mt-3 font-display text-xl font-bold tracking-wide text-navy">About the app</h1>
+            <img
+              src={asset("/brand/logo-horizontal-dark.png")}
+              alt="Pitchside Emergency Care — set-piece study guide"
+              width={1600}
+              height={512}
+              className="hidden h-auto w-full max-w-[18rem] rounded-lg dark:block"
+            />
+            <h1 className="mt-3 font-display text-xl font-bold tracking-wide text-heading">About the app</h1>
+          </div>
+        </Panel>
+        <Panel>
+          <div className="flex items-center gap-3 px-3.5 py-2.5">
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-sm font-semibold tracking-wide text-heading">Dark mode</p>
+              <p className="text-xs leading-snug text-muted">
+                Easier on the eyes at night and pitchside after dark. Also in the top bar. Saved on this device only.
+              </p>
+            </div>
+            <ThemeSwitch label="Dark mode" />
           </div>
         </Panel>
         <JumpChips items={sections.map((s) => ({ id: s.id, label: s.chip }))} />

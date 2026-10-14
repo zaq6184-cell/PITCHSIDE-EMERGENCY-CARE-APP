@@ -22,18 +22,18 @@ export function PositionDiagram({ highlight, caption }: { highlight?: RoleId; ca
     <figure className="bg-cream px-3 py-3">
       <svg viewBox="0 0 320 380" role="img" aria-label={title} className="mx-auto block h-auto w-full max-w-[19rem]">
         {/* side labels */}
-        <text x="14" y="366" fontSize="10" fontWeight="700" fill="#5B6470" letterSpacing="1">
+        <text x="14" y="366" fontSize="10" fontWeight="700" className="fill-muted" letterSpacing="1">
           PLAYER'S RIGHT
         </text>
-        <text x="306" y="366" fontSize="10" fontWeight="700" fill="#5B6470" letterSpacing="1" textAnchor="end">
+        <text x="306" y="366" fontSize="10" fontWeight="700" className="fill-muted" letterSpacing="1" textAnchor="end">
           PLAYER'S LEFT
         </text>
-        <text x="160" y="12" fontSize="10" fontWeight="700" fill="#5B6470" letterSpacing="1" textAnchor="middle">
+        <text x="160" y="12" fontSize="10" fontWeight="700" className="fill-muted" letterSpacing="1" textAnchor="middle">
           HEAD
         </text>
 
         {/* player, lying on the back, head at the top */}
-        <g fill="#0B1F3A">
+        <g className="fill-heading">
           <circle cx="160" cy="62" r="19" />
           <rect x="132" y="86" width="56" height="104" rx="16" />
           <rect x="108" y="92" width="20" height="92" rx="10" />
@@ -44,12 +44,12 @@ export function PositionDiagram({ highlight, caption }: { highlight?: RoleId; ca
 
         {/* FIFA bag and AED beside Green */}
         <g opacity={highlight && highlight !== "green" ? 0.35 : 1}>
-          <rect x="238" y="50" width="34" height="26" rx="4" fill="#F2C811" stroke="#0B1F3A" strokeWidth="1.5" />
-          <rect x="276" y="56" width="22" height="20" rx="4" fill="#7FB8C9" stroke="#0B1F3A" strokeWidth="1.5" />
-          <text x="255" y="90" fontSize="8.5" fontWeight="700" fill="#5B6470" textAnchor="middle">
+          <rect x="238" y="50" width="34" height="26" rx="4" fill="#F2C811" className="stroke-heading" strokeWidth="1.5" />
+          <rect x="276" y="56" width="22" height="20" rx="4" fill="#7FB8C9" className="stroke-heading" strokeWidth="1.5" />
+          <text x="255" y="90" fontSize="8.5" fontWeight="700" className="fill-muted" textAnchor="middle">
             BAG
           </text>
-          <text x="287" y="90" fontSize="8.5" fontWeight="700" fill="#5B6470" textAnchor="middle">
+          <text x="287" y="90" fontSize="8.5" fontWeight="700" className="fill-muted" textAnchor="middle">
             AED
           </text>
         </g>
@@ -59,7 +59,15 @@ export function PositionDiagram({ highlight, caption }: { highlight?: RoleId; ca
           return (
             <g key={m.id} opacity={on ? 1 : 0.3}>
               {highlight === m.id ? <circle cx={m.x} cy={m.y} r="31" fill="none" stroke="#C9A227" strokeWidth="3" /> : null}
-              <circle cx={m.x} cy={m.y} r="25" fill={m.fill} stroke="#0B1F3A" strokeWidth={m.id === "white" ? 1.5 : 0} />
+              <circle
+                cx={m.x}
+                cy={m.y}
+                r="25"
+                fill={m.fill}
+                // white needs an edge on a light page, black needs one on a dark page
+                className={m.id === "white" ? "stroke-navy" : m.id === "black" ? "stroke-transparent dark:stroke-white/40" : undefined}
+                strokeWidth={m.id === "white" || m.id === "black" ? 1.5 : 0}
+              />
               <text x={m.x} y={m.y + 4} fontSize="11" fontWeight="700" fill={m.ink} textAnchor="middle">
                 {m.label}
               </text>

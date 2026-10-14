@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FifaClipCard } from "@/components/fifa-video";
 import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
+import { moduleCover } from "@/lib/module-covers";
 import { type Block, getStation, stations } from "@/lib/stations";
 
 export const Route = createFileRoute("/station/$id")({ component: StationPage });
@@ -24,6 +25,7 @@ function StationPage() {
   const i = stations.indexOf(s);
   const prev = stations[i - 1];
   const next = stations[i + 1];
+  const cover = moduleCover(s.id);
 
   return (
     <AppShell tab="stations">
@@ -36,12 +38,27 @@ function StationPage() {
           All skill modules
         </Link>
         <Panel>
-          <div className="bg-navy px-3.5 py-3 text-on-navy">
-            <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">
-              MODULE {s.id}
-            </p>
-            <h2 className="mt-0.5 font-display text-xl font-bold leading-tight">{s.title}</h2>
-            <p className="mt-1 text-sm text-gold-soft">{s.subtitle}</p>
+          <div className="bg-navy text-on-navy">
+            {cover ? (
+              <div className="relative">
+                <img
+                  src={cover.src}
+                  alt={cover.alt}
+                  width={1280}
+                  height={720}
+                  className="block aspect-video w-full object-cover outline-none"
+                />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-navy to-transparent" />
+                <p className="absolute right-2 top-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">
+                  AI-generated illustration
+                </p>
+              </div>
+            ) : null}
+            <div className={cover ? "px-3.5 pb-3.5" : "px-3.5 py-3"}>
+              <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">MODULE {s.id}</p>
+              <h2 className="mt-0.5 font-display text-[1.45rem] font-bold leading-tight">{s.title}</h2>
+              <p className="mt-1 text-sm text-gold-soft">{s.subtitle}</p>
+            </div>
           </div>
         </Panel>
 
@@ -128,7 +145,7 @@ function BlockView({ b }: { b: Block }) {
         <dl className="flex flex-col divide-y divide-line">
           {b.items.map((d) => (
             <div key={d.term} className="py-1.5">
-              <dt className="font-display text-xs font-semibold tracking-wide text-navy">{d.term}</dt>
+              <dt className="font-display text-xs font-semibold tracking-wide text-heading">{d.term}</dt>
               <dd className="text-sm leading-snug">{d.text}</dd>
             </div>
           ))}
@@ -143,7 +160,7 @@ function BlockView({ b }: { b: Block }) {
                 {b.head.map((h) => (
                   <th
                     key={h}
-                    className="border-b-2 border-navy px-1.5 py-1.5 font-display text-[11px] font-semibold tracking-wide text-navy first:pl-0"
+                    className="border-b-2 border-heading px-1.5 py-1.5 font-display text-[11px] font-semibold tracking-wide text-heading first:pl-0"
                   >
                     {h}
                   </th>
@@ -186,8 +203,8 @@ function BlockView({ b }: { b: Block }) {
       );
     case "info":
       return (
-        <div className="rounded-lg border-l-4 border-navy bg-note px-2.5 py-2 text-sm leading-snug">
-          {b.title ? <p className="font-semibold text-navy">{b.title}</p> : null}
+        <div className="rounded-lg border-l-4 border-heading bg-note px-2.5 py-2 text-sm leading-snug">
+          {b.title ? <p className="font-semibold text-heading">{b.title}</p> : null}
           <p>{b.text}</p>
         </div>
       );
@@ -198,7 +215,7 @@ function BlockView({ b }: { b: Block }) {
           className="flex min-h-11 items-center justify-between gap-2 rounded-lg border border-gold/60 bg-note px-3 py-2 text-sm leading-snug"
         >
           <span>
-            <span className="block font-display font-semibold tracking-wide text-navy">{b.label}</span>
+            <span className="block font-display font-semibold tracking-wide text-heading">{b.label}</span>
             {b.text ? <span className="block text-muted">{b.text}</span> : null}
           </span>
           <ChevronRight className="h-5 w-5 shrink-0 text-gold" aria-hidden />
@@ -222,7 +239,7 @@ function BlockView({ b }: { b: Block }) {
       return (
         <figure className="-mx-3.5">
           <a href={b.src} target="_blank" rel="noopener noreferrer">
-            <img src={b.src} alt={b.alt} loading="lazy" className="block max-h-[28rem] w-full bg-cream object-contain" />
+            <img src={b.src} alt={b.alt} loading="lazy" className="block max-h-[28rem] w-full bg-matte object-contain" />
           </a>
           {b.caption ? (
             <figcaption className="px-3.5 pt-2 text-xs leading-snug text-muted">{b.caption}</figcaption>
@@ -258,7 +275,7 @@ function BlockView({ b }: { b: Block }) {
         <div className="flex flex-col gap-2">
           {b.items.map((c) => (
             <div key={c.title} className="rounded-lg bg-cream px-3 py-2.5">
-              <p className="font-display text-sm font-semibold text-navy">{c.title}</p>
+              <p className="font-display text-sm font-semibold text-heading">{c.title}</p>
               {c.sub ? <p className="text-xs text-muted">{c.sub}</p> : null}
               <ul className="mt-1.5 flex list-disc flex-col gap-0.5 pl-4 text-sm leading-snug marker:text-gold">
                 {c.lines.map((l) => (

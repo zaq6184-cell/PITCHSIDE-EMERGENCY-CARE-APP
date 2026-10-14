@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bandage, BriefcaseMedical, ChevronRight, HeartPulse, Stethoscope, Users } from "lucide-react";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
+import { moduleCover } from "@/lib/module-covers";
 import { stations } from "@/lib/stations";
 import { workshop } from "@/lib/workshop";
 
@@ -18,7 +19,10 @@ function ModuleBadge({ id }: { id: string }) {
   const look = moduleLook[id];
   const Icon = look.icon;
   return (
-    <span className="relative grid size-12 shrink-0 place-items-center rounded-xl" style={{ backgroundColor: look.tint, color: look.ink }}>
+    <span
+      className="tint-chip relative grid size-12 shrink-0 place-items-center rounded-xl"
+      style={{ "--tint": look.tint, "--ink": look.ink } as React.CSSProperties}
+    >
       <Icon className="size-6" strokeWidth={1.9} aria-hidden />
       <span className="absolute -bottom-1 -right-1 grid size-5 place-items-center rounded-full bg-navy font-display text-[11px] font-bold text-gold">
         {id}
@@ -27,22 +31,38 @@ function ModuleBadge({ id }: { id: string }) {
   );
 }
 
+function ModuleCover({ id }: { id: string }) {
+  const cover = moduleCover(id);
+  if (!cover) return null;
+  return (
+    <img
+      src={cover.small}
+      alt=""
+      width={720}
+      height={405}
+      loading={id === "1" ? "eager" : "lazy"}
+      className="block aspect-[12/5] w-full object-cover object-[50%_72%] outline-none"
+    />
+  );
+}
+
 function Stations() {
   return (
     <AppShell tab="stations">
       <div className="flex flex-col gap-3.5">
         <Note>
-          <span className="font-semibold text-navy">Five skill modules. </span>
+          <span className="font-semibold text-heading">Five skill modules. </span>
           Study notes for each part of the pitchside response, in the order a team would train them.
         </Note>
         <SectionLabel>SKILL MODULES</SectionLabel>
         {stations.map((s) => (
           <Link key={s.id} to="/station/$id" params={{ id: s.id }} className="block active:scale-[0.99]">
             <Panel>
+              <ModuleCover id={s.id} />
               <div className="flex items-center gap-3 px-3.5 py-3">
                 <ModuleBadge id={s.id} />
                 <div className="min-w-0 flex-1">
-                  <p className="font-display text-xs font-semibold tracking-[0.14em] text-navy">
+                  <p className="font-display text-xs font-semibold tracking-[0.14em] text-heading">
                     MODULE {s.id} · {s.short.toUpperCase()}
                   </p>
                   <p className="text-sm leading-snug">

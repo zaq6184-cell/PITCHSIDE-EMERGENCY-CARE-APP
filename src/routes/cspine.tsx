@@ -119,7 +119,7 @@ function Section({ id, title, children }: { id?: string; title: string; children
 }
 
 const bullets = "flex list-disc flex-col gap-1.5 pl-5 text-sm leading-snug marker:text-gold";
-const numbered = "flex list-decimal flex-col gap-1.5 pl-5 text-sm leading-snug marker:font-semibold marker:text-navy";
+const numbered = "flex list-decimal flex-col gap-1.5 pl-5 text-sm leading-snug marker:font-semibold marker:text-heading";
 const more = "inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold";
 
 function CspinePage() {
@@ -175,8 +175,8 @@ function CspinePage() {
               <li key={t}>{t}</li>
             ))}
           </ol>
-          <div className="rounded-lg border-l-4 border-navy bg-note px-2.5 py-2 text-sm leading-snug">
-            <p className="font-semibold text-navy">Mnemonic — NSAID</p>
+          <div className="rounded-lg border-l-4 border-heading bg-note px-2.5 py-2 text-sm leading-snug">
+            <p className="font-semibold text-heading">Mnemonic — NSAID</p>
             <p>
               Neurological deficit · Spinal midline tenderness · Altered mental status (GCS &lt; 15) · Intoxication
               (includes strong analgesics) · Distracting injury. Any one present → the spine cannot be cleared;
@@ -206,7 +206,7 @@ function CspinePage() {
             {setPiece.map((st, i) => (
               <li key={st.title} className="overflow-hidden rounded-lg border border-line">
                 <div className="flex items-center gap-2 bg-navy px-2.5 py-2 text-on-navy">
-                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-gold font-display text-xs font-bold text-navy">
+                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-gold font-display text-xs font-bold text-on-gold">
                     {i + 1}
                   </span>
                   <p className="font-display text-xs font-semibold leading-snug tracking-wide">{st.title.toUpperCase()}</p>
@@ -265,12 +265,12 @@ function CspinePage() {
               ["Fifth person (Green)", "Places the scoop or board."],
             ].map(([t, d]) => (
               <div key={t} className="py-1.5">
-                <dt className="font-display text-xs font-semibold tracking-wide text-navy">{t}</dt>
+                <dt className="font-display text-xs font-semibold tracking-wide text-heading">{t}</dt>
                 <dd className="text-sm leading-snug">{d}</dd>
               </div>
             ))}
           </dl>
-          <p className="text-sm font-semibold text-navy">Extrication order</p>
+          <p className="text-sm font-semibold text-heading">Extrication order</p>
           <ol className={numbered}>
             <li>Size and fit the collar — check the mouth can still open.</li>
             <li>Log roll or tilt onto the scoop — Orange leads the count.</li>
@@ -305,13 +305,13 @@ function CspinePage() {
             href={asset("/img/fifa/cspine-protocol-v2.jpg")}
             target="_blank"
             rel="noopener noreferrer"
-            className="block overflow-hidden rounded-lg border border-line bg-white active:scale-[0.99]"
+            className="block overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]"
           >
             <img
               src={asset("/img/fifa/cspine-protocol-v2.jpg")}
               alt="FIFA Medical Set-Piece protocol for cervical spine injury: colour-coded tasks from assessment to extrication"
               loading="lazy"
-              className="block max-h-[30rem] w-full object-contain"
+              className="block max-h-[30rem] w-full bg-white object-contain"
             />
             <span className="block border-t border-line px-3 py-2 text-xs leading-snug text-muted">
               Tap to open full size and zoom in.
@@ -324,7 +324,7 @@ function CspinePage() {
                   href={h}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-navy"
+                  className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
                   <FileText className="size-4 shrink-0 text-gold" />
                   <span>{t}</span>

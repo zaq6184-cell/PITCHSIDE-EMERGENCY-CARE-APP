@@ -43,7 +43,7 @@ function Home() {
       <div className="flex flex-col gap-3.5">
         <IntroHero />
         <Note>
-          <span className="font-semibold text-navy">{workshop.rule}</span>
+          <span className="font-semibold text-heading">{workshop.rule}</span>
         </Note>
         <SectionLabel>TAP A COLOUR</SectionLabel>
         <div className="grid grid-cols-2 gap-2.5">
@@ -54,7 +54,7 @@ function Home() {
                 key={r.id}
                 to="/role/$id"
                 params={{ id: r.id }}
-                className="relative flex min-h-[5.5rem] flex-col justify-end overflow-hidden rounded-xl px-3 pb-2.5 pt-3 transition-transform duration-150 ease-out active:scale-95"
+                className={`relative flex min-h-[5.5rem] flex-col justify-end overflow-hidden rounded-xl px-3 pb-2.5 pt-3 transition-transform duration-150 ease-out active:scale-95${r.id === "black" ? " dark:outline dark:outline-1 dark:outline-white/25" : ""}`}
                 style={{
                   backgroundColor: r.color,
                   backgroundImage: "linear-gradient(150deg, rgba(255,255,255,0.16), rgba(0,0,0,0.14))",
@@ -82,7 +82,7 @@ function Home() {
             <RoleExplorer3D />
           </div>
           <details className="border-t border-line px-3.5 py-1">
-            <summary className="flex min-h-11 cursor-pointer items-center font-display text-xs font-semibold tracking-wide text-navy">
+            <summary className="flex min-h-11 cursor-pointer items-center font-display text-xs font-semibold tracking-wide text-heading">
               Show the flat diagram
             </summary>
             <div className="-mx-3.5 pb-2">
@@ -91,15 +91,15 @@ function Home() {
           </details>
           <ul className="flex flex-col divide-y divide-line px-3.5 py-2 text-sm leading-snug">
             <li className="py-1.5">
-              <span className="font-semibold text-navy">At the head: </span>Orange, with Green beside the bag and AED on the
+              <span className="font-semibold text-heading">At the head: </span>Orange, with Green beside the bag and AED on the
               player's left.
             </li>
             <li className="py-1.5">
-              <span className="font-semibold text-navy">Player's right: </span>Red at the chest, Blue at the pelvis, White at the
+              <span className="font-semibold text-heading">Player's right: </span>Red at the chest, Blue at the pelvis, White at the
               lower legs.
             </li>
             <li className="py-1.5">
-              <span className="font-semibold text-navy">Player's left: </span>Black, the team leader, level with the chest.
+              <span className="font-semibold text-heading">Player's left: </span>Black, the team leader, level with the chest.
             </li>
           </ul>
         </Panel>
@@ -142,7 +142,7 @@ function Home() {
                     href={d.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-navy"
+                    className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-heading"
                   >
                     <span className="min-w-0 flex-1">{d.label}</span>
                     <ExternalLink className="size-4 shrink-0 text-gold" aria-hidden />
@@ -166,7 +166,7 @@ function Home() {
                     href={asset(`/brand/${file}`)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-navy"
+                    className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-heading"
                   >
                     <span className="min-w-0 flex-1">{label}</span>
                     <ChevronRight className="size-4 shrink-0 text-gold" aria-hidden />
@@ -184,7 +184,14 @@ function Home() {
               alt="Pitchside Emergency Care — set-piece study guide"
               width={1600}
               height={512}
-              className="mb-1 block h-auto w-full max-w-[17rem]"
+              className="mb-1 block h-auto w-full max-w-[17rem] dark:hidden"
+            />
+            <img
+              src={asset("/brand/logo-horizontal-dark.png")}
+              alt="Pitchside Emergency Care — set-piece study guide"
+              width={1600}
+              height={512}
+              className="mb-1 hidden h-auto w-full max-w-[17rem] rounded-lg dark:block"
             />
             <SectionLabel>ABOUT THE APP</SectionLabel>
             <p className="text-sm leading-snug">{about}</p>
@@ -250,7 +257,7 @@ function IntroHero() {
         <div className="mt-3 flex gap-2">
           <a
             href="#set-piece-3d"
-            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-lg bg-gold px-3 font-display text-sm font-semibold tracking-wide text-navy transition-transform duration-150 ease-out active:scale-95"
+            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-lg bg-gold px-3 font-display text-sm font-semibold tracking-wide text-on-gold transition-transform duration-150 ease-out active:scale-95"
           >
             Explore in 3D
           </a>
@@ -284,13 +291,13 @@ function Tiles({ items }: { items: Tile[] }) {
           <Panel className="h-full">
             <div className={`flex h-full gap-2 px-3 py-3${t.wide ? " flex-row items-center gap-3" : " flex-col"}`}>
               <span
-                className="grid size-10 shrink-0 place-items-center rounded-xl"
-                style={{ backgroundColor: t.tint, color: t.ink }}
+                className="tint-chip grid size-10 shrink-0 place-items-center rounded-xl"
+                style={{ "--tint": t.tint, "--ink": t.ink } as React.CSSProperties}
               >
                 <t.icon className="size-5" strokeWidth={2} />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block font-display text-sm font-semibold tracking-wide text-navy">{t.title}</span>
+                <span className="block font-display text-sm font-semibold tracking-wide text-heading">{t.title}</span>
                 <span className="mt-0.5 block text-xs leading-snug text-muted">{t.sub}</span>
               </span>
               {t.wide ? <ChevronRight className="size-5 shrink-0 text-gold" aria-hidden /> : null}

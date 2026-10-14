@@ -77,7 +77,7 @@ function RoleCard() {
               If it is not your colour, do not reach in.
             </p>
             <Note>
-              <span className="font-semibold text-navy">On the PEAP poster: </span>
+              <span className="font-semibold text-heading">On the PEAP poster: </span>
               {r.fifa}
             </Note>
             {fifaRoleCards[r.id] ? <FifaCard id={r.id} /> : null}
@@ -99,14 +99,14 @@ function FifaCard({ id }: { id: keyof typeof fifaRoleCards }) {
   ];
   return (
     <section className="rounded-lg border border-line bg-cream px-3 py-3">
-      <p className="font-display text-[11px] font-semibold tracking-[0.14em] text-navy">
+      <p className="font-display text-[11px] font-semibold tracking-[0.14em] text-heading">
         FROM FIFA'S ROLE CARD — SUMMARY
       </p>
       <p className="mt-1 text-sm font-medium leading-snug">{c.who}</p>
       {groups.map(([title, items]) =>
         items?.length ? (
           <div key={title} className="mt-2.5">
-            <p className="text-xs font-semibold text-navy">{title}</p>
+            <p className="text-xs font-semibold text-heading">{title}</p>
             <ul className="mt-1 flex list-disc flex-col gap-1 pl-4 text-sm leading-snug marker:text-gold">
               {items.map((t) => (
                 <li key={t}>{t}</li>
@@ -119,7 +119,7 @@ function FifaCard({ id }: { id: keyof typeof fifaRoleCards }) {
         href={FIFA_ROLE_CARDS_PDF}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-2 inline-flex min-h-9 items-center text-xs font-medium text-navy underline underline-offset-2"
+        className="mt-2 inline-flex min-h-9 items-center text-xs font-medium text-heading underline underline-offset-2"
       >
         Open FIFA's role cards (PDF, on FIFA's website)
       </a>

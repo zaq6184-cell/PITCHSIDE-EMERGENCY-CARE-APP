@@ -37,7 +37,7 @@ function GuidesPage() {
           <SectionLabel>CONCUSSION — FOCUS</SectionLabel>
           <p className="text-sm leading-snug text-muted">
             FIFA’s on-pitch concussion assessment film.{" "}
-            <Link to="/focus" className="font-medium text-navy underline underline-offset-2">
+            <Link to="/focus" className="font-medium text-heading underline underline-offset-2">
               Open the FOCUS protocol
             </Link>
             .

@@ -1,8 +1,9 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet, ScriptOnce, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 import { asset } from "@/lib/asset";
+import { themeBootScript } from "@/lib/theme";
 
 const APP_NAME = "Pitchside Emergency Care";
 
@@ -35,6 +36,7 @@ export const Route = createRootRoute({
     <html lang="en" className="antialiased" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <ScriptOnce>{themeBootScript}</ScriptOnce>
       </head>
       <body className="bg-bg text-ink">
         <PreviewHostBridge />
