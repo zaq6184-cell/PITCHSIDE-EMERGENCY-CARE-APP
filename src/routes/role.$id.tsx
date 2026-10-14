@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { PositionDiagram } from "@/components/position-diagram";
+import { roleIcons } from "@/components/role-icon";
 import { AppShell, Note, Panel, SayLine, SectionLabel } from "@/components/workshop";
 import { getRole, isRoleId } from "@/lib/workshop";
 import { FIFA_ROLE_CARDS_PDF, fifaRoleCards } from "@/lib/fifa-roles";
@@ -12,6 +13,7 @@ function RoleCard() {
   if (!isRoleId(id)) return <Navigate to="/" />;
   const r = getRole(id);
   if (!r) return <Navigate to="/" />;
+  const RoleIcon = roleIcons[r.id];
 
   return (
     <AppShell tab="home">
@@ -25,15 +27,17 @@ function RoleCard() {
         </Link>
         <Panel>
           <div
-            className="px-3.5 py-3"
+            className="relative overflow-hidden px-3.5 py-3.5"
             style={{
               backgroundColor: r.color,
+              backgroundImage: "linear-gradient(150deg, rgba(255,255,255,0.16), rgba(0,0,0,0.14))",
               color: r.text,
               boxShadow: r.id === "white" ? "inset 0 0 0 1px rgba(11,31,58,0.18)" : undefined,
             }}
           >
-            <h2 className="font-display text-2xl font-bold tracking-[0.08em]">{r.name}</h2>
-            <p className="text-sm opacity-90">{r.role}</p>
+            <RoleIcon className="absolute -right-1 -top-2 size-20 opacity-25" strokeWidth={1.4} aria-hidden />
+            <h2 className="font-display text-[1.7rem] font-bold leading-none tracking-[0.08em]">{r.name}</h2>
+            <p className="mt-1 text-sm opacity-90">{r.role}</p>
           </div>
           <PositionDiagram highlight={r.id} />
           <div className="flex flex-col gap-3.5 px-3.5 py-3.5">
