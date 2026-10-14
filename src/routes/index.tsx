@@ -11,6 +11,7 @@ import {
   PlayCircle,
   Stethoscope,
 } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { PositionDiagram } from "@/components/position-diagram";
 import { RoleExplorer3D } from "@/components/set-piece-3d";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
@@ -39,6 +40,7 @@ function Home() {
   return (
     <AppShell tab="home">
       <div className="flex flex-col gap-3.5">
+        <IntroHero />
         <Note>
           <span className="font-semibold text-navy">{workshop.rule}</span>
         </Note>
@@ -64,7 +66,7 @@ function Home() {
         <Note>If it is not your colour, do not reach in.</Note>
 
         <Panel>
-          <div className="px-3.5 pt-3.5">
+          <div id="set-piece-3d" className="scroll-mt-24 px-3.5 pt-3.5">
             <SectionLabel>THE SET PIECE IN 3D</SectionLabel>
           </div>
           <div className="mt-3">
@@ -190,6 +192,68 @@ function Home() {
         </Panel>
       </div>
     </AppShell>
+  );
+}
+
+/** Top of Home: a short looping intro film behind the title, with the two quickest ways in. */
+function IntroHero() {
+  const film = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = film.current;
+    if (!v) return;
+    // people who ask for less motion get the still cover frame instead of the moving film
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      v.pause();
+      return;
+    }
+    v.play().catch(() => {
+      // autoplay refused (data saver, low power): the cover frame stays
+    });
+  }, []);
+  return (
+    <section className="overflow-hidden rounded-xl bg-navy shadow-card" aria-label="Pitchside Emergency Care">
+      {/* the film stays clear of the title, so the six runners are never hidden behind text */}
+      <div className="relative">
+        <video
+          ref={film}
+          className="block aspect-video w-full object-cover"
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={asset("/img/intro/intro-poster.jpg")}
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          <source src={asset("/video/intro.mp4")} type="video/mp4" />
+        </video>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-navy to-transparent" />
+        <p className="absolute right-2 top-2 rounded-full bg-navy/70 px-2 py-0.5 text-[10px] font-medium text-on-navy">
+          AI-generated illustration
+        </p>
+      </div>
+      <div className="px-3.5 pb-3.5 pt-1">
+        <p className="font-display text-[11px] font-semibold tracking-[0.16em] text-gold">SET-PIECE STUDY GUIDE</p>
+        <h1 className="mt-0.5 font-display text-[1.7rem] font-bold leading-[1.05] tracking-wide text-on-navy">
+          Pitchside Emergency Care
+        </h1>
+        <p className="mt-1.5 text-sm leading-snug text-gold-soft">Six colours. One job each. Rehearsed before it is needed.</p>
+        <div className="mt-3 flex gap-2">
+          <a
+            href="#set-piece-3d"
+            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-lg bg-gold px-3 font-display text-sm font-semibold tracking-wide text-navy transition-transform duration-150 ease-out active:scale-95"
+          >
+            Explore in 3D
+          </a>
+          <Link
+            to="/drill"
+            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-lg border border-on-navy/70 px-3 font-display text-sm font-semibold tracking-wide text-on-navy transition-transform duration-150 ease-out active:scale-95"
+          >
+            Run the drill
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
 

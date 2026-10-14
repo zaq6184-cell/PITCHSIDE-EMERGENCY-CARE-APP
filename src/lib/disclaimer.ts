@@ -26,7 +26,8 @@ export const aboutApp = {
     "The original material in this app — the plain-language summaries, the position diagram, the logo and the title cards — is © 2026 the developers. It may be used free of charge for non-commercial teaching, with credit to the developers. Please ask before any commercial use, and do not alter the logo.",
   ],
   ai: [
-    "Artificial intelligence was used in building this app: an AI assistant (Claude, by Anthropic) helped to write the software, draft the plain-language summaries, and draw the diagram, logo and title cards. Some illustrations are AI-generated and are labelled as illustrations.",
+    "Artificial intelligence was used in building this app: an AI assistant (Claude, by Anthropic) helped to write the software, draft the plain-language summaries, and draw the diagram, logo and title cards. The 3D set piece was built this way too.",
+    "The short intro film at the top of Home is an AI-generated illustration (made with Higgsfield). It shows no real people or real event, and one bib was recoloured afterwards so that the six colours match the roles in this app.",
     "The content was checked against FIFA's published documents, and the developers remain responsible for it. AI tools can make mistakes: if something here differs from FIFA's documents, follow FIFA's documents.",
   ],
 };
