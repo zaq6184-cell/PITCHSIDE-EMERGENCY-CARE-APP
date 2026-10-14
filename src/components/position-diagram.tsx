@@ -1,4 +1,7 @@
-import type { RoleId } from "@/lib/workshop";
+import { Link } from "@tanstack/react-router";
+import { setTransitionDirection } from "@/lib/gestures";
+import { haptic, say, sfx } from "@/lib/sound";
+import { getRole, type RoleId, workshop } from "@/lib/workshop";
 
 /**
  * Where each PEAP role sits around the player, seen from above with the head at the top.
@@ -75,26 +78,85 @@ export function RoleDisc({ id, x, y, r = 25 }: { id: RoleId; x: number; y: numbe
   );
 }
 
-export function PositionDiagram({ highlight, caption }: { highlight?: RoleId; caption?: string }) {
+/** Each colour speaks its first "What you say" line when its disc is tapped. */
+const hear = (id: RoleId) => void say(`${id}-1`);
+
+/**
+ * `linkRoles`: each disc opens that colour's role page (with a whoosh and that colour's call-out);
+ * the highlighted disc replays its own call-out instead.
+ */
+export function PositionDiagram({ highlight, caption, linkRoles }: { highlight?: RoleId; caption?: string; linkRoles?: boolean }) {
   const title = highlight
     ? `Position of ${MARKS.find((m) => m.id === highlight)?.label} around the player`
     : "Positions of the six PEAP roles around the player";
+  const order = workshop.roles.map((r) => r.id);
   return (
     <figure className="bg-cream px-3 py-3">
-      <svg viewBox="0 0 320 380" role="img" aria-label={title} className="mx-auto block h-auto w-full max-w-[19rem]">
+      <svg
+        viewBox="0 0 320 380"
+        role={linkRoles ? "group" : "img"}
+        aria-label={linkRoles ? `${title}. Tap a colour to open its role.` : title}
+        className="mx-auto block h-auto w-full max-w-[19rem]"
+      >
         <DiagramBase dimBag={Boolean(highlight && highlight !== "green")} />
         {MARKS.map((m) => {
           const on = !highlight || highlight === m.id;
-          return (
-            <g key={m.id} opacity={on ? 1 : 0.3}>
+          const disc = (
+            <g opacity={on ? 1 : 0.3}>
               {highlight === m.id ? <circle cx={m.x} cy={m.y} r="31" fill="none" stroke="#C9A227" strokeWidth="3" /> : null}
+              {linkRoles ? <circle className="disc-focus" cx={m.x} cy={m.y} r="34" fill="none" strokeWidth="3" /> : null}
               <RoleDisc id={m.id} x={m.x} y={m.y} />
             </g>
+          );
+          if (!linkRoles) return <g key={m.id}>{disc}</g>;
+          const role = getRole(m.id)?.role ?? "";
+          if (m.id === highlight) {
+            return (
+              <g
+                key={m.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`${m.label}, ${role}: hear the call-out`}
+                className="disc-link"
+                onClick={() => {
+                  haptic(10);
+                  hear(m.id);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    hear(m.id);
+                  }
+                }}
+              >
+                {disc}
+              </g>
+            );
+          }
+          return (
+            <Link
+              key={m.id}
+              to="/role/$id"
+              params={{ id: m.id }}
+              aria-label={`${m.label}, ${role}: open this role`}
+              className="disc-link"
+              onClick={() => {
+                haptic(10);
+                setTransitionDirection(highlight && order.indexOf(m.id) < order.indexOf(highlight) ? "back" : "forward");
+                sfx("whoosh", 0.25);
+                hear(m.id);
+              }}
+            >
+              {disc}
+            </Link>
           );
         })}
       </svg>
       <figcaption className="mt-2 text-center text-xs leading-snug text-muted">
-        {caption ?? "Seen from above. Positions may all be flipped depending on the site of injury and hazards."}
+        {caption ??
+          (linkRoles
+            ? "Seen from above. Tap a colour to open its role. Positions may all be flipped depending on the site of injury and hazards."
+            : "Seen from above. Positions may all be flipped depending on the site of injury and hazards.")}
       </figcaption>
     </figure>
   );

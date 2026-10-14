@@ -243,7 +243,7 @@ function BlockView({ b }: { b: Block }) {
     case "positions":
       return (
         <div className="-mx-3.5">
-          <PositionDiagram />
+          <PositionDiagram linkRoles />
         </div>
       );
     case "video":

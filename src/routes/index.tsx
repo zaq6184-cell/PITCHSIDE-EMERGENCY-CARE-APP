@@ -111,7 +111,7 @@ function Home() {
               Show the flat diagram
             </summary>
             <div className="-mx-3.5 pb-2">
-              <PositionDiagram />
+              <PositionDiagram linkRoles />
             </div>
           </details>
           <ul className="flex flex-col divide-y divide-line px-3.5 py-2 text-sm leading-snug">
