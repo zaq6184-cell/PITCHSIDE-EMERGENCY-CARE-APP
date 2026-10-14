@@ -365,7 +365,7 @@ function FocusPage() {
           </ul>
         </Section>
 
-        <Section title="RELATED IN THIS APP">
+        <Section title="RELATED IN THIS GUIDE">
           <Link to="/cspine" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold">
             Cervical spine injury — FIFA set piece →
           </Link>

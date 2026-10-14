@@ -20,6 +20,20 @@ import { workshop } from "@/lib/workshop";
 
 export const Route = createFileRoute("/")({ component: Home });
 
+/** Original artwork for this guide, in public/brand. */
+const teachingKit: [string, string][] = [
+  ["Logo — horizontal, light background (PNG)", "logo-horizontal-light.png"],
+  ["Logo — horizontal, dark background (PNG)", "logo-horizontal-dark.png"],
+  ["Logo — stacked (PNG)", "logo-stacked.png"],
+  ["Logo mark (SVG)", "logo-mark.svg"],
+  ["Title card — Module 1 · FIFA PEAP & roles", "module-1-title.png"],
+  ["Title card — Module 2 · Cardiac arrest", "module-2-title.png"],
+  ["Title card — Module 3 · Primary survey", "module-3-title.png"],
+  ["Title card — Module 4 · Immobilisation", "module-4-title.png"],
+  ["Title card — Module 5 · Emergency care bag", "module-5-title.png"],
+  ["Brand sheet — colours and usage (PNG)", "brand-sheet.png"],
+];
+
 function Home() {
   return (
     <AppShell tab="home">
@@ -126,7 +140,38 @@ function Home() {
         </Panel>
 
         <Panel>
+          <div className="px-3.5 py-3.5">
+            <SectionLabel>TEACHING KIT</SectionLabel>
+            <p className="mt-2 text-xs leading-snug text-muted">
+              Logo and title cards made for this guide, free to use on slides and handouts when you teach these modules.
+            </p>
+            <ul className="mt-2 flex flex-col divide-y divide-line">
+              {teachingKit.map(([label, file]) => (
+                <li key={file}>
+                  <a
+                    href={asset(`/brand/${file}`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-navy"
+                  >
+                    <span className="min-w-0 flex-1">{label}</span>
+                    <ChevronRight className="size-4 shrink-0 text-gold" aria-hidden />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Panel>
+
+        <Panel>
           <div id="about" className="flex scroll-mt-24 flex-col gap-2 px-3.5 py-3.5">
+            <img
+              src={asset("/brand/logo-horizontal-light.png")}
+              alt="Pitchside Emergency Care — set-piece study guide"
+              width={1600}
+              height={512}
+              className="mb-1 block h-auto w-full max-w-[17rem]"
+            />
             <SectionLabel>ABOUT THIS GUIDE</SectionLabel>
             <p className="text-sm leading-snug">{about}</p>
             <p className="mt-1 font-display text-xs font-semibold tracking-wide text-navy">DISCLAIMER</p>
