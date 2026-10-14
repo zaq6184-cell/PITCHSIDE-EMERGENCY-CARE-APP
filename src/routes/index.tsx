@@ -14,7 +14,7 @@ import {
 import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, HeroPhoto, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
-import { about, disclaimer } from "@/lib/disclaimer";
+import { about, aboutApp, disclaimer } from "@/lib/disclaimer";
 import { fifaDownloads } from "@/lib/fifa-links";
 import { workshop } from "@/lib/workshop";
 
@@ -172,14 +172,17 @@ function Home() {
               height={512}
               className="mb-1 block h-auto w-full max-w-[17rem]"
             />
-            <SectionLabel>ABOUT THIS GUIDE</SectionLabel>
+            <SectionLabel>ABOUT THE APP</SectionLabel>
             <p className="text-sm leading-snug">{about}</p>
-            <p className="mt-1 font-display text-xs font-semibold tracking-wide text-navy">DISCLAIMER</p>
-            {disclaimer.paragraphs.map((p) => (
-              <p key={p} className="text-xs leading-snug text-muted">
-                {p}
-              </p>
-            ))}
+            <p className="text-sm leading-snug">{aboutApp.developers[0]}</p>
+            <p className="text-xs leading-snug text-muted">{disclaimer.short}</p>
+            <Link
+              to="/about"
+              className="inline-flex min-h-11 items-center gap-1 font-display text-sm font-semibold tracking-wide text-gold"
+            >
+              Purpose, developers, disclaimer, copyright and use of AI
+              <ChevronRight className="size-4" aria-hidden />
+            </Link>
           </div>
         </Panel>
       </div>
