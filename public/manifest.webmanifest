@@ -1,0 +1,54 @@
+{
+  "name": "Pitchside Emergency Care",
+  "short_name": "Pitchside",
+  "description": "Study guide to FIFA's medical set piece for football: the six colour roles, sudden cardiac arrest, primary survey, cervical spine, concussion (FOCUS) and the emergency care bag. Works offline once installed.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b1f3a",
+  "theme_color": "#0b1f3a",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "medical", "health", "sports"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Team drill",
+      "short_name": "Drill",
+      "description": "Sudden cardiac arrest in six steps, in 3D",
+      "url": "./drill",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "10-second carry timer",
+      "short_name": "Carry timer",
+      "url": "./timer",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Test yourself",
+      "short_name": "Quiz",
+      "description": "Who does what? and Place the team",
+      "url": "./quiz",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Skill modules",
+      "short_name": "Modules",
+      "url": "./stations",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "screenshots": [
+    { "src": "screenshots/phone-home.jpg", "sizes": "840x1800", "type": "image/jpeg", "form_factor": "narrow", "label": "The six colour roles" },
+    { "src": "screenshots/phone-drill.jpg", "sizes": "840x1800", "type": "image/jpeg", "form_factor": "narrow", "label": "The cardiac arrest drill in 3D" },
+    { "src": "screenshots/phone-quiz.jpg", "sizes": "840x1800", "type": "image/jpeg", "form_factor": "narrow", "label": "Test yourself" },
+    { "src": "screenshots/desktop-home.jpg", "sizes": "1280x800", "type": "image/jpeg", "form_factor": "wide", "label": "Pitchside Emergency Care on a computer" }
+  ]
+}

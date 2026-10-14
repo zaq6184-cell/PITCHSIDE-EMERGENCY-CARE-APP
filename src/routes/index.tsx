@@ -13,6 +13,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { InstallCard } from "@/components/install-app";
 import { PositionDiagram } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { RoleExplorer3D } from "@/components/set-piece-3d";
@@ -46,6 +47,7 @@ function Home() {
         <Note>
           <span className="font-semibold text-heading">{workshop.rule}</span>
         </Note>
+        <InstallCard />
         <SectionLabel>TAP A COLOUR</SectionLabel>
         <div className="grid grid-cols-2 gap-2.5">
           {workshop.roles.map((r, i) => {

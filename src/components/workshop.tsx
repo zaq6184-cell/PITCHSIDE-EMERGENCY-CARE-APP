@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { BookOpen, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { InstallHeaderButton, OfflineBanner } from "@/components/install-app";
 import { SoundButton } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { asset } from "@/lib/asset";
@@ -32,6 +33,7 @@ export function AppShell({
       ["/fifa", "FIFA Health & Medical · sudden cardiac arrest"],
       ["/pitchside", "FIFA Health & Medical · pitchside emergency care"],
       ["/quiz", "Test yourself · quiz and positions game"],
+      ["/install", "Install the app · phone, tablet, computer"],
     ] as const
   ).find(([p]) => pathname.startsWith(p))?.[1];
 
@@ -65,11 +67,13 @@ export function AppShell({
             </p>
           </div>
           <div className="-my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center">
+            <InstallHeaderButton />
             <SoundButton />
             <ThemeSwitch />
           </div>
         </div>
       </header>
+      <OfflineBanner />
       <main className="relative z-[1] mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
         {children}
       </main>
