@@ -16,7 +16,7 @@ const sections: { id: string; chip: string; title: string; paragraphs: string[] 
 
 function About() {
   return (
-    <AppShell tab="home">
+    <AppShell tab="about">
       <div className="flex flex-col gap-3.5">
         <Link
           to="/"
