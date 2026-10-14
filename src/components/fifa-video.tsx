@@ -1,5 +1,7 @@
-import { ExternalLink, Play } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, ExternalLink, Play } from "lucide-react";
 import { Note, Panel, SectionLabel } from "@/components/workshop";
+import { cn } from "@/lib/utils";
 import { fifaClips, fifaDocs, fifaSkillList, skillClips, type FifaClip } from "@/lib/videos";
 
 type SkillClip = (typeof skillClips)[number];
@@ -10,7 +12,7 @@ export function FifaVideoList() {
     <section id="films-sca" className="flex scroll-mt-24 flex-col gap-3">
       <SectionLabel>SCA GUIDELINE FILMS</SectionLabel>
       <p className="text-sm leading-snug text-muted">
-        FIFA, UEFA Medical and U.S. Soccer. Each film opens on its owner's website.
+        FIFA's films open on FIFA's website. The UEFA Medical and U.S. Soccer films play here — tap to play; needs a connection.
       </p>
       <VideoList clips={fifaClips} />
       <Panel>
@@ -31,8 +33,8 @@ export function FifaVideoList() {
             ))}
           </ul>
           <Note>
-            Films are not copied into this guide: FIFA's open on FIFA's website, the others on YouTube. This guide does
-            not replace life support certification.
+            FIFA's films are linked, not embedded: they open on FIFA's website or FIFA's YouTube channel. Films from other
+            publishers play here in YouTube's player. This guide does not replace life support certification.
           </Note>
         </div>
       </Panel>
@@ -71,6 +73,7 @@ export function SkillVideoList() {
                 poster={clip.poster}
                 watchUrl={`https://www.youtube.com/watch?v=${clip.youtubeId}`}
                 watchLabel="Watch on YouTube"
+                playHere
                 summary={clip.fifa[0]}
               >
                 <SkillPoints clip={clip} />
@@ -112,6 +115,7 @@ export function VideoList({ clips }: { clips: FifaClip[] }) {
               watchUrl={c.watchUrl ?? `https://www.youtube.com/watch?v=${c.youtubeId}`}
               watchLabel={c.watchUrl ? "Watch on FIFA's website" : "Watch on YouTube"}
               summary={c.why}
+              playHere={!isFifaFilm(c)}
             />
           </li>
         ))}
@@ -120,14 +124,19 @@ export function VideoList({ clips }: { clips: FifaClip[] }) {
   );
 }
 
-/** Compact row: the film is not embedded — the row links out to the page where its owner publishes it. */
+/**
+ * Film row. FIFA's films are never embedded: the row links to the FIFA page that shows them.
+ * Films from other publishers play here in YouTube's own player, loaded only when tapped.
+ */
 function VideoRow({
+  id,
   title,
   source,
   duration,
   watchUrl,
   watchLabel,
   summary,
+  playHere,
   children,
 }: {
   id: string;
@@ -138,31 +147,61 @@ function VideoRow({
   watchUrl: string;
   watchLabel: string;
   summary: string;
+  playHere?: boolean;
   children?: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
+  const head = (
+    <>
+      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-navy text-gold">
+        <Play className="size-4 translate-x-px" fill="currentColor" strokeWidth={0} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block font-display text-[13px] font-semibold leading-tight tracking-wide text-navy">{title}</span>
+        <span className="mt-0.5 block text-[11px] text-muted">
+          {source}
+          {duration ? ` · ${duration}` : ""}
+        </span>
+      </span>
+    </>
+  );
   return (
     <div className="px-3 py-3">
-      <a
-        href={watchUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`${title} — ${watchLabel} (opens in a new tab)`}
-        className="flex items-center gap-3 active:opacity-80"
-      >
-        <span className="grid size-10 shrink-0 place-items-center rounded-full bg-navy text-gold">
-          <Play className="size-4 translate-x-px" fill="currentColor" strokeWidth={0} />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block font-display text-[13px] font-semibold leading-tight tracking-wide text-navy">
-            {title}
-          </span>
-          <span className="mt-0.5 block text-[11px] text-muted">
-            {source}
-            {duration ? ` · ${duration}` : ""}
-          </span>
-        </span>
-        <ExternalLink className="size-4 shrink-0 text-gold" aria-hidden />
-      </a>
+      {playHere ? (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-label={`${open ? "Close" : "Play"} ${title}`}
+          className="flex w-full items-center gap-3 text-left active:opacity-80"
+        >
+          {head}
+          <ChevronDown className={cn("size-4 shrink-0 text-gold transition-transform", open && "rotate-180")} aria-hidden />
+        </button>
+      ) : (
+        <a
+          href={watchUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${title} — ${watchLabel} (opens in a new tab)`}
+          className="flex items-center gap-3 active:opacity-80"
+        >
+          {head}
+          <ExternalLink className="size-4 shrink-0 text-gold" aria-hidden />
+        </a>
+      )}
+      {playHere && open ? (
+        <div className="relative -mx-3 mt-3 aspect-video bg-navy">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`}
+            title={`${title} — ${source}`}
+            className="absolute inset-0 h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
+        </div>
+      ) : null}
       <div className="mt-2 pl-[3.25rem]">
         {children ?? <p className="text-sm leading-snug">{summary}</p>}
         <a
@@ -177,6 +216,9 @@ function VideoRow({
     </div>
   );
 }
+
+/** FIFA's own films stay as links, whether FIFA shows them on its site or on YouTube. */
+const isFifaFilm = (c: { watchUrl?: string; source: string }) => Boolean(c.watchUrl) || /\bFIFA\b/.test(c.source);
 
 const watchTarget = (clip: FifaClip) => clip.watchUrl ?? `https://www.youtube.com/watch?v=${clip.youtubeId}`;
 const watchText = (clip: FifaClip) => (clip.watchUrl ? "Watch on FIFA's website" : "Watch on YouTube");
