@@ -26,7 +26,7 @@ export const fifaSca = {
     { title: "Unresponsive", text: "No response at all to voice or touch." },
     {
       title: "Abnormal or absent breathing",
-      text: "Breathing may look normal at first, then turns to gasping and usually stops within 60–90 seconds. Gasping is not normal breathing — do not let it reassure you.",
+      text: "Breathing can look normal, even rapid, for about the first 90 seconds; then it becomes abnormal — gasping — before it stops. Normal-looking breathing does not rule out a cardiac arrest, and gasping is not normal breathing.",
     },
     {
       title: "Brief seizure-like movements",
