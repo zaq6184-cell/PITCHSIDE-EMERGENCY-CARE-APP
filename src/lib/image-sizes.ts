@@ -2,12 +2,12 @@
 export const IMAGE_SIZES: Record<string, readonly [number, number]> = {
   "/img/3d/stadium.jpg": [2048, 878],
   "/img/bag/aed.jpg": [320, 253],
-  "/img/bag/afc-bag.jpg": [720, 1280],
   "/img/bag/battery-tab.jpg": [605, 807],
   "/img/bag/battery.jpg": [350, 350],
   "/img/bag/fifa-closed.jpg": [228, 300],
   "/img/bag/fifa-open.jpg": [500, 410],
   "/img/bag/fifa-trays.jpg": [500, 402],
+  "/img/bag/pitchside-bag.jpg": [720, 1280],
   "/img/fifa/aed-travel.jpg": [1413, 2000],
   "/img/fifa/bag-factsheet.jpg": [1413, 2000],
   "/img/fifa/cspine-protocol-v2.jpg": [1395, 2033],

@@ -19,8 +19,8 @@ function BagPage() {
       <div className="flex flex-col gap-3.5">
         <figure className="overflow-hidden rounded-xl bg-paper shadow-card">
           <img
-            src={bag.photos.afc.src}
-            alt={bag.photos.afc.alt}
+            src={bag.photos.packed.src}
+            alt={bag.photos.packed.alt}
             className="block max-h-80 w-full object-cover object-[50%_28%]"
           />
           <figcaption className="px-3.5 py-2.5 text-xs leading-snug text-muted">
