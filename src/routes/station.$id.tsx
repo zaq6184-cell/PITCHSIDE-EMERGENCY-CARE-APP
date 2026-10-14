@@ -33,12 +33,12 @@ function StationPage() {
           className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold"
         >
           <ArrowLeft className="size-4" strokeWidth={2.4} />
-          All lessons
+          All skill modules
         </Link>
         <Panel>
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">
-              LESSON {s.id}
+              MODULE {s.id}
             </p>
             <h2 className="mt-0.5 font-display text-xl font-bold leading-tight">{s.title}</h2>
             <p className="mt-1 text-sm text-gold-soft">{s.subtitle}</p>
@@ -95,7 +95,7 @@ function StationPage() {
               to="/stations"
               className="flex min-h-11 items-center justify-end gap-1 rounded-lg bg-paper px-3 py-2 text-right text-sm shadow-card"
             >
-              <span className="truncate">All lessons</span>
+              <span className="truncate">All modules</span>
               <ChevronRight className="size-4 shrink-0 text-gold" />
             </Link>
           )}

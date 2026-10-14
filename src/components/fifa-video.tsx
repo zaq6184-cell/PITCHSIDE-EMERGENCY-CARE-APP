@@ -181,7 +181,7 @@ function VideoRow({
 const watchTarget = (clip: FifaClip) => clip.watchUrl ?? `https://www.youtube.com/watch?v=${clip.youtubeId}`;
 const watchText = (clip: FifaClip) => (clip.watchUrl ? "Watch on FIFA's website" : "Watch on YouTube");
 
-/** Single-film card (used inside the lessons): a link to the film on its owner's site. */
+/** Single-film card (used inside the skill modules): a link to the film on its owner's site. */
 export function FifaClipCard({ clip }: { clip: FifaClip }) {
   return (
     <Panel>

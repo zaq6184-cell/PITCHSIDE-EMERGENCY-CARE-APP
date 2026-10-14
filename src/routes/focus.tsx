@@ -374,7 +374,7 @@ function FocusPage() {
             params={{ id: "3" }}
             className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold"
           >
-            Lesson 3 — primary survey (D: disability) →
+            Skill module 3 — primary survey (D: disability) →
           </Link>
         </Section>
 
