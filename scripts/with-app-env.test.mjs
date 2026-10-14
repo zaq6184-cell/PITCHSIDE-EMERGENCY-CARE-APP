@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -25,6 +25,19 @@ function makeWorkspace(appEnvJson) {
   }
   return root;
 }
+
+/** A throwaway project holding a copy of the wrapper and an app env with auth off. */
+function makeWrappedProject() {
+  const root = makeWorkspace('{"VITE_AUTH_ENABLED":"false"}');
+  mkdirSync(join(root, "scripts"));
+  copyFileSync(WRAPPER, join(root, "scripts/with-app-env.mjs"));
+  return root;
+}
+
+// The shipped .grok/app-env.json exists only in the app-builder workspace (.gitignore keeps .grok/ out of the repo).
+const builderOnly = existsSync(join(projectRoot(), APP_ENV_REL_PATH))
+  ? {}
+  : { skip: "app-builder workspace only: .grok/app-env.json is not committed" };
 
 test("keeps VITE_-prefixed string entries", () => {
   assert.deepEqual(parseAppEnv('{"VITE_AUTH_ENABLED":"false"}'), {
@@ -59,7 +72,7 @@ test("an explicit process-env override wins over the file", () => {
   assert.equal(merged.PATH, "/usr/bin");
 });
 
-test("the template ships auth off", () => {
+test("the template ships auth off", builderOnly, () => {
   assert.deepEqual(readAppEnv(projectRoot()), { VITE_AUTH_ENABLED: "false" });
 });
 
@@ -74,8 +87,9 @@ test("vite loadEnv resolves the wrapped value", () => {
 });
 
 test("the wrapped command runs with the app env applied", async () => {
+  const root = makeWrappedProject();
   const { stdout } = await execFileAsync(process.execPath, [
-    WRAPPER,
+    join(root, "scripts/with-app-env.mjs"),
     process.execPath,
     "-e",
     PRINT_FLAG,
@@ -117,7 +131,7 @@ test("the CLI still runs when invoked through a symlinked path", async () => {
   // node realpaths import.meta.url but not process.argv[1], so a raw comparison
   // turns the wrapper into a no-op that exits 0 without starting anything.
   const link = join(mkdtempSync(join(tmpdir(), "app-env-link-")), "scripts");
-  symlinkSync(join(projectRoot(), "scripts"), link);
+  symlinkSync(join(makeWrappedProject(), "scripts"), link);
   const { stdout } = await execFileAsync(process.execPath, [
     join(link, "with-app-env.mjs"),
     process.execPath,

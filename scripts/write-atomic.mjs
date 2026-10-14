@@ -56,7 +56,7 @@ export function handOver(staged, target, { rename = renameSync } = {}) {
   }
   mkdirSync(dirname(target), { recursive: true });
   try {
-    rename(staged, target);
+    renameWithRetry(rename, staged, target);
   } catch (err) {
     if (err?.code === "EXDEV") {
       throw new Error(
@@ -65,6 +65,23 @@ export function handOver(staged, target, { rename = renameSync } = {}) {
       );
     }
     throw err;
+  }
+}
+
+/**
+ * Windows can refuse a rename for a moment while antivirus or the search indexer still holds a
+ * file that was just written (EPERM / EACCES / EBUSY), so retry briefly there; elsewhere those
+ * errors are real and surface at once.
+ */
+function renameWithRetry(rename, from, to) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return rename(from, to);
+    } catch (err) {
+      const transient = process.platform === "win32" && ["EPERM", "EACCES", "EBUSY"].includes(err?.code);
+      if (!transient || attempt >= 10) throw err;
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 20 * attempt);
+    }
   }
 }
 
