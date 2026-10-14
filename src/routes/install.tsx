@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Check, Download, WifiOff } from "lucide-react";
-import { InstallGuides, InstallNow, OfflineSave, useInstall } from "@/components/install-app";
+import { InstallGuides, InstallNow, OfflineSave } from "@/components/install-app";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
 
@@ -17,8 +17,6 @@ const PERKS = [
 ];
 
 function InstallPage() {
-  const s = useInstall();
-  const desktop = s.ready && (s.platform === "desktop" || s.platform === "mac-safari" || s.platform === "firefox-desktop");
   return (
     <AppShell tab="about">
       <div className="flex flex-col gap-3.5">
@@ -50,11 +48,12 @@ function InstallPage() {
         <SectionLabel>HOW TO INSTALL</SectionLabel>
         <InstallGuides />
 
-        {desktop ? (
+        {/* computers only, decided by CSS before the first paint */}
+        <div className="install-desktop-only">
           <Panel>
             <div className="flex items-center gap-3.5 px-3.5 py-3.5">
               <div className="shrink-0 rounded-lg bg-white p-1.5">
-                <img src={asset("/icons/install-qr.svg")} alt="QR code that opens this guide on a phone" width={112} height={112} className="size-28 outline-none" />
+                <img src={asset("/icons/install-qr.svg")} alt="QR code that opens this guide on a phone" width={112} height={112} loading="lazy" className="size-28 outline-none" />
               </div>
               <div className="min-w-0">
                 <p className="font-display text-sm font-semibold tracking-wide text-heading">On your phone too</p>
@@ -62,7 +61,7 @@ function InstallPage() {
               </div>
             </div>
           </Panel>
-        ) : null}
+        </div>
 
         <Panel>
           <div className="flex flex-col gap-2.5 px-3.5 py-3.5">

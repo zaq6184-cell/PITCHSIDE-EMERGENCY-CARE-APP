@@ -18,23 +18,21 @@ declare global {
   }
 }
 
-/** Runs in <head>: keeps the browser's install prompt for our own button (it can fire before React starts). */
-export const installBootScript =
-  'window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pecBip=e});';
+/**
+ * Runs in <head> before the first paint. Keeps the browser's install prompt for our own button (it can
+ * fire before React starts) and marks the device type on <html> (data-platform), so the install page
+ * shows this device's steps first from the start instead of jumping once the app loads.
+ */
+export const installBootScript = String.raw`window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pecBip=e});(function(u){document.documentElement.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1)?"ios":/Android/.test(u)?"android":/Firefox\//.test(u)?"firefox-desktop":/Macintosh/.test(u)&&/Safari\//.test(u)&&!/Chrome\/|Chromium\/|Edg\//.test(u)?"mac-safari":"desktop"})(navigator.userAgent);`;
 
 const SERVER: InstallState = { ready: false, canPrompt: false, installed: false, platform: "desktop" };
 let state: InstallState = SERVER;
 let started = false;
 const listeners = new Set<() => void>();
 
+/** The device type installBootScript marked on <html>, so the page and the CSS always agree. */
 function detectPlatform(): Platform {
-  const ua = navigator.userAgent;
-  const iPadOS = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
-  if (/iPhone|iPad|iPod/.test(ua) || iPadOS) return "ios";
-  if (/Android/.test(ua)) return "android";
-  if (/Firefox\//.test(ua)) return "firefox-desktop";
-  if (/Macintosh/.test(ua) && /Safari\//.test(ua) && !/Chrome\/|Chromium\/|Edg\//.test(ua)) return "mac-safari";
-  return "desktop";
+  return (document.documentElement.dataset.platform as Platform | undefined) ?? "desktop";
 }
 
 function standalone() {

@@ -100,6 +100,34 @@
   outline-color: rgba(255, 255, 255, 0.08);
 }
 
+/* install page: this device's guide comes first and is marked, from the data-platform set before the
+   first paint (installBootScript), so the list never jumps once the app starts */
+.install-guide-badge,
+.install-desktop-only {
+  display: none;
+}
+
+:root[data-platform="ios"] [data-guide="ios"],
+:root[data-platform="android"] [data-guide="android"],
+:root[data-platform="desktop"] [data-guide="desktop"],
+:root[data-platform="mac-safari"] [data-guide="mac-safari"],
+:root[data-platform="firefox-desktop"] [data-guide="firefox-desktop"] {
+  order: -1;
+  border-color: var(--color-gold);
+  box-shadow: inset 0 0 0 1px var(--color-gold);
+  background-color: var(--color-note);
+
+  & .install-guide-badge {
+    display: inline-block;
+  }
+}
+
+:root[data-platform="desktop"] .install-desktop-only,
+:root[data-platform="mac-safari"] .install-desktop-only,
+:root[data-platform="firefox-desktop"] .install-desktop-only {
+  display: block;
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;

@@ -149,22 +149,24 @@ function BagPage() {
         <Panel>
           <div className="px-3.5 py-3.5">
             <SectionLabel>SUPPLY</SectionLabel>
-            <p className="mt-2 text-sm leading-snug">
-              Re-order: {bag.contact.name}
-              <br />
-              <a href={`mailto:${bag.contact.email}`} className="font-medium text-heading">
+            <p className="mt-2 text-sm leading-snug">Re-order: {bag.contact.name}</p>
+            <div className="flex flex-col items-start text-sm">
+              <a
+                href={`mailto:${bag.contact.email}`}
+                className="inline-flex min-h-11 items-center font-medium text-heading underline underline-offset-2"
+              >
                 {bag.contact.email}
               </a>
-              <br />
               <a
                 href={bag.contact.web}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-heading"
+                className="inline-flex min-h-11 items-center font-medium text-heading underline underline-offset-2"
               >
                 promotemedical.com
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
-            </p>
+            </div>
             <div className="mt-3">
               <Note>{bag.disclaimer}</Note>
             </div>

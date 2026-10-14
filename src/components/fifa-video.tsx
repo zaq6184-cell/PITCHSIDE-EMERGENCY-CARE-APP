@@ -28,6 +28,7 @@ export function FifaVideoList() {
                   className="text-sm font-medium leading-snug text-heading underline-offset-2 hover:underline"
                 >
                   {d.label}
+                  <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               </li>
             ))}
@@ -198,22 +199,16 @@ function VideoRow({
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label={`${open ? "Close" : "Play"} ${title}`}
           className="flex w-full items-center gap-3 text-left active:opacity-80"
         >
           {head}
           <ActionPill kind={open ? "close" : "play"} />
         </button>
       ) : (
-        <a
-          href={watchUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${title} — ${watchLabel} (opens in a new tab)`}
-          className="flex items-center gap-3 active:opacity-80"
-        >
+        <a href={watchUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 active:opacity-80">
           {head}
           <ActionPill kind="open" />
+          <span className="sr-only"> — {watchLabel} (opens in a new tab)</span>
         </a>
       )}
       {playHere && open ? (
@@ -237,15 +232,16 @@ function VideoRow({
           className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-heading underline underline-offset-2"
         >
           {watchLabel}
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </div>
     </div>
   );
 }
 
-/** FIFA's own films stay as links, whether FIFA shows them on its site or on YouTube. */
 /** FIFA's player address for a film — only once embedding FIFA's films has been switched on. */
 const fifaPlayer = (c: { embed?: string }) => (FIFA_EMBEDS_ENABLED ? c.embed : undefined);
+/** FIFA's own films stay as links, whether FIFA shows them on its site or on YouTube. */
 const isFifaFilm = (c: { watchUrl?: string; source: string }) => Boolean(c.watchUrl) || /\bFIFA\b/.test(c.source);
 
 const watchTarget = (clip: FifaClip) => clip.watchUrl ?? `https://www.youtube.com/watch?v=${clip.youtubeId}`;
@@ -286,6 +282,7 @@ export function FifaClipCard({ clip }: { clip: FifaClip }) {
           </span>
         </span>
         <ActionPill kind="open" />
+        <span className="sr-only"> — {watchText(clip)} (opens in a new tab)</span>
       </a>
       <div className="px-3.5 pb-3">
         <p className="text-sm leading-snug">{clip.why}</p>
@@ -296,6 +293,7 @@ export function FifaClipCard({ clip }: { clip: FifaClip }) {
           className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-heading underline underline-offset-2"
         >
           {watchText(clip)}
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </div>
     </Panel>
