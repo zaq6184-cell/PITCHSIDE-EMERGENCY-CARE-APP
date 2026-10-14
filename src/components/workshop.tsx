@@ -1,8 +1,10 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users } from "lucide-react";
-import { useEffect } from "react";
+import { BookOpen, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users, Volume2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { SoundButton } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { asset } from "@/lib/asset";
+import { say, tap } from "@/lib/sound";
 import { syncThemeColor } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { getRole, type RoleId, workshop } from "@/lib/workshop";
@@ -29,18 +31,25 @@ export function AppShell({
       ["/cspine", "FIFA Medical Set Piece · cervical spine injury"],
       ["/fifa", "FIFA Health & Medical · sudden cardiac arrest"],
       ["/pitchside", "FIFA Health & Medical · pitchside emergency care"],
+      ["/quiz", "Test yourself · quiz and positions game"],
     ] as const
   ).find(([p]) => pathname.startsWith(p))?.[1];
 
   return (
     <div className="min-h-dvh bg-bg text-ink">
+      {/* slow floodlight glow behind the cards; decorative only */}
+      <div className="ambient pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+        <span className="ambient-a" />
+        <span className="ambient-b" />
+        <span className="ambient-lines" />
+      </div>
       <header className="sticky top-0 z-20 border-b-[3px] border-gold bg-gradient-to-r from-navy to-navy-2 px-3.5 dark:from-[#0e1d35] dark:to-[#16305a] pb-2.5 pt-[max(0.6rem,env(safe-area-inset-top))] text-on-navy">
         <div className="mx-auto flex w-full max-w-xl items-center gap-2.5">
           <Link to="/" aria-label="Home" className="shrink-0 transition-transform duration-150 ease-out active:scale-95">
             <img src={asset("/brand/logo-mark.svg")} alt="" width={36} height={36} className="size-9 rounded-full" />
           </Link>
           <div className="min-w-0">
-            <p className="font-display text-[15px] font-bold leading-tight tracking-[0.06em] text-on-navy">{workshop.event}</p>
+            <p className="truncate font-display text-[15px] font-bold leading-tight tracking-[0.06em] text-on-navy">{workshop.event}</p>
             <p className="truncate text-[11px] leading-snug text-gold-soft">
               {bag
                 ? "FIFA Emergency Care Bag · Green brings this"
@@ -55,10 +64,13 @@ export function AppShell({
                         : workshop.title}
             </p>
           </div>
-          <ThemeSwitch className="-my-1.5 -mr-1.5 ml-auto" />
+          <div className="-my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center">
+            <SoundButton />
+            <ThemeSwitch />
+          </div>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
+      <main className="relative z-[1] mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
         {children}
       </main>
       <nav
@@ -93,6 +105,7 @@ function TabLink({
   return (
     <Link
       to={to}
+      onClick={tap}
       className={cn(
         "flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 text-[10.5px] font-semibold tracking-wide",
         active ? "text-heading" : "text-muted",
@@ -114,7 +127,7 @@ function TabLink({
 
 export function Panel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("animate-rise overflow-hidden rounded-xl bg-paper shadow-card", className)}>
+    <div className={cn("reveal overflow-hidden rounded-xl bg-paper shadow-card", className)}>
       {children}
     </div>
   );
@@ -181,9 +194,31 @@ export function HeroPhoto({
   );
 }
 
-export function SayLine({ text }: { text: string }) {
+/** A call-out line. With a `voice` id it becomes a button that plays the recorded call-out. */
+export function SayLine({ text, voice }: { text: string; voice?: string }) {
+  const [playing, setPlaying] = useState(false);
+  if (!voice) return <p className="rounded-lg bg-cream px-2.5 py-2 text-sm italic leading-snug text-ink">{text}</p>;
   return (
-    <p className="rounded-lg bg-cream px-2.5 py-2 text-sm italic leading-snug text-ink">{text}</p>
+    <button
+      type="button"
+      onClick={async () => {
+        setPlaying(true);
+        await say(voice, true);
+        setPlaying(false);
+      }}
+      aria-label={`Hear it: ${text}`}
+      className="flex w-full items-center gap-2.5 rounded-lg bg-cream px-2.5 py-2 text-left text-sm italic leading-snug text-ink transition-transform duration-150 active:scale-[0.99]"
+    >
+      <span
+        className={cn(
+          "grid size-8 shrink-0 place-items-center rounded-full bg-gold text-on-gold shadow-[0_3px_8px_-3px_rgba(0,0,0,0.4)]",
+          playing && "sound-wave",
+        )}
+      >
+        <Volume2 className="size-4" aria-hidden />
+      </span>
+      <span className="min-w-0 flex-1">{text}</span>
+    </button>
   );
 }
 

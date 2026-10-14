@@ -6,6 +6,7 @@ import {
   ChevronRight,
   ClipboardList,
   ExternalLink,
+  Gamepad2,
   HeartPulse,
   ListOrdered,
   PlayCircle,
@@ -47,25 +48,28 @@ function Home() {
         </Note>
         <SectionLabel>TAP A COLOUR</SectionLabel>
         <div className="grid grid-cols-2 gap-2.5">
-          {workshop.roles.map((r) => {
+          {workshop.roles.map((r, i) => {
             const Icon = roleIcons[r.id];
             return (
               <Link
                 key={r.id}
                 to="/role/$id"
                 params={{ id: r.id }}
-                className={`relative flex min-h-[5.5rem] flex-col justify-end overflow-hidden rounded-xl px-3 pb-2.5 pt-3 transition-transform duration-150 ease-out active:scale-95${r.id === "black" ? " dark:outline dark:outline-1 dark:outline-white/25" : ""}`}
-                style={{
-                  backgroundColor: r.color,
-                  backgroundImage: "linear-gradient(150deg, rgba(255,255,255,0.16), rgba(0,0,0,0.14))",
-                  color: r.text,
-                  boxShadow:
-                    r.id === "white"
-                      ? "inset 0 0 0 1px rgba(11,31,58,0.22), 0 6px 14px -8px rgba(11,31,58,0.35)"
-                      : `0 8px 16px -8px ${r.color}`,
-                }}
+                className={`shine relative flex min-h-[5.5rem] flex-col justify-end overflow-hidden rounded-xl px-3 pb-2.5 pt-3 transition-transform duration-150 ease-out active:scale-95${r.id === "black" ? " dark:outline dark:outline-1 dark:outline-white/25" : ""}`}
+                style={
+                  {
+                    "--d": `${i * 0.7}s`,
+                    backgroundColor: r.color,
+                    backgroundImage: "linear-gradient(150deg, rgba(255,255,255,0.16), rgba(0,0,0,0.14))",
+                    color: r.text,
+                    boxShadow:
+                      r.id === "white"
+                        ? "inset 0 0 0 1px rgba(11,31,58,0.22), 0 6px 14px -8px rgba(11,31,58,0.35)"
+                        : `0 8px 16px -8px ${r.color}`,
+                  } as React.CSSProperties
+                }
               >
-                <Icon className="absolute right-2.5 top-2.5 size-9 opacity-30" strokeWidth={1.6} aria-hidden />
+                <Icon className="float-y absolute right-2.5 top-2.5 size-9 opacity-30" strokeWidth={1.6} aria-hidden />
                 <span className="font-display text-xl font-bold leading-none tracking-[0.1em]">{r.name}</span>
                 <span className="mt-1 text-[11px] font-medium leading-tight opacity-90">{r.role}</span>
               </Link>
@@ -73,6 +77,25 @@ function Home() {
           })}
         </div>
         <Note>If it is not your colour, do not reach in.</Note>
+
+        <Link to="/quiz" className="block active:scale-[0.99]">
+          <div
+            className="reveal shine relative overflow-hidden rounded-xl bg-gradient-to-br from-navy to-navy-2 px-4 py-4 text-on-navy shadow-card dark:from-[#0e1d35] dark:to-[#1a3460]"
+            style={{ "--d": "2s" } as React.CSSProperties}
+          >
+            <div className="flex items-center gap-3">
+              <span className="float-y grid size-12 shrink-0 place-items-center rounded-2xl bg-gold text-on-gold shadow-[0_6px_14px_-6px_rgba(0,0,0,0.5)]">
+                <Gamepad2 className="size-6" aria-hidden />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-[11px] font-semibold tracking-[0.16em] text-gold">TEST YOURSELF</span>
+                <span className="block font-display text-lg font-bold leading-tight">Who does what? · Place the team</span>
+                <span className="mt-0.5 block text-xs leading-snug text-gold-soft">Two quick games built from the role cards</span>
+              </span>
+              <ChevronRight className="size-5 shrink-0 text-gold" aria-hidden />
+            </div>
+          </div>
+        </Link>
 
         <Panel>
           <div id="set-piece-3d" className="scroll-mt-24 px-3.5 pt-3.5">
@@ -126,6 +149,7 @@ function Home() {
             { to: "/drill", icon: ListOrdered, tint: "#FBE9E7", ink: "#C0392B", title: "Team drill", sub: "Cardiac arrest in six steps" },
             { to: "/bag", icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1E8A4C", title: "Emergency bag", sub: "FIFA packing list" },
             { to: "/guides", icon: PlayCircle, tint: "#E4EFF8", ink: "#1F6AA5", title: "Films", sub: "Links to FIFA's films" },
+            { to: "/quiz", icon: Gamepad2, tint: "#F6EFD6", ink: "#8A6D10", title: "Test yourself", sub: "Quiz · place the team", wide: true },
           ]}
         />
 
@@ -274,7 +298,7 @@ function IntroHero() {
 }
 
 type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides";
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz";
   icon: typeof HeartPulse;
   tint: string;
   ink: string;

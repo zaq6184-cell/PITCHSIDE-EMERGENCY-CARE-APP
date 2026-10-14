@@ -40,16 +40,16 @@ function StationPage() {
         <Panel>
           <div className="bg-navy text-on-navy">
             {cover ? (
-              <div className="relative">
+              <div className="flare relative overflow-hidden">
                 <img
                   src={cover.src}
                   alt={cover.alt}
                   width={1280}
                   height={720}
-                  className="block aspect-video w-full object-cover outline-none"
+                  className="kenburns block aspect-video w-full object-cover outline-none"
                 />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-navy to-transparent" />
-                <p className="absolute right-2 top-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">
+                <p className="absolute right-2 top-2 z-[1] rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">
                   AI-generated illustration
                 </p>
               </div>

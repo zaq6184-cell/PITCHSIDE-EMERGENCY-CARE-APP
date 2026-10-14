@@ -25,8 +25,8 @@ function TimerPage() {
                 </li>
               ))}
             </ul>
-            <SayLine text="Black: “Ready to lift. On three. One, two, three, LIFT.”" />
-            <SayLine text="Green: “Ten seconds!” — player down, CPR on." />
+            <SayLine text="Black: “Ready to lift. On three. One, two, three, LIFT.”" voice="black-3" />
+            <SayLine text="Green: “Ten seconds!” — player down, CPR on." voice="green-3" />
           </div>
         </Panel>
       </div>
