@@ -117,7 +117,7 @@ function PitchsidePage() {
         <Section title="PROTOCOLS FOR ON-FIELD INTERVENTIONS">
           <p className="text-xs leading-snug text-muted">FIFA Medical Set Piece booklet, version 3 (March 2025) — used at FIFA World Cups.</p>
           <ul className="flex list-disc flex-col gap-1.5 pl-5 text-sm leading-snug marker:text-gold">
-            <li><b>Team:</b> 8–9 members — one emergency physician plus paramedics / health professionals, trained in the set piece by the team leader 5–7 days before the first match.</li>
+            <li><b>Team:</b> 8–9 members — one emergency physician plus paramedics / health professionals, trained in the set piece by the FIFA Match Doctor (usually Black, the team leader) 5–7 days before the first match.</li>
             <li><b>Matchday:</b> present and kit checked by kick-off −2 h; moulages between −2 h and −1 h; always present at half-time and cool-down.</li>
             <li><b>Entering the pitch:</b> only on the referee's stretcher signal — except a non-contact collapse, when the team runs on at once.</li>
             <li><b>Ready position:</b> move along the touchline level with the incident and squat with the stretcher.</li>

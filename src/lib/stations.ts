@@ -104,8 +104,8 @@ export const stations: Station[] = [
           {
             kind: "defs",
             items: [
-              { term: "FIFA — before the tournament", text: "The whole medical team trains in the FIFA set piece with the team leader 5–7 days before the first match, on the standard FIFA equipment." },
-              { term: "FIFA — on matchday", text: "Between 2 hours and 1 hour before kick-off the team runs moulages (simulations) of the most critical scenarios, led by the team leader." },
+              { term: "FIFA — before the tournament", text: "The whole medical team trains in the FIFA set piece with the FIFA Match Doctor (usually Black, the team leader) 5–7 days before the first match, on the standard FIFA equipment." },
+              { term: "FIFA — on matchday", text: "Between 2 hours and 1 hour before kick-off the team runs moulages (simulations) of the most critical scenarios, led by the FIFA Match Doctor." },
               { term: "FIFA — everywhere", text: "Use and rehearse the PEAP in all football settings — training sessions as well as matches — adapted to the site and the expertise available." },
               { term: "How often", text: "Practise the emergency plan at least once a year with everyone likely to respond, and review it briefly with the home and visiting medical staff before each competition." },
               { term: "How to rehearse", text: "Hands-on and scenario-based, at different places in the venue: sudden cardiac arrest, head and neck injury, heat stroke and limb injuries. Record when, where, who took part and which scenarios." },
@@ -211,8 +211,8 @@ export const stations: Station[] = [
             kind: "defs",
             items: [
               { term: "Medical team at FIFA matches", text: "8–9 members: one emergency physician experienced in out-of-hospital care plus paramedics / health professionals doing BLS and ALS, with 2–3 reserves. The same team works every match at a venue." },
-              { term: "Training", text: "The whole team trains in the FIFA set piece with the team leader 5–7 days before the first match, on the standard FIFA equipment." },
-              { term: "Team leader", text: "Sits with and leads the team, reviews injury mechanisms on a replay device (often with a remote injury spotter), makes their own assessment, calls the ready position, and enters for potentially serious injury or concussion — then directs when the team comes on with the equipment." },
+              { term: "Training", text: "The whole team trains in the FIFA set piece with the FIFA Match Doctor 5–7 days before the first match, on the standard FIFA equipment." },
+              { term: "FIFA Match Doctor", text: "Usually Black, the team leader. Sits with and leads the team, reviews injury mechanisms on a replay device (often with a remote injury spotter), makes their own assessment, calls the ready position, and enters for potentially serious injury or concussion — then directs when the team comes on with the equipment." },
             ],
           },
         ],
@@ -224,7 +224,7 @@ export const stations: Station[] = [
             kind: "defs",
             items: [
               { term: "Kick-off −2 h", text: "Team present, equipment checked; player medical centre staffed." },
-              { term: "−2 h to −1 h", text: "Moulages (simulations) of the most critical scenarios, led by the team leader." },
+              { term: "−2 h to −1 h", text: "Moulages (simulations) of the most critical scenarios, led by the FIFA Match Doctor." },
               { term: "Half-time · cool-down", text: "Medical team always present." },
               { term: "Post-match", text: "Medical centre staff stay until the last player has left the stadium." },
             ],
