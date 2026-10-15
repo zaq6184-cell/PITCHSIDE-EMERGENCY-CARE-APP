@@ -113,7 +113,7 @@ export const workshop = {
     {
       id: "blue",
       name: "BLUE",
-      role: "Oxygen",
+      role: "Pelvis",
       color: "#1F6AA5",
       text: "#FFFFFF",
       stand: "Player's RIGHT side, level with the pelvis (PEAP blue mark), next to Red.",
@@ -131,7 +131,7 @@ export const workshop = {
     {
       id: "white",
       name: "WHITE",
-      role: "Scoop & splints",
+      role: "Legs",
       color: "#F2F2F0",
       text: "#1C1C1C",
       stand: "Player's RIGHT side, level with the lower legs (PEAP white mark), next to Blue.",
