@@ -1,7 +1,7 @@
 {
   "name": "Pitchside Emergency Care",
   "short_name": "Pitchside",
-  "description": "Study guide to FIFA's medical set piece for football: the six colour roles, sudden cardiac arrest, primary survey, cervical spine, concussion (FOCUS) and the emergency care bag. Works offline once installed.",
+  "description": "Study guide to FIFA's medical set piece for football: the six colour roles, sudden cardiac arrest, primary survey, cervical spine, concussion (FOCUS) and the emergency care bag, with a match plan and an arrest timer for match day. Works offline once installed.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -18,6 +18,20 @@
     { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
+    {
+      "name": "Arrest timer",
+      "short_name": "Arrest timer",
+      "description": "CPR clock with 2-minute rhythm checks and a shock and drug log",
+      "url": "./arrest",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Match plan",
+      "short_name": "Match plan",
+      "description": "FIFA's Pre-Match Emergency Action Plan on your phone",
+      "url": "./plan",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
     {
       "name": "Team drill",
       "short_name": "Drill",
