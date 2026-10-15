@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users, Volume2 } from "lucide-react";
+import { BookOpen, ChevronRight, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { InstallHeaderButton, OfflineBanner } from "@/components/install-app";
 import { SoundButton } from "@/components/sound-control";
@@ -13,11 +13,11 @@ import { getRole, type RoleId, workshop } from "@/lib/workshop";
 
 /**
  * Music for each page: the calm theme on Home and the role pages, the drill at CPR tempo (110 a minute),
- * an upbeat loop for the games, a study loop for reading — and none on Tools, where the CPR beat and the
- * carry timer need to be heard on their own.
+ * an upbeat loop for the games, a study loop for reading — and none on Tools and the arrest timer, where
+ * the CPR beat, the carry timer and the rhythm-check whistle need to be heard on their own.
  */
 function musicFor(pathname: string): MusicScene {
-  if (pathname.startsWith("/timer")) return "none";
+  if (pathname.startsWith("/timer") || pathname.startsWith("/arrest")) return "none";
   if (pathname.startsWith("/drill")) return "drill";
   if (pathname.startsWith("/quiz")) return "quiz";
   if (pathname === "/" || pathname.startsWith("/role") || pathname.startsWith("/about") || pathname.startsWith("/install")) return "theme";
@@ -56,7 +56,9 @@ export function AppShell({
       ["/quiz", "Test yourself · quiz and positions game"],
       ["/install", "Install the app · phone, tablet, computer"],
       ["/drill", "Cardiac arrest drill · step by step in 3D"],
-      ["/timer", "10-second carry timer · CPR rhythm trainer"],
+      ["/timer", "Match-day tools · timers and trainers"],
+      ["/plan", "Match plan · FIFA PEAP on your phone"],
+      ["/arrest", "Arrest timer · CPR clock and event log"],
       ["/rules", "Golden rules · FIFA key points"],
       ["/role", "Colour roles · FIFA PEAP positions"],
     ] as const
@@ -71,12 +73,14 @@ export function AppShell({
         <span className="ambient-lines" />
       </div>
       <header style={{ viewTransitionName: "app-header" }} className="sticky top-0 z-20 border-b-[3px] border-gold bg-gradient-to-r from-navy to-navy-2 px-3.5 dark:from-[#0e1d35] dark:to-[#16305a] pb-2.5 pt-[max(0.6rem,env(safe-area-inset-top))] text-on-navy">
-        <div className="mx-auto flex w-full max-w-xl items-center gap-2.5">
+        <div className="mx-auto flex w-full max-w-xl items-center gap-2 min-[380px]:gap-2.5">
           <Link to="/" aria-label="Home" className="shrink-0 transition-transform duration-150 ease-out active:scale-95">
-            <img src={asset("/brand/logo-mark.svg")} alt="" width={36} height={36} className="size-9 rounded-full" />
+            <img src={asset("/brand/logo-mark.svg")} alt="" width={36} height={36} className="size-8 rounded-full min-[380px]:size-9" />
           </Link>
           <div className="min-w-0">
-            <p className="truncate font-display text-[15px] font-bold leading-tight tracking-[0.06em] text-on-navy">{workshop.event}</p>
+            <p className="truncate font-display text-[14px] font-bold leading-tight tracking-[0.04em] text-on-navy min-[380px]:text-[15px] min-[380px]:tracking-[0.06em]">
+              {workshop.event}
+            </p>
             <p className="truncate text-[11px] leading-snug text-gold-soft">
               {bag
                 ? "FIFA Emergency Care Bag · Green brings this"
@@ -172,6 +176,43 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
   return (
     <div className={cn("reveal overflow-hidden rounded-xl bg-paper shadow-card", className)}>
       {children}
+    </div>
+  );
+}
+
+export type Tile = {
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer";
+  icon: typeof Users;
+  tint: string;
+  ink: string;
+  title: string;
+  sub: string;
+  wide?: boolean;
+};
+
+/** Link tiles in two columns; `wide` ones take the whole row, with a chevron. */
+export function Tiles({ items }: { items: Tile[] }) {
+  return (
+    <div className="grid grid-cols-2 gap-2.5">
+      {items.map((t) => (
+        <Link key={t.to} to={t.to} className={`block active:scale-[0.98]${t.wide ? " col-span-2" : ""}`}>
+          <Panel className="h-full">
+            <div className={`flex h-full gap-2 px-3 py-3${t.wide ? " flex-row items-center gap-3" : " flex-col"}`}>
+              <span
+                className="tint-chip grid size-10 shrink-0 place-items-center rounded-xl"
+                style={{ "--tint": t.tint, "--ink": t.ink } as React.CSSProperties}
+              >
+                <t.icon className="size-5" strokeWidth={2} />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-sm font-semibold tracking-wide text-heading">{t.title}</span>
+                <span className="mt-0.5 block text-xs leading-snug text-muted">{t.sub}</span>
+              </span>
+              {t.wide ? <ChevronRight className="size-5 shrink-0 text-gold-ink" aria-hidden /> : null}
+            </div>
+          </Panel>
+        </Link>
+      ))}
     </div>
   );
 }

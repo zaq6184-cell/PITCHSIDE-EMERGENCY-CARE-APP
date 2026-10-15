@@ -1,18 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ClipboardCheck, Timer } from "lucide-react";
 import { CprTrainer } from "@/components/cpr-trainer";
 import { DashTimer } from "@/components/dash-timer";
-import { AppShell, Panel, SayLine, SectionLabel } from "@/components/workshop";
+import { AppShell, Panel, SayLine, SectionLabel, Tiles } from "@/components/workshop";
 import { workshop } from "@/lib/workshop";
 
 export const Route = createFileRoute("/timer")({
   component: TimerPage,
-  head: () => ({ meta: [{ title: "Carry timer and CPR trainer · Pitchside Emergency Care" }] }),
+  head: () => ({ meta: [{ title: "Match-day tools · Pitchside Emergency Care" }] }),
 });
 
 function TimerPage() {
   return (
-    <AppShell tab="timer" heading="Carry timer and CPR rhythm trainer">
+    <AppShell tab="timer" heading="Match-day tools: match plan, arrest timer, carry timer and CPR rhythm trainer">
       <div className="flex flex-col gap-3.5">
+        <Tiles
+          items={[
+            { to: "/plan", icon: ClipboardCheck, tint: "#E3F2E8", ink: "#1A7F45", title: "Match plan", sub: "FIFA PEAP on your phone · names, hospital, checklist", wide: true },
+            { to: "/arrest", icon: Timer, tint: "#FBE9E7", ink: "#C0392B", title: "Arrest timer", sub: "CPR clock · 2-minute checks · shock and drug log", wide: true },
+          ]}
+        />
         <Panel>
           <div className="px-3.5 pt-4">
             <SectionLabel>10-SECOND CARRY TIMER</SectionLabel>

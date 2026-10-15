@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as ArrestRouteImport } from './routes/arrest'
 import { Route as BagRouteImport } from './routes/bag'
 import { Route as CspineRouteImport } from './routes/cspine'
 import { Route as DrillRouteImport } from './routes/drill'
@@ -19,6 +20,7 @@ import { Route as FocusRouteImport } from './routes/focus'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as InstallRouteImport } from './routes/install'
 import { Route as PitchsideRouteImport } from './routes/pitchside'
+import { Route as PlanRouteImport } from './routes/plan'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as StationsRouteImport } from './routes/stations'
@@ -34,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArrestRoute = ArrestRouteImport.update({
+  id: '/arrest',
+  path: '/arrest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BagRoute = BagRouteImport.update({
@@ -76,6 +83,11 @@ const PitchsideRoute = PitchsideRouteImport.update({
   path: '/pitchside',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlanRoute = PlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizRoute = QuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
@@ -110,6 +122,7 @@ const StationIdRoute = StationIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
@@ -118,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/guides': typeof GuidesRoute
   '/install': typeof InstallRoute
   '/pitchside': typeof PitchsideRoute
+  '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
   '/stations': typeof StationsRoute
@@ -128,6 +142,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
@@ -136,6 +151,7 @@ export interface FileRoutesByTo {
   '/guides': typeof GuidesRoute
   '/install': typeof InstallRoute
   '/pitchside': typeof PitchsideRoute
+  '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
   '/stations': typeof StationsRoute
@@ -147,6 +163,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
@@ -155,6 +172,7 @@ export interface FileRoutesById {
   '/guides': typeof GuidesRoute
   '/install': typeof InstallRoute
   '/pitchside': typeof PitchsideRoute
+  '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
   '/rules': typeof RulesRoute
   '/stations': typeof StationsRoute
@@ -167,6 +185,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/arrest'
     | '/bag'
     | '/cspine'
     | '/drill'
@@ -175,6 +194,7 @@ export interface FileRouteTypes {
     | '/guides'
     | '/install'
     | '/pitchside'
+    | '/plan'
     | '/quiz'
     | '/rules'
     | '/stations'
@@ -185,6 +205,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/arrest'
     | '/bag'
     | '/cspine'
     | '/drill'
@@ -193,6 +214,7 @@ export interface FileRouteTypes {
     | '/guides'
     | '/install'
     | '/pitchside'
+    | '/plan'
     | '/quiz'
     | '/rules'
     | '/stations'
@@ -203,6 +225,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/arrest'
     | '/bag'
     | '/cspine'
     | '/drill'
@@ -211,6 +234,7 @@ export interface FileRouteTypes {
     | '/guides'
     | '/install'
     | '/pitchside'
+    | '/plan'
     | '/quiz'
     | '/rules'
     | '/stations'
@@ -222,6 +246,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ArrestRoute: typeof ArrestRoute
   BagRoute: typeof BagRoute
   CspineRoute: typeof CspineRoute
   DrillRoute: typeof DrillRoute
@@ -230,6 +255,7 @@ export interface RootRouteChildren {
   GuidesRoute: typeof GuidesRoute
   InstallRoute: typeof InstallRoute
   PitchsideRoute: typeof PitchsideRoute
+  PlanRoute: typeof PlanRoute
   QuizRoute: typeof QuizRoute
   RulesRoute: typeof RulesRoute
   StationsRoute: typeof StationsRoute
@@ -252,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arrest': {
+      id: '/arrest'
+      path: '/arrest'
+      fullPath: '/arrest'
+      preLoaderRoute: typeof ArrestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bag': {
@@ -310,6 +343,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PitchsideRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/plan': {
+      id: '/plan'
+      path: '/plan'
+      fullPath: '/plan'
+      preLoaderRoute: typeof PlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quiz': {
       id: '/quiz'
       path: '/quiz'
@@ -358,6 +398,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ArrestRoute: ArrestRoute,
   BagRoute: BagRoute,
   CspineRoute: CspineRoute,
   DrillRoute: DrillRoute,
@@ -366,6 +407,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuidesRoute: GuidesRoute,
   InstallRoute: InstallRoute,
   PitchsideRoute: PitchsideRoute,
+  PlanRoute: PlanRoute,
   QuizRoute: QuizRoute,
   RulesRoute: RulesRoute,
   StationsRoute: StationsRoute,
