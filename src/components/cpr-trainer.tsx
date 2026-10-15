@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSoundPrefs } from "@/components/sound-control";
 import { haptic, startMetronome, stopMetronome, tapClick } from "@/lib/sound";
 import { cn } from "@/lib/utils";
+import { useWakeLock } from "@/lib/wake-lock";
 
 type Mode = "30:2" | "igel";
 
@@ -20,6 +21,7 @@ export function CprTrainer() {
   const [guide, setGuide] = useState(false);
   const [idle, setIdle] = useState(true);
   const lastPress = useRef(0);
+  useWakeLock(guide || !idle);
 
   // the steady 110/min guide click (plays even with effects off — it was switched on here)
   useEffect(() => {

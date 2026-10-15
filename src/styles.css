@@ -620,6 +620,21 @@ html[data-vt="back"]::view-transition-new(main-content) {
   }
 }
 
+/* the top bar's Install button glows three times on the first page of a visit, then rests */
+.install-attn > span {
+  animation: install-glow 1.8s ease-out 0.8s 3;
+}
+
+@keyframes install-glow {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-gold) 75%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

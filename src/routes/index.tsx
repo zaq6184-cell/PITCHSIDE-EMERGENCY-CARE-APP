@@ -4,6 +4,7 @@ import {
   Brain,
   BriefcaseMedical,
   ChevronRight,
+  ClipboardCheck,
   ClipboardList,
   ExternalLink,
   Gamepad2,
@@ -11,13 +12,14 @@ import {
   ListOrdered,
   PlayCircle,
   Stethoscope,
+  Timer,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { InstallCard } from "@/components/install-app";
 import { PositionDiagram } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { RoleExplorer3D } from "@/components/set-piece-3d";
-import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
+import { AppShell, Note, Panel, SectionLabel, Tiles } from "@/components/workshop";
 import { asset } from "@/lib/asset";
 import { about, aboutApp, disclaimer } from "@/lib/disclaimer";
 import { fifaDownloads } from "@/lib/fifa-links";
@@ -44,6 +46,7 @@ function Home() {
     <AppShell tab="home">
       <div className="flex flex-col gap-3.5">
         <IntroHero />
+        <InstallCard />
         <Note>
           <span className="font-semibold text-heading">{workshop.rule}</span>
         </Note>
@@ -97,7 +100,6 @@ function Home() {
             </div>
           </div>
         </Link>
-        <InstallCard />
 
         <Panel>
           <div id="set-piece-3d" className="scroll-mt-24 px-3.5 pt-3.5">
@@ -134,6 +136,14 @@ function Home() {
             <p className="text-sm leading-snug">{workshop.stretcherNote}</p>
           </div>
         </Panel>
+
+        <SectionLabel>MATCH DAY</SectionLabel>
+        <Tiles
+          items={[
+            { to: "/plan", icon: ClipboardCheck, tint: "#E3F2E8", ink: "#1A7F45", title: "Match plan", sub: "FIFA PEAP on your phone · names, hospital, checklist", wide: true },
+            { to: "/arrest", icon: Timer, tint: "#FBE9E7", ink: "#C0392B", title: "Arrest timer", sub: "CPR clock · 2-minute checks · shock and drug log", wide: true },
+          ]}
+        />
 
         <SectionLabel>FIFA TOPICS</SectionLabel>
         <Tiles
@@ -296,41 +306,5 @@ function IntroHero() {
         </div>
       </div>
     </section>
-  );
-}
-
-type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz";
-  icon: typeof HeartPulse;
-  tint: string;
-  ink: string;
-  title: string;
-  sub: string;
-  wide?: boolean;
-};
-
-function Tiles({ items }: { items: Tile[] }) {
-  return (
-    <div className="grid grid-cols-2 gap-2.5">
-      {items.map((t) => (
-        <Link key={t.to} to={t.to} className={`block active:scale-[0.98]${t.wide ? " col-span-2" : ""}`}>
-          <Panel className="h-full">
-            <div className={`flex h-full gap-2 px-3 py-3${t.wide ? " flex-row items-center gap-3" : " flex-col"}`}>
-              <span
-                className="tint-chip grid size-10 shrink-0 place-items-center rounded-xl"
-                style={{ "--tint": t.tint, "--ink": t.ink } as React.CSSProperties}
-              >
-                <t.icon className="size-5" strokeWidth={2} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block font-display text-sm font-semibold tracking-wide text-heading">{t.title}</span>
-                <span className="mt-0.5 block text-xs leading-snug text-muted">{t.sub}</span>
-              </span>
-              {t.wide ? <ChevronRight className="size-5 shrink-0 text-gold-ink" aria-hidden /> : null}
-            </div>
-          </Panel>
-        </Link>
-      ))}
-    </div>
   );
 }

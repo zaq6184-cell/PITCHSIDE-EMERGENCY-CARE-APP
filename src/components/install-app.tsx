@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowDown, Check, CloudDownload, Download, Laptop, MoreVertical, Share, Smartphone, SquarePlus, WifiOff, X } from "lucide-react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { ArrowDown, Check, CloudDownload, Download, Laptop, MoreVertical, Share, Share2, Smartphone, SquarePlus, WifiOff, X } from "lucide-react";
 import { type ReactNode, useEffect, useState, useSyncExternalStore } from "react";
 import { asset } from "@/lib/asset";
 import {
@@ -13,6 +13,7 @@ import {
   saveEverything,
   subscribeInstall,
 } from "@/lib/install";
+import { shareOrCopy, siteUrl } from "@/lib/share";
 import { sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
@@ -60,6 +61,7 @@ export function InstallCard() {
           <p className="font-display text-[11px] font-semibold tracking-[0.16em] text-gold-ink">GET THE APP</p>
           <p className="font-display text-base font-bold leading-tight text-heading">Install on your phone or computer</p>
           <p className="mt-0.5 text-xs leading-snug text-muted">Opens full screen from your home screen and works offline at the pitch. Free, no account.</p>
+          {!s.canPrompt ? <p className="mt-1.5 text-xs leading-relaxed text-ink">{QUICK[s.platform]}</p> : null}
         </div>
       </div>
       <div className="flex gap-2 px-3.5 pb-3.5">
@@ -95,22 +97,72 @@ export function InstallCard() {
   );
 }
 
-/** Top bar, wider screens only: a one-click install where the browser offers it. */
+/** The Install button glows on the first page of a visit only, not on every page change. */
+let glowed = false;
+
+/**
+ * Top bar, on every page and screen until the app is installed: one tap installs where the browser
+ * offers it (Chrome, Edge, Android); on iPhone, iPad, Safari and Firefox it opens this device's steps.
+ */
 export function InstallHeaderButton() {
   const s = useInstall();
-  if (!s.ready || s.installed || !s.canPrompt) return null;
+  const navigate = useNavigate();
+  const onInstallPage = useRouterState({ select: (r) => r.location.pathname.startsWith("/install") });
+  const [glow] = useState(() => !glowed);
+  useEffect(() => {
+    if (s.ready) glowed = true;
+  }, [s.ready]);
+  if (!s.ready || s.installed || onInstallPage) return null;
   return (
     <button
       type="button"
-      onClick={() => {
+      onClick={async () => {
         tap();
-        void promptInstall();
+        if (s.canPrompt) {
+          if ((await promptInstall()) === "accepted") sfx("cheer", 0.4);
+        } else void navigate({ to: "/install", hash: "install-steps" });
       }}
-      className="mr-1 hidden min-h-9 items-center gap-1.5 rounded-full bg-gold px-3 font-display text-xs font-semibold tracking-wide text-on-gold active:scale-95 sm:inline-flex"
+      aria-label="Install the app"
+      title="Install the app"
+      className={cn(
+        "group grid min-h-11 shrink-0 place-items-center rounded-full px-0.5 outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-navy",
+        glow && "install-attn",
+      )}
     >
-      <Download className="size-3.5" aria-hidden />
-      Install app
+      {/* icon only on phones, so the title in the bar keeps its room */}
+      <span className="inline-flex h-8 min-w-8 items-center justify-center gap-1 rounded-full bg-gold px-2 font-display text-xs font-bold tracking-wide text-on-gold shadow-[0_3px_10px_-4px_rgba(0,0,0,0.55)] transition-transform duration-150 group-active:scale-95 min-[420px]:px-2.5">
+        <Download className="size-4" strokeWidth={2.4} aria-hidden />
+        <span className="hidden min-[420px]:inline">Install</span>
+      </span>
     </button>
+  );
+}
+
+/** Sends the guide's address to teammates: the device's share sheet, or the link copied where there is none. */
+export function ShareAppButton() {
+  const [note, setNote] = useState("");
+  return (
+    <div className="flex flex-col gap-1">
+      <button
+        type="button"
+        onClick={async () => {
+          tap();
+          const r = await shareOrCopy({
+            title: "Pitchside Emergency Care",
+            text: "FIFA medical set piece study guide — install it on your phone and it works offline at the pitch.",
+            url: siteUrl(),
+          });
+          setNote(r === "copied" ? "Link copied — paste it into your team chat." : r === "failed" ? "Sharing is not available here — copy the address from the browser." : "");
+        }}
+        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-line bg-paper font-display text-sm font-semibold tracking-wide text-heading active:scale-[0.98]"
+      >
+        <Share2 className="size-4" aria-hidden />
+        Share the app with your team
+      </button>
+      <p className="min-h-4 text-center text-xs text-muted" aria-live="polite">
+        {note}
+      </p>
+    </div>
   );
 }
 
@@ -128,6 +180,27 @@ const Key = ({ children }: { children: ReactNode }) => (
     {children}
   </span>
 );
+
+/** The shortest way to install on each kind of device, for the card on Home. */
+const QUICK: Record<Platform, ReactNode> = {
+  ios: (
+    <>
+      Tap <Key><Share className="size-3.5" aria-hidden />Share</Key> then <Key><SquarePlus className="size-3.5" aria-hidden />Add to Home Screen</Key>.
+    </>
+  ),
+  android: (
+    <>
+      Browser menu <Key><MoreVertical className="size-3.5" aria-hidden /><span className="sr-only">menu</span></Key> → <Key>Install app</Key> or <Key>Add to Home screen</Key>.
+    </>
+  ),
+  desktop: <>Click the install icon at the right of the address bar, or the browser menu → <Key>Install</Key>.</>,
+  "mac-safari": (
+    <>
+      <Key>File</Key> → <Key>Add to Dock</Key>.
+    </>
+  ),
+  "firefox-desktop": <>Open this page in Chrome or Edge to install it.</>,
+};
 
 const GUIDES: { id: Platform; title: string; icon: typeof Smartphone; steps: ReactNode[] }[] = [
   {

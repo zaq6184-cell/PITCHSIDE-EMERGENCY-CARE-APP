@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { countTick, say, sfx } from "@/lib/sound";
 import { DASH_SECONDS } from "@/lib/workshop";
 import { cn } from "@/lib/utils";
+import { useWakeLock } from "@/lib/wake-lock";
 
 const RADIUS = 54;
 const CIRC = 2 * Math.PI * RADIUS;
@@ -20,6 +21,7 @@ export function DashTimer() {
   const startedAt = useRef<number | null>(null);
   const lastSecond = useRef(DASH_SECONDS);
   const finished = remaining <= 0;
+  useWakeLock(running);
 
   useEffect(() => {
     if (!running) return;

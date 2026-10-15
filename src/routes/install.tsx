@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Check, Download, WifiOff } from "lucide-react";
-import { InstallGuides, InstallNow, OfflineSave } from "@/components/install-app";
+import { InstallGuides, InstallNow, OfflineSave, ShareAppButton } from "@/components/install-app";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
 
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/install")({
 const PERKS = [
   "Opens full screen from its own icon, like any app.",
   "Works offline at the pitch once saved — no signal needed.",
-  "Shortcuts to the drill, carry timer, quiz and modules: long-press the icon on Android, or right-click it on a computer.",
+  "Shortcuts to the arrest timer, match plan, drill and carry timer: long-press the icon on Android, or right-click it on a computer.",
   "Updates itself whenever you are online. No app store, no account, nothing collected.",
 ];
 
@@ -73,6 +73,8 @@ function InstallPage() {
             <OfflineSave />
           </div>
         </Panel>
+
+        <ShareAppButton />
 
         <Note>
           <Download className="mr-1 inline size-3.5 align-[-2px]" aria-hidden />
