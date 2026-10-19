@@ -1,5 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
 import { ArrestTimer } from "@/components/arrest-timer";
 import { AppShell, Note } from "@/components/workshop";
 
@@ -12,10 +11,6 @@ function ArrestPage() {
   return (
     <AppShell tab="timer">
       <div className="flex flex-col gap-3.5">
-        <Link to="/timer" className="inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold-ink">
-          <ArrowLeft className="size-4" strokeWidth={2.4} />
-          Tools
-        </Link>
         <ArrestTimer />
         <Note>
           For drills, moulages and debriefs. Drug reminders are for teams trained in advanced life support. In a real

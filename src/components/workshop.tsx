@@ -1,5 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, ChevronRight, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users, Volume2 } from "lucide-react";
+import { Link, useCanGoBack, useRouter, useRouterState } from "@tanstack/react-router";
+import { ArrowLeft, ArrowUp, BookOpen, ChevronRight, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { InstallHeaderButton, OfflineBanner } from "@/components/install-app";
 import { SoundButton } from "@/components/sound-control";
@@ -9,7 +9,7 @@ import { setTransitionDirection } from "@/lib/gestures";
 import { type MusicScene, say, setMusicScene, tap } from "@/lib/sound";
 import { syncThemeColor } from "@/lib/theme";
 import { cn } from "@/lib/utils";
-import { getRole, type RoleId, workshop } from "@/lib/workshop";
+import { getRole, type RoleId, roleTag, workshop } from "@/lib/workshop";
 
 /**
  * Music for each page: the calm theme on Home and the role pages, the drill at CPR tempo (110 a minute),
@@ -22,6 +22,38 @@ function musicFor(pathname: string): MusicScene {
   if (pathname.startsWith("/quiz")) return "quiz";
   if (pathname === "/" || pathname.startsWith("/role") || pathname.startsWith("/about") || pathname.startsWith("/install")) return "theme";
   return "study";
+}
+
+/** Where Back goes when this page was the first one opened (from a shared link or a shortcut). */
+function parentOf(pathname: string): "/" | "/stations" | "/timer" {
+  if (pathname.startsWith("/station/")) return "/stations";
+  if (pathname.startsWith("/plan") || pathname.startsWith("/arrest")) return "/timer";
+  return "/";
+}
+
+/** Back to the page you were on before — or, if this page was opened first, to its parent page. */
+export function BackButton({ className }: { className?: string }) {
+  const router = useRouter();
+  const canGoBack = useCanGoBack();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        tap();
+        setTransitionDirection("back");
+        if (canGoBack) router.history.back();
+        else void router.navigate({ to: parentOf(pathname) });
+      }}
+      className={cn(
+        "inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold-ink active:scale-95",
+        className,
+      )}
+    >
+      <ArrowLeft className="size-4" strokeWidth={2.4} aria-hidden />
+      Back
+    </button>
+  );
 }
 
 export function AppShell({
@@ -45,12 +77,13 @@ export function AppShell({
     setMusicScene(musicFor(pathname));
   }, [pathname]);
 
+  const home = pathname === "/";
   const bag = pathname.startsWith("/bag");
   const guides = pathname.startsWith("/guides");
   const topic = (
     [
       ["/focus", "FIFA FOCUS · on-pitch concussion assessment"],
-      ["/cspine", "FIFA Medical Set Piece · cervical spine injury"],
+      ["/cspine", "Major trauma · cervical spine injury"],
       ["/fifa", "FIFA Health & Medical · sudden cardiac arrest"],
       ["/pitchside", "FIFA Health & Medical · pitchside emergency care"],
       ["/quiz", "Test yourself · quiz and positions game"],
@@ -105,7 +138,24 @@ export function AppShell({
       <OfflineBanner />
       <main style={{ viewTransitionName: "main-content" }} className="relative z-[1] mx-auto w-full max-w-xl px-3.5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-3.5">
         {heading ? <h1 className="sr-only">{heading}</h1> : null}
+        {home ? null : <BackButton className="-mt-1.5 mb-1.5" />}
         {children}
+        {home ? null : (
+          <div className="mt-5 flex items-center justify-between border-t border-line pt-1.5">
+            <BackButton />
+            <button
+              type="button"
+              onClick={() => {
+                tap();
+                window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+              }}
+              className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-muted active:scale-95"
+            >
+              Top
+              <ArrowUp className="size-4" strokeWidth={2.4} aria-hidden />
+            </button>
+          </div>
+        )}
       </main>
       <nav
         style={{ viewTransitionName: "app-nav" }}
@@ -241,7 +291,7 @@ export function RoleChip({ id }: { id: RoleId }) {
         boxShadow: r.id === "white" ? "inset 0 0 0 1px rgba(11,31,58,0.2)" : undefined,
       }}
     >
-      {r.name}
+      {roleTag(r)}
     </span>
   );
 }

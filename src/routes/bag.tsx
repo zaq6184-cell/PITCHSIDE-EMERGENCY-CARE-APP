@@ -159,12 +159,11 @@ function BagPage() {
               </a>
               <a
                 href={bag.contact.web}
-                target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex min-h-11 items-center font-medium text-heading underline underline-offset-2"
               >
                 promotemedical.com
-                <span className="sr-only"> (opens in a new tab)</span>
+                <span className="sr-only"> (opens on that website — use Back to return)</span>
               </a>
             </div>
             <div className="mt-3">

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Check, ClipboardCheck, Eye, PencilLine, Phone, RotateCcw, Share2, Trash2 } from "lucide-react";
+import { Check, ClipboardCheck, Eye, PencilLine, Phone, RotateCcw, Share2, Trash2 } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { AppShell, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { CHECKLIST, COLOURS, EMPTY_PLAN, isBlank, type MatchPlan, parsePlan, planText, prettyDate, telHref } from "@/lib/match-plan";
@@ -67,10 +67,6 @@ function PlanPage() {
   return (
     <AppShell tab="timer">
       <div className="flex flex-col gap-3.5">
-        <Link to="/timer" className="inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold-ink">
-          <ArrowLeft className="size-4" strokeWidth={2.4} />
-          Tools
-        </Link>
         <Panel>
           <div className="flex flex-col gap-3 px-3.5 py-4">
             <div className="flex items-center gap-3">

@@ -1,7 +1,8 @@
 import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Box, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Box, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState } from "react";
 import { FifaClipCard } from "@/components/fifa-video";
+import { ZoomImage } from "@/components/zoom-image";
 import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { imageSize } from "@/lib/asset";
@@ -47,13 +48,6 @@ function StationPage() {
   return (
     <AppShell tab="stations">
       <div ref={swipe} className="flex flex-col gap-3">
-        <Link
-          to="/stations"
-          className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold-ink"
-        >
-          <ArrowLeft className="size-4" strokeWidth={2.4} />
-          All skill modules
-        </Link>
         <Panel>
           <div className="bg-navy text-on-navy">
             {cover ? (
@@ -257,9 +251,9 @@ function BlockView({ b }: { b: Block }) {
     case "image":
       return (
         <figure className="-mx-3.5">
-          <a href={b.src} target="_blank" rel="noopener noreferrer">
-            <img src={b.src} alt={b.alt} {...imageSize(b.src)} loading="lazy" className="block max-h-[28rem] w-full bg-matte object-contain" />
-          </a>
+          <ZoomImage src={b.src} alt={b.alt}>
+            <img src={b.src} alt="" {...imageSize(b.src)} loading="lazy" className="block max-h-[28rem] w-full bg-matte object-contain" />
+          </ZoomImage>
           {b.caption ? (
             <figcaption className="px-3.5 pt-2 text-xs leading-snug text-muted">{b.caption}</figcaption>
           ) : null}
@@ -342,7 +336,6 @@ function DeviceFigure({ b }: { b: Extract<Block, { kind: "device" }> }) {
               3D model “{b.model.name}” by {b.model.by} on{" "}
               <a
                 href={`https://sketchfab.com/3d-models/${b.model.uid}`}
-                target="_blank"
                 rel="noopener noreferrer"
                 className="underline"
               >
@@ -353,7 +346,7 @@ function DeviceFigure({ b }: { b: Extract<Block, { kind: "device" }> }) {
           ) : b.credit.href ? (
             <>
               Photo:{" "}
-              <a href={b.credit.href} target="_blank" rel="noopener noreferrer" className="underline">
+              <a href={b.credit.href} rel="noopener noreferrer" className="underline">
                 {b.credit.by}
               </a>
               , {b.credit.license}, via Wikimedia Commons

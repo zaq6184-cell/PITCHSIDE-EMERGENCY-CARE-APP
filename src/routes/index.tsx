@@ -23,7 +23,7 @@ import { AppShell, Note, Panel, SectionLabel, Tiles } from "@/components/worksho
 import { asset } from "@/lib/asset";
 import { about, aboutApp, disclaimer } from "@/lib/disclaimer";
 import { fifaDownloads } from "@/lib/fifa-links";
-import { workshop } from "@/lib/workshop";
+import { roleTag, workshop } from "@/lib/workshop";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -38,6 +38,7 @@ const teachingKit: [string, string][] = [
   ["Title card — Module 3 · Primary survey", "module-3-title.png"],
   ["Title card — Module 4 · Immobilisation", "module-4-title.png"],
   ["Title card — Module 5 · Emergency care bag", "module-5-title.png"],
+  ["Title card — Module 6 · Concussion assessment", "module-6-title.png"],
   ["Brand sheet — colours and usage (PNG)", "brand-sheet.png"],
 ];
 
@@ -74,13 +75,20 @@ function Home() {
                 }
               >
                 <Icon className="float-y absolute right-2.5 top-2.5 size-9 opacity-30" strokeWidth={1.6} aria-hidden />
-                <span className="font-display text-xl font-bold leading-none tracking-[0.1em]">{r.name}</span>
+                <span className="font-display text-xl font-bold leading-none tracking-[0.1em]">{roleTag(r)}</span>
                 <span className="mt-1 text-[11px] font-medium leading-tight">{r.role}</span>
               </Link>
             );
           })}
         </div>
-        <Note>If it is not your colour, do not reach in.</Note>
+        <Note>
+          If it is not your colour, do not reach in — except Black 1, the team leader, who is in overall control and steps in when a
+          job is not being done.
+        </Note>
+        <Note>
+          <span className="font-semibold text-heading">Numbers for hand signals: </span>
+          {workshop.numberNote}
+        </Note>
 
         <Link to="/quiz" className="block active:scale-[0.99]">
           <div
@@ -118,15 +126,15 @@ function Home() {
           </details>
           <ul className="flex flex-col divide-y divide-line px-3.5 py-2 text-sm leading-snug">
             <li className="py-1.5">
-              <span className="font-semibold text-heading">At the head: </span>Orange, with Green beside the bag and AED on the
-              player's left.
+              <span className="font-semibold text-heading">At the head: </span>Orange 2 kneels directly behind the head, in line with
+              the body; Green 6 is beside the head on the player's left, with the bag and AED.
             </li>
             <li className="py-1.5">
-              <span className="font-semibold text-heading">Player's right: </span>Red at the chest, Blue at the pelvis, White at the
-              lower legs.
+              <span className="font-semibold text-heading">Player's right: </span>Red 3 at the chest, Blue 4 at the pelvis, White 5 at
+              the lower legs.
             </li>
             <li className="py-1.5">
-              <span className="font-semibold text-heading">Player's left: </span>Black, the team leader, level with the chest.
+              <span className="font-semibold text-heading">Player's left: </span>Black 1, the team leader, level with the chest.
             </li>
           </ul>
         </Panel>
@@ -148,16 +156,16 @@ function Home() {
         <SectionLabel>FIFA TOPICS</SectionLabel>
         <Tiles
           items={[
-            { to: "/fifa", icon: HeartPulse, tint: "#FBE9E7", ink: "#C0392B", title: "Sudden cardiac arrest", sub: "Signs · emergency steps · FIFA's films and downloads", wide: true },
-            { to: "/focus", icon: Brain, tint: "#EFE8F7", ink: "#6B3FA0", title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain", wide: true },
-            { to: "/cspine", icon: Bone, tint: "#E4EFF8", ink: "#1F6AA5", title: "Cervical spine injury", sub: "Set piece by colour · collar · log roll", wide: true },
             { to: "/pitchside", icon: Stethoscope, tint: "#E3F2E8", ink: "#1A7F45", title: "Pitchside emergency care", sub: "Set-piece protocols · role cards · bag", wide: true },
+            { to: "/fifa", icon: HeartPulse, tint: "#FBE9E7", ink: "#C0392B", title: "Sudden cardiac arrest", sub: "Signs · emergency steps · FIFA's films and downloads", wide: true },
+            { to: "/cspine", icon: Bone, tint: "#E4EFF8", ink: "#1F6AA5", title: "Major trauma · cervical spine injury", sub: "Set piece by colour · collar sizing · log roll", wide: true },
+            { to: "/focus", icon: Brain, tint: "#EFE8F7", ink: "#6B3FA0", title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain", wide: true },
           ]}
         />
         <SectionLabel>STUDY</SectionLabel>
         <Tiles
           items={[
-            { to: "/stations", icon: ClipboardList, tint: "#F6EFD6", ink: "#8A6D10", title: "Skill modules", sub: "PEAP · arrest · survey · immobilisation · bag" },
+            { to: "/stations", icon: ClipboardList, tint: "#F6EFD6", ink: "#8A6D10", title: "Skill modules", sub: "PEAP · arrest · survey · immobilisation · bag · concussion" },
             { to: "/drill", icon: ListOrdered, tint: "#FBE9E7", ink: "#C0392B", title: "Team drill", sub: "Cardiac arrest in six steps" },
             { to: "/bag", icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1A7F45", title: "Emergency bag", sub: "FIFA packing list" },
             { to: "/guides", icon: PlayCircle, tint: "#E4EFF8", ink: "#1F6AA5", title: "Films", sub: "Links to FIFA's films" },
@@ -176,7 +184,6 @@ function Home() {
                 <li key={d.href}>
                   <a
                     href={d.href}
-                    target="_blank"
                     rel="noopener noreferrer"
                     className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-heading"
                   >
@@ -200,7 +207,7 @@ function Home() {
                 <li key={file}>
                   <a
                     href={asset(`/brand/${file}`)}
-                    target="_blank"
+                    download
                     rel="noopener noreferrer"
                     className="flex min-h-11 items-center gap-2 py-2 text-sm font-medium leading-snug text-heading"
                   >

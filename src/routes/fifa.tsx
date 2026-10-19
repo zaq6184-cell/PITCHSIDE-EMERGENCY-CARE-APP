@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { FifaClipCard } from "@/components/fifa-video";
+import { ZoomImage } from "@/components/zoom-image";
 import { fifaOwnClips } from "@/lib/videos";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { imageSize } from "@/lib/asset";
@@ -107,13 +108,13 @@ function FifaScaPage() {
           <p className="text-xs leading-snug text-muted">Tap a picture to open it full size and zoom in.</p>
           <div className="flex flex-col gap-3">
             {fifaSca.infographics.map((g) => (
-              <a key={g.src} href={g.src} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
-                <img src={g.src} alt={g.title} {...imageSize(g.src)} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
+              <ZoomImage key={g.src} src={g.src} alt={g.title} className="overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
+                <img src={g.src} alt="" {...imageSize(g.src)} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
                 <span className="block border-t border-line px-3 py-2">
                   <span className="block text-sm font-semibold text-heading">{g.title}</span>
                   <span className="block text-xs leading-snug text-muted">{g.note}</span>
                 </span>
-              </a>
+              </ZoomImage>
             ))}
           </div>
         </Section>
@@ -141,7 +142,6 @@ function FifaScaPage() {
               <li key={d.href}>
                 <a
                   href={d.href}
-                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
@@ -159,7 +159,6 @@ function FifaScaPage() {
             <a
               key={r.href}
               href={r.href}
-              target="_blank"
               rel="noopener noreferrer"
               className="text-sm leading-snug text-heading underline underline-offset-2"
             >
@@ -170,7 +169,7 @@ function FifaScaPage() {
 
         <Note>
           Summary of{" "}
-          <a href={FIFA_SCA_URL} target="_blank" rel="noopener noreferrer" className="underline">
+          <a href={FIFA_SCA_URL} rel="noopener noreferrer" className="underline">
             FIFA's Sudden cardiac arrest page
           </a>
           . Infographics, films and documents © FIFA; the originals are on FIFA's website.

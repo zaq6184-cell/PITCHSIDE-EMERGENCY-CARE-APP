@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ChevronRight, Gamepad2, MapPin, RotateCcw, Trophy, Volume2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Confetti } from "@/components/confetti";
-import { DiagramBase, MARKS, PositionDiagram, RoleDisc } from "@/components/position-diagram";
+import { DIAGRAM_VIEWBOX, DiagramBase, MARKS, PositionDiagram, RoleDisc } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { haptic, say, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
-import { type RoleId, workshop } from "@/lib/workshop";
+import { type RoleId, roleTag, voiceId, workshop } from "@/lib/workshop";
 
 export const Route = createFileRoute("/quiz")({
   component: QuizPage,
@@ -75,8 +75,8 @@ function questionPool(): Question[] {
   const qs: Question[] = [];
   for (const r of workshop.roles) {
     qs.push({ prompt: "Who brings this onto the pitch?", text: r.bring, answer: r.id });
-    r.say.forEach((t, i) => qs.push({ prompt: "Who says this?", text: `“${t}”`, answer: r.id, voice: `${r.id}-${i + 1}` }));
-    r.do
+    r.say.forEach((t, i) => qs.push({ prompt: "Who says this?", text: `“${t}”`, answer: r.id, voice: voiceId(r, i) }));
+    [...r.arrest, ...r.trauma, ...r.both]
       .filter((t) => !NAMES.test(t) && !/^Bring /.test(t))
       .forEach((t) => qs.push({ prompt: "Whose job is this?", text: t, answer: r.id }));
   }
@@ -242,7 +242,7 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
                 type="button"
                 disabled={answered}
                 onClick={() => choose(r.id)}
-                aria-label={`${r.name}, ${r.role}`}
+                aria-label={`${roleTag(r)}, ${r.role}`}
                 className={cn(
                   "relative flex min-h-14 items-center gap-2 overflow-hidden rounded-xl px-3 text-left transition-all duration-200 active:scale-95",
                   answered && !isAnswer && !isWrongPick && "opacity-40",
@@ -258,7 +258,7 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
               >
                 <Icon className="size-5 shrink-0 opacity-80" aria-hidden />
                 <span className="min-w-0">
-                  <span className="block font-display text-sm font-bold tracking-[0.08em]">{r.name}</span>
+                  <span className="block font-display text-sm font-bold tracking-[0.08em]">{roleTag(r)}</span>
                   <span className="block truncate text-[10.5px] font-medium leading-tight">{r.role}</span>
                 </span>
                 {isAnswer ? <Check className="absolute right-2 top-2 size-5" strokeWidth={3} aria-hidden /> : null}
@@ -272,7 +272,7 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
             <p className={cn("rounded-lg px-3 py-2 text-sm leading-snug", right ? "bg-[#1A7F45]/12 text-ink" : "bg-danger/10 text-ink")}>
               <span className="font-semibold">{right ? "Correct. " : "Not quite. "}</span>
               {right ? "" : "It's "}
-              <span className="font-semibold">{role.name}</span> — {role.role}.{" "}
+              <span className="font-semibold">{roleTag(role)}</span> — {role.role}.{" "}
               <Link to="/role/$id" params={{ id: role.id }} className="font-medium text-heading underline underline-offset-2">
                 Open the role
               </Link>
@@ -365,7 +365,7 @@ function PlaceTheTeam() {
                 ? `Now tap the spot where ${MARKS.find((m) => m.id === holding)?.label} kneels.`
                 : "Tap a colour below, then tap its spot around the player. Seen from above, head at the top."}
           </p>
-          <svg viewBox="0 0 320 380" className="mx-auto mt-2 block h-auto w-full max-w-[19rem] select-none" role="group" aria-label="Spots around the player">
+          <svg viewBox={DIAGRAM_VIEWBOX} className="mx-auto mt-2 block h-auto w-full max-w-[19rem] select-none" role="group" aria-label="Spots around the player">
             <DiagramBase />
             {MARKS.map((m) => {
               const chip = placed[m.id];
@@ -424,7 +424,7 @@ function PlaceTheTeam() {
                   )}
                   style={{ backgroundColor: r.color, color: r.text, boxShadow: id === "white" ? "inset 0 0 0 1px rgba(11,31,58,0.25)" : undefined }}
                 >
-                  {r.name}
+                  {roleTag(r)}
                 </button>
               );
             })}

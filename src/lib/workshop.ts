@@ -2,6 +2,8 @@ export type RoleId = "black" | "orange" | "red" | "blue" | "white" | "green";
 
 export type Role = {
   id: RoleId;
+  /** Black 1 … Green 6: the order FIFA's Emergency Care Manual lists the team members, for hand signals. */
+  num: number;
   name: string;
   role: string;
   color: string;
@@ -9,9 +11,23 @@ export type Role = {
   stand: string;
   bring: string;
   fifa: string;
-  do: string[];
+  /** "What you do", split the way FIFA's PEAP poster splits it: sudden cardiac arrest, then trauma. */
+  arrest: string[];
+  trauma: string[];
+  /** Jobs that are the same in both. */
+  both: string[];
   say: string[];
+  /** Recording for each `say` line when it is not simply black-1, black-2 … in order (a line added later). */
+  voices?: string[];
 };
+
+/** "BLACK 1" — the colour and its number. */
+export const roleTag = (r: Pick<Role, "name" | "num">) => `${r.name} ${r.num}`;
+/** The recording of a role's `say` line i, e.g. "orange-2". */
+export const voiceId = (r: Pick<Role, "id" | "voices">, i: number) => r.voices?.[i] ?? `${r.id}-${i + 1}`;
+
+/** "Black 1" — for sentences and page titles. */
+export const roleWord = (r: Pick<Role, "name" | "num">) => `${r.name.charAt(0)}${r.name.slice(1).toLowerCase()} ${r.num}`;
 
 export type Step = {
   n: number;
@@ -49,12 +65,14 @@ export const workshop = {
     { tag: "Every 10th", text: "With an i-gel: continuous compressions, one breath every 10th compression (~10/min)." },
     { tag: "15 L/min", text: "Oxygen to the bag reservoir." },
     { tag: "2 min", text: "Rhythm check every 2 minutes. Rotate the person doing compressions." },
-    { tag: "≤ 10 s", text: "Maximum CPR interruption for any carry." },
+    { tag: "Transfer", text: "Ambulance or buggy onto the pitch to the player; mechanical CPR (LUCAS) where available." },
+    { tag: "≤ 10 s", text: "Carry only as a last resort — never more than 10 seconds without CPR." },
     { tag: "≥ 2 min", text: "After each carry: player down and at least 2 minutes of compressions." },
   ],
   roles: [
     {
       id: "black",
+      num: 1,
       name: "BLACK",
       role: "Team leader",
       color: "#1C1C1C",
@@ -62,38 +80,54 @@ export const workshop = {
       stand: "Player's LEFT side, level with the chest (PEAP black mark). Hands-off where possible.",
       bring: "Phone or radio, and the completed PEAP sheet with the contact numbers.",
       fifa: "Leads the team and keeps the overview. Ideally hands-off, or with one very limited task. Ensures the ambulance is called.",
-      do: [
-        "Lead the team. Stay hands-off so you keep the overview and do not fix on one task.",
-        "Ensure the ambulance is called.",
+      arrest: [
+        "Call the cardiac arrest out loud and make sure the ambulance is called.",
         "Check that compressions are running and that the AED goes on the moment it arrives.",
-        "Use closed-loop communication: name the person, give the task, hear it confirmed.",
-        "Decide when and how the player is moved, and call each lift.",
+        "Plan the move early: the ambulance or a buggy onto the pitch to the player, and a mechanical CPR device (LUCAS) if available. Carrying is a last resort.",
+        "If the team is trained: direct IV/IO access and the drugs after the 3rd shock.",
+      ],
+      trauma: [
+        "Make sure the player is assessed A-c-B-C-D-E and that the neck stays protected until it is cleared.",
+        "Decide on the collar, the log roll and how the player leaves the pitch, and call each move.",
+        "Call the ambulance as soon as the player needs hospital.",
+      ],
+      both: [
+        "Lead the team. Stay hands-off where possible so you keep the overview and do not fix on one task.",
+        "You are in overall control: if a colour is not doing their job, step in or hand the task to someone else.",
+        "Use closed-loop communication: name the person, give the task, hear it confirmed. When the crowd is too loud, signal the number.",
       ],
       say: [
         "Cardiac arrest. Please alert the ambulance.",
         "Green, AED on as soon as it is here.",
+        "Bring the ambulance onto the pitch, to the player.",
         "Ready to lift. On three. One, two, three, LIFT.",
       ],
+      voices: ["black-1", "black-2", "black-4", "black-3"],
     },
     {
       id: "orange",
+      num: 2,
       name: "ORANGE",
       role: "Head · airway & cervical spine",
       color: "#E36B12",
       text: "#0B1F3A",
-      stand: "At the player's HEAD (PEAP orange mark). Hands stay on the head until the neck is cleared or fully immobilised.",
+      stand: "Kneel DIRECTLY BEHIND the player's head, in line with the body. Hands stay on the head until the neck is cleared or fully immobilised.",
       bring: "Laryngeal mask airway (i-gel) and bag-valve with reservoir.",
       fifa: "Trauma: immobilise the cervical spine. Cardiac arrest: insert the laryngeal mask airway, attach the bag valve, squeeze the bag once every 10 compressions.",
-      do: [
-        "Trauma: hold the head in line with both hands and talk to the player. Jaw thrust only if you are experienced.",
-        "Cardiac arrest: once compressions and the AED are running, insert the i-gel and attach the bag valve.",
-        "Squeeze the bag ONCE EVERY 10 COMPRESSIONS. If the i-gel leaks, or you only have a face mask: pause for 30:2.",
-        "Control the log roll from the head — you give the count.",
+      arrest: [
+        "Once compressions and the AED are running, insert the i-gel and attach the bag valve.",
+        "Squeeze the bag ONCE EVERY 10 COMPRESSIONS. If the i-gel leaks, or you only have a face mask: 30 compressions to 2 breaths.",
       ],
+      trauma: [
+        "Immobilise the cervical spine: hold the head in line with both hands and talk to the player.",
+        "Jaw thrust only if you are experienced in it.",
+      ],
+      both: ["Control the log roll from the head — you give the count."],
       say: ["Airway open. i-gel in.", "Holding the head. Ready to roll.", "Roll on three. One, two, three, ROLL."],
     },
     {
       id: "red",
+      num: 3,
       name: "RED",
       role: "Chest",
       color: "#C0392B",
@@ -101,17 +135,21 @@ export const workshop = {
       stand: "Player's RIGHT side, level with the chest (PEAP red mark).",
       bring: "Nothing. First hands on the player.",
       fifa: "Trauma: assess the player with A-c-B-C-D-E and apply treatment. Cardiac arrest: commence chest compressions.",
-      do: [
+      arrest: [
         "Check for signs of life: breathing and carotid pulse together, no more than 10 seconds.",
-        "Cardiac arrest: start chest compressions at once — 5–6 cm, 100–120/min, full recoil. 30:2 until the i-gel is in, then continuous.",
-        "Do not stop compressions while the AED pads go on.",
-        "Trauma: run the primary survey (A-c-B-C-D-E) and treat what you find: trauma mask, airway adjuncts, cervical collar.",
-        "Take the CHEST in the log roll. If there is no team leader, you lead.",
+        "Commence chest compressions at once — 5–6 cm, 100–120/min, full recoil. 30:2 until the i-gel is in, then continuous.",
+        "Keep compressing while the AED pads go on.",
       ],
+      trauma: [
+        "Assess the player using A-c-B-C-D-E and treat what you find.",
+        "Apply treatment: trauma mask, airway adjuncts, cervical collar.",
+      ],
+      both: ["Take the CHEST in the log roll. If there is no team leader, you lead."],
       say: ["Player is unresponsive!", "No breathing, no pulse. Starting compressions."],
     },
     {
       id: "blue",
+      num: 4,
       name: "BLUE",
       role: "Pelvis",
       color: "#1F6AA5",
@@ -119,17 +157,18 @@ export const workshop = {
       stand: "Player's RIGHT side, level with the pelvis (PEAP blue mark), next to Red.",
       bring: "Oxygen cylinder.",
       fifa: "Bring oxygen. Trauma: attach to the trauma mask at 15 L/min. Cardiac arrest: attach to the bag-valve reservoir at 15 L/min.",
-      do: [
-        "Bring the oxygen cylinder onto the pitch.",
-        "Oxygen at 15 L/min: to the trauma mask (trauma) or to the bag-valve reservoir (cardiac arrest).",
+      arrest: [
+        "Attach the oxygen to the bag-valve reservoir at 15 L/min.",
         "Before a shock: with an i-gel / LMA in place (a closed loop) the oxygen can stay connected. With a face mask only, take the mask and oxygen away for the shock and replace them straight after.",
-        "Take the PELVIS in the log roll and help with the straps.",
         "Be ready to take over chest compressions from Red at the 2-minute rhythm check.",
       ],
+      trauma: ["Attach the oxygen to the trauma mask at 15 L/min."],
+      both: ["Take the PELVIS in the log roll and help with the straps."],
       say: ["Oxygen connected, 15 litres.", "Oxygen clear.", "Pelvis ready."],
     },
     {
       id: "white",
+      num: 5,
       name: "WHITE",
       role: "Legs",
       color: "#F2F2F0",
@@ -137,17 +176,21 @@ export const workshop = {
       stand: "Player's RIGHT side, level with the lower legs (PEAP white mark), next to Blue.",
       bring: "Scoop stretcher and splints.",
       fifa: "Bring the scoop and splints. Assist as directed by the team leader.",
-      do: [
-        "Bring the scoop stretcher and splints.",
+      arrest: [
+        "Assist as the team leader directs — this may include IV/IO access and drugs if you are trained. If you are not, say so at the pre-match briefing.",
+        "Have the board or scoop ready for the move to the ambulance.",
+      ],
+      trauma: ["Assist as the team leader directs, such as splinting a limb injury."],
+      both: [
         "Set the extrication kit in line with the player's feet, 2–3 basket lengths away: scoop opened out and split, ready to slide in.",
         "Take the LEGS in the log roll and help with the straps.",
         "Keep the kit and anyone carrying it out of the medical team's way.",
-        "Otherwise assist as the team leader directs.",
       ],
       say: ["Scoop ready.", "Legs ready.", "Strapped — one unit."],
     },
     {
       id: "green",
+      num: 6,
       name: "GREEN",
       role: "Equipment · bag & AED",
       color: "#1A7F45",
@@ -155,13 +198,13 @@ export const workshop = {
       stand: "At the HEAD on the player's LEFT, with the FIFA bag and AED open beside you (PEAP green mark).",
       bring: "FIFA Emergency Care Bag and AED.",
       fifa: "Bring the FIFA bag and AED. Trauma: assist with equipment. Cardiac arrest: apply the AED and perform safe defibrillation if advised.",
-      do: [
-        "Bring the FIFA bag and the AED and open them at the head.",
-        "Cardiac arrest: apply the AED as soon as it arrives — do not wait for the 30-count. Pads: below the right collarbone, and below the left armpit on the mid-axillary line.",
+      arrest: [
+        "Apply the AED as soon as it arrives — do not wait for the 30-count. Pads: below the right collarbone, and below the left armpit on the mid-axillary line.",
         "Before every shock: check that everyone is clear and that oxygen is removed — unless it is on a closed loop (i-gel / LMA).",
-        "Trauma: hand the right equipment to the right person at the right time. Know where everything is in the bag.",
-        "During a carry: count the 10 seconds out loud.",
+        "If the team has to carry (a last resort): count the 10 seconds out loud.",
       ],
+      trauma: ["Assist with equipment: hand the right equipment to the right person at the right time."],
+      both: ["Open the FIFA bag and the AED at the head, on the player's left. Know where everything is in the bag."],
       say: ["I'm clear, you're clear, everyone's clear!", "Shock delivered.", "Ten seconds!"],
     },
   ] as Role[],
@@ -219,23 +262,22 @@ export const workshop = {
       time: "Planned before kick-off",
       who: ["black", "orange", "white", "blue"],
       lines: [
-        "FIFA's protocol: after the third shock and medications, the team leader considers extricating the player.",
-        "Best: the ambulance comes onto the field to the player. Agree this before the match.",
-        "Otherwise: log roll on Orange's count — Red chest, Blue pelvis, White legs — onto a long spinal board (a scoop can also be used).",
-        "Strap the player, the board and the AED together as one unit.",
-        "A mechanical chest-compression device, where available and the team is trained on it, is fitted before the move so compressions are barely interrupted.",
+        "After the third shock and medications, the team leader considers moving the player.",
+        "Best: the ambulance — or a buggy — comes onto the pitch to the player. Agree this before the match.",
+        "A mechanical chest-compression device (LUCAS), where available and the team is trained on it, is fitted before the move so compressions continue.",
+        "Log roll on Orange's count — Red chest, Blue pelvis, White legs — onto a long spinal board (a scoop can also be used). Strap the player, the board and the AED together as one unit.",
       ],
     },
     {
       n: 6,
-      title: "Stop-and-start carry",
+      title: "Carry — last resort",
       time: "≤ 10 s each",
       who: ["black", "green"],
       lines: [
+        "Only if no ambulance, buggy or mechanical CPR device can reach the player: the 10-second stop-and-start carry.",
         "On Black's command, lift and carry for no more than 10 seconds — Green counts out loud.",
-        "Then put the player down and give at least 2 minutes of compressions before the next carry.",
-        "Repeat until the player is inside the ambulance. Continue CPR en route.",
-        "Destination: a hospital with 24/7 coronary angiography, agreed before the match.",
+        "Then put the player down and give at least 2 minutes of compressions before the next carry. Repeat until the player is inside the ambulance.",
+        "Destination: a hospital with 24/7 coronary angiography, agreed before the match. Continue CPR en route.",
         "ALS if trained: adrenaline 1 mg IV after the 3rd shock (as soon as possible if non-shockable), then every 3–5 min; amiodarone 300 mg after the 3rd shock, 150 mg after the 5th.",
       ],
     },
@@ -247,19 +289,21 @@ export const workshop = {
     "With an i-gel: continuous compressions, ~10 breaths/min (every 10th compression). Face mask + OPA/NPA: 30:2, two people.",
     "Before a shock the person shocking checks that everyone is clear and that oxygen is removed — unless it is on a closed loop such as an LMA (FIFA on-field protocols, 2025). The 2022 manual's older advice was to turn the oxygen off or disconnect it.",
     "After a shock: no pulse check — restart CPR immediately. Rhythm check every 2 minutes.",
-    "Transfer: player, long spinal board (or scoop) and AED strapped as one unit. CPR interrupted no more than 10 s per carry, then at least 2 minutes of compressions. An ambulance coming to the player is always preferable. Extrication is considered after the third shock and medications, at the team leader's discretion.",
+    "Transfer: considered after the third shock and medications, at the team leader's discretion. Best: the ambulance or a buggy comes onto the pitch to the player, with a mechanical CPR device (LUCAS) where available. The 10-second stop-and-start carry is a last resort: player, board (or scoop) and AED strapped as one unit, no more than 10 s without CPR, then at least 2 minutes of compressions.",
     "ALS if trained: adrenaline 1 mg IV after the 3rd shock (shockable) or as soon as possible (non-shockable), every 3–5 min; amiodarone 300 mg after the 3rd shock, 150 mg after the 5th.",
     "Reversible causes (4 Hs & 4 Ts) — only once compressions, AED and airway are running: hypoxia, hypovolaemia, hypo/hyperthermia and tension pneumothorax are the pitchside ones.",
     "Destination: a hospital with 24/7 coronary angiography, agreed before the match.",
   ],
   dashRules: [
-    "Extrication is considered after the third shock and medications; the team leader decides.",
+    "First choice: the ambulance or a buggy comes onto the pitch to the player, with a mechanical CPR device (LUCAS) where available. Carrying is a last resort.",
+    "Moving the player is considered after the third shock and medications; the team leader decides.",
     "Carry only on the team leader's command, and never for more than 10 seconds — count out loud.",
     "At “Ten seconds!”: player down, compressions at once.",
-    "At least 2 minutes of compressions before the next carry.",
-    "Repeat until the player is inside the ambulance.",
-    "An ambulance coming onto the field to the player is always preferable to carrying.",
+    "At least 2 minutes of compressions before the next carry. Repeat until the player is inside the ambulance.",
   ],
+  /** For the colour numbers, shown on Home and in Module 1. */
+  numberNote:
+    "Each colour has a number — Black 1, Orange 2, Red 3, Blue 4, White 5, Green 6 — in the order FIFA's Emergency Care Manual lists the team members. When the crowd is too loud to hear, the team leader can call or hand-signal a role by its number.",
   /** The current PEAP poster has six roles and no separate extrication team. */
   stretcherNote:
     "The current FIFA PEAP shows six roles: Black, Orange, Red, Green, Blue and White. Earlier versions also marked a separate extrication team in yellow, usually four first aiders provided by the stadium. Some venues and teaching centres still use one. If yours does, include them in the pre-match plan: they wait beside the scoop and basket, facing the player, and join only when the team leader calls them — to help with a log roll or to carry.",

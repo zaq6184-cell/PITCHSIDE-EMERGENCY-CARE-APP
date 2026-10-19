@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { VideoList } from "@/components/fifa-video";
+import { ZoomImage } from "@/components/zoom-image";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset, imageSize } from "@/lib/asset";
 import { FIFA_PITCHSIDE_PAGE, fifaSkillList } from "@/lib/videos";
@@ -122,20 +123,20 @@ function PitchsidePage() {
             <li><b>Entering the pitch:</b> only on the referee's stretcher signal — except a non-contact collapse, when the team runs on at once.</li>
             <li><b>Ready position:</b> move along the touchline level with the incident and squat with the stretcher.</li>
             <li><b>Kit:</b> two identical sets — basket, scoop or spine board, head blocks, collar, straps; AED; oxygen; splints.</li>
-            <li><b>SCA:</b> the chance of a good outcome falls by up to 10% per minute. After the third shock and medications the team leader considers extrication, with a mechanical CPR device fitted first where available; without one, use the 10-second stop-and-start carry.</li>
+            <li><b>SCA:</b> the chance of a good outcome falls by up to 10% per minute. After the third shock and medications the team leader considers moving the player, with a mechanical CPR device (LUCAS) fitted first where available. FIFA's current advice: bring the ambulance or a buggy onto the pitch to the player — the 10-second stop-and-start carry is a last resort.</li>
             <li><b>Neck injury:</b> collar → log roll onto the scoop → straps (centre strap on the sternum) → head blocks → tape → release MILS → basket, 6 people.</li>
             <li><b>Extremity fracture:</b> full A–E first; hands above and below; analgesia; clean and dress wounds; splint and recheck.</li>
           </ul>
           <div className="grid grid-cols-2 gap-2">
             {["ready-position", "extrication-setup", "access-rules", "carry-photo"].map((f) => (
-              <a key={f} href={asset(`/img/fifa/onfield/${f}.jpg`)} target="_blank" rel="noopener noreferrer">
+              <ZoomImage key={f} src={asset(`/img/fifa/onfield/${f}.jpg`)} alt={`FIFA on-field protocols: ${f.replace("-", " ")}`}>
                 <img
                   src={asset(`/img/fifa/onfield/${f}.jpg`)}
-                  alt={f.replace("-", " ")}
+                  alt=""
                   loading="lazy"
                   className="aspect-[3/4] w-full rounded-lg border border-line bg-white object-cover object-top"
                 />
-              </a>
+              </ZoomImage>
             ))}
           </div>
           <p className="text-xs leading-snug text-muted">Details are in skill modules 1 to 4.</p>
@@ -145,19 +146,13 @@ function PitchsidePage() {
           <p className="text-xs leading-snug text-muted">Tap a picture to open it full size and zoom in.</p>
           <div className="flex flex-col gap-3">
             {posters.map((g) => (
-              <a
-                key={g.src}
-                href={g.src}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]"
-              >
-                <img src={g.src} alt={g.title} {...imageSize(g.src)} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
+              <ZoomImage key={g.src} src={g.src} alt={g.title} className="overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
+                <img src={g.src} alt="" {...imageSize(g.src)} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
                 <span className="block border-t border-line px-3 py-2">
                   <span className="block text-sm font-semibold text-heading">{g.title}</span>
                   <span className="block text-xs leading-snug text-muted">{g.note}</span>
                 </span>
-              </a>
+              </ZoomImage>
             ))}
           </div>
         </Section>
@@ -169,14 +164,9 @@ function PitchsidePage() {
           </p>
           <div className="grid grid-cols-2 gap-2">
             {["fecb-2", "fecb-3"].map((f) => (
-              <a key={f} href={asset(`/img/fifa/${f}.jpg`)} target="_blank" rel="noopener noreferrer">
-                <img
-                  src={asset(`/img/fifa/${f}.jpg`)}
-                  alt="FIFA Emergency Care Bag opened out, showing labelled compartments"
-                  loading="lazy"
-                  className="aspect-video w-full rounded-lg object-cover"
-                />
-              </a>
+              <ZoomImage key={f} src={asset(`/img/fifa/${f}.jpg`)} alt="FIFA Emergency Care Bag opened out, showing labelled compartments">
+                <img src={asset(`/img/fifa/${f}.jpg`)} alt="" loading="lazy" className="aspect-video w-full rounded-lg object-cover" />
+              </ZoomImage>
             ))}
           </div>
           <Link to="/bag" className="inline-flex min-h-11 items-center font-display text-sm font-semibold tracking-wide text-gold-ink">
@@ -190,7 +180,6 @@ function PitchsidePage() {
               <li key={h}>
                 <a
                   href={h}
-                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
@@ -204,7 +193,7 @@ function PitchsidePage() {
 
         <Note>
           From{" "}
-          <a href={FIFA_PITCHSIDE_PAGE} target="_blank" rel="noopener noreferrer" className="underline">
+          <a href={FIFA_PITCHSIDE_PAGE} rel="noopener noreferrer" className="underline">
             FIFA's Pitchside emergency care page
           </a>
           . Films, posters, photos and documents © FIFA.

@@ -94,7 +94,7 @@ export function prettyDate(iso: string) {
   return `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`;
 }
 
-type RoleInfo = { id: string; name: string; role: string };
+type RoleInfo = { id: string; name: string; role: string; num?: number };
 
 /** The plan as plain text for the team chat; blank fields are left out. */
 export function planText(p: MatchPlan, roles: readonly RoleInfo[], url?: string) {
@@ -104,12 +104,14 @@ export function planText(p: MatchPlan, roles: readonly RoleInfo[], url?: string)
   if (match) lines.push(match);
   const hospital = join(p.hospital, p.hospitalPhone);
   if (hospital) lines.push(`Nearest hospital: ${hospital}`);
+  const word = (r: RoleInfo) => `${r.name.charAt(0)}${r.name.slice(1).toLowerCase()}${r.num ? ` ${r.num}` : ""}`;
+  const black = roles.find((x) => x.id === "black");
   const leader = join(p.leader, p.leaderPhone);
-  if (leader) lines.push(`Team leader (Black): ${leader} — ensures the ambulance is called`);
+  if (leader) lines.push(`Team leader (${black ? word(black) : "Black"}): ${leader} — ensures the ambulance is called`);
   for (const id of COLOURS) {
     const r = roles.find((x) => x.id === id);
     const name = p.names[id].trim();
-    if (r && name) lines.push(`${r.name.charAt(0)}${r.name.slice(1).toLowerCase()} (${r.role}): ${name}`);
+    if (r && name) lines.push(`${word(r)} (${r.role}): ${name}`);
   }
   if (p.ambulance.trim()) lines.push(`Ambulance: ${p.ambulance.trim()}`);
   if (p.extrication.trim()) lines.push(`Extrication team: ${p.extrication.trim()}`);

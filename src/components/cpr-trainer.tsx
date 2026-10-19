@@ -100,6 +100,11 @@ export function CprTrainer() {
           </button>
         ))}
       </div>
+      <p className="-mt-1 text-xs leading-snug text-muted">
+        {mode === "igel"
+          ? "i-gel in, bag valve attached and oxygen at 15 L/min on the reservoir: continuous compressions, one squeeze of the bag every 10th compression (FIFA's PEAP). If the i-gel leaks — poor chest rise or gurgling — go back to 30:2."
+          : "No i-gel yet, a face mask only, or a leaking i-gel: 30 compressions, then 2 breaths."}
+      </p>
 
       <div className="flex w-full items-end justify-around">
         <div>

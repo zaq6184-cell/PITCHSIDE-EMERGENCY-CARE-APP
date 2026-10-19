@@ -1,6 +1,11 @@
 import { asset } from "@/lib/asset";
 import { type RoleId, workshop } from "@/lib/workshop";
-import { type FifaClip, fifaOwnClips, fifaSkillClips } from "@/lib/videos";
+import { afterConcussion, focusStages, returnNote, returnStages } from "@/lib/focus";
+import { type FifaClip, fifaFocusClip, fifaOwnClips, fifaSkillClips } from "@/lib/videos";
+
+/** The collar-sizing diagram (public/img/s5/collar-sizing.svg), drawn for this guide from the FIFA manual's method. */
+export const COLLAR_SIZING_ALT =
+  "Collar sizing diagram. 1: with the head neutral, follow a line from the chin straight back until it crosses the sternomastoid, then count fingerbreadths down to the top of the trapezius. 2: the collar opened out flat; put the same fingers on it from the sizing line down to the bottom edge of the hard plastic, not the foam pad, and choose the nearest size — between two, start smaller.";
 
 /** Content blocks rendered by the station page. Copy is taken from the station handouts — do not invent protocol. */
 export type Block =
@@ -27,7 +32,7 @@ export type Block =
 
 export type Section = { title: string; blocks: Block[] };
 
-export type StationId = "1" | "2" | "3" | "4" | "5";
+export type StationId = "1" | "2" | "3" | "4" | "5" | "6";
 
 export type Station = {
   id: StationId;
@@ -56,8 +61,8 @@ export const stations: Station[] = [
             kind: "list",
             items: [
               "The team doctor enters first, followed by the rest of the medical team.",
-              "Team leader (Black) — leads, ideally hands-off.",
-              "Around the player: Orange (head), Red (chest), Blue (pelvis), White (legs) and Green (bag and AED).",
+              "Team leader (Black 1) — leads, ideally hands-off, and steps in if a job is not being done.",
+              "Around the player: Orange 2 (directly behind the head), Red 3 (chest), Blue 4 (pelvis), White 5 (legs) and Green 6 (bag and AED, at the head on the player's left).",
             ],
           },
         ],
@@ -136,18 +141,20 @@ export const stations: Station[] = [
             kind: "table",
             head: ["Role", "Position", "Main responsibility"],
             rows: [
-              ["Team leader (Black)", "Player's left, level with the chest", "Hands off. Overall command, CPR/AED flow, calls any lift, ambulance and referee liaison."],
-              ["Head (Orange)", "At the head", "Manual in-line stabilisation and airway; i-gel and bag in cardiac arrest; commands the log roll."],
-              ["Chest (Red)", "Player's right, level with the chest", "A-c-B-C-D-E assessment and treatment; chest compressions 100–120/min with full recoil."],
-              ["Pelvis (Blue)", "Player's right, level with the pelvis", "Oxygen at 15 L/min; takes the PELVIS in the log roll; takes over compressions at 2 minutes."],
-              ["Legs (White)", "Player's right, level with the lower legs", "Brings the scoop and splints; takes the LEGS in the log roll; assists as directed."],
-              ["Equipment (Green)", "At the head, player's left", "FIFA bag and AED; hands equipment to Red; applies the AED and checks all clear before a shock."],
+              ["Team leader (Black 1)", "Player's left, level with the chest", "Hands off, in overall control: steps in if a job is not being done. CPR/AED flow, the transfer plan, ambulance and referee liaison."],
+              ["Head (Orange 2)", "Directly behind the head, in line with the body", "Manual in-line stabilisation and airway; i-gel and bag in cardiac arrest; commands the log roll."],
+              ["Chest (Red 3)", "Player's right, level with the chest", "A-c-B-C-D-E assessment and treatment; chest compressions 100–120/min with full recoil."],
+              ["Pelvis (Blue 4)", "Player's right, level with the pelvis", "Oxygen at 15 L/min; takes the PELVIS in the log roll; takes over compressions at 2 minutes."],
+              ["Legs (White 5)", "Player's right, level with the lower legs", "Brings the scoop and splints; takes the LEGS in the log roll; assists as directed."],
+              ["Equipment (Green 6)", "At the head, on the player's left", "FIFA bag and AED; hands equipment to Red; applies the AED and checks all clear before a shock."],
             ],
           },
           {
             kind: "defs",
             items: [
               { term: "Six roles", text: "Black, Orange, Red, Green, Blue and White — the colours on FIFA's PEAP poster." },
+              { term: "Numbers", text: workshop.numberNote },
+              { term: "Orange's position", text: "This guide places Orange directly behind the head, in line with the body, for manual in-line stabilisation. FIFA's poster marks Orange at the head." },
               { term: "Smaller teams", text: "One person can cover more than one role if they are able to. Every role still has to be filled." },
               { term: "Extrication team", text: workshop.stretcherNote },
             ],
@@ -343,7 +350,7 @@ export const stations: Station[] = [
     id: "2",
     short: "Cardiac arrest",
     title: "Approach to Pitchside Cardiac Arrest",
-    subtitle: "Part 1 — BLS + AED · Part 2 — 10-second stop and start for ambulance transfer",
+    subtitle: "Part 1 — BLS + AED · Part 2 — the transfer: ambulance or buggy to the player, mechanical CPR, and the 10-second carry only as a last resort",
     sections: [
       {
         title: "Team member roles & equipment",
@@ -423,7 +430,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Moving the player: FIFA's protocol is that after the third shock and medications, extrication is considered at the team leader's discretion. A mechanical chest-compression device, where available and the team is trained on it, is fitted first so compressions are barely interrupted. Without one, use the 10-second stop-and-start carry. An ambulance coming onto the field to the player is always preferable.",
+            text: "Moving the player: after the third shock and medications, the team leader considers moving the player. FIFA's current advice is to bring the ambulance — or a buggy — onto the pitch to the player, and to fit a mechanical chest-compression device (LUCAS), where available and the team is trained on it, so compressions continue during the move. The 10-second stop-and-start carry is a last resort.",
           },
         ],
       },
@@ -712,6 +719,12 @@ export const stations: Station[] = [
             model: { uid: "4baa44a5069b41b0bac9ce4038945c23", name: "Cervical Collar", by: "ChakkitPP" },
           },
           {
+            kind: "image",
+            src: asset("/img/s5/collar-sizing.svg"),
+            alt: COLLAR_SIZING_ALT,
+            caption: "How to size the collar, after the FIFA Emergency Care Manual: count fingerbreadths on the player, then find the same distance on the opened collar. Drawn for this guide — always follow the manufacturer's instructions.",
+          },
+          {
             kind: "text",
             text: "Restricts excessive cervical movement when the spine cannot be clinically cleared — midline tenderness, neurological deficit, altered mental status, intoxication or distracting injury.",
           },
@@ -732,7 +745,7 @@ export const stations: Station[] = [
           {
             kind: "defs",
             items: [
-              { term: "FIFA sizing", text: "Neutral head: line from the chin back to the sternomastoid; measure fingerbreadths down to trapezius. Between two sizes → start SMALLER (too big extends the neck)." },
+              { term: "FIFA sizing", text: "Neutral head: line from the chin back to the sternomastoid; measure fingerbreadths down to trapezius; find the same distance on the collar's sizing marker (see the diagram). Between two sizes → start SMALLER (too big extends the neck)." },
               { term: "FIFA contraindication", text: "Airway obstruction — keep MILS instead until the airway is dealt with." },
               { term: "FIFA reminder", text: "A collar alone does not immobilise: keep MILS until blocks, tape and a device are on. Recheck the player after fitting. Follow local guidance — some countries no longer use collars." },
             ],
@@ -1211,9 +1224,10 @@ export const stations: Station[] = [
             head: ["Clinical problem", "Medication category"],
             rows: [
               ["Anaphylaxis", "Adrenaline / epinephrine IM"],
-              ["Asthma / bronchospasm", "Salbutamol ± ipratropium according to protocol"],
-              ["Hypoglycaemia", "Oral glucose"],
-              ["Severe hypoglycaemia / unconscious", "Parenteral glucose / dextrose according to protocol"],
+              ["Asthma / bronchospasm", "Salbutamol ± ipratropium — as an inhaler (with a spacer) and as nebules for a nebuliser, according to protocol"],
+              ["Hypoglycaemia", "Oral glucose / dextrose gel"],
+              ["Severe hypoglycaemia / unconscious", "Glucagon IM (if available), or parenteral glucose / dextrose according to protocol"],
+              ["Chest pain — suspected cardiac", "Aspirin and GTN spray, according to protocol"],
               ["Pain", "Analgesia according to approved formulary"],
               ["Allergic reaction", "Antihistamine according to protocol"],
               ["Cardiac arrest", "Resuscitation drugs only where advanced medical team / protocol supports them"],
@@ -1289,6 +1303,7 @@ export const stations: Station[] = [
             ordered: true,
             items: [
               "No AED available",
+              "Expired AED battery or expired defibrillator pads",
               "No oxygen / BVM",
               "No suction when required by the service level",
               "Unable to identify emergency access / ambulance plan",
@@ -1303,9 +1318,84 @@ export const stations: Station[] = [
     ],
     source: "FIFA's standard bag: FIFA Emergency Care Manual, Ch.10. The bag-number guide, the longer local checklist, the 11-compartment layout and the critical-fail list are practical additions that go beyond FIFA's minimum.",
   },
+  {
+    id: "6",
+    short: "Concussion (FOCUS)",
+    title: "On-Pitch Concussion Assessment — FIFA FOCUS",
+    subtitle: "Suspect and protect: the 11 FOCUS domains, what happens after a suspected concussion, and the graduated return to football",
+    sections: [
+      {
+        title: "Suspect and protect",
+        blocks: [
+          {
+            kind: "alert",
+            title: "Suspected concussion = remove from play immediately",
+            text: "The on-pitch assessment does not diagnose concussion. It decides whether any sign or symptom raises suspicion — and if it does, the player comes off and does not go back on that day.",
+          },
+          {
+            kind: "list",
+            items: [
+              "FOCUS: FIFA's Football-Specific Standardised On-Pitch Concussion Assessment Protocol.",
+              "11 domains, checked from the touchline, on approaching the player, on the pitch and back at the touchline.",
+              "Some abnormal findings lower your threshold for concern — carry on with the assessment. Others mean substitute the player for assessment and treatment off the pitch.",
+              "Footballers who play on with a concussion recover more slowly, perform worse and risk further injury.",
+            ],
+          },
+          { kind: "video", clip: fifaFocusClip },
+        ],
+      },
+      {
+        title: "The 11 domains",
+        blocks: [
+          {
+            kind: "table",
+            head: ["Where · domain", "Check", "If abnormal"],
+            rows: focusStages.flatMap((st) =>
+              st.domains
+                .filter((d) => d.outcome !== "step")
+                .map((d) => [
+                  `${st.where} · ${d.domain}`,
+                  d.items ? `${d.lead} ${d.items.join(" · ")}` : d.lead,
+                  d.outcome === "sub" ? "Substitute — assess off the pitch" : "Lower threshold, carry on",
+                ]),
+            ),
+          },
+          {
+            kind: "info",
+            title: "On the pitch, in this order",
+            text: "Level of consciousness and the cervical spine first. Only then ask the player to sit up, and go on to symptoms, orientation, balance, proprioception and eye movements.",
+          },
+          { kind: "text", text: "ACVPU = Alert, new Confusion, Voice, Pain, Unresponsive." },
+        ],
+      },
+      {
+        title: "After a suspected concussion",
+        blocks: [{ kind: "list", items: afterConcussion.map((a) => `${a.lead} ${a.text}`) }],
+      },
+      {
+        title: "Graduated return to football",
+        blocks: [
+          { kind: "list", ordered: true, items: [...returnStages] },
+          { kind: "text", text: returnNote },
+        ],
+      },
+      {
+        title: "FOCUS card and FIFA's documents",
+        blocks: [
+          {
+            kind: "link",
+            to: "/focus",
+            label: "Open the FOCUS page →",
+            text: "FIFA's lanyard card (both sides), the full FOCUS resources and FIFA's concussion protocols.",
+          },
+        ],
+      },
+    ],
+    source: "FIFA FOCUS (lanyard card, April 2026) and FIFA's Concussion Protocol for Medical Staff (August 2024). A study summary: FIFA's documents are the authoritative source.",
+  },
 ];
 
-const IDS: StationId[] = ["1", "2", "3", "4", "5"];
+const IDS: StationId[] = ["1", "2", "3", "4", "5", "6"];
 
 export function getStation(id: string): Station | undefined {
   return (IDS as string[]).includes(id) ? stations.find((s) => s.id === id) : undefined;

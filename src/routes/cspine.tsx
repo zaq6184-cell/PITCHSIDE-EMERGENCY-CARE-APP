@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { FifaClipCard, VideoList } from "@/components/fifa-video";
+import { ZoomImage } from "@/components/zoom-image";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { asset, imageSize } from "@/lib/asset";
+import { COLLAR_SIZING_ALT } from "@/lib/stations";
 import { FIFA_PITCHSIDE_PAGE, type FifaClip, fifaSkillClips, skillClips } from "@/lib/videos";
 import type { RoleId } from "@/lib/workshop";
 
@@ -234,13 +236,20 @@ function CspinePage() {
         </Section>
 
         <Section id="cs-collar" title="COLLAR AND HEAD BLOCKS">
-          <img
-            src={asset("/img/s5/collar.jpg")}
-            alt="Adjustable extrication cervical collar fitted on an adult, side view"
-            {...imageSize("/img/s5/collar.jpg")}
-            loading="lazy"
-            className="-mx-3.5 block max-h-64 w-[calc(100%+1.75rem)] max-w-none bg-white object-contain"
-          />
+          <ZoomImage src={asset("/img/s5/collar-sizing.svg")} alt={COLLAR_SIZING_ALT} className="-mx-3.5 w-[calc(100%+1.75rem)]">
+            <img
+              src={asset("/img/s5/collar-sizing.svg")}
+              alt=""
+              width={960}
+              height={540}
+              loading="lazy"
+              className="block w-full bg-white"
+            />
+          </ZoomImage>
+          <p className="text-xs leading-snug text-muted">
+            Sizing, after the FIFA Emergency Care Manual: count fingerbreadths on the player, then find the same distance on the
+            opened collar. Tap to enlarge. Always follow the manufacturer's instructions.
+          </p>
           <ol className={numbered}>
             <li>Maintain MILS throughout.</li>
             <li>Size: neutral head, line from the chin back to the sternomastoid, measure fingerbreadths down to trapezius.</li>
@@ -262,11 +271,11 @@ function CspinePage() {
         <Section id="cs-logroll" title="LOG ROLL AND EXTRICATION">
           <dl className="flex flex-col divide-y divide-line">
             {[
-              ["Head (Orange)", "MILS. Controls the move: explains the signal and says how far — 90° log roll, or a 15–20° tilt for a scoop."],
-              ["Chest (Red)", "One hand on the far shoulder, one on the hip."],
-              ["Pelvis (Blue)", "One hand on the waist, the other under the knee."],
-              ["Legs (White)", "One hand under the lower leg, the other under the ankle."],
-              ["Fifth person (Green)", "Places the scoop or board."],
+              ["Head (Orange 2)", "Directly behind the head: MILS. Controls the move: explains the signal and says how far — 90° log roll, or a 15–20° tilt for a scoop."],
+              ["Chest (Red 3)", "One hand on the far shoulder, one on the hip."],
+              ["Pelvis (Blue 4)", "One hand on the waist, the other under the knee."],
+              ["Legs (White 5)", "One hand under the lower leg, the other under the ankle."],
+              ["Fifth person (Green 6)", "Places the scoop or board."],
             ].map(([t, d]) => (
               <div key={t} className="py-1.5">
                 <dt className="font-display text-xs font-semibold tracking-wide text-heading">{t}</dt>
@@ -283,15 +292,18 @@ function CspinePage() {
             <li>Only now can MILS be released.</li>
             <li>Slide the basket under the scoop and extricate with 6 people if possible.</li>
           </ol>
-          <a href={asset("/img/fifa/onfield/extrication-setup.jpg")} target="_blank" rel="noopener noreferrer">
+          <ZoomImage
+            src={asset("/img/fifa/onfield/extrication-setup.jpg")}
+            alt="FIFA extrication set-up: bag and oxygen at the head, scoop between the feet and the basket, basket 2–3 lengths from the feet"
+          >
             <img
               src={asset("/img/fifa/onfield/extrication-setup.jpg")}
-              alt="FIFA extrication set-up: bag and oxygen at the head, scoop between the feet and the basket, basket 2–3 lengths from the feet"
+              alt=""
               {...imageSize("/img/fifa/onfield/extrication-setup.jpg")}
               loading="lazy"
               className="block max-h-80 w-full rounded-lg border border-line bg-white object-contain"
             />
-          </a>
+          </ZoomImage>
           <Note>
             For trauma: scoop stretcher and basket, set up below the feet in line with the player —
             basket 2–3 lengths away. A scoop moves the player only ~15° instead of a 90° log roll.
@@ -306,15 +318,14 @@ function CspinePage() {
         </Section>
 
         <Section id="cs-poster" title="FIFA POSTER AND DOWNLOADS">
-          <a
-            href={asset("/img/fifa/cspine-protocol-v2.jpg")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]"
+          <ZoomImage
+            src={asset("/img/fifa/cspine-protocol-v2.jpg")}
+            alt="FIFA Medical Set-Piece protocol for cervical spine injury: colour-coded tasks from assessment to extrication"
+            className="overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]"
           >
             <img
               src={asset("/img/fifa/cspine-protocol-v2.jpg")}
-              alt="FIFA Medical Set-Piece protocol for cervical spine injury: colour-coded tasks from assessment to extrication"
+              alt=""
               {...imageSize("/img/fifa/cspine-protocol-v2.jpg")}
               loading="lazy"
               className="block max-h-[30rem] w-full bg-white object-contain"
@@ -322,13 +333,13 @@ function CspinePage() {
             <span className="block border-t border-line px-3 py-2 text-xs leading-snug text-muted">
               Tap to open full size and zoom in.
             </span>
-          </a>
+          </ZoomImage>
           <ul className="flex flex-col divide-y divide-line">
             {downloads.map(([t, h]) => (
               <li key={h}>
                 <a
                   href={h}
-                  target="_blank"
+                  download={h.includes("/docs/") ? "" : undefined}
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
@@ -354,7 +365,7 @@ function CspinePage() {
 
         <Note>
           From the FIFA Medical Set-Piece Protocol for Cervical Spine Injury, the FIFA Emergency Care Manual and{" "}
-          <a href={FIFA_PITCHSIDE_PAGE} target="_blank" rel="noopener noreferrer" className="underline">
+          <a href={FIFA_PITCHSIDE_PAGE} rel="noopener noreferrer" className="underline">
             FIFA's Pitchside emergency care page
           </a>
           . Film, poster and documents © FIFA. Follow FIFA's current documents and your local protocol.

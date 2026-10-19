@@ -8,7 +8,7 @@ import { haptic, say, setSoundPrefs, sfx, type SfxName, startMetronome, stopMetr
 import { cn } from "@/lib/utils";
 import { useSwipe } from "@/lib/gestures";
 import { type Callout, callouts, drillCallouts } from "@/lib/voice";
-import { type RoleId, workshop } from "@/lib/workshop";
+import { type RoleId, roleTag, workshop } from "@/lib/workshop";
 
 const Scene3D = lazy(() => import("@/components/scene-3d"));
 
@@ -159,7 +159,7 @@ export function RoleExplorer3D() {
             )}
             style={{ backgroundColor: r.color, color: r.text, boxShadow: r.id === "white" ? "inset 0 0 0 1px rgba(11,31,58,0.25)" : undefined }}
           >
-            {r.name}
+            {roleTag(r)}
           </button>
         ))}
       </div>
@@ -167,7 +167,7 @@ export function RoleExplorer3D() {
         {role ? (
           <div key={role.id} className="caption-in rounded-lg bg-note px-3 py-2.5">
             <p className="font-display text-sm font-semibold tracking-wide text-heading">
-              {role.name} · {role.role}
+              {roleTag(role)} · {role.role}
             </p>
             <p className="mt-1 text-sm leading-snug">{role.stand}</p>
             <p className="mt-1 text-sm leading-snug text-muted">Brings: {role.bring}</p>

@@ -1,145 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUp, Eye, FileText, RefreshCw } from "lucide-react";
 import { FifaClipCard } from "@/components/fifa-video";
+import { ZoomImage } from "@/components/zoom-image";
 import { AppShell, JumpChips, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset, imageSize } from "@/lib/asset";
 import { cn } from "@/lib/utils";
+import { afterConcussion, focusStages, type Outcome, returnNote, returnStages } from "@/lib/focus";
 import { FIFA_FOCUS_PAGE, fifaFocusClip } from "@/lib/videos";
 
 export const Route = createFileRoute("/focus")({
   component: FocusPage,
   head: () => ({ meta: [{ title: "Concussion assessment (FOCUS) · Pitchside Emergency Care" }] }),
 });
-
-/** watch = lower threshold for concern + continue; sub = substitute + assess off the pitch. */
-/** step = a practical action between FIFA's domains, not an assessment item. */
-type Outcome = "watch" | "sub" | "step";
-type Domain = { domain: string; outcome: Outcome; lead: string; items?: string[] };
-type Stage = { id: string; where: string; when: string; domains: Domain[] };
-
-const stages: Stage[] = [
-  {
-    id: "focus-before",
-    where: "Touchline",
-    when: "Before any incident",
-    domains: [
-      { domain: "Player medical history", outcome: "watch", lead: "Know: the player's medical and concussion history." },
-    ],
-  },
-  {
-    id: "focus-approach",
-    where: "Touchline",
-    when: "On approaching the player, and at any time after",
-    domains: [
-      {
-        domain: "Mechanism of injury",
-        outcome: "watch",
-        lead: "Consider: the mechanism of injury. Observe: player lying motionless.",
-      },
-      {
-        domain: "Visible signs",
-        outcome: "sub",
-        lead: "Observe:",
-        items: [
-          "No protective action",
-          "Seizure",
-          "Tonic posturing",
-          "Motor incoordination",
-          "Vomiting",
-          "Abnormal emotional / behavioural response",
-          "Possible skull fracture",
-          "Abnormality of head / neck",
-          "Blood / clear fluid from ear(s)",
-          "Periocular / retroauricular haematoma",
-          "Pupil abnormalities",
-        ],
-      },
-      {
-        domain: "Visible signs",
-        outcome: "watch",
-        lead: "Observe:",
-        items: ["Superficial face / head injury / nosebleed", "Blank / vacant look"],
-      },
-    ],
-  },
-  {
-    id: "focus-pitch",
-    where: "Pitch",
-    when: "With the player",
-    domains: [
-      {
-        domain: "Level of consciousness",
-        outcome: "sub",
-        lead: "Assess: ACVPU scale. Ask: What happened? What is the last thing you remember?",
-      },
-      {
-        domain: "Cervical spine assessment",
-        outcome: "sub",
-        lead: "Assess / ask:",
-        items: [
-          "Midline neck tenderness",
-          "Restricted active range of neck motion",
-          "Unexplained limb strength and / or sensation abnormality",
-          "Numbness / tingling",
-        ],
-      },
-      {
-        domain: "Sit the player up",
-        outcome: "step",
-        lead: "Ask the player to sit up — once the cervical spine assessment is done — then carry on with the symptoms.",
-      },
-      {
-        domain: "Symptoms",
-        outcome: "sub",
-        lead: "Ask:",
-        items: [
-          "Headache / pressure in head",
-          "Feel normal",
-          "Drowsy",
-          "Disorientated",
-          "Difficulty concentrating",
-          "Nauseous",
-          "Blurred / double vision",
-          "Feeling slowed down",
-          "Normal hearing",
-        ],
-      },
-      {
-        domain: "Orientation",
-        outcome: "sub",
-        lead: "Ask: What venue? Which half? Which team scored last? Which team did you play last week? Win / lose / draw?",
-      },
-      {
-        domain: "Balance",
-        outcome: "sub",
-        lead: "Observe: tandem stand with eyes closed. Ask: dizziness, balance difficulties.",
-      },
-      {
-        domain: "Proprioception",
-        outcome: "sub",
-        lead: "Observe: finger to nose with eyes closed (left and right index fingers).",
-      },
-      {
-        domain: "Oculomotor",
-        outcome: "sub",
-        lead: "Observe:",
-        items: ["Smooth pursuit (side to side, up and down)", "Convergence"],
-      },
-    ],
-  },
-  {
-    id: "focus-activity",
-    where: "Touchline",
-    when: "After the on-pitch assessment",
-    domains: [
-      {
-        domain: "Activity-based assessment",
-        outcome: "sub",
-        lead: "Observe: change-of-direction sprint. Ask: symptoms provoked.",
-      },
-    ],
-  },
-];
 
 const resources = [
   {
@@ -260,7 +132,7 @@ function FocusPage() {
             </p>
           </div>
           <ol className="flex flex-col gap-3">
-            {stages.map((st, i) => (
+            {focusStages.map((st, i) => (
               <li key={st.id} id={st.id} className="scroll-mt-24">
                 <div className="flex items-baseline gap-2">
                   <span className="grid size-6 shrink-0 place-items-center self-center rounded-full bg-navy font-display text-xs font-bold text-gold">
@@ -310,25 +182,24 @@ function FocusPage() {
           <p className="text-xs leading-snug text-muted">FIFA's palm-sized card (April 2026). Tap a side to open it full size.</p>
           <div className="grid grid-cols-2 gap-2">
             {[1, 2].map((n) => (
-              <a key={n} href={asset(`/img/fifa/focus/lanyard-${n}.jpg`)} target="_blank" rel="noopener noreferrer">
+              <ZoomImage key={n} src={asset(`/img/fifa/focus/lanyard-${n}.jpg`)} alt={`FIFA FOCUS lanyard card, side ${n}`}>
                 <img
                   src={asset(`/img/fifa/focus/lanyard-${n}.jpg`)}
-                  alt={`FIFA FOCUS lanyard card, side ${n}`}
+                  alt=""
                   {...imageSize(`/img/fifa/focus/lanyard-${n}.jpg`)}
                   loading="lazy"
                   className="block w-full rounded-lg border border-line bg-white"
                 />
-              </a>
+              </ZoomImage>
             ))}
           </div>
           <a
             href={asset("/docs/FIFA-FOCUS-Concussion-Lanyard-April-2026.pdf")}
-            target="_blank"
-            rel="noopener noreferrer"
+            download
             className="inline-flex min-h-11 items-center gap-2 font-display text-sm font-semibold tracking-wide text-gold-ink"
           >
             <FileText className="size-4" />
-            Open the print PDF
+            Download the print PDF
           </a>
         </Section>
 
@@ -338,49 +209,21 @@ function FocusPage() {
             Concussion is a clinical diagnosis: a normal scan does not rule it out.
           </p>
           <ul className="flex list-disc flex-col gap-1.5 pl-5 text-sm leading-snug marker:text-gold">
-            <li>
-              <b>No return the same day.</b> A player with a suspected concussion does not go back on that day.
-            </li>
-            <li>
-              <b>Red flags</b> — signs of a life-threatening problem or of bleeding in or around the brain: emergency
-              management and consider immediate transfer to hospital.
-            </li>
-            <li>
-              <b>Yellow flags</b> — any neurological or orthopaedic impairment, or the doctor is in doubt: remove from
-              football and examine further, with a specialist if needed.
-            </li>
-            <li>
-              <b>CT scan on the day</b> is recommended for any of: GCS below 13 (or below 15 after two hours),
-              suspected skull fracture, more than one episode of vomiting, a seizure after the injury, loss of
-              consciousness, persistent memory loss for events after the injury, or a focal neurological deficit.
-            </li>
-            <li>
-              <b>72 hours of observation</b> by the team doctor, with a daily check, because symptoms can appear late.
-              Avoid medication that could mask or worsen symptoms until a more serious injury is ruled out.
-            </li>
-            <li>
-              <b>Before leaving the venue, and before any flight,</b> re-examine for new or worsening signs.
-            </li>
+            {afterConcussion.map((a) => (
+              <li key={a.lead}>
+                <b>{a.lead}</b> {a.text}
+              </li>
+            ))}
           </ul>
           <p className="font-display text-xs font-semibold tracking-wide text-heading">GRADUATED RETURN TO FOOTBALL</p>
           <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm leading-snug marker:text-muted">
-            <li>Symptom-limited daily activity, such as a short walk.</li>
-            <li>Light aerobic exercise, up to about 70% of maximum heart rate.</li>
-            <li>Football-specific exercises one-to-one (player and coach), with no contact and no heavy resistance.</li>
-            <li>Non-contact training drills in a small group; only easy heading with a soft ball.</li>
-            <li>Drills with controlled contact, and heading with a normal ball in a controlled setting.</li>
-            <li>Full-contact team training, after medical clearance.</li>
-            <li>Return to match play.</li>
+            {returnStages.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
           </ol>
-          <Note>
-            Each stage needs at least one session and lasts at least 24 hours. If symptoms return, rest until they
-            settle (at least 24 hours) and go back to the last symptom-free stage. The doctor re-examines the player
-            before stage 1 and again before stage 6, and clearance rests on medical grounds only. Be more cautious
-            with younger players and after repeated concussions.
-          </Note>
+          <Note>{returnNote}</Note>
           <a
             href="https://digitalhub.fifa.com/asset/b6bc9c16-b211-47f4-b5e0-3e929df9115c/Medical-concussion-protocol-Elite_EN_Final.pdf"
-            target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-11 items-center text-sm font-medium text-heading underline underline-offset-2"
           >
@@ -394,7 +237,6 @@ function FocusPage() {
               <a
                 key={r.href}
                 href={r.href}
-                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 rounded-lg border border-line bg-paper p-2 active:scale-[0.99]"
               >
@@ -411,7 +253,7 @@ function FocusPage() {
               <li key={h}>
                 <a
                   href={h}
-                  target="_blank"
+                  download={h.includes("/docs/") ? "" : undefined}
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-2.5 py-2 text-sm leading-snug text-heading"
                 >
@@ -441,7 +283,7 @@ function FocusPage() {
 
         <Note>
           From{" "}
-          <a href={FIFA_FOCUS_PAGE} target="_blank" rel="noopener noreferrer" className="underline">
+          <a href={FIFA_FOCUS_PAGE} rel="noopener noreferrer" className="underline">
             FIFA's FOCUS page
           </a>{" "}
           and the FOCUS lanyard (April 2026). Film, card and documents © FIFA.

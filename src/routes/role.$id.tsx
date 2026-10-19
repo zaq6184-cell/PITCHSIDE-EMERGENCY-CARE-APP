@@ -1,19 +1,19 @@
 import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bone, ChevronLeft, ChevronRight, HeartPulse, Repeat } from "lucide-react";
 import { PositionDiagram } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { AppShell, Note, Panel, SayLine, SectionLabel } from "@/components/workshop";
 import { setTransitionDirection, useSwipe } from "@/lib/gestures";
 import { roleImage } from "@/lib/role-images";
 import { haptic } from "@/lib/sound";
-import { getRole, isRoleId, workshop } from "@/lib/workshop";
+import { getRole, isRoleId, roleTag, roleWord, voiceId, workshop } from "@/lib/workshop";
 import { FIFA_ROLE_CARDS_PDF, fifaRoleCards } from "@/lib/fifa-roles";
 
 export const Route = createFileRoute("/role/$id")({
   component: RoleCard,
   head: ({ params }) => {
     const r = isRoleId(params.id) ? getRole(params.id) : undefined;
-    return { meta: [{ title: r ? `${r.name.charAt(0)}${r.name.slice(1).toLowerCase()} · ${r.role} · Pitchside Emergency Care` : "Pitchside Emergency Care" }] };
+    return { meta: [{ title: r ? `${roleWord(r)} · ${r.role} · Pitchside Emergency Care` : "Pitchside Emergency Care" }] };
   },
 });
 
@@ -39,13 +39,6 @@ function RoleCard() {
   return (
     <AppShell tab="home">
       <div ref={swipe} className="flex flex-col gap-3">
-        <Link
-          to="/"
-          className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-gold-ink"
-        >
-          <ArrowLeft className="size-4" strokeWidth={2.4} />
-          All colours
-        </Link>
         <Panel>
           <div className="flare relative overflow-hidden bg-navy">
             <img
@@ -70,7 +63,7 @@ function RoleCard() {
             }}
           >
             <RoleIcon className="absolute -right-1 -top-2 size-20 opacity-25" strokeWidth={1.4} aria-hidden />
-            <h1 className="font-display text-[1.7rem] font-bold leading-none tracking-[0.08em]">{r.name}</h1>
+            <h1 className="font-display text-[1.7rem] font-bold leading-none tracking-[0.08em]">{roleTag(r)}</h1>
             <p className="mt-1 text-sm font-medium">{r.role}</p>
           </div>
           <PositionDiagram highlight={r.id} linkRoles />
@@ -91,24 +84,22 @@ function RoleCard() {
                 </Link>
               ) : null}
             </section>
-            <section>
+            <section className="flex flex-col gap-2">
               <SectionLabel>WHAT YOU DO</SectionLabel>
-              <ul className="mt-2 flex flex-col gap-1.5">
-                {r.do.map((line) => (
-                  <li key={line} className="text-sm leading-snug">
-                    {line}
-                  </li>
-                ))}
-              </ul>
+              <DoGroup title="Sudden cardiac arrest" sub="Collapsed + unresponsive" icon={HeartPulse} tone="arrest" items={r.arrest} />
+              <DoGroup title="Trauma" icon={Bone} tone="trauma" items={r.trauma} />
+              <DoGroup title="In both" icon={Repeat} tone="both" items={r.both} />
             </section>
             <section className="flex flex-col gap-1.5">
               <SectionLabel>WHAT YOU SAY</SectionLabel>
               {r.say.map((line, i) => (
-                <SayLine key={line} text={`“${line}”`} voice={`${r.id}-${i + 1}`} />
+                <SayLine key={line} text={`“${line}”`} voice={voiceId(r, i)} />
               ))}
             </section>
             <p className="rounded-lg bg-navy px-2.5 py-2 text-center font-display text-xs font-semibold tracking-wide text-gold">
-              If it is not your colour, do not reach in.
+              {r.id === "black"
+                ? "You are in overall control: step in if a colour is not doing their job."
+                : "If it is not your colour, do not reach in."}
             </p>
             <Note>
               <span className="font-semibold text-heading">On the PEAP poster: </span>
@@ -125,14 +116,14 @@ function RoleCard() {
           >
             <ChevronLeft className="size-4 shrink-0 text-gold-ink" aria-hidden />
             <span className="size-3 shrink-0 rounded-full ring-1 ring-black/15" style={{ background: prev.color }} aria-hidden />
-            <span className="truncate">{prev.name}</span>
+            <span className="truncate">{roleTag(prev)}</span>
           </button>
           <button
             type="button"
             onClick={() => go(next, "forward")}
             className="flex min-h-11 items-center justify-end gap-1.5 rounded-lg bg-paper px-3 py-2 text-right text-sm shadow-card active:scale-[0.98]"
           >
-            <span className="truncate">{next.name}</span>
+            <span className="truncate">{roleTag(next)}</span>
             <span className="size-3 shrink-0 rounded-full ring-1 ring-black/15" style={{ background: next.color }} aria-hidden />
             <ChevronRight className="size-4 shrink-0 text-gold-ink" aria-hidden />
           </button>
@@ -140,6 +131,45 @@ function RoleCard() {
         <p className="text-center text-[11px] text-muted pointer-fine:hidden">Swipe left or right for the next colour.</p>
       </div>
     </AppShell>
+  );
+}
+
+/** One part of "What you do", headed like the columns of FIFA's PEAP poster. */
+function DoGroup({
+  title,
+  sub,
+  icon: Icon,
+  tone,
+  items,
+}: {
+  title: string;
+  sub?: string;
+  icon: typeof HeartPulse;
+  tone: "arrest" | "trauma" | "both";
+  items: string[];
+}) {
+  if (!items.length) return null;
+  return (
+    <div
+      className={
+        tone === "arrest"
+          ? "rounded-lg border-l-4 border-danger bg-danger/10 px-3 py-2.5"
+          : tone === "trauma"
+            ? "rounded-lg border-l-4 border-[#1F6AA5] bg-[#1F6AA5]/10 px-3 py-2.5"
+            : "rounded-lg border-l-4 border-gold bg-gold/10 px-3 py-2.5"
+      }
+    >
+      <p className="flex items-center gap-1.5 font-display text-xs font-semibold tracking-[0.1em] text-heading">
+        <Icon className="size-4 shrink-0" aria-hidden />
+        {title.toUpperCase()}
+        {sub ? <span className="font-sans text-[11px] font-normal normal-case tracking-normal text-muted">· {sub}</span> : null}
+      </p>
+      <ul className="mt-1.5 flex list-disc flex-col gap-1 pl-4 text-sm leading-snug marker:text-muted">
+        {items.map((line) => (
+          <li key={line}>{line}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -172,7 +202,6 @@ function FifaCard({ id }: { id: keyof typeof fifaRoleCards }) {
       )}
       <a
         href={FIFA_ROLE_CARDS_PDF}
-        target="_blank"
         rel="noopener noreferrer"
         className="mt-2 inline-flex min-h-9 items-center text-xs font-medium text-heading underline underline-offset-2"
       >

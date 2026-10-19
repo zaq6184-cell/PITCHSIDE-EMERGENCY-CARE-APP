@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bandage, BriefcaseMedical, ChevronRight, HeartPulse, Stethoscope, Users } from "lucide-react";
+import { Bandage, Brain, BriefcaseMedical, ChevronRight, HeartPulse, Stethoscope, Users } from "lucide-react";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { moduleCover } from "@/lib/module-covers";
 import { stations } from "@/lib/stations";
@@ -16,6 +16,7 @@ const moduleLook: Record<string, { icon: typeof Users; tint: string; ink: string
   "3": { icon: Stethoscope, tint: "#E4EFF8", ink: "#1F6AA5" },
   "4": { icon: Bandage, tint: "#EFE8F7", ink: "#6B3FA0" },
   "5": { icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1A7F45" },
+  "6": { icon: Brain, tint: "#EFE8F7", ink: "#6B3FA0" },
 };
 
 function ModuleBadge({ id }: { id: string }) {

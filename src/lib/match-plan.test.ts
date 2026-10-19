@@ -3,12 +3,12 @@ import assert from "node:assert/strict";
 import { CHECKLIST, EMPTY_PLAN, isBlank, type MatchPlan, parsePlan, planText, prettyDate, telHref } from "./match-plan.ts";
 
 const roles = [
-  { id: "black", name: "BLACK", role: "Team leader" },
-  { id: "orange", name: "ORANGE", role: "Head · airway & cervical spine" },
-  { id: "red", name: "RED", role: "Chest" },
-  { id: "blue", name: "BLUE", role: "Pelvis" },
-  { id: "white", name: "WHITE", role: "Legs" },
-  { id: "green", name: "GREEN", role: "Equipment · bag & AED" },
+  { id: "black", num: 1, name: "BLACK", role: "Team leader" },
+  { id: "orange", num: 2, name: "ORANGE", role: "Head · airway & cervical spine" },
+  { id: "red", num: 3, name: "RED", role: "Chest" },
+  { id: "blue", num: 4, name: "BLUE", role: "Pelvis" },
+  { id: "white", num: 5, name: "WHITE", role: "Legs" },
+  { id: "green", num: 6, name: "GREEN", role: "Equipment · bag & AED" },
 ];
 
 describe("telHref", () => {
@@ -82,9 +82,9 @@ describe("planText", () => {
         "Match plan (FIFA PEAP)",
         "City Stadium · 15 Oct 2026 · KO 19:30",
         "Nearest hospital: General Hospital · 999",
-        "Team leader (Black): Dr Tan · +852 1234 — ensures the ambulance is called",
-        "Orange (Head · airway & cervical spine): Ali",
-        "Blue (Pelvis): Mei",
+        "Team leader (Black 1): Dr Tan · +852 1234 — ensures the ambulance is called",
+        "Orange 2 (Head · airway & cervical spine): Ali",
+        "Blue 4 (Pelvis): Mei",
         "",
         "Pitchside Emergency Care: https://example.org/app/",
       ].join("\n"),

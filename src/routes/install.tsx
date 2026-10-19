@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Check, Download, WifiOff } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Check, Download, WifiOff } from "lucide-react";
 import { InstallGuides, InstallNow, OfflineSave, ShareAppButton } from "@/components/install-app";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/install")({
 const PERKS = [
   "Opens full screen from its own icon, like any app.",
   "Works offline at the pitch once saved — no signal needed.",
-  "Shortcuts to the arrest timer, match plan, drill and carry timer: long-press the icon on Android, or right-click it on a computer.",
+  "Shortcuts to the arrest timer, match plan, drill and tools: long-press the icon on Android, or right-click it on a computer.",
   "Updates itself whenever you are online. No app store, no account, nothing collected.",
 ];
 
@@ -20,10 +20,6 @@ function InstallPage() {
   return (
     <AppShell tab="about">
       <div className="flex flex-col gap-3.5">
-        <Link to="/" className="inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold-ink">
-          <ArrowLeft className="size-4" strokeWidth={2.4} />
-          Home
-        </Link>
         <Panel>
           <div className="flex flex-col gap-3 px-3.5 py-4">
             <div className="flex items-center gap-3">

@@ -24,12 +24,11 @@ export function FifaVideoList() {
               <li key={d.href}>
                 <a
                   href={d.href}
-                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium leading-snug text-heading underline-offset-2 hover:underline"
                 >
                   {d.label}
-                  <span className="sr-only"> (opens in a new tab)</span>
+                  <span className="sr-only"> (opens on that website — use Back to return)</span>
                 </a>
               </li>
             ))}
@@ -212,10 +211,10 @@ function VideoRow({
           <ActionPill kind={open ? "close" : "play"} />
         </button>
       ) : (
-        <a href={watchUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 active:opacity-80">
+        <a href={watchUrl} rel="noopener noreferrer" className="flex items-center gap-3 active:opacity-80">
           {head}
           <ActionPill kind="open" />
-          <span className="sr-only"> — {watchLabel} (opens in a new tab)</span>
+          <span className="sr-only"> — {watchLabel} (opens on that website — use Back to return)</span>
         </a>
       )}
       {playHere && open ? (
@@ -234,12 +233,11 @@ function VideoRow({
         {children ?? <p className="text-sm leading-snug">{summary}</p>}
         <a
           href={watchUrl}
-          target="_blank"
           rel="noopener noreferrer"
           className="mt-1 inline-flex min-h-10 items-center gap-1.5 text-sm font-medium text-heading underline underline-offset-2"
         >
           {watchLabel}
-          <span className="sr-only"> (opens in a new tab)</span>
+          <span className="sr-only"> (opens on that website — use Back to return)</span>
         </a>
       </div>
     </div>
@@ -277,7 +275,6 @@ export function FifaClipCard({ clip }: { clip: FifaClip }) {
     <Panel>
       <a
         href={watchTarget(clip)}
-        target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-3 px-3.5 py-3 active:opacity-80"
       >
@@ -289,18 +286,17 @@ export function FifaClipCard({ clip }: { clip: FifaClip }) {
           </span>
         </span>
         <ActionPill kind="open" />
-        <span className="sr-only"> — {watchText(clip)} (opens in a new tab)</span>
+        <span className="sr-only"> — {watchText(clip)} (opens on that website — use Back to return)</span>
       </a>
       <div className="px-3.5 pb-3">
         <p className="text-sm leading-snug">{clip.why}</p>
         <a
           href={watchTarget(clip)}
-          target="_blank"
           rel="noopener noreferrer"
           className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-heading underline underline-offset-2"
         >
           {watchText(clip)}
-          <span className="sr-only"> (opens in a new tab)</span>
+          <span className="sr-only"> (opens on that website — use Back to return)</span>
         </a>
       </div>
     </Panel>

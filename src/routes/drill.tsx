@@ -89,7 +89,7 @@ function Drill() {
         </Panel>
         <SectionLabel>SEQUENCE</SectionLabel>
         <p className="text-xs leading-snug text-muted">
-          Recognise → compressions → AED and shock → airway and oxygen → prepare the transfer → stop-and-start carry.
+          Recognise → compressions → AED and shock → airway and oxygen → prepare the transfer (ambulance or buggy to the player) → carry only as a last resort.
         </p>
         <Link to="/guides" className="block active:scale-[0.99]">
           <Panel>

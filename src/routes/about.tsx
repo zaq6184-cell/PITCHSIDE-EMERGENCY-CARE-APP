@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ChevronRight, Download } from "lucide-react";
+import { ChevronRight, Download } from "lucide-react";
 import { ShareAppButton } from "@/components/install-app";
 import { SoundSettings } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -24,13 +24,6 @@ function About() {
   return (
     <AppShell tab="about">
       <div className="flex flex-col gap-3.5">
-        <Link
-          to="/"
-          className="inline-flex min-h-11 items-center gap-1.5 self-start font-display text-sm font-semibold tracking-wide text-gold-ink"
-        >
-          <ArrowLeft className="size-4" strokeWidth={2.4} />
-          Home
-        </Link>
         <Panel>
           <div className="px-3.5 py-3.5">
             <img

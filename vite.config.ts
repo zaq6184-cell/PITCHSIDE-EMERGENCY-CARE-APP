@@ -204,6 +204,7 @@ export default defineConfig(({ command, isPreview }) => ({
               { path: "/station/3" },
               { path: "/station/4" },
               { path: "/station/5" },
+              { path: "/station/6" },
               { path: "/quiz" },
               { path: "/install" },
               { path: "/plan" },
