@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
 import { Box, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AedTrainer } from "@/components/aed-trainer";
 import { FifaClipCard } from "@/components/fifa-video";
 import { SpineDrill3D } from "@/components/set-piece-3d";
@@ -10,8 +10,9 @@ import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/comp
 import { imageSize } from "@/lib/asset";
 import { setTransitionDirection, useSwipe } from "@/lib/gestures";
 import { moduleCover } from "@/lib/module-covers";
+import { record, step as did } from "@/lib/progress";
 import { haptic } from "@/lib/sound";
-import { type Block, getStation, stations } from "@/lib/stations";
+import { type Block, getStation, sectionSlug as slug, stations } from "@/lib/stations";
 
 export const Route = createFileRoute("/station/$id")({
   component: StationPage,
@@ -20,9 +21,6 @@ export const Route = createFileRoute("/station/$id")({
     return { meta: [{ title: st ? `Module ${st.id} · ${st.short} · Pitchside Emergency Care` : "Pitchside Emergency Care" }] };
   },
 });
-
-const slug = (t: string) =>
-  "s-" + t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 /** Chip label: the part before any dash, colon or bracket. */
 const shortTitle = (t: string) => {
@@ -44,6 +42,9 @@ function StationPage() {
     setTransitionDirection(d === "left" ? "forward" : "back");
     void navigate({ to: "/station/$id", params: { id: to.id } });
   });
+  useEffect(() => {
+    if (s) record(did.module, s.id);
+  }, [s]);
   if (!s) return <Navigate to="/stations" />;
   const cover = moduleCover(s.id);
 

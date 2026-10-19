@@ -36,7 +36,8 @@ function TimerPage() {
             <div className="px-3.5 pb-2 pt-4">
               <SectionLabel>CPR RHYTHM TRAINER</SectionLabel>
               <p className="mt-2 text-sm leading-snug text-muted">
-                Tap the red button as if compressing. The rate shows live — keep it between 100 and 120 a minute.
+                Tap the red button as if compressing — or turn on Count by motion and compress on a manikin with the phone in your
+                hands. The rate shows live: keep it between 100 and 120 a minute, and the voice coach tells you when to change.
               </p>
             </div>
             <CprTrainer />

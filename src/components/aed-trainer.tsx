@@ -1,13 +1,16 @@
-import { Check, ListChecks, RotateCcw, Volume2, X, Zap } from "lucide-react";
+import { Check, ListChecks, Maximize2, Minimize2, RotateCcw, Volume2, X, Zap } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { AedStage, AedView } from "@/components/aed-scene-3d";
 import { Loading3D, Safe } from "@/components/set-piece-3d";
 import { useSoundPrefs } from "@/components/sound-control";
 import { RoleChip } from "@/components/workshop";
 import { judgeTap, PAD_CHOICES, PAD_TARGETS, type PadId, type Tap } from "@/lib/aed-pads";
+import { record, step as did } from "@/lib/progress";
 import { aedCharge, haptic, say, setSoundPrefs, sfx, startMetronome, stopMetronome, stopVoice, tap as tapSound } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { aedPrompts, callouts } from "@/lib/voice";
+import { useFullscreen } from "@/lib/use-fullscreen";
+import { voicePan } from "@/lib/view3d";
 import { canRender3D } from "@/lib/webgl";
 
 const AedScene3D = lazy(() => import("@/components/aed-scene-3d"));
@@ -50,6 +53,7 @@ export function AedTrainer() {
   const [shockAt, setShockAt] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const [result, setResult] = useState<Result | null>(null);
+  const present = useFullscreen<HTMLDivElement>();
   const t0 = useRef(0);
   const run = useRef(0);
   const stopCharge = useRef<() => void>(() => {});
@@ -80,7 +84,7 @@ export function AedTrainer() {
   const speak = async (l: Line, min = 2600) => {
     setLine(l);
     const started = Date.now();
-    await say(l.id);
+    await say(l.id, false, l.who === "aed" ? (voicePan.aed ?? 0.3) : 0);
     const left = min - (Date.now() - started);
     if (left > 0) await wait(left);
   };
@@ -205,6 +209,7 @@ export function AedTrainer() {
       setLine(null);
       setStage("done");
       setResult(summary);
+      record(did.aed, summary);
     })();
   };
 
@@ -214,8 +219,8 @@ export function AedTrainer() {
   const flat = <AedFlat view={view} onTap={onTap} />;
 
   return (
-    <div>
-      <div className="relative">
+    <div ref={present.ref} className="present">
+      <div className="stage-box relative">
         {mode === "3d" ? (
           <Safe fallback={flat}>
             <Suspense fallback={<Loading3D />}>
@@ -231,11 +236,24 @@ export function AedTrainer() {
           {STAGE_LABEL[stage]}
           {stage === "pads" ? ` · ${count}/2` : ""}
         </p>
-        {stage !== "idle" ? (
-          <p className="pointer-events-none absolute right-2 top-2 rounded-full bg-[#0b1f3a]/80 px-2.5 py-1 font-display text-[11px] font-semibold tabular-nums tracking-wide text-[#f7f4ee]">
-            {clock(elapsed)}
-          </p>
-        ) : null}
+        <div className="absolute right-2 top-2 flex items-center gap-1.5">
+          {stage !== "idle" ? (
+            <p className="pointer-events-none rounded-full bg-[#0b1f3a]/80 px-2.5 py-1 font-display text-[11px] font-semibold tabular-nums tracking-wide text-[#f7f4ee]">
+              {clock(elapsed)}
+            </p>
+          ) : null}
+          {present.supported ? (
+            <button
+              type="button"
+              onClick={() => void present.toggle()}
+              aria-label={present.active ? "Leave full screen" : "Full screen — presenter mode"}
+              title={present.active ? "Leave full screen" : "Full screen"}
+              className="relative z-[2] grid size-9 place-items-center rounded-full bg-[#0b1f3a]/80 text-[#f7f4ee] active:scale-95"
+            >
+              {present.active ? <Minimize2 className="size-4" aria-hidden /> : <Maximize2 className="size-4" aria-hidden />}
+            </button>
+          ) : null}
+        </div>
         {line ? <AedCaption line={line} /> : null}
         {stage === "idle" ? (
           <div className="absolute inset-0 grid place-items-center bg-[#0b1f3a]/55 p-4">
@@ -385,7 +403,7 @@ function AedCaption({ line }: { line: Line }) {
       ) : (
         <span className="shrink-0 rounded-full bg-[#F2C811] px-2 py-0.5 font-display text-[11px] font-bold tracking-wide text-[#0b1f3a]">AED</span>
       )}
-      <p className="min-w-0 text-[13px] font-medium italic leading-snug text-[#f7f4ee]">“{line.text}”</p>
+      <p className="caption-text min-w-0 text-[13px] font-medium italic leading-snug text-[#f7f4ee]">“{line.text}”</p>
     </div>
   );
 }

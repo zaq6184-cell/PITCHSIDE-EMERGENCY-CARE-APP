@@ -3,6 +3,7 @@ import { type ReactNode, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { asset } from "@/lib/asset";
 import { useSceneVisibility } from "@/lib/use-scene-visibility";
+import { panFrom, voicePan } from "@/lib/view3d";
 import { type RoleId, workshop } from "@/lib/workshop";
 
 /**
@@ -1302,6 +1303,10 @@ function Rig({ autoRotate, angle, dragging }: { autoRotate: boolean; angle: Reac
     const y = (narrow ? 3.3 : 2.6) * k + 1.1 * (1 - k);
     camera.position.set(Math.sin(a) * r, y, Math.cos(a) * r + 0.45);
     camera.lookAt(0, 0.5 + (1 - k) * 2.2, -0.1);
+    // each colour's voice comes from their side of the screen
+    const cx = camera.position.x;
+    const cz = camera.position.z;
+    for (const s of SPOTS) voicePan[s.id] = panFrom(s.x, s.z, cx, cz, -cx, -0.1 - cz, 5);
   });
   return null;
 }

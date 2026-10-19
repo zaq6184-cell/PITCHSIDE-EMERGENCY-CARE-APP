@@ -8,6 +8,7 @@ import {
   HandHeart,
   HeartPulse,
   type LucideIcon,
+  MessageCircle,
   Play,
   RotateCcw,
   Share2,
@@ -20,6 +21,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { Panel, SectionLabel } from "@/components/workshop";
 import {
+  ADRENALINE_EVERY_MS,
   amiodaroneDose,
   type ArrestEventKind,
   type ArrestSession,
@@ -29,6 +31,7 @@ import {
   CYCLE_MS,
   eventLabel,
   first,
+  latest,
   logText,
   nextCheckIn,
   ONCE,
@@ -37,11 +40,12 @@ import {
   summary,
 } from "@/lib/arrest-log";
 import { shareOrCopy } from "@/lib/share";
-import { sfx, startMetronome, stopMetronome, tap } from "@/lib/sound";
+import { say, sfx, startMetronome, stopMetronome, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { useWakeLock } from "@/lib/wake-lock";
 
 const KEY = "pec-arrest-timer";
+const VOICE_KEY = "pec-arrest-voice";
 
 type Tone = "red" | "navy" | "gold" | "plain";
 const BUTTONS: { kind: ArrestEventKind; label: (s: ArrestSession) => string; icon: LucideIcon; tone: Tone }[] = [
@@ -95,7 +99,9 @@ export function ArrestTimer() {
   const [beat, setBeat] = useState(false);
   const [alarm, setAlarm] = useState(false);
   const [note, setNote] = useState("");
+  const [voice, setVoice] = useState(true);
   const cued = useRef(0);
+  const adrenalineCued = useRef<number | null>(null);
   const running = Boolean(s && !s.endedAt);
 
   useEffect(() => {
@@ -109,6 +115,14 @@ export function ArrestTimer() {
     if (saved) {
       setS(saved);
       cued.current = checksDue(saved, t);
+      // a reminder already due before the reload is not spoken again
+      const dose = latest(saved, "adrenaline");
+      if (dose && t - dose.at >= ADRENALINE_EVERY_MS) adrenalineCued.current = dose.at;
+    }
+    try {
+      setVoice(localStorage.getItem(VOICE_KEY) !== "off");
+    } catch {
+      // storage blocked: the voice stays on
     }
     setNow(t);
     setReady(true);
@@ -132,7 +146,7 @@ export function ArrestTimer() {
     return () => window.clearInterval(id);
   }, [running]);
 
-  // every 2 minutes: a whistle, a buzz and a banner for the rhythm check
+  // every 2 minutes: a whistle, a buzz, a banner — and Black calling the rhythm check
   useEffect(() => {
     if (!s || !running) return;
     const due = checksDue(s, now);
@@ -140,9 +154,19 @@ export function ArrestTimer() {
       sfx("whistle", 0.6);
       vibrate([200, 100, 200]);
       setAlarm(true);
+      if (voice) window.setTimeout(() => void say("black-s2"), 900);
     }
     cued.current = due;
-  }, [s, now, running]);
+  }, [s, now, running, voice]);
+
+  // 3 minutes after each adrenaline dose (for trained teams), a spoken reminder — once per dose
+  useEffect(() => {
+    if (!s || !running) return;
+    const last = latest(s, "adrenaline");
+    if (!last || now - last.at < ADRENALINE_EVERY_MS || adrenalineCued.current === last.at) return;
+    adrenalineCued.current = last.at;
+    if (voice) void say("black-s3");
+  }, [s, now, running, voice]);
 
   useEffect(() => {
     if (!alarm) return;
@@ -233,7 +257,7 @@ export function ArrestTimer() {
           <ul className="flex flex-col gap-1.5 text-sm leading-snug">
             {[
               "The clock runs from the collapse. Tap each step as it happens.",
-              "Every 2 minutes a whistle and a buzz call the rhythm check — swap the person compressing.",
+              "Every 2 minutes a whistle, a buzz and Black's voice call the rhythm check — swap the person compressing.",
               "At the end you get the timings for the debrief, ready to share. The screen stays on while it runs.",
             ].map((t) => (
               <li key={t} className="flex gap-2">
@@ -309,7 +333,7 @@ export function ArrestTimer() {
                 );
               })}
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-4 gap-2">
               <button
                 type="button"
                 onClick={undo}
@@ -333,6 +357,29 @@ export function ArrestTimer() {
               >
                 <Activity className={cn("size-4", beat && "sound-wave")} aria-hidden />
                 Beat 110
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  tap();
+                  setVoice((v) => {
+                    try {
+                      localStorage.setItem(VOICE_KEY, v ? "off" : "on");
+                    } catch {
+                      // storage blocked
+                    }
+                    return !v;
+                  });
+                }}
+                aria-pressed={voice}
+                aria-label={voice ? "Spoken prompts on" : "Spoken prompts off"}
+                className={cn(
+                  "inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl font-display text-xs font-semibold tracking-wide active:scale-95",
+                  voice ? "bg-navy text-gold" : "border border-line bg-paper text-heading",
+                )}
+              >
+                <MessageCircle className="size-4" aria-hidden />
+                Voice
               </button>
               <button
                 type="button"

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bandage, Brain, BriefcaseMedical, ChevronRight, HeartPulse, Stethoscope, Users } from "lucide-react";
+import { SearchBar } from "@/components/search";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { moduleCover } from "@/lib/module-covers";
 import { stations } from "@/lib/stations";
@@ -58,9 +59,10 @@ function Stations() {
     <AppShell tab="stations" heading="Skill modules">
       <div className="flex flex-col gap-3.5">
         <Note>
-          <span className="font-semibold text-heading">Five skill modules. </span>
+          <span className="font-semibold text-heading">Six skill modules. </span>
           Study notes for each part of the pitchside response, in the order a team would train them.
         </Note>
+        <SearchBar label="Search every module…" />
         <SectionLabel>SKILL MODULES</SectionLabel>
         {stations.map((s) => (
           <Link key={s.id} to="/station/$id" params={{ id: s.id }} className="block active:scale-[0.99]">

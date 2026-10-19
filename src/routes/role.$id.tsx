@@ -1,10 +1,12 @@
 import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Bone, ChevronLeft, ChevronRight, HeartPulse, Repeat } from "lucide-react";
 import { PositionDiagram } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { AppShell, Note, Panel, SayLine, SectionLabel } from "@/components/workshop";
 import { setTransitionDirection, useSwipe } from "@/lib/gestures";
 import { roleImage } from "@/lib/role-images";
+import { record, step as did } from "@/lib/progress";
 import { haptic } from "@/lib/sound";
 import { getRole, isRoleId, roleTag, roleWord, voiceId, workshop } from "@/lib/workshop";
 import { FIFA_ROLE_CARDS_PDF, fifaRoleCards } from "@/lib/fifa-roles";
@@ -30,6 +32,9 @@ function RoleCard() {
     void navigate({ to: "/role/$id", params: { id: to.id } });
   };
   const swipe = useSwipe<HTMLDivElement>((d) => (d === "left" ? go(next, "forward") : go(prev, "back")));
+  useEffect(() => {
+    if (isRoleId(id)) record(did.role, id);
+  }, [id]);
   if (!isRoleId(id)) return <Navigate to="/" />;
   const r = getRole(id);
   if (!r) return <Navigate to="/" />;

@@ -36,6 +36,9 @@ export type Block =
 
 export type Section = { title: string; blocks: Block[] };
 
+/** The anchor of a section on its module page, e.g. "s-cervical-collar". */
+export const sectionSlug = (t: string) => "s-" + t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
 export type StationId = "1" | "2" | "3" | "4" | "5" | "6";
 
 export type Station = {

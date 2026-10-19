@@ -1,7 +1,8 @@
 import { Link, useCanGoBack, useRouter, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, ArrowUp, BookOpen, ChevronRight, ClipboardList, Info, ListOrdered, PlayCircle, Timer, Users, Volume2 } from "lucide-react";
+import { ArrowLeft, ArrowUp, BookOpen, ChevronRight, ClipboardList, Info, ListOrdered, PlayCircle, Search, Timer, Users, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { InstallHeaderButton, OfflineBanner } from "@/components/install-app";
+import { openSearch } from "@/lib/search-open";
 import { SoundButton } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { asset } from "@/lib/asset";
@@ -144,6 +145,17 @@ export function AppShell({
         {home ? null : (
           <div className="mt-5 flex items-center justify-between border-t border-line pt-1.5">
             <BackButton />
+            <button
+              type="button"
+              onClick={() => {
+                tap();
+                openSearch();
+              }}
+              className="inline-flex min-h-11 items-center gap-1.5 font-display text-sm font-semibold tracking-wide text-muted active:scale-95"
+            >
+              <Search className="size-4" strokeWidth={2.4} aria-hidden />
+              Search
+            </button>
             <button
               type="button"
               onClick={() => {

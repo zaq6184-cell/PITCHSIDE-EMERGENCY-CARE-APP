@@ -1,13 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, Hand, HeartPulse, Pause, Play, Volume2 } from "lucide-react";
+import { ChevronRight, Hand, HeartPulse, Maximize2, Minimize2, Pause, Play, Volume2 } from "lucide-react";
 import { Component, lazy, type ReactNode, Suspense, useEffect, useRef, useState } from "react";
 import { PositionDiagram } from "@/components/position-diagram";
 import { useSoundPrefs } from "@/components/sound-control";
 import { RoleChip } from "@/components/workshop";
 import { haptic, say, setSoundPrefs, sfx, type SfxName, startMetronome, stopMetronome, stopVoice, tap } from "@/lib/sound";
+import { useFullscreen } from "@/lib/use-fullscreen";
 import { cn } from "@/lib/utils";
+import { voicePan } from "@/lib/view3d";
 import { canRender3D } from "@/lib/webgl";
 import { useSwipe } from "@/lib/gestures";
+import { record, step as did } from "@/lib/progress";
 import { type DrillStep, spineCallouts, spineSteps } from "@/lib/spine-drill";
 import { type Callout, callouts, drillCallouts } from "@/lib/voice";
 import { type RoleId, roleTag, workshop } from "@/lib/workshop";
@@ -116,7 +119,7 @@ function Caption({ c }: { c: Callout | null }) {
       aria-live="polite"
     >
       <RoleChip id={c.role} />
-      <p className="min-w-0 text-[13px] font-medium italic leading-snug text-[#f7f4ee]">“{c.text}”</p>
+      <p className="caption-text min-w-0 text-[13px] font-medium italic leading-snug text-[#f7f4ee]">“{c.text}”</p>
     </div>
   );
 }
@@ -146,7 +149,7 @@ export function RoleExplorer3D() {
     if (next) {
       const c = callouts[`${next}-1`];
       setCaption(c);
-      void say(c.id);
+      void say(c.id, false, voicePan[next] ?? 0);
       window.setTimeout(() => setCaption((now) => (now?.id === c.id ? null : now)), 3200);
     } else {
       setCaption(null);
@@ -237,6 +240,7 @@ function StepPlayer3D({
   const [phase, setPhase] = useState(0);
   const prefs = useSoundPrefs();
   const [box, inView] = useInView<HTMLDivElement>();
+  const present = useFullscreen<HTMLDivElement>();
   const cur = steps[step - 1];
   const autoRef = useRef(auto);
   const onStepRef = useRef(onStep);
@@ -252,6 +256,11 @@ function StepPlayer3D({
       onStep(next);
     }
   });
+
+  // every step watched counts towards the drill's badge
+  useEffect(() => {
+    record(did.drill, scenario, step);
+  }, [scenario, step]);
 
   // each step: a whoosh, then the script in order
   useEffect(() => {
@@ -281,7 +290,7 @@ function StepPlayer3D({
         const c = callouts[id];
         if (c) setCaption(c);
         const started = Date.now();
-        await say(id);
+        await say(id, false, c ? (voicePan[c.role] ?? 0) : 0);
         const left = 2300 - (Date.now() - started); // keep each caption up long enough to read
         if (left > 0) await wait(left);
         await wait(200);
@@ -312,7 +321,8 @@ function StepPlayer3D({
 
   return (
     <div ref={box}>
-      <div className="relative">
+      <div ref={present.ref} className="present">
+      <div className="stage-box relative">
         <Stage step={step} phase={phase} scenario={scenario} acting={cur.who} />
         <p className="pointer-events-none absolute left-2 top-2 max-w-[calc(100%-1rem)] truncate rounded-full bg-[#0b1f3a]/75 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
           STEP {cur.n} · {cur.title.toUpperCase()}
@@ -336,6 +346,17 @@ function StepPlayer3D({
             >
               <Volume2 className="size-3.5" aria-hidden />
               Hear the team
+            </button>
+          ) : null}
+          {present.supported ? (
+            <button
+              type="button"
+              onClick={() => void present.toggle()}
+              aria-label={present.active ? "Leave full screen" : "Full screen — presenter mode"}
+              title={present.active ? "Leave full screen" : "Full screen"}
+              className="grid size-9 place-items-center rounded-full bg-[#0b1f3a]/75 text-[#f7f4ee] active:scale-95"
+            >
+              {present.active ? <Minimize2 className="size-4" aria-hidden /> : <Maximize2 className="size-4" aria-hidden />}
             </button>
           ) : null}
         </div>
@@ -384,6 +405,7 @@ function StepPlayer3D({
           {cur.lines[0]}
         </p>
         <p className="px-3.5 pb-3.5 text-[11px] text-muted pointer-fine:hidden">Swipe here for the next step.</p>
+      </div>
       </div>
     </div>
   );

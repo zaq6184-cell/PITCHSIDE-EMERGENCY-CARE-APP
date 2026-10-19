@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { InstallCard } from "@/components/install-app";
+import { TrainingCard } from "@/components/progress-ui";
+import { SearchBar } from "@/components/search";
 import { PositionDiagram } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { RoleExplorer3D } from "@/components/set-piece-3d";
@@ -48,7 +50,9 @@ function Home() {
     <AppShell tab="home">
       <div className="flex flex-col gap-3.5">
         <IntroHero />
+        <SearchBar />
         <InstallCard />
+        <TrainingCard />
         <Note>
           <span className="font-semibold text-heading">{workshop.rule}</span>
         </Note>
@@ -257,6 +261,29 @@ function Home() {
 }
 
 /** Top of Home: a short looping intro film behind the title, with the two quickest ways in. */
+/** A monitor's heartbeat trace along the foot of the banner, with a bright sweep running across it. */
+function HeartbeatTrace() {
+  const beat = (x: number) => `L${x + 26},20 Q${x + 31},15 ${x + 36},20 L${x + 44},20 L${x + 48},4 L${x + 53},33 L${x + 57},20 L${x + 66},20 Q${x + 74},11 ${x + 82},20 L${x + 100},20`;
+  const d = `M0,20 ${[0, 100, 200, 300].map(beat).join(" ")}`;
+  return (
+    <svg viewBox="0 0 400 40" preserveAspectRatio="none" className="pointer-events-none absolute inset-x-0 bottom-1 h-8 w-full" aria-hidden="true">
+      <path d={d} fill="none" stroke="var(--color-gold)" strokeOpacity="0.28" strokeWidth="1.4" vectorEffect="non-scaling-stroke" />
+      <path
+        d={d}
+        pathLength={600}
+        fill="none"
+        stroke="#ffe08a"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+        className="ecg-sweep"
+        style={{ filter: "drop-shadow(0 0 3px rgba(255, 214, 102, 0.9))" }}
+      />
+    </svg>
+  );
+}
+
 function IntroHero() {
   const film = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -289,6 +316,7 @@ function IntroHero() {
           <source src={asset("/video/intro.mp4")} type="video/mp4" />
         </video>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-navy to-transparent" />
+        <HeartbeatTrace />
         <p className="absolute right-2 top-2 rounded-full bg-navy/70 px-2 py-0.5 text-[10px] font-medium text-on-navy">
           AI-generated illustration
         </p>

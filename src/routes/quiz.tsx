@@ -5,6 +5,7 @@ import { Confetti } from "@/components/confetti";
 import { DIAGRAM_VIEWBOX, DiagramBase, MARKS, PositionDiagram, RoleDisc } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
+import { record, step as did } from "@/lib/progress";
 import { haptic, say, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { type RoleId, roleTag, voiceId, workshop } from "@/lib/workshop";
@@ -26,7 +27,7 @@ function QuizPage() {
       <div className="flex flex-col gap-3.5">
         <Note>
           <span className="font-semibold text-heading">Test yourself. </span>
-          Two quick games built from this guide's role cards. Nothing is saved or sent anywhere.
+          Two quick games built from this guide's role cards. Your best score stays on this device; nothing is sent anywhere.
         </Note>
         <div className="grid grid-cols-2 gap-2" role="tablist" aria-label="Games">
           {(
@@ -100,6 +101,11 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
   const [picked, setPicked] = useState<RoleId | null>(null);
   const [score, setScore] = useState(0);
   const [burst, setBurst] = useState(0);
+
+  // a finished round counts towards the quiz badge (best score, on this device only)
+  useEffect(() => {
+    if (round && i >= round.length) record(did.quiz, score);
+  }, [round, i, score]);
 
   const start = () => {
     tap();
@@ -345,6 +351,7 @@ function PlaceTheTeam() {
     if (correct === MARKS.length) {
       sfx("cheer", 0.5);
       setBurst((v) => v + 1);
+      record(did.placed);
     } else {
       sfx("wrong", 0.4);
     }

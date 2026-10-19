@@ -1,6 +1,8 @@
 import { createRootRoute, HeadContent, Outlet, ScriptOnce, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
+import { BadgeToaster } from "@/components/progress-ui";
+import { SearchHost } from "@/components/search";
 import appCss from "../styles.css?url";
 import { asset } from "@/lib/asset";
 import { useEffect } from "react";
@@ -68,6 +70,8 @@ export const Route = createRootRoute({
         <PwaRegister />
         <AuthProvider>
           <Outlet />
+          <SearchHost />
+          <BadgeToaster />
         </AuthProvider>
         <Scripts />
       </body>

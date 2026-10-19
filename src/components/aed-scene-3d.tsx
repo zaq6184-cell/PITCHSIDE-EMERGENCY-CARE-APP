@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { CPR_HZ, GOLD, Lights, PLAYER_Y, Player, Stadium, Team } from "@/components/scene-3d";
 import { PAD_TARGETS, type PadId, type Tap } from "@/lib/aed-pads";
 import { useSceneVisibility } from "@/lib/use-scene-visibility";
+import { panFrom, voicePan } from "@/lib/view3d";
 
 /**
  * The AED pads trainer in 3D: a close view over the player's chest from the left, where Green kneels.
@@ -259,6 +260,7 @@ function AedRig({ angle, dragging, still }: { angle: React.RefObject<number>; dr
     const h = narrow ? 2.15 : 1.95;
     camera.position.set(target.x + Math.cos(a) * r, target.y + h, target.z + Math.sin(a) * r);
     camera.lookAt(target);
+    voicePan.aed = panFrom(AED_POS[0], AED_POS[2], camera.position.x, camera.position.z, -Math.cos(a), -Math.sin(a), 2);
   });
   return null;
 }

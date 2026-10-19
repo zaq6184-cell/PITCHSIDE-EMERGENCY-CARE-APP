@@ -171,6 +171,8 @@ export function tapClick() {
 /** A tiny vibration on phones that support it (Android); quiet when sound effects are off. */
 export function haptic(pattern: number | number[]) {
   if (typeof navigator === "undefined" || !getSoundPrefs().sfx) return;
+  // browsers refuse (and log an error) before the first tap on the page, e.g. a badge earned on a deep link
+  if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return;
   try {
     navigator.vibrate?.(pattern);
   } catch {
@@ -245,12 +247,25 @@ export function stopMetronome() {
 
 // ------------------------------------------------------------------ spoken call-outs
 let voiceEl: HTMLAudioElement | null = null;
-/** Plays one call-out; resolves when it ends. `force` plays it even with effects off (a direct tap). */
-export function say(id: string, force = false): Promise<void> {
+/**
+ * Plays one call-out; resolves when it ends. `force` plays it even with effects off (a direct tap).
+ * `pan` (-1 left … 1 right) places the voice where its speaker is in a 3D scene — through the audio
+ * engine, so only once it is running; otherwise the voice simply plays straight out.
+ */
+export function say(id: string, force = false, pan = 0): Promise<void> {
   if (typeof window === "undefined" || (!force && !getSoundPrefs().sfx)) return Promise.resolve();
   stopVoice();
   const el = new Audio(asset(`/audio/voice/${id}.mp3`));
   voiceEl = el;
+  if (pan && ac && ac.state === "running") {
+    try {
+      const panner = ac.createStereoPanner();
+      panner.pan.value = Math.max(-1, Math.min(1, pan));
+      ac.createMediaElementSource(el).connect(panner).connect(ac.destination);
+    } catch {
+      // no panning here: the voice plays straight out
+    }
+  }
   duck(1); // music steps back while someone speaks
   return new Promise((resolve) => {
     let over = false;

@@ -594,6 +594,71 @@ html[data-vt="back"]::view-transition-new(main-content) {
   }
 }
 
+/* badges: the toast slides up; earned badges get a soft gold lift */
+.toast-in {
+  animation: toast-in 0.45s var(--ease-out-smooth) both;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+}
+
+.badge-earned {
+  box-shadow:
+    0 6px 14px -8px rgba(201, 162, 39, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* search opens with a short drop; its own close button replaces the browser's clear "×" */
+.search-field::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-in {
+  animation: search-in 0.28s var(--ease-out-smooth) both;
+}
+
+@keyframes search-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.985);
+  }
+}
+
+/* Home banner: a heartbeat trace with a bright sweep running along it */
+.ecg-sweep {
+  stroke-dasharray: 70 530;
+  animation: ecg-sweep 2.8s linear infinite;
+}
+
+@keyframes ecg-sweep {
+  from {
+    stroke-dashoffset: 600;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* presenter mode: a 3D player full screen, the scene as tall as the screen allows */
+.present:fullscreen {
+  overflow-y: auto;
+  background: var(--color-paper);
+}
+
+.present:fullscreen .stage-box [class*="aspect-"] {
+  aspect-ratio: auto;
+  height: calc(100dvh - 9.5rem);
+}
+
+.present:fullscreen .caption-text {
+  font-size: 1.15rem;
+}
+
 /* quiz celebration */
 .confetti-piece {
   position: absolute;
