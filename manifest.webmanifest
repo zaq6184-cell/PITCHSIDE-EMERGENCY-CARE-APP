@@ -40,8 +40,8 @@
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
-      "name": "10-second carry timer",
-      "short_name": "Carry timer",
+      "name": "Tools — CPR trainer and carry timer",
+      "short_name": "Tools",
       "url": "./timer",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },

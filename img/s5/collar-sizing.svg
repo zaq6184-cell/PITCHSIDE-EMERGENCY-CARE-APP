@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" font-family="Arial, Helvetica, sans-serif">
+  <title>Sizing a cervical collar</title>
+  <desc>Left: with the head neutral, follow a line from the chin straight back until it crosses the sternomastoid, then count fingerbreadths down to the top of the trapezius. Right: the opened collar, front view; put the same fingers against the collar from the sizing line down to the bottom edge of the hard plastic, not the foam, and pick the nearest size, the smaller if between two.</desc>
+  <rect width="960" height="540" rx="18" fill="#FFFFFF"/>
+  <line x1="480" y1="28" x2="480" y2="512" stroke="#D6D1C4" stroke-width="2"/>
+
+  <!-- 1 · measure the player -->
+  <g>
+    <circle cx="40" cy="40" r="17" fill="#0B1F3A"/>
+    <text x="40" y="47" font-size="20" font-weight="700" fill="#C9A227" text-anchor="middle">1</text>
+    <text x="66" y="48" font-size="25" font-weight="700" fill="#0B1F3A">Measure the player</text>
+    <text x="66" y="74" font-size="15" fill="#5B6470">Head in a neutral position, seen from the side</text>
+
+    <!-- head, neck and shoulders, facing right -->
+    <path d="M70 452 L70 424 C74 402 108 390 142 384 C164 378 178 362 180 336 C180 306 170 282 166 258 C152 206 170 138 226 118 C266 104 292 124 296 146 C300 160 310 172 314 184 C320 196 330 204 334 212 C334 218 326 222 317 223 C322 230 322 236 318 238 C322 244 320 250 314 252 C318 258 319 266 315 271 C311 282 300 288 288 290 C284 306 282 342 288 376 C306 388 330 402 342 426 L348 452 Z" fill="#E9D8C6" stroke="#0B1F3A" stroke-width="2.5" stroke-linejoin="round"/>
+    <ellipse cx="208" cy="212" rx="12" ry="21" fill="#DDC3AB" stroke="#0B1F3A" stroke-width="2"/>
+    <!-- sternomastoid: behind the ear down to the top of the breastbone -->
+    <path d="M198 242 L282 376" stroke="#B5543F" stroke-opacity="0.45" stroke-width="16" stroke-linecap="round"/>
+    <!-- top of the trapezius, where the collar will sit -->
+    <path d="M180 336 C206 344 236 356 270 372" fill="none" stroke="#0B1F3A" stroke-width="2.5"/>
+
+    <!-- chin line, straight back to the sternomastoid -->
+    <line x1="314" y1="269" x2="215" y2="269" stroke="#0B1F3A" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <circle cx="215" cy="269" r="5" fill="#C0392B" stroke="#FFFFFF" stroke-width="1.5"/>
+
+    <!-- fingerbreadths: three fingers, an example -->
+    <g fill="#F2C29B" stroke="#0B1F3A" stroke-width="2">
+      <rect x="184" y="272" width="62" height="25" rx="12.5"/>
+      <rect x="184" y="299" width="62" height="25" rx="12.5"/>
+      <rect x="184" y="326" width="62" height="25" rx="12.5"/>
+    </g>
+    <!-- the distance to count -->
+    <g stroke="#C0392B" stroke-width="3" fill="#C0392B">
+      <line x1="262" y1="276" x2="262" y2="344"/>
+      <path d="M262 269 L255 282 L269 282 Z" stroke="none"/>
+      <path d="M262 351 L255 338 L269 338 Z" stroke="none"/>
+    </g>
+
+    <!-- labels -->
+    <g font-size="15" fill="#0B1F3A">
+      <text x="326" y="274" font-weight="700">Chin line</text>
+      <text x="326" y="293" fill="#5B6470">straight back</text>
+      <text x="300" y="338" font-weight="700" fill="#C0392B">Count the</text>
+      <text x="300" y="356" font-weight="700" fill="#C0392B">fingerbreadths</text>
+      <line x1="132" y1="218" x2="204" y2="252" stroke="#0B1F3A" stroke-width="1.5"/>
+      <text x="24" y="223" font-weight="700">Sternomastoid</text>
+      <line x1="104" y1="360" x2="196" y2="341" stroke="#0B1F3A" stroke-width="1.5"/>
+      <text x="24" y="352" font-weight="700">Top of the</text>
+      <text x="24" y="370" font-weight="700">trapezius</text>
+    </g>
+  </g>
+
+  <!-- 2 · set the collar -->
+  <g>
+    <circle cx="512" cy="40" r="17" fill="#0B1F3A"/>
+    <text x="512" y="47" font-size="20" font-weight="700" fill="#C9A227" text-anchor="middle">2</text>
+    <text x="538" y="48" font-size="25" font-weight="700" fill="#0B1F3A">Size the collar</text>
+    <text x="538" y="74" font-size="15" fill="#5B6470">Opened out flat, front view</text>
+
+    <!-- foam pad showing below the hard plastic -->
+    <path d="M556 336 C640 350 810 350 896 336 L896 350 C810 364 640 364 556 350 Z" fill="#9AA6B2" stroke="#0B1F3A" stroke-width="1.5"/>
+    <!-- the collar body (hard plastic) -->
+    <path d="M520 252 C560 244 610 236 652 232 C664 206 676 178 690 166 C704 182 714 194 726 196 C738 194 748 182 762 166 C776 178 788 206 800 232 C842 236 892 244 932 252 C944 256 948 268 944 282 L938 316 C936 328 928 334 916 336 C850 346 790 350 726 350 C662 350 602 346 536 336 C524 334 516 328 514 316 L508 282 C504 268 508 256 520 252 Z" fill="#F4F1EA" stroke="#0B1F3A" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- chin rest -->
+    <path d="M690 166 C704 182 714 194 726 196 C738 194 748 182 762 166" fill="none" stroke="#0B1F3A" stroke-width="5" stroke-linecap="round"/>
+    <!-- airway / pulse access opening -->
+    <ellipse cx="726" cy="284" rx="22" ry="34" fill="#FFFFFF" stroke="#0B1F3A" stroke-width="2"/>
+    <!-- hook-and-loop strap at one end -->
+    <rect x="928" y="270" width="24" height="44" rx="6" fill="#0B1F3A"/>
+    <!-- sizing marker -->
+    <rect x="644" y="236" width="12" height="44" rx="3" fill="#0B1F3A"/>
+    <line x1="630" y1="246" x2="670" y2="246" stroke="#0B1F3A" stroke-width="3"/>
+
+    <!-- the same fingers on the collar -->
+    <g fill="#F2C29B" stroke="#0B1F3A" stroke-width="2">
+      <rect x="560" y="249" width="62" height="26" rx="13"/>
+      <rect x="560" y="277" width="62" height="26" rx="13"/>
+      <rect x="560" y="305" width="62" height="26" rx="13"/>
+    </g>
+    <!-- sizing line down to the bottom of the hard plastic -->
+    <g stroke="#C0392B" stroke-width="3" fill="#C0392B">
+      <line x1="684" y1="253" x2="684" y2="333"/>
+      <path d="M684 246 L677 259 L691 259 Z" stroke="none"/>
+      <path d="M684 341 L677 328 L691 328 Z" stroke="none"/>
+    </g>
+
+    <!-- labels -->
+    <g font-size="15" fill="#0B1F3A">
+      <line x1="600" y1="128" x2="646" y2="240" stroke="#0B1F3A" stroke-width="1.5"/>
+      <text x="520" y="110" font-weight="700">Sizing line</text>
+      <text x="520" y="128" fill="#5B6470">on the sizing marker</text>
+      <line x1="640" y1="396" x2="676" y2="346" stroke="#0B1F3A" stroke-width="1.5"/>
+      <text x="520" y="414" font-weight="700">Bottom edge of the hard plastic</text>
+      <line x1="842" y1="396" x2="842" y2="362" stroke="#0B1F3A" stroke-width="1.5"/>
+      <text x="934" y="414" font-weight="700" text-anchor="end">Foam pad —</text>
+      <text x="934" y="432" fill="#5B6470" text-anchor="end">not included</text>
+    </g>
+  </g>
+
+  <!-- how to use the two measurements -->
+  <g font-size="15" fill="#0B1F3A">
+    <text x="24" y="482">Follow the chin line straight back until it crosses</text>
+    <text x="24" y="502">the sternomastoid, then count fingerbreadths down</text>
+    <text x="24" y="522">to the top of the trapezius.</text>
+    <text x="512" y="482">Put the same fingers on the collar, from the sizing</text>
+    <text x="512" y="502">line to the bottom of the hard plastic. Choose the</text>
+    <text x="512" y="522"><tspan font-weight="700">nearest size — between two, start smaller.</tspan></text>
+  </g>
+</svg>
