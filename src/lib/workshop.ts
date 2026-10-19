@@ -101,8 +101,9 @@ export const workshop = {
         "Green, AED on as soon as it is here.",
         "Bring the ambulance onto the pitch, to the player.",
         "Ready to lift. On three. One, two, three, LIFT.",
+        "Possible neck injury. Orange, hold the head.",
       ],
-      voices: ["black-1", "black-2", "black-4", "black-3"],
+      voices: ["black-1", "black-2", "black-4", "black-3", "black-s1"],
     },
     {
       id: "orange",
@@ -123,7 +124,14 @@ export const workshop = {
         "Jaw thrust only if you are experienced in it.",
       ],
       both: ["Control the log roll from the head — you give the count."],
-      say: ["Airway open. i-gel in.", "Holding the head. Ready to roll.", "Roll on three. One, two, three, ROLL."],
+      say: [
+        "Airway open. i-gel in.",
+        "I'm holding your head. Try not to move.",
+        "Holding the head. Ready to roll.",
+        "Roll on three. One, two, three, ROLL.",
+        "Blocks on and taped. Releasing the head.",
+      ],
+      voices: ["orange-1", "orange-s1", "orange-2", "orange-3", "orange-s2"],
     },
     {
       id: "red",
@@ -145,7 +153,14 @@ export const workshop = {
         "Apply treatment: trauma mask, airway adjuncts, cervical collar.",
       ],
       both: ["Take the CHEST in the log roll. If there is no team leader, you lead."],
-      say: ["Player is unresponsive!", "No breathing, no pulse. Starting compressions."],
+      say: [
+        "Player is unresponsive!",
+        "No breathing, no pulse. Starting compressions.",
+        "Airway clear. Breathing normally.",
+        "Neck tender in the midline. We can't clear the spine.",
+        "Collar on. Mouth still opens.",
+      ],
+      voices: ["red-1", "red-2", "red-s1", "red-s3", "red-s2"],
     },
     {
       id: "blue",

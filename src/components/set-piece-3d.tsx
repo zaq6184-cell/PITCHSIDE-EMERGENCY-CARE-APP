@@ -6,14 +6,16 @@ import { useSoundPrefs } from "@/components/sound-control";
 import { RoleChip } from "@/components/workshop";
 import { haptic, say, setSoundPrefs, sfx, type SfxName, startMetronome, stopMetronome, stopVoice, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
+import { canRender3D } from "@/lib/webgl";
 import { useSwipe } from "@/lib/gestures";
+import { type DrillStep, spineCallouts, spineSteps } from "@/lib/spine-drill";
 import { type Callout, callouts, drillCallouts } from "@/lib/voice";
 import { type RoleId, roleTag, workshop } from "@/lib/workshop";
 
 const Scene3D = lazy(() => import("@/components/scene-3d"));
 
 /** The flat diagram stands in while the 3D scene loads, and whenever 3D is not available. */
-class Safe extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
+export class Safe extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
@@ -23,17 +25,8 @@ class Safe extends Component<{ fallback: ReactNode; children: ReactNode }, { fai
   }
 }
 
-function canRender3D() {
-  try {
-    const c = document.createElement("canvas");
-    return Boolean(c.getContext("webgl2") || c.getContext("webgl"));
-  } catch {
-    return false;
-  }
-}
-
 /** While the 3D team loads: a shimmer and the six colours bouncing. */
-function Loading3D() {
+export function Loading3D() {
   const dots = ["#1C1C1C", "#E36B12", "#C0392B", "#1F6AA5", "#F4F4F1", "#1A7F45"];
   return (
     <div className="relative grid aspect-square w-full place-items-center overflow-hidden bg-navy sm:aspect-video" role="status" aria-label="Loading the 3D scene">
@@ -50,7 +43,23 @@ function Loading3D() {
   );
 }
 
-function Stage({ selected, onSelect, step }: { selected?: RoleId; onSelect?: (id: RoleId) => void; step?: number }) {
+type Scenario = "arrest" | "spine";
+
+function Stage({
+  selected,
+  onSelect,
+  step,
+  phase,
+  scenario,
+  acting,
+}: {
+  selected?: RoleId;
+  onSelect?: (id: RoleId) => void;
+  step?: number;
+  phase?: number;
+  scenario?: Scenario;
+  acting?: readonly RoleId[];
+}) {
   // 3D only in the browser, only where the device can draw it, and only once it is near the screen
   const box = useRef<HTMLDivElement>(null);
   const [ok, setOk] = useState<boolean | null>(null);
@@ -81,7 +90,15 @@ function Stage({ selected, onSelect, step }: { selected?: RoleId; onSelect?: (id
       ) : (
         <Safe fallback={flat}>
           <Suspense fallback={<Loading3D />}>
-            <Scene3D selected={selected} onSelect={onSelect} step={step} className="aspect-square w-full bg-navy sm:aspect-video" />
+            <Scene3D
+              selected={selected}
+              onSelect={onSelect}
+              step={step}
+              phase={phase}
+              scenario={scenario}
+              acting={acting}
+              className="aspect-square w-full bg-navy sm:aspect-video"
+            />
           </Suspense>
         </Safe>
       )}
@@ -191,14 +208,35 @@ export function RoleExplorer3D() {
 }
 
 const wait = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
+/** A script entry that is a recorded call-out (not "sfx:…", "wait:…" or "cue"). */
+const isVoice = (id: string) => id !== "cue" && !id.includes(":");
 
-/** Drill: the same scene acting out each of the six steps, with the team's call-outs. */
-export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: number) => void }) {
+/**
+ * A drill played in the 3D scene, step by step, with the team's call-outs (spoken if sound is on,
+ * always captioned). Script entries: a call-out id, "sfx:name", "wait:ms", or "cue" — which moves the
+ * scene on to its next action within the step.
+ */
+function StepPlayer3D({
+  scenario,
+  steps,
+  script,
+  rhythm,
+  step,
+  onStep,
+}: {
+  scenario: Scenario;
+  steps: readonly DrillStep[];
+  script: Record<number, string[]>;
+  /** steps that have compressions running, for the 110/min click */
+  rhythm?: (n: number) => boolean;
+  step: number;
+  onStep: (n: number) => void;
+}) {
   const [auto, setAuto] = useState(false);
   const [caption, setCaption] = useState<Callout | null>(null);
+  const [phase, setPhase] = useState(0);
   const prefs = useSoundPrefs();
   const [box, inView] = useInView<HTMLDivElement>();
-  const steps = workshop.steps;
   const cur = steps[step - 1];
   const autoRef = useRef(auto);
   const onStepRef = useRef(onStep);
@@ -215,16 +253,25 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
     }
   });
 
-  // each step: a whoosh, then the call-outs in order (spoken if sound is on, always captioned)
+  // each step: a whoosh, then the script in order
   useEffect(() => {
     let cancelled = false;
+    setPhase(0);
     const run = async () => {
       if (!firstRun.current) sfx("whoosh", 0.3);
       firstRun.current = false;
       const t0 = Date.now();
       await wait(400);
-      for (const id of drillCallouts[step] ?? []) {
+      for (const id of script[step] ?? []) {
         if (cancelled) return;
+        if (id === "cue") {
+          setPhase((p) => p + 1);
+          continue;
+        }
+        if (id.startsWith("wait:")) {
+          await wait(Number(id.slice(5)));
+          continue;
+        }
         if (id.startsWith("sfx:")) {
           const name = id.slice(4) as SfxName;
           sfx(name, name === "siren" ? 0.35 : 0.6);
@@ -232,7 +279,7 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
           continue;
         }
         const c = callouts[id];
-        setCaption(c);
+        if (c) setCaption(c);
         const started = Date.now();
         await say(id);
         const left = 2300 - (Date.now() - started); // keep each caption up long enough to read
@@ -242,8 +289,8 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
       if (cancelled) return;
       setCaption(null);
       if (autoRef.current) {
-        const rest = 9000 - (Date.now() - t0);
-        if (rest > 0) await wait(rest);
+        const rest = (steps[step - 1]?.hold ?? 9000) - (Date.now() - t0);
+        await wait(Math.max(rest, 1200));
         if (!cancelled && autoRef.current) onStepRef.current(step >= steps.length ? 1 : step + 1);
       }
     };
@@ -253,10 +300,10 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
       stopVoice();
       setCaption(null);
     };
-  }, [step, auto, steps.length]);
+  }, [step, auto, steps, script]);
 
-  // the CPR rhythm at 110 per minute while compressions run (steps 2–4), only on screen and with sound on
-  const compressing = step >= 2 && step <= 4;
+  // the CPR rhythm at 110 per minute while compressions run, only on screen and with sound on
+  const compressing = rhythm?.(step) ?? false;
   useEffect(() => {
     if (!(compressing && prefs.sfx && inView)) return;
     startMetronome(110);
@@ -266,11 +313,11 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
   return (
     <div ref={box}>
       <div className="relative">
-        <Stage step={step} />
-        <p className="pointer-events-none absolute left-2 top-2 rounded-full bg-[#0b1f3a]/75 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
+        <Stage step={step} phase={phase} scenario={scenario} acting={cur.who} />
+        <p className="pointer-events-none absolute left-2 top-2 max-w-[calc(100%-1rem)] truncate rounded-full bg-[#0b1f3a]/75 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
           STEP {cur.n} · {cur.title.toUpperCase()}
         </p>
-        <div className="absolute right-2 top-2 flex items-center gap-1.5">
+        <div className={cn("absolute right-2 flex items-center gap-1.5", scenario === "arrest" ? "top-2" : "top-10")}>
           {compressing ? (
             <span className="flex items-center gap-1 rounded-full bg-[#0b1f3a]/75 px-2 py-1 font-display text-[11px] font-semibold tracking-wide text-[#f7f4ee]">
               <HeartPulse className="cpr-beat size-3.5 text-[#ff6b5b]" aria-hidden />
@@ -282,7 +329,7 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
               type="button"
               onClick={() => {
                 setSoundPrefs({ sfx: true });
-                const first = drillCallouts[step]?.find((id) => !id.startsWith("sfx:"));
+                const first = script[step]?.find(isVoice);
                 if (first) void say(first);
               }}
               className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-gold px-3 font-display text-[11px] font-semibold tracking-wide text-on-gold shadow-[0_4px_12px_-4px_rgba(0,0,0,0.5)] active:scale-95"
@@ -295,48 +342,67 @@ export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: numb
         <Caption c={caption} />
       </div>
       <div ref={swipe}>
-      <div className="flex items-center gap-1 px-3.5 pt-3 min-[400px]:gap-1.5">
-        {steps.map((s) => (
+        <div className="flex items-center gap-1 px-3.5 pt-3 min-[400px]:gap-1.5">
+          {steps.map((s) => (
+            <button
+              key={s.n}
+              type="button"
+              onClick={() => {
+                tap();
+                onStep(s.n);
+              }}
+              aria-label={`Step ${s.n}: ${s.title}`}
+              aria-current={s.n === step ? "step" : undefined}
+              className={cn(
+                "grid size-8 shrink-0 place-items-center rounded-full font-display text-sm font-bold transition-all duration-200 active:scale-95",
+                steps.length > 6 ? "min-[400px]:size-9 min-[440px]:size-10" : "min-[360px]:size-9 min-[400px]:size-10",
+                s.n === step ? "scale-110 bg-navy text-gold shadow-[0_6px_14px_-6px_rgba(0,0,0,0.5)]" : "bg-note text-heading",
+              )}
+            >
+              {s.n}
+            </button>
+          ))}
           <button
-            key={s.n}
             type="button"
             onClick={() => {
-              tap();
-              onStep(s.n);
+              if (!auto) sfx("whistle", 0.5);
+              setAuto((on) => !on);
             }}
-            aria-label={`Step ${s.n}: ${s.title}`}
-            aria-current={s.n === step ? "step" : undefined}
-            className={cn(
-              "grid size-8 shrink-0 place-items-center rounded-full font-display text-sm font-bold transition-all duration-200 active:scale-95 min-[360px]:size-9 min-[400px]:size-10",
-              s.n === step ? "scale-110 bg-navy text-gold shadow-[0_6px_14px_-6px_rgba(0,0,0,0.5)]" : "bg-note text-heading",
-            )}
+            aria-pressed={auto}
+            aria-label={auto ? "Pause" : "Play all steps"}
+            className="ml-auto inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 rounded-full bg-gold px-2.5 font-display text-xs font-semibold tracking-wide text-on-gold transition-transform duration-150 active:scale-95 min-[400px]:px-3.5"
           >
-            {s.n}
+            {auto ? <Pause className="size-3.5" aria-hidden /> : <Play className="size-3.5" aria-hidden />}
+            <span className="max-[399px]:sr-only">{auto ? "Pause" : "Play all"}</span>
           </button>
-        ))}
-        <button
-          type="button"
-          onClick={() => {
-            if (!auto) sfx("whistle", 0.5);
-            setAuto((v) => !v);
-          }}
-          aria-pressed={auto}
-          aria-label={auto ? "Pause" : "Play all steps"}
-          className="ml-auto inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-1.5 rounded-full bg-gold px-2.5 font-display text-xs font-semibold tracking-wide text-on-gold transition-transform duration-150 active:scale-95 min-[400px]:px-3.5"
-        >
-          {auto ? <Pause className="size-3.5" aria-hidden /> : <Play className="size-3.5" aria-hidden />}
-          <span className="max-[399px]:sr-only">{auto ? "Pause" : "Play all"}</span>
-        </button>
-      </div>
-      <div className="mx-3.5 mt-2.5 h-1 overflow-hidden rounded-full bg-line" aria-hidden="true">
-        <div className="h-full rounded-full bg-gold transition-[width] duration-700 ease-out" style={{ width: `${(step / steps.length) * 100}%` }} />
-      </div>
-      <p key={step} className="caption-in px-3.5 pb-1 pt-2.5 text-sm leading-snug" aria-live="polite">
-        <span className="font-semibold text-heading">{cur.title}. </span>
-        {cur.lines[0]}
-      </p>
-      <p className="px-3.5 pb-3.5 text-[11px] text-muted pointer-fine:hidden">Swipe here for the next step.</p>
+        </div>
+        <div className="mx-3.5 mt-2.5 h-1 overflow-hidden rounded-full bg-line" aria-hidden="true">
+          <div className="h-full rounded-full bg-gold transition-[width] duration-700 ease-out" style={{ width: `${(step / steps.length) * 100}%` }} />
+        </div>
+        <p key={step} className="caption-in px-3.5 pb-1 pt-2.5 text-sm leading-snug" aria-live="polite">
+          <span className="font-semibold text-heading">{cur.title}. </span>
+          {cur.lines[0]}
+        </p>
+        <p className="px-3.5 pb-3.5 text-[11px] text-muted pointer-fine:hidden">Swipe here for the next step.</p>
       </div>
     </div>
   );
+}
+
+const arrestRhythm = (n: number) => n >= 2 && n <= 4;
+
+/** Drill: the cardiac arrest set piece acted out step by step, with the team's call-outs. */
+export function DrillPlayer3D({ step, onStep }: { step: number; onStep: (n: number) => void }) {
+  return <StepPlayer3D scenario="arrest" steps={workshop.steps} script={drillCallouts} rhythm={arrestRhythm} step={step} onStep={onStep} />;
+}
+
+/** The neck-injury set piece in 3D: MILS, A-c-B-C-D-E, collar, roll onto the scoop, straps, basket. */
+export function SpinePlayer3D({ step, onStep }: { step: number; onStep: (n: number) => void }) {
+  return <StepPlayer3D scenario="spine" steps={spineSteps} script={spineCallouts} step={step} onStep={onStep} />;
+}
+
+/** The neck-injury drill with its own step state, for pages that embed it. */
+export function SpineDrill3D() {
+  const [step, setStep] = useState(1);
+  return <SpinePlayer3D step={step} onStep={setStep} />;
 }

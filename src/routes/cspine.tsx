@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { FifaClipCard, VideoList } from "@/components/fifa-video";
+import { SpineDrill3D } from "@/components/set-piece-3d";
 import { ZoomImage } from "@/components/zoom-image";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { asset, imageSize } from "@/lib/asset";
@@ -148,6 +149,7 @@ function CspinePage() {
 
         <JumpChips
           items={[
+            { id: "cs-3d", label: "3D set piece" },
             { id: "cs-video", label: "FIFA film" },
             { id: "cs-clear", label: "Clearing the spine" },
             { id: "cs-setpiece", label: "Set piece by colour" },
@@ -165,6 +167,21 @@ function CspinePage() {
             non-contact collapse.
           </p>
         </div>
+
+        <section id="cs-3d" className="scroll-mt-24">
+          <Panel>
+            <div className="px-3.5 pt-3.5">
+              <SectionLabel>THE SET PIECE IN 3D</SectionLabel>
+              <p className="mt-2 text-xs leading-snug text-muted">
+                Seven steps with the team's call-outs, from holding the head to the basket lift. Tap a step, or Play all. Works
+                offline.
+              </p>
+            </div>
+            <div className="mt-3">
+              <SpineDrill3D />
+            </div>
+          </Panel>
+        </section>
 
         <Section id="cs-video" title="FIFA SKILL ZONE FILM">
           <p className="text-xs leading-snug text-muted">FIFA's own film of the full set piece. Tap play — needs a connection.</p>

@@ -582,6 +582,18 @@ html[data-vt="back"]::view-transition-new(main-content) {
   }
 }
 
+/* AED trainer: the shock button flashes once the AED is charged */
+.shock-ready {
+  animation: shock-ready 0.7s ease-in-out infinite;
+}
+
+@keyframes shock-ready {
+  50% {
+    box-shadow: 0 0 0 6px rgba(232, 84, 28, 0.35);
+    filter: brightness(1.2);
+  }
+}
+
 /* quiz celebration */
 .confetti-piece {
   position: absolute;

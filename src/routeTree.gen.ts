@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AedRouteImport } from './routes/aed'
 import { Route as ArrestRouteImport } from './routes/arrest'
 import { Route as BagRouteImport } from './routes/bag'
 import { Route as CspineRouteImport } from './routes/cspine'
@@ -36,6 +37,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AedRoute = AedRouteImport.update({
+  id: '/aed',
+  path: '/aed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArrestRoute = ArrestRouteImport.update({
@@ -122,6 +128,7 @@ const StationIdRoute = StationIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/aed': typeof AedRoute
   '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/aed': typeof AedRoute
   '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/aed': typeof AedRoute
   '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cspine': typeof CspineRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/aed'
     | '/arrest'
     | '/bag'
     | '/cspine'
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/aed'
     | '/arrest'
     | '/bag'
     | '/cspine'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/aed'
     | '/arrest'
     | '/bag'
     | '/cspine'
@@ -246,6 +258,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AedRoute: typeof AedRoute
   ArrestRoute: typeof ArrestRoute
   BagRoute: typeof BagRoute
   CspineRoute: typeof CspineRoute
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aed': {
+      id: '/aed'
+      path: '/aed'
+      fullPath: '/aed'
+      preLoaderRoute: typeof AedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/arrest': {
@@ -398,6 +418,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AedRoute: AedRoute,
   ArrestRoute: ArrestRoute,
   BagRoute: BagRoute,
   CspineRoute: CspineRoute,

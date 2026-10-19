@@ -1,7 +1,9 @@
 import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
 import { Box, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useState } from "react";
+import { AedTrainer } from "@/components/aed-trainer";
 import { FifaClipCard } from "@/components/fifa-video";
+import { SpineDrill3D } from "@/components/set-piece-3d";
 import { ZoomImage } from "@/components/zoom-image";
 import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
@@ -238,6 +240,18 @@ function BlockView({ b }: { b: Block }) {
       return (
         <div className="-mx-3.5">
           <PositionDiagram linkRoles />
+        </div>
+      );
+    case "aed-trainer":
+      return (
+        <div className="-mx-3.5 -mb-3.5 border-t border-line">
+          <AedTrainer />
+        </div>
+      );
+    case "spine-3d":
+      return (
+        <div className="-mx-3.5 -mb-3.5">
+          <SpineDrill3D />
         </div>
       );
     case "video":

@@ -24,3 +24,11 @@ export const drillCallouts: Record<number, string[]> = {
   5: ["black-4", "white-1", "orange-2", "orange-3", "white-3"],
   6: ["black-3", "green-3", "sfx:siren"],
 };
+
+/** The AED's own spoken prompts (a training voice, not a team member) for the pads trainer. */
+export const aedPrompts = {
+  pads: { id: "aed-1", text: "Apply pads to the patient's bare chest." },
+  analyse: { id: "aed-2", text: "Analysing heart rhythm. Do not touch the patient." },
+  shock: { id: "aed-3", text: "Shock advised. Stand clear. Press the flashing button." },
+  done: { id: "aed-4", text: "Shock delivered. Start CPR now." },
+} as const;

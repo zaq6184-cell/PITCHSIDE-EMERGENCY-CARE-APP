@@ -209,6 +209,7 @@ export default defineConfig(({ command, isPreview }) => ({
               { path: "/install" },
               { path: "/plan" },
               { path: "/arrest" },
+              { path: "/aed" },
             ],
           }
         : undefined,

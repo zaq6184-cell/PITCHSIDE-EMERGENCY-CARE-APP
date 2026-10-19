@@ -19,6 +19,10 @@ export type Block =
   | { kind: "image"; src: string; alt: string; caption?: string }
   | { kind: "video"; clip: FifaClip }
   | { kind: "positions" }
+  /** the AED pads trainer in 3D (components/aed-trainer.tsx) */
+  | { kind: "aed-trainer" }
+  /** the neck-injury set piece in 3D, with the team's call-outs */
+  | { kind: "spine-3d" }
   | { kind: "link"; to: "/focus" | "/cspine"; label: string; text?: string }
   | {
       kind: "device";
@@ -382,6 +386,16 @@ export const stations: Station[] = [
         ],
       },
       {
+        title: "AED pads — practise in 3D",
+        blocks: [
+          {
+            kind: "text",
+            text: "You are Green 6 and the AED has just arrived: expose the chest, place both pads, hands off for the analysis, call everyone clear, then shock. The AED talks you through it and the clock runs to the shock.",
+          },
+          { kind: "aed-trainer" },
+        ],
+      },
+      {
         title: "Airway & ventilation in arrest",
         blocks: [
           {
@@ -699,6 +713,16 @@ export const stations: Station[] = [
             ],
           },
           { kind: "remember", text: "ASSESS → STABILISE → IMMOBILISE → SECURE → REASSESS" },
+        ],
+      },
+      {
+        title: "Neck injury set piece in 3D",
+        blocks: [
+          {
+            kind: "text",
+            text: "The whole FIFA set piece for a suspected cervical spine injury, with the team's call-outs: MILS, A-c-B-C-D-E, collar, log roll onto the scoop, straps, blocks and tape, then the basket and the lift with six.",
+          },
+          { kind: "spine-3d" },
         ],
       },
       {

@@ -183,6 +183,41 @@ export function countTick(last = false) {
   tick(last ? 1180 : 940, 0.09, last ? 0.16 : 0.08);
 }
 
+/**
+ * A training AED charging: a rising whine, then a "ready" beep every 0.7 s until stopped.
+ * Returns the function that stops it (call it when the shock is given or the trainer resets).
+ */
+export function aedCharge(seconds = 2.4): () => void {
+  const c = ctx();
+  if (!c || !getSoundPrefs().sfx) return () => {};
+  const t = c.currentTime;
+  const o = c.createOscillator();
+  const g = c.createGain();
+  o.type = "triangle";
+  o.frequency.setValueAtTime(420, t);
+  o.frequency.exponentialRampToValueAtTime(2400, t + seconds);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.03, t + 0.2);
+  g.gain.setValueAtTime(0.03, t + seconds - 0.1);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + seconds);
+  o.connect(g).connect(c.destination);
+  o.start(t);
+  o.stop(t + seconds + 0.05);
+  let beeps: number | undefined;
+  const ready = window.setTimeout(() => {
+    beeps = window.setInterval(() => tick(1500, 0.07, 0.14), 700);
+  }, seconds * 1000);
+  return () => {
+    window.clearTimeout(ready);
+    window.clearInterval(beeps);
+    try {
+      o.stop();
+    } catch {
+      // already stopped
+    }
+  };
+}
+
 // ------------------------------------------------------------------ CPR rhythm, 110 per minute
 let metro: number | null = null;
 export function startMetronome(bpm = 110, force = false) {

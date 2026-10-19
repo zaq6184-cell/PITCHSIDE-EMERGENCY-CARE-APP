@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ClipboardCheck, Timer } from "lucide-react";
+import { ClipboardCheck, Timer, Zap } from "lucide-react";
 import { CprTrainer } from "@/components/cpr-trainer";
 import { DashTimer } from "@/components/dash-timer";
 import { AppShell, Panel, SayLine, SectionLabel, Tiles } from "@/components/workshop";
@@ -18,6 +18,7 @@ function TimerPage() {
           items={[
             { to: "/plan", icon: ClipboardCheck, tint: "#E3F2E8", ink: "#1A7F45", title: "Match plan", sub: "FIFA PEAP on your phone · names, hospital, checklist", wide: true },
             { to: "/arrest", icon: Timer, tint: "#FBE9E7", ink: "#C0392B", title: "Arrest timer", sub: "CPR clock · 2-minute checks · shock and drug log", wide: true },
+            { to: "/aed", icon: Zap, tint: "#F6EFD6", ink: "#8A6D10", title: "AED pads trainer", sub: "Place the pads in 3D · everyone clear · shock", wide: true },
           ]}
         />
         <Panel>

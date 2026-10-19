@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
+import { AedTrainer } from "@/components/aed-trainer";
 import { FifaClipCard } from "@/components/fifa-video";
 import { ZoomImage } from "@/components/zoom-image";
 import { fifaOwnClips } from "@/lib/videos";
@@ -103,6 +104,18 @@ function FifaScaPage() {
             See the team drill →
           </Link>
         </Section>
+
+        <Panel>
+          <div className="px-3.5 pt-3.5">
+            <SectionLabel>PRACTISE: AED PADS IN 3D</SectionLabel>
+            <p className="mt-2 text-xs leading-snug text-muted">
+              You are Green 6: expose the chest, place both pads, hands off for the analysis, call everyone clear, then shock.
+            </p>
+          </div>
+          <div className="mt-3 border-t border-line">
+            <AedTrainer />
+          </div>
+        </Panel>
 
         <Section title="FIFA INFOGRAPHICS">
           <p className="text-xs leading-snug text-muted">Tap a picture to open it full size and zoom in.</p>

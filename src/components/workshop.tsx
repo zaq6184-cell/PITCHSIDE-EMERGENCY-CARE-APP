@@ -13,11 +13,11 @@ import { getRole, type RoleId, roleTag, workshop } from "@/lib/workshop";
 
 /**
  * Music for each page: the calm theme on Home and the role pages, the drill at CPR tempo (110 a minute),
- * an upbeat loop for the games, a study loop for reading — and none on Tools and the arrest timer, where
- * the CPR beat, the carry timer and the rhythm-check whistle need to be heard on their own.
+ * an upbeat loop for the games, a study loop for reading — and none on Tools, the arrest timer and the AED
+ * trainer, where the CPR beat, the carry timer, the whistle and the AED's voice need to be heard on their own.
  */
 function musicFor(pathname: string): MusicScene {
-  if (pathname.startsWith("/timer") || pathname.startsWith("/arrest")) return "none";
+  if (pathname.startsWith("/timer") || pathname.startsWith("/arrest") || pathname.startsWith("/aed")) return "none";
   if (pathname.startsWith("/drill")) return "drill";
   if (pathname.startsWith("/quiz")) return "quiz";
   if (pathname === "/" || pathname.startsWith("/role") || pathname.startsWith("/about") || pathname.startsWith("/install")) return "theme";
@@ -88,7 +88,8 @@ export function AppShell({
       ["/pitchside", "FIFA Health & Medical · pitchside emergency care"],
       ["/quiz", "Test yourself · quiz and positions game"],
       ["/install", "Install the app · phone, tablet, computer"],
-      ["/drill", "Cardiac arrest drill · step by step in 3D"],
+      ["/drill", "Team drills · cardiac arrest and neck injury in 3D"],
+      ["/aed", "AED pads trainer · pads, everyone clear, shock"],
       ["/timer", "Match-day tools · timers and trainers"],
       ["/plan", "Match plan · FIFA PEAP on your phone"],
       ["/arrest", "Arrest timer · CPR clock and event log"],
@@ -231,7 +232,7 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
 }
 
 export type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer";
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed";
   icon: typeof Users;
   tint: string;
   ink: string;

@@ -13,6 +13,7 @@ import {
   PlayCircle,
   Stethoscope,
   Timer,
+  Zap,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { InstallCard } from "@/components/install-app";
@@ -158,7 +159,7 @@ function Home() {
           items={[
             { to: "/pitchside", icon: Stethoscope, tint: "#E3F2E8", ink: "#1A7F45", title: "Pitchside emergency care", sub: "Set-piece protocols · role cards · bag", wide: true },
             { to: "/fifa", icon: HeartPulse, tint: "#FBE9E7", ink: "#C0392B", title: "Sudden cardiac arrest", sub: "Signs · emergency steps · FIFA's films and downloads", wide: true },
-            { to: "/cspine", icon: Bone, tint: "#E4EFF8", ink: "#1F6AA5", title: "Major trauma · cervical spine injury", sub: "Set piece by colour · collar sizing · log roll", wide: true },
+            { to: "/cspine", icon: Bone, tint: "#E4EFF8", ink: "#1F6AA5", title: "Major trauma · cervical spine injury", sub: "Set piece in 3D · collar sizing · log roll", wide: true },
             { to: "/focus", icon: Brain, tint: "#EFE8F7", ink: "#6B3FA0", title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain", wide: true },
           ]}
         />
@@ -166,9 +167,10 @@ function Home() {
         <Tiles
           items={[
             { to: "/stations", icon: ClipboardList, tint: "#F6EFD6", ink: "#8A6D10", title: "Skill modules", sub: "PEAP · arrest · survey · immobilisation · bag · concussion" },
-            { to: "/drill", icon: ListOrdered, tint: "#FBE9E7", ink: "#C0392B", title: "Team drill", sub: "Cardiac arrest in six steps" },
+            { to: "/drill", icon: ListOrdered, tint: "#FBE9E7", ink: "#C0392B", title: "Team drills", sub: "Cardiac arrest · neck injury, in 3D" },
             { to: "/bag", icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1A7F45", title: "Emergency bag", sub: "FIFA packing list" },
             { to: "/guides", icon: PlayCircle, tint: "#E4EFF8", ink: "#1F6AA5", title: "Films", sub: "Links to FIFA's films" },
+            { to: "/aed", icon: Zap, tint: "#F6EFD6", ink: "#8A6D10", title: "AED pads trainer", sub: "Place the pads in 3D · everyone clear · shock", wide: true },
             { to: "/quiz", icon: Gamepad2, tint: "#F6EFD6", ink: "#8A6D10", title: "Test yourself", sub: "Quiz · place the team", wide: true },
           ]}
         />
