@@ -211,6 +211,8 @@ type PoseCtx = {
   L: (x: number, y: number, z: number) => THREE.Vector3;
   /** the camera in figure space */
   cam: THREE.Vector3;
+  /** spot the mistake: the planted error being shown (lib/mistakes.ts) */
+  fault?: string;
 };
 
 const holdPose = (p: Pose, l: THREE.Vector3, r: THREE.Vector3, lean: number, hipZ = -0.06): Pose => ({ ...p, handL: l, handR: r, lean, hip: v(0, 0.62, hipZ) });
@@ -250,6 +252,8 @@ function poseFor(ctx: PoseCtx): Pose {
     walk: 0,
   };
   const p = standing ? upright : kneel;
+  const wrong = ctx.fault ? faultPose(ctx, kneel, chest) : null;
+  if (wrong) return wrong;
   if (ctx.scenario === "spine") return spinePose(ctx, p, upright);
   if (ctx.scenario === "aed") return aedPose(ctx, p, chest);
 
@@ -332,6 +336,32 @@ function poseFor(ctx: PoseCtx): Pose {
   }
   return p;
 }
+
+/** Spot the mistake: where a figure kneels when the planted error moves it off its PEAP mark. */
+function faultPlace(fault: string | undefined, id: RoleId, scenario: Scenario, step: number): [number, number] | null {
+  if (!fault || scenario !== "arrest") return null;
+  if (fault === "orange-side" && id === "orange" && step === 4) return [-0.52, -1.16];
+  if (fault === "black-hands-on" && id === "black" && step === 2) return [0.6, -0.34];
+  if (fault === "green-right" && id === "green" && step === 3) return [-0.6, -1.12];
+  return null;
+}
+
+/** Spot the mistake: the pose that shows the planted error, or null where the figure acts as usual. */
+function faultPose(ctx: PoseCtx, kneel: Pose, chest: THREE.Vector3): Pose | null {
+  const { fault, id, step, t, L, scenario } = ctx;
+  const hold = (l: THREE.Vector3, r: THREE.Vector3, lean: number, hipZ = -0.06) => holdPose(kneel, l, r, lean, hipZ);
+  if (scenario === "arrest") {
+    if (fault === "pads-pause" && id === "red" && step === 3 && t % 5 < 2.2) return clearPose(kneel); // sits back while the pads go on
+    if (fault === "touch-shock" && id === "blue" && step === 3 && handsOff(step, t)) return { ...hold(L(-0.22, 0.2, 0.05), L(-0.2, 0.2, 0.28), 0.78), look: L(-0.2, 0.2, 0.15) };
+    if (fault === "black-hands-on" && id === "black" && step === 2) return { ...hold(L(0.22, 0.34, -0.62), L(0.2, 0.32, -0.38), 0.72), look: chest };
+    if (fault === "white-reach" && id === "white" && step === 4) return { ...hold(L(-0.1, 0.36, -0.52), L(-0.04, 0.34, -0.66), 0.98, -0.16), look: chest };
+  }
+  if (scenario === "spine" && fault === "orange-release" && id === "orange" && step === 4) return { ...kneel, look: L(0, 0.3, -0.8) }; // hands off the head
+  return null;
+}
+
+/** Red's compressions stop in the "pads-pause" mistake while the pads go on. */
+const compressionWith = (fault: string | undefined, step: number, t: number) => (fault === "pads-pause" && step === 3 && t % 5 < 2.2 ? 0 : compression(step, t));
 
 /** Neck injury: MILS from directly behind the head, A-c-B-C-D-E, collar, roll onto the scoop, straps, basket. */
 function spinePose(ctx: PoseCtx, p: Pose, upright: Pose): Pose {
@@ -514,6 +544,7 @@ export function Figure({
   phase = 0,
   scenario = "arrest",
   acting = false,
+  fault,
   onSelect,
 }: {
   spot: Spot;
@@ -523,6 +554,7 @@ export function Figure({
   phase?: number;
   scenario?: Scenario;
   acting?: boolean;
+  fault?: string;
   onSelect?: (id: RoleId) => void;
 }) {
   const root = useRef<THREE.Group>(null);
@@ -574,7 +606,7 @@ export function Figure({
 
     // where the figure kneels: its PEAP mark, or (neck injury) where the job takes it
     const pl = place.current;
-    const moveTo = scenario === "spine" ? spinePlace(spot.id, step) : null;
+    const moveTo = faultPlace(fault, spot.id, scenario, step) ?? (scenario === "spine" ? spinePlace(spot.id, step) : null);
     const [tx, tz] = moveTo ?? [spot.x, spot.z];
     const away = Math.hypot(tx - pl.x, tz - pl.z);
     const km = 1 - Math.exp(-dt * 2.6);
@@ -617,6 +649,7 @@ export function Figure({
       scenario,
       L: scenario === "arrest" && step === 6 ? Lw : L,
       cam: camL,
+      fault,
     });
     if (away > 0.06) target.walk = 1; // walking over to a new place
 
@@ -742,10 +775,13 @@ export function Player({
   body: bodyExtra,
   shockAt,
   onTap,
+  fault,
 }: {
   step: number;
   phase?: number;
   scenario?: Scenario;
+  /** spot the mistake: the planted error being shown */
+  fault?: string;
   /** AED trainer: the shirt fades away once the chest is exposed */
   shirt?: "on" | "off";
   chest?: ReactNode;
@@ -787,7 +823,7 @@ export function Player({
       }
       return;
     }
-    const c = compression(step, t);
+    const c = compressionWith(fault, step, t);
     const shock = step === 3 && t % 5 > 4.72 ? 0.05 : 0;
     grp.position.y = PLAYER_Y + shock + (step === 6 ? carryLift(t) : 0);
     grp.position.z = step === 6 ? carryTravel(t) : 0;
@@ -863,7 +899,7 @@ export function Player({
         <sphereGeometry args={[1, 18, 14]} />
         <meshStandardMaterial color="#1a120d" roughness={0.9} />
       </mesh>
-      {scenario === "spine" ? <SpineGear step={step} phase={phase} /> : null}
+      {scenario === "spine" ? <SpineGear step={step} phase={phase} fault={fault} /> : null}
       {bodyExtra}
     </group>
   );
@@ -877,7 +913,7 @@ function showGear(o: THREE.Object3D | null, k: number, from = 0.7) {
 }
 
 /** Neck injury, on the player: trauma mask, collar, straps, head blocks and tape. */
-function SpineGear({ step, phase }: { step: number; phase: number }) {
+function SpineGear({ step, phase, fault }: { step: number; phase: number; fault?: string }) {
   const mask = useRef<THREE.Group>(null);
   const collar = useRef<THREE.Group>(null);
   const straps = useRef<(THREE.Group | null)[]>([]);
@@ -886,6 +922,7 @@ function SpineGear({ step, phase }: { step: number; phase: number }) {
   const since = useSince(step, phase);
   useFrame(({ clock }) => {
     const gear = spineGear(step, phase, since(clock.elapsedTime));
+    if (fault === "no-straps") gear.straps = [0, 0, 0]; // the planted mistake: lifted unstrapped
     showGear(mask.current, gear.mask);
     showGear(collar.current, gear.collar, 0.55);
     showGear(blocks.current, gear.blocks, 0.4);
@@ -1286,6 +1323,46 @@ export function Lights() {
   );
 }
 
+/** The set piece without the stadium: the player, the kit and the six figures (also placed in AR). */
+export function SetPiece({
+  step,
+  phase = 0,
+  scenario = "arrest",
+  fault,
+  acting = [],
+  selected,
+  onSelect,
+}: {
+  step: number;
+  phase?: number;
+  scenario?: Exclude<Scenario, "aed">;
+  fault?: string;
+  acting?: readonly RoleId[];
+  selected?: RoleId;
+  onSelect?: (id: RoleId) => void;
+}) {
+  return (
+    <>
+      <Player step={step} phase={phase} scenario={scenario} fault={fault} />
+      {scenario === "spine" ? <SpineKit step={step} phase={phase} /> : <Kit step={step} />}
+      {SPOTS.map((s) => (
+        <Figure
+          key={s.id}
+          spot={s}
+          step={step}
+          phase={phase}
+          scenario={scenario}
+          acting={acting.includes(s.id)}
+          fault={fault}
+          selected={selected === s.id}
+          dim={Boolean(selected) && selected !== s.id && step === 0}
+          onSelect={onSelect}
+        />
+      ))}
+    </>
+  );
+}
+
 function Rig({ autoRotate, angle, dragging }: { autoRotate: boolean; angle: React.RefObject<number>; dragging: React.RefObject<boolean> }) {
   const { camera, size } = useThree();
   const sway = useRef(0);
@@ -1318,6 +1395,7 @@ export default function Scene3D({
   phase = 0,
   scenario = "arrest",
   acting,
+  fault,
   className,
 }: {
   selected?: RoleId;
@@ -1327,6 +1405,8 @@ export default function Scene3D({
   scenario?: Exclude<Scenario, "aed">;
   /** the colours that act in this step (gold rings) */
   acting?: readonly RoleId[];
+  /** spot the mistake: one planted error (lib/mistakes.ts) */
+  fault?: string;
   className?: string;
 }) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -1372,28 +1452,22 @@ export default function Scene3D({
         <Lights />
         <Rig autoRotate={!still} angle={angle} dragging={dragging} />
         <Stadium />
-        <Player step={step} phase={phase} scenario={scenario} />
-        {scenario === "spine" ? <SpineKit step={step} phase={phase} /> : <Kit step={step} />}
-        {SPOTS.map((s) => (
-          <Figure
-            key={s.id}
-            spot={s}
-            step={step}
-            phase={phase}
-            scenario={scenario}
-            acting={busy.includes(s.id)}
-            selected={selected === s.id}
-            dim={Boolean(selected) && selected !== s.id && step === 0}
-            onSelect={
-              onSelect
-                ? (id) => {
-                    // a drag that ends on a figure is a turn of the scene, not a tap
-                    if (moved.current < 8) onSelect(id);
-                  }
-                : undefined
-            }
-          />
-        ))}
+        <SetPiece
+          step={step}
+          phase={phase}
+          scenario={scenario}
+          fault={fault}
+          acting={busy}
+          selected={selected}
+          onSelect={
+            onSelect
+              ? (id) => {
+                  // a drag that ends on a figure is a turn of the scene, not a tap
+                  if (moved.current < 8) onSelect(id);
+                }
+              : undefined
+          }
+        />
       </Canvas>
     </div>
   );

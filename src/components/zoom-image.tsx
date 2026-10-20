@@ -8,8 +8,10 @@ import { cn } from "@/lib/utils";
  * A picture that opens full screen inside the app when tapped. Back — the button, the Escape key or
  * the phone's own back gesture — closes it and leaves you where you were, instead of a new tab or a
  * bare image file with no way back (which is what an installed app shows).
+ * With `captioned`, the caption shown on the button names it (screen readers hear what is on screen) and a
+ * hidden "open full size" follows; otherwise the button is named "Open full size: {alt}".
  */
-export function ZoomImage({ src, alt, className, children }: { src: string; alt: string; className?: string; children: ReactNode }) {
+export function ZoomImage({ src, alt, className, captioned = false, children }: { src: string; alt: string; className?: string; captioned?: boolean; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -19,10 +21,11 @@ export function ZoomImage({ src, alt, className, children }: { src: string; alt:
           tap();
           setOpen(true);
         }}
-        aria-label={`Open full size: ${alt}`}
+        aria-label={captioned ? undefined : `Open full size: ${alt}`}
         className={cn("block w-full cursor-zoom-in text-left", className)}
       >
         {children}
+        {captioned ? <span className="sr-only">, open full size</span> : null}
       </button>
       {open ? <Viewer src={src} alt={alt} onClose={() => setOpen(false)} /> : null}
     </>

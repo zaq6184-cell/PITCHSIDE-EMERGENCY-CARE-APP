@@ -201,6 +201,21 @@ export function countTick(last = false) {
   tick(last ? 1180 : 940, 0.09, last ? 0.16 : 0.08);
 }
 
+/** The patient monitor's beep on each heartbeat: higher pitched the better the oxygen saturation. */
+export function monitorBeep(spo2 = 97) {
+  if (!getSoundPrefs().sfx) return;
+  tick(560 + Math.max(0, Math.min(100, spo2) - 70) * 11, 0.045, 0.09);
+}
+
+/** A monitor alarm: two falling tones (cardiac arrest rhythm). */
+export function monitorAlarm() {
+  if (!getSoundPrefs().sfx) return;
+  const c = ctx();
+  if (!c) return;
+  tick(988, 0.05, 0.16, c.currentTime);
+  tick(784, 0.05, 0.16, c.currentTime + 0.2);
+}
+
 /**
  * A training AED charging: a rising whine, then a "ready" beep every 0.7 s until stopped.
  * Returns the function that stops it (call it when the shock is given or the trainer resets).

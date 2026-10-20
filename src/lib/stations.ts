@@ -23,7 +23,9 @@ export type Block =
   | { kind: "aed-trainer" }
   /** the neck-injury set piece in 3D, with the team's call-outs */
   | { kind: "spine-3d" }
-  | { kind: "link"; to: "/focus" | "/cspine"; label: string; text?: string }
+  /** "every minute counts": survival against the minutes to the first shock (components/survival-chart.tsx) */
+  | { kind: "survival" }
+  | { kind: "link"; to: "/focus" | "/cspine" | "/injuries" | "/heat" | "/cases" | "/bag" | "/live"; hash?: string; label: string; text?: string }
   | {
       kind: "device";
       src: string;
@@ -138,6 +140,11 @@ export const stations: Station[] = [
             kind: "alert",
             title: "Presume sudden cardiac arrest (SCA) until proven otherwise",
             text: "ENTER IMMEDIATELY → ASSESS → START CPR → APPLY AED WITHIN 30 SECONDS. Do not delay CPR / defibrillation for C-spine or fracture assessment in a non-contact collapse.",
+          },
+          {
+            kind: "info",
+            title: "2025 resuscitation guidelines: call at once",
+            text: "The Resuscitation Council UK's 2025 guidelines say to call for help for anyone who is unresponsive, without first waiting to judge their breathing. On the pitch that is the set piece already: the team enters at once, Black makes sure the ambulance is called and Green brings the AED. Red's 10-second check of breathing and pulse decides on compressions — it never holds up the call.",
           },
         ],
       },
@@ -385,6 +392,22 @@ export const stations: Station[] = [
               who: [...s.who],
               lines: [...s.lines],
             })),
+          },
+        ],
+      },
+      {
+        title: "Time to the first shock",
+        blocks: [
+          {
+            kind: "text",
+            text: "The shock is what stops VF; good CPR keeps the brain and heart supplied until it comes. Drag the clock and see what each minute costs — without CPR, and with CPR from the start.",
+          },
+          { kind: "survival" },
+          {
+            kind: "link",
+            to: "/cases",
+            label: "Practise the decisions: case simulator →",
+            text: "Make the calls with a live monitor — non-contact collapse, and a ball to the chest.",
           },
         ],
       },
@@ -691,6 +714,13 @@ export const stations: Station[] = [
           { kind: "text", text: "Set up below the feet (FIFA): basket in line with the player, 2–3 basket lengths from the feet; scoop out of the basket, extended and split, laid between the feet and the basket." },
         ],
       },
+      {
+        title: "Common pitchside injuries",
+        blocks: [
+          { kind: "text", text: "After the primary survey: what to check and do for the eye, nose, teeth, shoulder, knee, ankle and the rest — with the Ottawa rules for who needs an X-ray." },
+          { kind: "link", to: "/injuries", label: "Injury map: tap where it hurts →", text: "Body map, pitchside cards and the Ottawa ankle, foot and knee rules." },
+        ],
+      },
     ],
     source: "FIFA Emergency Care Manual, Ch.2. The 5-second scan and the NSAID and CCTVR memory aids are practical additions, not from the manual.",
   },
@@ -716,6 +746,11 @@ export const stations: Station[] = [
             ],
           },
           { kind: "remember", text: "ASSESS → STABILISE → IMMOBILISE → SECURE → REASSESS" },
+          {
+            kind: "info",
+            title: "Teaching note: collars, first aiders and medical teams",
+            text: "International first-aid guidance (ILCOR and the European Resuscitation Council) advises first-aid providers not to apply cervical collars routinely: fitting one can move the neck, and manual stabilisation is preferred. FIFA's protocols are written for trained pitchside medical teams, who fit the collar as part of full immobilisation while Orange holds manual in-line stabilisation throughout. Teach both, and say which applies to whom.",
+          },
         ],
       },
       {
@@ -1236,6 +1271,7 @@ export const stations: Station[] = [
             kind: "alert",
             text: "The pre-event emergency plan should specifically address exertional heat illness and rapid cooling before transport.",
           },
+          { kind: "link", to: "/heat", label: "Heat illness: cool first, transport second →", text: "Heat risk from a WBGT reading, spotting heat stroke, and a cooling simulator." },
         ],
       },
       {
@@ -1291,6 +1327,7 @@ export const stations: Station[] = [
             kind: "text",
             text: "FIFA's standard bag is a minimum. Teams may add items, but FIFA recommends not altering the basic inventory, so different teams can work together on the same pitch with the same kit. Contents suit players over 14 years and over 50 kg.",
           },
+          { kind: "link", to: "/bag", hash: "pack", label: "Game: pack the bag →", text: "Drag each item into its tray against the clock — and bin the faulty kit." },
           {
             kind: "defs",
             items: [
@@ -1415,6 +1452,7 @@ export const stations: Station[] = [
             label: "Open the FOCUS page →",
             text: "FIFA's lanyard card (both sides), the full FOCUS resources and FIFA's concussion protocols.",
           },
+          { kind: "link", to: "/focus", hash: "focus-signs", label: "Practise: spot the sign in 3D →", text: "A player acts out the visible signs — name each one and what FOCUS asks for." },
         ],
       },
     ],

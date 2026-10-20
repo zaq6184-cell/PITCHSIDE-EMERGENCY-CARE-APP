@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { AedTrainer } from "@/components/aed-trainer";
 import { FifaClipCard } from "@/components/fifa-video";
+import { SurvivalSlider } from "@/components/survival-chart";
 import { ZoomImage } from "@/components/zoom-image";
 import { fifaOwnClips } from "@/lib/videos";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
@@ -60,7 +61,7 @@ function FifaScaPage() {
           <div className="grid grid-cols-1 gap-2">
             {fifaSca.signs.map((s, i) => (
               <div key={s.title} className="flex gap-3 rounded-lg bg-cream px-3 py-2.5">
-                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-danger font-display text-sm font-bold text-white">
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-danger-fill font-display text-sm font-bold text-white">
                   {i + 1}
                 </span>
                 <div>
@@ -106,6 +107,17 @@ function FifaScaPage() {
         </Section>
 
         <Panel>
+          <div id="every-minute" className="flex scroll-mt-24 flex-col gap-2 px-3.5 py-3.5">
+            <SectionLabel>EVERY MINUTE COUNTS</SectionLabel>
+            <p className="text-sm leading-snug">
+              The shock is what stops VF; CPR keeps the brain and heart supplied until it comes. Drag the clock to see what each
+              minute to the first shock costs.
+            </p>
+            <SurvivalSlider />
+          </div>
+        </Panel>
+
+        <Panel>
           <div className="px-3.5 pt-3.5">
             <SectionLabel>PRACTISE: AED PADS IN 3D</SectionLabel>
             <p className="mt-2 text-xs leading-snug text-muted">
@@ -121,7 +133,7 @@ function FifaScaPage() {
           <p className="text-xs leading-snug text-muted">Tap a picture to open it full size and zoom in.</p>
           <div className="flex flex-col gap-3">
             {fifaSca.infographics.map((g) => (
-              <ZoomImage key={g.src} src={g.src} alt={g.title} className="overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
+              <ZoomImage key={g.src} src={g.src} alt={g.title} captioned className="overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
                 <img src={g.src} alt="" {...imageSize(g.src)} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
                 <span className="block border-t border-line px-3 py-2">
                   <span className="block text-sm font-semibold text-heading">{g.title}</span>

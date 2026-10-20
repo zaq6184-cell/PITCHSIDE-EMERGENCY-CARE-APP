@@ -18,6 +18,8 @@
   --color-line: #d6d1c4;
   --color-paper: #fffcf7;
   --color-danger: #c0392b;
+  /* solid red behind white text: stays deep in dark mode, where danger itself turns light for text (5.4:1) */
+  --color-danger-fill: #c0392b;
   --color-note: #eef3f8;
   --color-on-navy: #f7f4ee;
   --color-on-gold: #0b1f3a;
@@ -25,6 +27,9 @@
   --color-heading: #0b1f3a;
   /* mat behind pictures: stays light in both themes */
   --color-matte: #f4f1ea;
+  /* chart series: hazard (no CPR, too hot) and help (CPR, cooling) — validated for colour-blind contrast */
+  --color-chart-1: #c0392b;
+  --color-chart-2: #1f6aa5;
 
   --font-display: "Barlow Condensed", "Arial Narrow", "Franklin Gothic Medium", sans-serif;
   --font-sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -73,6 +78,8 @@
   --color-danger: #ec6a5e;
   --color-note: #13213a;
   --color-heading: #e2eaf6;
+  --color-chart-1: #e25b4f;
+  --color-chart-2: #4895d4;
 }
 
 :root[data-theme="dark"] .shadow-card {
@@ -158,6 +165,95 @@
 :root[data-platform="mac-safari"] .install-desktop-only,
 :root[data-platform="firefox-desktop"] .install-desktop-only {
   display: block;
+}
+
+/* chart labels that can sit over a line keep a ring of the panel colour around the letters */
+.chart-halo {
+  paint-order: stroke;
+  stroke: var(--color-paper);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+/* range sliders in the trainers: thin track, gold up to the thumb (--fill), a big thumb to drag */
+.range-gold {
+  appearance: none;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+.range-gold::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-gold) var(--fill, 50%), var(--color-line) var(--fill, 50%));
+}
+.range-gold::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-line);
+}
+.range-gold::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-gold);
+}
+.range-gold::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+  border-radius: 999px;
+  background: var(--color-gold);
+  border: 3px solid var(--color-paper);
+  box-shadow: 0 0 0 1px rgba(11, 31, 58, 0.25), 0 3px 8px -2px rgba(0, 0, 0, 0.45);
+}
+.range-gold::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--color-gold);
+  border: 3px solid var(--color-paper);
+  box-shadow: 0 0 0 1px rgba(11, 31, 58, 0.25), 0 3px 8px -2px rgba(0, 0, 0, 0.45);
+}
+.range-gold:focus-visible {
+  outline: none;
+}
+.range-gold:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px var(--color-heading);
+}
+.range-gold:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px var(--color-heading);
+}
+
+/* tap-here dots on the body map: a slow pulse that invites a tap */
+.hotspot-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pec-hotspot 1.8s ease-in-out infinite;
+}
+@keyframes pec-hotspot {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hotspot-dot {
+    animation: none;
+  }
+}
+
+/* AR (WebXR dom-overlay): the root of the buttons drawn over the camera view; the buttons take the taps */
+.ar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
 }
 
 /* install offers are in every built page: hidden before the first paint once the app is installed, and

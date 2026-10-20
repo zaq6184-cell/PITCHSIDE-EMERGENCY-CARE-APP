@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AedTrainer } from "@/components/aed-trainer";
 import { FifaClipCard } from "@/components/fifa-video";
 import { SpineDrill3D } from "@/components/set-piece-3d";
+import { SurvivalSlider } from "@/components/survival-chart";
 import { ZoomImage } from "@/components/zoom-image";
 import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
@@ -228,6 +229,7 @@ function BlockView({ b }: { b: Block }) {
       return (
         <Link
           to={b.to}
+          hash={b.hash}
           className="flex min-h-11 items-center justify-between gap-2 rounded-lg border border-gold/60 bg-note px-3 py-2 text-sm leading-snug"
         >
           <span>
@@ -255,6 +257,8 @@ function BlockView({ b }: { b: Block }) {
           <SpineDrill3D />
         </div>
       );
+    case "survival":
+      return <SurvivalSlider />;
     case "video":
       return (
         <div className="-mx-3.5">

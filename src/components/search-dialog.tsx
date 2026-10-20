@@ -66,8 +66,9 @@ export default function SearchDialog({ onClose }: { onClose: () => void }) {
     tap();
     onClose();
     if (t.to === "/role/$id") void navigate({ to: t.to, params: { id: t.id }, replace: true });
+    else if (t.to === "/case/$id") void navigate({ to: t.to, params: { id: t.id }, replace: true });
     else if (t.to === "/station/$id") void navigate({ to: t.to, params: { id: t.id }, hash: t.hash, replace: true });
-    else if (t.to === "/drill") void navigate({ to: "/drill", search: t.neck ? { case: "neck" } : {}, replace: true });
+    else if (t.to === "/drill") void navigate({ to: "/drill", search: t.neck ? { case: "neck" } : t.mistakes ? { case: "mistakes" } : {}, replace: true });
     else void navigate({ to: t.to, hash: t.hash, replace: true });
   };
 

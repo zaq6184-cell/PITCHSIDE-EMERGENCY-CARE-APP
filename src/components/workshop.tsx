@@ -18,7 +18,8 @@ import { getRole, type RoleId, roleTag, workshop } from "@/lib/workshop";
  * trainer, where the CPR beat, the carry timer, the whistle and the AED's voice need to be heard on their own.
  */
 function musicFor(pathname: string): MusicScene {
-  if (pathname.startsWith("/timer") || pathname.startsWith("/arrest") || pathname.startsWith("/aed")) return "none";
+  // no music where a monitor, a metronome or the instructor's timing has to be heard
+  if (pathname.startsWith("/timer") || pathname.startsWith("/arrest") || pathname.startsWith("/aed") || pathname.startsWith("/scorer") || pathname.startsWith("/case/") || pathname.startsWith("/live")) return "none";
   if (pathname.startsWith("/drill")) return "drill";
   if (pathname.startsWith("/quiz")) return "quiz";
   if (pathname === "/" || pathname.startsWith("/role") || pathname.startsWith("/about") || pathname.startsWith("/install")) return "theme";
@@ -26,9 +27,10 @@ function musicFor(pathname: string): MusicScene {
 }
 
 /** Where Back goes when this page was the first one opened (from a shared link or a shortcut). */
-function parentOf(pathname: string): "/" | "/stations" | "/timer" {
+function parentOf(pathname: string): "/" | "/stations" | "/timer" | "/cases" {
   if (pathname.startsWith("/station/")) return "/stations";
-  if (pathname.startsWith("/plan") || pathname.startsWith("/arrest")) return "/timer";
+  if (pathname.startsWith("/case/")) return "/cases";
+  if (pathname.startsWith("/plan") || pathname.startsWith("/arrest") || pathname.startsWith("/scorer")) return "/timer";
   return "/";
 }
 
@@ -87,7 +89,13 @@ export function AppShell({
       ["/cspine", "Major trauma · cervical spine injury"],
       ["/fifa", "FIFA Health & Medical · sudden cardiac arrest"],
       ["/pitchside", "FIFA Health & Medical · pitchside emergency care"],
-      ["/quiz", "Test yourself · quiz and positions game"],
+      ["/quiz", "Test yourself · quizzes and games"],
+      ["/heat", "Heat illness · cool first, transport second"],
+      ["/injuries", "Injury map · tap where it hurts"],
+      ["/cases", "Case simulator · make the calls"],
+      ["/scorer", "Practical scorer · for instructors"],
+      ["/live", "Live class quiz · answer from your phone"],
+      ["/case/", "Case simulator · make the calls"],
       ["/install", "Install the app · phone, tablet, computer"],
       ["/drill", "Team drills · cardiac arrest and neck injury in 3D"],
       ["/aed", "AED pads trainer · pads, everyone clear, shock"],
@@ -244,7 +252,7 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
 }
 
 export type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed";
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer";
   icon: typeof Users;
   tint: string;
   ink: string;

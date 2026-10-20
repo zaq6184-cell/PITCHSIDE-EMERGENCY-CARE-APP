@@ -1,4 +1,9 @@
 import { bagGroups } from "@/lib/bag";
+import { CASES } from "@/lib/cases";
+import { SIGNS } from "@/lib/concussion-signs";
+import { METHODS, ZONES } from "@/lib/heat";
+import { REGIONS } from "@/lib/injuries";
+import { MISTAKES } from "@/lib/mistakes";
 import { fifaSca } from "@/lib/fifa-sca";
 import { focusStages } from "@/lib/focus";
 import type { Doc } from "@/lib/search";
@@ -9,10 +14,11 @@ import { type RoleId, roleTag, workshop } from "@/lib/workshop";
 /** Where a search result goes. */
 export type Target =
   | { to: "/role/$id"; id: RoleId }
+  | { to: "/case/$id"; id: string }
   | { to: "/station/$id"; id: string; hash?: string }
-  | { to: "/drill"; neck?: boolean }
+  | { to: "/drill"; neck?: boolean; mistakes?: boolean }
   | {
-      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about";
+      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer";
       hash?: string;
     };
 
@@ -48,6 +54,8 @@ function blockText(b: Block): string {
       return "AED pads trainer in 3D: pads, everyone clear, shock.";
     case "spine-3d":
       return "Neck injury set piece in 3D with the team's call-outs.";
+    case "survival":
+      return "Every minute counts: survival falls 7 to 10 percent a minute without CPR and 3 to 4 percent with CPR until the first shock. FIFA Sudden Death Registry: 85 percent survived with an AED, 35 percent without.";
     case "positions":
       return "Team positions diagram.";
   }
@@ -73,6 +81,38 @@ const PAGES: Entry[] = [
   { id: "stations", kind: "page", title: "Skill modules", sub: "Study notes for the workshop", text: stations.map((s) => `${s.short} ${s.title}`).join(" "), target: { to: "/stations" } },
   { id: "install", kind: "page", title: "Install the app", sub: "Phone, tablet or computer", text: "Add to home screen offline download app.", target: { to: "/install" } },
   { id: "about", kind: "page", title: "About the app", sub: "Credits and disclaimer", text: "About credits sources disclaimer.", target: { to: "/about" } },
+  {
+    id: "cases",
+    kind: "tool",
+    title: "Case simulator",
+    sub: "Make the calls · live monitor",
+    text: `Branching cases with a patient monitor, ECG, VF, oxygen saturation, case clock and debrief. ${CASES.map((c) => `${c.title} ${c.short} ${c.teaching.join(" ")}`).join(" ")}`,
+    target: { to: "/cases" },
+  },
+  ...CASES.map((c) => ({ id: `case-${c.id}`, kind: "tool" as const, title: `Case: ${c.title}`, sub: `Case simulator · ${c.short}`, text: `${c.setting} ${c.stages.map((s) => s.text).join(" ")}`, target: { to: "/case/$id" as const, id: c.id } })),
+  {
+    id: "heat",
+    kind: "page",
+    title: "Heat illness",
+    sub: "Cool first, transport second",
+    text: `Exertional heat stroke, WBGT heat risk, cooling breaks, hydration breaks, World Cup 2026, rectal temperature, cold-water immersion, ice towels, tarp. ${ZONES.map((z) => `${z.label}: ${z.actions.join(" ")}`).join(" ")} ${METHODS.map((m) => m.name).join(" ")}`,
+    target: { to: "/heat" },
+  },
+  {
+    id: "injuries",
+    kind: "page",
+    title: "Injury map",
+    sub: "Tap where it hurts · Ottawa rules",
+    text: `Body map, Ottawa ankle rule, Ottawa knee rule, X-ray, sprain, fracture, dislocation, bleeding, tourniquet. ${REGIONS.map((r) => `${r.name} ${r.cards.map((c) => `${c.title} ${c.lines.join(" ")}`).join(" ")}`).join(" ")}`,
+    target: { to: "/injuries" },
+  },
+  { id: "scorer", kind: "tool", title: "Practical scorer", sub: "For instructors · time a team on the manikin", text: "Instructor assessment of the cardiac arrest set piece: tap events, compression fraction, hands-off pauses, first shock target, timeline, debrief to share as text or an image.", target: { to: "/scorer" } },
+  { id: "live", kind: "tool", title: "Live class quiz", sub: "For instructors · trainees answer from their phones", text: "Classroom quiz with a QR code, room code, answers from phones, live chart of answers, leaderboard, podium. Kahoot-style.", target: { to: "/live" } },
+  { id: "lightning", kind: "tool", title: "Lightning tool", sub: "Tools · flash to bang, the 30/30 rule", text: "Thunder and lightning: count from flash to bang, under 30 seconds stop play, 30 minutes before resuming, distance in km, safe shelter, someone struck by lightning, reverse triage.", target: { to: "/timer", hash: "lightning" } },
+  { id: "signals", kind: "tool", title: "Hand signals game", sub: "Test yourself · numbers for each colour", text: "Hand signal numbers Black 1 Orange 2 Red 3 Blue 4 White 5 Green 6 against the clock.", target: { to: "/quiz", hash: "signals" } },
+  { id: "pack", kind: "tool", title: "Pack the bag", sub: "Game · emergency bag trays", text: "Drag items into the FIFA emergency bag trays and pouches; faulty or out-of-date kit goes in the replace bin; critical fails.", target: { to: "/bag", hash: "pack" } },
+  { id: "mistakes", kind: "tool", title: "Spot the mistake", sub: "Team drills in 3D · find the error", text: `Planted errors in the 3D drills. ${MISTAKES.map((m) => `${m.what}. ${m.why}`).join(" ")}`, target: { to: "/drill", mistakes: true } },
+  { id: "signs", kind: "tool", title: "Spot the sign (concussion)", sub: "FOCUS · visible signs in 3D", text: `Visible signs of concussion acted out in 3D. ${SIGNS.map((s) => `${s.name}: ${s.what}`).join(" ")}`, target: { to: "/focus", hash: "focus-signs" } },
 ];
 
 let cache: Entry[] | null = null;
@@ -111,4 +151,4 @@ export function searchEntries(): Entry[] {
 }
 
 /** What search shows before anything is typed. */
-export const QUICK = ["arrest", "aed", "cpr", "drill-neck", "plan", "quiz"];
+export const QUICK = ["arrest", "aed", "cases", "cpr", "plan", "drill-neck", "heat", "injuries"];

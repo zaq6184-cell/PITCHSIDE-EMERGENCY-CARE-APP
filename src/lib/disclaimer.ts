@@ -1,6 +1,6 @@
 /** About text, developers, disclaimer, copyright and AI statement shown on Home and the About page. */
 export const about =
-  "A free study guide to pitchside emergency care in football, built around FIFA's medical set piece: the six colour roles, sudden cardiac arrest, the primary survey, cervical spine injury, concussion assessment and the emergency care bag — with team drills in 3D, an AED pads trainer and match-day tools. It summarises FIFA's published guidance in plain language and links to FIFA's own documents and films.";
+  "A free study guide to pitchside emergency care in football, built around FIFA's medical set piece: the six colour roles, sudden cardiac arrest, the primary survey, cervical spine injury, concussion assessment and the emergency care bag — with team drills in 3D, a case simulator, an AED pads trainer, heat-illness and injury tools, instructor tools and match-day tools. It summarises FIFA's published guidance in plain language and links to FIFA's own documents and films.";
 
 export const disclaimer = {
   short: "For education only. FIFA materials belong to FIFA.",
@@ -23,7 +23,7 @@ export const aboutApp = {
   copyright: [
     "FIFA's protocols, documents, images and films are the property of FIFA and remain under FIFA's copyright. FIFA's films and documents are linked to on FIFA's own website; they are not copied into this app.",
     "Films from other publishers play in YouTube's player and remain the property of their owners. Photographs from open-licence sources are credited where they appear.",
-    "The original material in this app — the plain-language summaries, the position diagram, the 3D scenes and trainers, and the logo — is © 2026 the developers. It may be used free of charge for non-commercial teaching, with credit to the developers. Please ask before any commercial use, and do not alter the logo.",
+    "The original material in this app — the plain-language summaries, the position diagram, the 3D scenes, trainers, cases and games, and the logo — is © 2026 the developers. It may be used free of charge for non-commercial teaching, with credit to the developers. Please ask before any commercial use, and do not alter the logo.",
   ],
   ai: [
     "AI tools helped to make this app, including its software, illustrations, voices and music. The content was checked against FIFA's published documents; if anything here differs, follow FIFA's documents.",

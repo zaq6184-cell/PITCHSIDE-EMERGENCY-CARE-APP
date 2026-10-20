@@ -147,7 +147,7 @@ function PitchsidePage() {
           <p className="text-xs leading-snug text-muted">Tap a picture to open it full size and zoom in.</p>
           <div className="flex flex-col gap-3">
             {posters.map((g) => (
-              <ZoomImage key={g.src} src={g.src} alt={g.title} className="overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
+              <ZoomImage key={g.src} src={g.src} alt={g.title} captioned className="overflow-hidden rounded-lg border border-line bg-paper active:scale-[0.99]">
                 <img src={g.src} alt="" {...imageSize(g.src)} loading="lazy" className="block max-h-96 w-full bg-white object-contain" />
                 <span className="block border-t border-line px-3 py-2">
                   <span className="block text-sm font-semibold text-heading">{g.title}</span>

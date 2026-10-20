@@ -43,6 +43,19 @@ describe("progress", () => {
     assert.equal(nextBadge(EMPTY)?.id, "colours");
   });
 
+  it("earns the new badges: all three cases, six mistakes, a clean bag", () => {
+    let p = EMPTY;
+    for (const id of ["vf", "commotio"]) p = step.caseSolved(p, id);
+    assert.equal(BADGES.find((b) => b.id === "cases")!.done(p), false);
+    p = step.caseSolved(p, "heat");
+    assert.equal(BADGES.find((b) => b.id === "cases")!.done(p), true);
+    for (let i = 1; i <= 6; i++) p = step.mistake(step.mistake(p, `m${i}`), `m${i}`);
+    assert.equal(p.mistakes.length, 6);
+    assert.equal(BADGES.find((b) => b.id === "mistakes")!.done(p), true);
+    assert.equal(BADGES.find((b) => b.id === "bag")!.done(step.bag(p)), true);
+    assert.equal(BADGES.length, 12);
+  });
+
   it("reads saved progress safely", () => {
     assert.deepEqual(parseProgress(null), EMPTY);
     assert.deepEqual(parseProgress("not json"), EMPTY);

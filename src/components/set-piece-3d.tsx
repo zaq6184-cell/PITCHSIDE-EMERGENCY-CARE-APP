@@ -48,13 +48,15 @@ export function Loading3D() {
 
 type Scenario = "arrest" | "spine";
 
-function Stage({
+/** The 3D scene with its loading state and flat fallback; also used by the spot-the-mistake game. */
+export function Stage({
   selected,
   onSelect,
   step,
   phase,
   scenario,
   acting,
+  fault,
 }: {
   selected?: RoleId;
   onSelect?: (id: RoleId) => void;
@@ -62,6 +64,7 @@ function Stage({
   phase?: number;
   scenario?: Scenario;
   acting?: readonly RoleId[];
+  fault?: string;
 }) {
   // 3D only in the browser, only where the device can draw it, and only once it is near the screen
   const box = useRef<HTMLDivElement>(null);
@@ -100,6 +103,7 @@ function Stage({
               phase={phase}
               scenario={scenario}
               acting={acting}
+              fault={fault}
               className="aspect-square w-full bg-navy sm:aspect-video"
             />
           </Suspense>

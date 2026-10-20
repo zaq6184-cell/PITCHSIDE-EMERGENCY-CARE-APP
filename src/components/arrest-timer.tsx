@@ -69,7 +69,7 @@ const BUTTONS: { kind: ArrestEventKind; label: (s: ArrestSession) => string; ico
 ];
 
 const TONES: Record<Tone, string> = {
-  red: "bg-danger text-white",
+  red: "bg-danger-fill text-white",
   navy: "bg-navy text-on-navy",
   gold: "bg-gold text-on-gold",
   plain: "border border-line bg-paper text-heading",
@@ -249,7 +249,7 @@ export function ArrestTimer() {
           <button
             type="button"
             onClick={start}
-            className="inline-flex min-h-16 w-full items-center justify-center gap-2.5 rounded-xl bg-danger font-display text-lg font-bold tracking-wide text-white shadow-card active:scale-[0.98]"
+            className="inline-flex min-h-16 w-full items-center justify-center gap-2.5 rounded-xl bg-danger-fill font-display text-lg font-bold tracking-wide text-white shadow-card active:scale-[0.98]"
           >
             <Play className="size-6" fill="currentColor" aria-hidden />
             Start — player collapsed

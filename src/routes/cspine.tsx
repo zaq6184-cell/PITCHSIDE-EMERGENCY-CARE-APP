@@ -347,10 +347,8 @@ function CspinePage() {
               loading="lazy"
               className="block max-h-[30rem] w-full bg-white object-contain"
             />
-            <span className="block border-t border-line px-3 py-2 text-xs leading-snug text-muted">
-              Tap to open full size and zoom in.
-            </span>
           </ZoomImage>
+          <p className="-mt-1 text-xs leading-snug text-muted">Tap the poster to open it full size and zoom in.</p>
           <ul className="flex flex-col divide-y divide-line">
             {downloads.map(([t, h]) => (
               <li key={h}>

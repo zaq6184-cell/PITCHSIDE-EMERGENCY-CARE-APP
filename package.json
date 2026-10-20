@@ -19,7 +19,7 @@
     "check:auth": "node scripts/check-auth-invariant.mjs",
     "sw": "node scripts/build-sw.mjs",
     "image-sizes": "node scripts/image-sizes.mjs",
-    "test": "node --test \"scripts/**/*.test.mjs\" &&node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/lib/arrest-log.test.ts src/lib/match-plan.test.ts src/lib/aed-pads.test.ts src/lib/progress.test.ts src/lib/compression-detector.test.ts src/lib/search.test.ts",
+    "test": "node --test \"scripts/**/*.test.mjs\" &&node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/lib/arrest-log.test.ts src/lib/match-plan.test.ts src/lib/aed-pads.test.ts src/lib/progress.test.ts src/lib/compression-detector.test.ts src/lib/search.test.ts src/lib/survival.test.ts src/lib/lightning.test.ts src/lib/heat.test.ts src/lib/injuries.test.ts src/lib/pack-bag.test.ts src/lib/cases.test.ts src/lib/scorer.test.ts src/lib/mistakes.test.ts src/lib/concussion-signs.test.ts src/lib/live.test.ts",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -73,7 +73,9 @@
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.3.0",
     "three": "^0.170.0",
+    "trystero": "0.26.0",
     "tw-animate-css": "^1.3.4",
+    "uqr": "0.1.3",
     "vaul": "^1.1.2",
     "zod": "^4.4.0",
     "zustand": "^5.0.0"

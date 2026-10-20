@@ -3,6 +3,11 @@ import {
   Bone,
   Brain,
   BriefcaseMedical,
+  PersonStanding,
+  MonitorPlay,
+  QrCode,
+  ClipboardPen,
+  ThermometerSun,
   ChevronRight,
   ClipboardCheck,
   ClipboardList,
@@ -16,6 +21,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { ArButton } from "@/components/ar-button";
 import { InstallCard } from "@/components/install-app";
 import { TrainingCard } from "@/components/progress-ui";
 import { SearchBar } from "@/components/search";
@@ -91,8 +97,8 @@ function Home() {
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block font-display text-[11px] font-semibold tracking-[0.16em] text-gold">TEST YOURSELF</span>
-                <span className="block font-display text-lg font-bold leading-tight">Who does what? · Place the team</span>
-                <span className="mt-0.5 block text-xs leading-snug text-gold-soft">Two quick games built from the role cards</span>
+                <span className="block font-display text-lg font-bold leading-tight">Who does what? · Place the team · Hand signals</span>
+                <span className="mt-0.5 block text-xs leading-snug text-gold-soft">Three quick games built from the role cards</span>
               </span>
               <ChevronRight className="size-5 shrink-0 text-gold" aria-hidden />
             </div>
@@ -106,6 +112,7 @@ function Home() {
           <div className="mt-3">
             <RoleExplorer3D />
           </div>
+          <ArButton className="px-3.5 pb-3" />
           <details className="border-t border-line px-3.5 py-1">
             <summary className="flex min-h-11 cursor-pointer items-center font-display text-xs font-semibold tracking-wide text-heading">
               Show the flat diagram
@@ -149,7 +156,14 @@ function Home() {
             { to: "/pitchside", icon: Stethoscope, tint: "#E3F2E8", ink: "#1A7F45", title: "Pitchside emergency care", sub: "Set-piece protocols · role cards · bag", wide: true },
             { to: "/fifa", icon: HeartPulse, tint: "#FBE9E7", ink: "#C0392B", title: "Sudden cardiac arrest", sub: "Signs · emergency steps · FIFA's films and downloads", wide: true },
             { to: "/cspine", icon: Bone, tint: "#E4EFF8", ink: "#1F6AA5", title: "Major trauma · cervical spine injury", sub: "Set piece in 3D · collar sizing · log roll", wide: true },
-            { to: "/focus", icon: Brain, tint: "#EFE8F7", ink: "#6B3FA0", title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain", wide: true },
+            { to: "/focus", icon: Brain, tint: "#EFE8F7", ink: "#6B3FA0", title: "Concussion assessment (FOCUS)", sub: "On-pitch assessment, domain by domain · spot the sign in 3D", wide: true },
+          ]}
+        />
+        <SectionLabel>MORE PITCHSIDE TOPICS</SectionLabel>
+        <Tiles
+          items={[
+            { to: "/heat", icon: ThermometerSun, tint: "#FDEBDD", ink: "#B3541E", title: "Heat illness", sub: "Heat risk · cool first, transport second" },
+            { to: "/injuries", icon: PersonStanding, tint: "#E4EFF8", ink: "#1F6AA5", title: "Injury map", sub: "Tap where it hurts · Ottawa rules" },
           ]}
         />
         <SectionLabel>STUDY</SectionLabel>
@@ -159,8 +173,16 @@ function Home() {
             { to: "/drill", icon: ListOrdered, tint: "#FBE9E7", ink: "#C0392B", title: "Team drills", sub: "Cardiac arrest · neck injury, in 3D" },
             { to: "/bag", icon: BriefcaseMedical, tint: "#E3F2E8", ink: "#1A7F45", title: "Emergency bag", sub: "FIFA packing list" },
             { to: "/guides", icon: PlayCircle, tint: "#E4EFF8", ink: "#1F6AA5", title: "Films", sub: "Links to FIFA's films" },
+            { to: "/cases", icon: MonitorPlay, tint: "#FBE9E7", ink: "#C0392B", title: "Case simulator", sub: "Make the calls with a live monitor · arrest, ball to the chest, heat stroke", wide: true },
             { to: "/aed", icon: Zap, tint: "#F6EFD6", ink: "#8A6D10", title: "AED pads trainer", sub: "Place the pads in 3D · everyone clear · shock", wide: true },
-            { to: "/quiz", icon: Gamepad2, tint: "#F6EFD6", ink: "#8A6D10", title: "Test yourself", sub: "Quiz · place the team", wide: true },
+            { to: "/quiz", icon: Gamepad2, tint: "#F6EFD6", ink: "#8A6D10", title: "Test yourself", sub: "Quiz · place the team · hand signals", wide: true },
+          ]}
+        />
+        <SectionLabel>FOR INSTRUCTORS</SectionLabel>
+        <Tiles
+          items={[
+            { to: "/live", icon: QrCode, tint: "#EFE8F7", ink: "#6B3FA0", title: "Live class quiz", sub: "Trainees answer from their phones" },
+            { to: "/scorer", icon: ClipboardPen, tint: "#E3F2E8", ink: "#1A7F45", title: "Practical scorer", sub: "Time a team on the manikin · debrief" },
           ]}
         />
 

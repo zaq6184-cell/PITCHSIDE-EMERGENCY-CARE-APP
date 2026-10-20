@@ -22,6 +22,12 @@ export type Progress = {
   aedClean: boolean;
   /** 30 compressions in a row at 100–120 a minute in the CPR rhythm trainer */
   cprGood: boolean;
+  /** "Pack the bag" with every item right and nothing faulty packed */
+  bagClean: boolean;
+  /** case simulator: the cases finished with a good outcome */
+  cases: string[];
+  /** spot the mistake: the planted mistakes found in the 3D drills */
+  mistakes: string[];
   /** badges already celebrated */
   badges: string[];
 };
@@ -35,8 +41,15 @@ export const EMPTY: Progress = {
   aedBest: null,
   aedClean: false,
   cprGood: false,
+  bagClean: false,
+  cases: [],
+  mistakes: [],
   badges: [],
 };
+
+/** The three cases in the simulator, and how many planted mistakes earn "Eagle eye". */
+export const CASE_IDS = ["vf", "commotio", "heat"] as const;
+export const MISTAKES_FOR_BADGE = 6;
 
 export type Badge = { id: string; title: string; how: string; done: (p: Progress) => boolean };
 
@@ -53,6 +66,9 @@ export const BADGES: Badge[] = [
   { id: "aed", title: "Safe shock", how: "AED trainer: pads right first time, everyone clear", done: (p) => p.aedClean },
   { id: "aed-fast", title: "Under 20 seconds", how: "A clean AED run in under 20 seconds", done: (p) => p.aedBest !== null && p.aedBest < 20 },
   { id: "cpr", title: "In the zone", how: "30 compressions in a row at 100–120 a minute", done: (p) => p.cprGood },
+  { id: "cases", title: "Case solved", how: "Finish all three cases in the simulator with a good outcome", done: (p) => has(p.cases, CASE_IDS) },
+  { id: "mistakes", title: "Eagle eye", how: `Spot ${MISTAKES_FOR_BADGE} planted mistakes in the 3D drills`, done: (p) => p.mistakes.length >= MISTAKES_FOR_BADGE },
+  { id: "bag", title: "Bag packed", how: "Pack the bag with every item right and nothing faulty", done: (p) => p.bagClean },
 ];
 
 /** Badges earned but not yet celebrated. */
@@ -83,6 +99,9 @@ export const step = {
     };
   },
   cpr: (p: Progress): Progress => ({ ...p, cprGood: true }),
+  bag: (p: Progress): Progress => ({ ...p, bagClean: true }),
+  caseSolved: (p: Progress, id: string): Progress => ({ ...p, cases: add(p.cases, id) }),
+  mistake: (p: Progress, id: string): Progress => ({ ...p, mistakes: add(p.mistakes, id) }),
 };
 
 /** Reads saved progress back, keeping only what is well formed. */
@@ -103,6 +122,9 @@ export function parseProgress(raw: string | null): Progress {
       aedBest: num(v.aedBest),
       aedClean: v.aedClean === true,
       cprGood: v.cprGood === true,
+      bagClean: v.bagClean === true,
+      cases: strings(v.cases),
+      mistakes: strings(v.mistakes),
       badges: strings(v.badges),
     };
   } catch {

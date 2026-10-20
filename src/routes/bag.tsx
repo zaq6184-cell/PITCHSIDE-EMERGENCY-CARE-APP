@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { PackTheBag } from "@/components/pack-bag";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { imageSize } from "@/lib/asset";
 import { aedTravel, bag, filterBagGroups } from "@/lib/bag";
@@ -77,6 +78,15 @@ function BagPage() {
             ))}
           </div>
         </Panel>
+
+        <section id="pack" className="scroll-mt-24">
+          <Panel>
+            <div className="px-3.5 pt-3.5">
+              <SectionLabel>GAME · PACK THE BAG</SectionLabel>
+            </div>
+            <PackTheBag />
+          </Panel>
+        </section>
 
         <label className="relative block">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />

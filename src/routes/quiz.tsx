@@ -1,39 +1,44 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Check, ChevronRight, Gamepad2, MapPin, RotateCcw, Trophy, Volume2, X } from "lucide-react";
+import { Check, ChevronRight, Gamepad2, Hand, MapPin, QrCode, RotateCcw, Trophy, Volume2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Confetti } from "@/components/confetti";
+import { HandSignalGame } from "@/components/hand-signal-game";
 import { DIAGRAM_VIEWBOX, DiagramBase, MARKS, PositionDiagram, RoleDisc } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { record, step as did } from "@/lib/progress";
 import { haptic, say, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
-import { type RoleId, roleTag, voiceId, workshop } from "@/lib/workshop";
+import { type Question, questionPool, shuffle } from "@/lib/quiz-questions";
+import { type RoleId, roleTag, workshop } from "@/lib/workshop";
 
 export const Route = createFileRoute("/quiz")({
   component: QuizPage,
   head: () => ({ meta: [{ title: "Test yourself · Pitchside Emergency Care" }] }),
 });
 
-type Mode = "who" | "place";
+type Mode = "who" | "place" | "signals";
 
 function QuizPage() {
   const [mode, setMode] = useState<Mode>("who");
   useEffect(() => {
-    if (window.location.hash === "#place") setMode("place");
+    const h = window.location.hash;
+    if (h === "#place") setMode("place");
+    else if (h === "#signals") setMode("signals");
   }, []);
   return (
     <AppShell tab="home" heading="Test yourself">
       <div className="flex flex-col gap-3.5">
         <Note>
           <span className="font-semibold text-heading">Test yourself. </span>
-          Two quick games built from this guide's role cards. Your best score stays on this device; nothing is sent anywhere.
+          Three quick games built from this guide's role cards. Your best score stays on this device; nothing is sent anywhere.
         </Note>
-        <div className="grid grid-cols-2 gap-2" role="tablist" aria-label="Games">
+        <div className="grid grid-cols-3 gap-2" role="tablist" aria-label="Games">
           {(
             [
               ["who", "Who does what?", Gamepad2],
               ["place", "Place the team", MapPin],
+              ["signals", "Hand signals", Hand],
             ] as const
           ).map(([m, label, Icon]) => (
             <button
@@ -46,10 +51,10 @@ function QuizPage() {
               onClick={() => {
                 tap();
                 setMode(m);
-                history.replaceState(null, "", m === "place" ? "#place" : "#who");
+                history.replaceState(null, "", `#${m}`);
               }}
               className={cn(
-                "flex min-h-12 items-center justify-center gap-2 rounded-xl font-display text-sm font-semibold tracking-wide transition-colors duration-200",
+                "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-center font-display text-[13px] font-semibold leading-tight tracking-wide transition-colors duration-200",
                 mode === m ? "bg-navy text-gold shadow-card" : "bg-paper text-heading shadow-card",
               )}
             >
@@ -59,40 +64,28 @@ function QuizPage() {
           ))}
         </div>
         <div id="quiz-panel" role="tabpanel" aria-labelledby={`tab-${mode}`}>
-          {mode === "who" ? <WhoDoesWhat onPlace={() => setMode("place")} /> : <PlaceTheTeam />}
+          {mode === "who" ? <WhoDoesWhat onPlace={() => setMode("place")} /> : mode === "place" ? <PlaceTheTeam /> : <HandSignalGame />}
         </div>
+        <Link to="/live" className="block active:scale-[0.99]">
+          <Panel>
+            <div className="flex items-center gap-3 px-3.5 py-3">
+              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#6B3FA0] text-white">
+                <QrCode className="size-5" aria-hidden />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-sm font-bold tracking-wide text-heading">Run it live with your class</span>
+                <span className="block text-xs leading-snug text-muted">Trainees scan a QR code and answer from their phones — with a live chart and a leaderboard</span>
+              </span>
+              <ChevronRight className="size-5 shrink-0 text-gold-ink" aria-hidden />
+            </div>
+          </Panel>
+        </Link>
       </div>
     </AppShell>
   );
 }
 
 // ------------------------------------------------------------------ game 1: who does what?
-type Question = { prompt: string; text: string; answer: RoleId; voice?: string };
-
-const NAMES = /\b(black|orange|red|blue|white|green)\b/i;
-
-/** Questions come straight from the role cards: what each colour brings, says and does. */
-function questionPool(): Question[] {
-  const qs: Question[] = [];
-  for (const r of workshop.roles) {
-    qs.push({ prompt: "Who brings this onto the pitch?", text: r.bring, answer: r.id });
-    r.say.forEach((t, i) => qs.push({ prompt: "Who says this?", text: `“${t}”`, answer: r.id, voice: voiceId(r, i) }));
-    [...r.arrest, ...r.trauma, ...r.both]
-      .filter((t) => !NAMES.test(t) && !/^Bring /.test(t))
-      .forEach((t) => qs.push({ prompt: "Whose job is this?", text: t, answer: r.id }));
-  }
-  return qs;
-}
-
-function shuffle<T>(a: T[]) {
-  const b = [...a];
-  for (let i = b.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [b[i], b[j]] = [b[j], b[i]];
-  }
-  return b;
-}
-
 const ROUND = 10;
 
 function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {

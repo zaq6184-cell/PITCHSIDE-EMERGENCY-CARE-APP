@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUp, Eye, FileText, RefreshCw } from "lucide-react";
 import { FifaClipCard } from "@/components/fifa-video";
 import { ZoomImage } from "@/components/zoom-image";
+import { SignGame } from "@/components/sign-game";
 import { AppShell, JumpChips, Note, Panel, SectionLabel } from "@/components/workshop";
 import { asset, imageSize } from "@/lib/asset";
 import { cn } from "@/lib/utils";
@@ -52,7 +53,7 @@ function OutcomeIcon({ outcome }: { outcome: Outcome }) {
     );
   }
   return outcome === "sub" ? (
-    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-danger text-white" title="Substitute">
+    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-danger-fill text-white" title="Substitute">
       <RefreshCw className="size-3.5" strokeWidth={2.4} />
     </span>
   ) : (
@@ -98,6 +99,7 @@ function FocusPage() {
           items={[
             { id: "focus-video", label: "Video" },
             { id: "focus-protocol", label: "The 11 domains" },
+            { id: "focus-signs", label: "Spot the sign" },
             { id: "focus-card", label: "Lanyard card" },
             { id: "focus-after", label: "Afterwards" },
             { id: "focus-resources", label: "FIFA resources" },
@@ -177,6 +179,15 @@ function FocusPage() {
             between FIFA's cervical spine and symptoms domains; it is not on FIFA's card.
           </Note>
         </Section>
+
+        <section id="focus-signs" className="scroll-mt-24">
+          <Panel>
+            <div className="px-3.5 pt-3.5">
+              <SectionLabel>PRACTISE · SPOT THE SIGN IN 3D</SectionLabel>
+            </div>
+            <SignGame />
+          </Panel>
+        </section>
 
         <Section id="focus-card" title="FOCUS LANYARD CARD">
           <p className="text-xs leading-snug text-muted">FIFA's palm-sized card (April 2026). Tap a side to open it full size.</p>

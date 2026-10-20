@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, Bone, BookOpen, Brain, HeartPulse, Lock, MapPin, Palette, Timer, Trophy, Zap, type LucideIcon } from "lucide-react";
+import { Activity, Bone, BookOpen, Brain, Briefcase, Eye, HeartPulse, Lock, MapPin, Monitor, Palette, Timer, Trophy, Zap, type LucideIcon } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Confetti } from "@/components/confetti";
 import { Panel, SectionLabel } from "@/components/workshop";
@@ -21,10 +21,13 @@ const ICONS: Record<string, LucideIcon> = {
   aed: Zap,
   "aed-fast": Timer,
   cpr: Activity,
+  cases: Monitor,
+  mistakes: Eye,
+  bag: Briefcase,
 };
 
 /** Where to go to earn each badge. */
-const WHERE: Record<string, { to: "/" | "/stations" | "/drill" | "/quiz" | "/aed" | "/timer"; label: string; neck?: boolean; hash?: string }> = {
+const WHERE: Record<string, { to: "/" | "/stations" | "/drill" | "/quiz" | "/aed" | "/timer" | "/cases" | "/bag"; label: string; neck?: boolean; mistakes?: boolean; hash?: string }> = {
   colours: { to: "/", label: "Role cards" },
   modules: { to: "/stations", label: "Skill modules" },
   arrest: { to: "/drill", label: "Arrest drill" },
@@ -34,6 +37,9 @@ const WHERE: Record<string, { to: "/" | "/stations" | "/drill" | "/quiz" | "/aed
   aed: { to: "/aed", label: "AED trainer" },
   "aed-fast": { to: "/aed", label: "AED trainer" },
   cpr: { to: "/timer", label: "CPR rhythm trainer", hash: "cpr-trainer" },
+  cases: { to: "/cases", label: "Case simulator" },
+  mistakes: { to: "/drill", label: "Spot the mistake", mistakes: true },
+  bag: { to: "/bag", label: "Pack the bag", hash: "pack" },
 };
 
 const R = 26;
@@ -79,8 +85,8 @@ export function TrainingCard() {
             <p className="mt-1.5 text-sm leading-snug">
               <span className="font-semibold text-heading">Next: {next.title}. </span>
               {next.how}.{" "}
-              {where.neck ? (
-                <Link to="/drill" search={{ case: "neck" }} className={go}>
+              {where.neck || where.mistakes ? (
+                <Link to="/drill" search={{ case: where.neck ? "neck" : "mistakes" }} className={go}>
                   {where.label} →
                 </Link>
               ) : (

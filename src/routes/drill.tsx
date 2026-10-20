@@ -1,47 +1,54 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Bone, HeartPulse, PlayCircle, Zap } from "lucide-react";
+import { useState, useSyncExternalStore } from "react";
+import { Bone, Eye, HeartPulse, MonitorPlay, PlayCircle, Zap } from "lucide-react";
 import { AppShell, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
+import { ArButton } from "@/components/ar-button";
+import { MistakeGame } from "@/components/mistake-game";
 import { DrillPlayer3D, SpinePlayer3D } from "@/components/set-piece-3d";
 import { spineSteps } from "@/lib/spine-drill";
 import { tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { type Step, workshop } from "@/lib/workshop";
 
-type Search = { case?: "neck" };
+type Search = { case?: "neck" | "mistakes" };
+
+const noSubscribe = () => () => {};
 
 export const Route = createFileRoute("/drill")({
   component: Drill,
-  validateSearch: (s: Record<string, unknown>): Search => (s.case === "neck" ? { case: "neck" } : {}),
+  validateSearch: (s: Record<string, unknown>): Search => (s.case === "neck" || s.case === "mistakes" ? { case: s.case } : {}),
   head: () => ({ meta: [{ title: "Team drills in 3D · Pitchside Emergency Care" }] }),
 });
 
 function Drill() {
   const search = Route.useSearch();
-  // the page is built without the query, so the neck drill switches on once the page is running —
-  // the first render matches the built page (no hydration mismatch)
-  const [ready, setReady] = useState(false);
-  useEffect(() => setReady(true), []);
+  // the page is built without the query, so a drill named in the query switches on once the built page has
+  // hydrated (the first render matches it: no hydration mismatch); on visits from inside the app it is there
+  // from the first frame
+  const ready = useSyncExternalStore(noSubscribe, () => true, () => false);
   const neck = ready && search.case === "neck";
+  const mistakes = ready && search.case === "mistakes";
   const navigate = useNavigate({ from: "/drill" });
   const [arrestStep, setArrestStep] = useState(1);
   const [neckStep, setNeckStep] = useState(1);
   const step = neck ? neckStep : arrestStep;
   const setStep = neck ? setNeckStep : setArrestStep;
   const steps: readonly Step[] = neck ? spineSteps : workshop.steps;
-  const pick = (toNeck: boolean) => {
-    if (toNeck === neck) return;
+  const mode: Search["case"] = mistakes ? "mistakes" : neck ? "neck" : undefined;
+  const pick = (to: Search["case"]) => {
+    if (to === mode) return;
     tap();
-    void navigate({ search: toNeck ? { case: "neck" } : {}, replace: true, resetScroll: false });
+    void navigate({ search: to ? { case: to } : {}, replace: true, resetScroll: false });
   };
 
   return (
-    <AppShell tab="drill" heading={neck ? "Neck injury team drill" : "Sudden cardiac arrest team drill"}>
+    <AppShell tab="drill" heading={mistakes ? "Spot the mistake in the team drills" : neck ? "Neck injury team drill" : "Sudden cardiac arrest team drill"}>
       <div className="flex flex-col gap-3.5">
-        <div role="tablist" aria-label="Which drill" className="grid grid-cols-2 gap-1 rounded-full bg-paper p-1 shadow-card">
+        <div role="tablist" aria-label="Which drill" className="grid grid-cols-3 gap-1 rounded-full bg-paper p-1 shadow-card">
           {[
-            { on: !neck, label: "Cardiac arrest", icon: HeartPulse, to: false },
-            { on: neck, label: "Neck injury", icon: Bone, to: true },
+            { on: !neck && !mistakes, label: "Cardiac arrest", short: "Arrest", icon: HeartPulse, to: undefined },
+            { on: neck, label: "Neck injury", short: "Neck", icon: Bone, to: "neck" as const },
+            { on: mistakes, label: "Spot the mistake", short: "Mistakes", icon: Eye, to: "mistakes" as const },
           ].map((t) => (
             <button
               key={t.label}
@@ -50,15 +57,36 @@ function Drill() {
               aria-selected={t.on}
               onClick={() => pick(t.to)}
               className={cn(
-                "inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full font-display text-sm font-semibold tracking-wide transition-colors",
+                "inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full px-1 font-display text-sm font-semibold tracking-wide transition-colors",
                 t.on ? "bg-navy text-gold" : "text-heading",
               )}
             >
-              <t.icon className="size-4" aria-hidden />
-              {t.label}
+              <t.icon className="size-4 shrink-0" aria-hidden />
+              <span className="min-[440px]:hidden">{t.short}</span>
+              <span className="hidden min-[440px]:inline">{t.label}</span>
             </button>
           ))}
         </div>
+        {mistakes ? (
+          <>
+            <Panel>
+              <MistakeGame />
+            </Panel>
+            <Link to="/cases" className="block active:scale-[0.99]">
+              <div className="reveal flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#0b1f3a] to-[#1a3460] px-3.5 py-3 text-white shadow-card">
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/15">
+                  <MonitorPlay className="size-5 text-gold" aria-hidden />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-display text-sm font-bold tracking-wide">Case simulator</span>
+                  <span className="block text-xs text-white/85">Make the calls with a live monitor: arrest, ball to the chest, heat stroke</span>
+                </span>
+              </div>
+            </Link>
+          </>
+        ) : null}
+        {mistakes ? null : (
+        <>
         <Note>
           {neck ? (
             <>
@@ -75,6 +103,7 @@ function Drill() {
         </Note>
         <Panel>
           {neck ? <SpinePlayer3D key="neck" step={step} onStep={setStep} /> : <DrillPlayer3D key="arrest" step={step} onStep={setStep} />}
+          <ArButton scenario={neck ? "spine" : "arrest"} step={step} className="border-t border-line px-3.5 py-3" />
         </Panel>
         {neck ? (
           <Link to="/cspine" className="block active:scale-[0.99]">
@@ -98,6 +127,17 @@ function Drill() {
                 <span className="min-w-0 flex-1">
                   <span className="block font-display text-sm font-bold tracking-wide">AED pads trainer</span>
                   <span className="block text-xs text-white/90">Place the pads in 3D, call everyone clear, shock — against the clock</span>
+                </span>
+              </div>
+            </Link>
+            <Link to="/cases" className="block active:scale-[0.99]">
+              <div className="reveal flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#0b1f3a] to-[#1a3460] px-3.5 py-3 text-white shadow-card">
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/15">
+                  <MonitorPlay className="size-5 text-gold" aria-hidden />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-display text-sm font-bold tracking-wide">Case simulator</span>
+                  <span className="block text-xs text-white/85">Make the calls with a live monitor — the arrest from collapse to transfer</span>
                 </span>
               </div>
             </Link>
@@ -186,6 +226,8 @@ function Drill() {
             </div>
           </Panel>
         </Link>
+        </>
+        )}
       </div>
     </AppShell>
   );
