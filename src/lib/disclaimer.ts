@@ -23,7 +23,7 @@ export const aboutApp = {
   copyright: [
     "FIFA's protocols, documents, images and films are the property of FIFA and remain under FIFA's copyright. FIFA's films and documents are linked to on FIFA's own website; they are not copied into this app.",
     "Films from other publishers play in YouTube's player and remain the property of their owners. Photographs from open-licence sources are credited where they appear.",
-    "The original material in this app — the plain-language summaries, the position diagram, the 3D scenes and trainers, the logo and the title cards — is © 2026 the developers. It may be used free of charge for non-commercial teaching, with credit to the developers. Please ask before any commercial use, and do not alter the logo.",
+    "The original material in this app — the plain-language summaries, the position diagram, the 3D scenes and trainers, and the logo — is © 2026 the developers. It may be used free of charge for non-commercial teaching, with credit to the developers. Please ask before any commercial use, and do not alter the logo.",
   ],
   ai: [
     "AI tools helped to make this app, including its software, illustrations, voices and music. The content was checked against FIFA's published documents; if anything here differs, follow FIFA's documents.",
