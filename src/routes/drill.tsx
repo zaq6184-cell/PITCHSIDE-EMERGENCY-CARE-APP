@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bone, HeartPulse, PlayCircle, Zap } from "lucide-react";
 import { AppShell, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { DrillPlayer3D, SpinePlayer3D } from "@/components/set-piece-3d";
@@ -17,7 +17,12 @@ export const Route = createFileRoute("/drill")({
 });
 
 function Drill() {
-  const neck = Route.useSearch().case === "neck";
+  const search = Route.useSearch();
+  // the page is built without the query, so the neck drill switches on once the page is running —
+  // the first render matches the built page (no hydration mismatch)
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
+  const neck = ready && search.case === "neck";
   const navigate = useNavigate({ from: "/drill" });
   const [arrestStep, setArrestStep] = useState(1);
   const [neckStep, setNeckStep] = useState(1);

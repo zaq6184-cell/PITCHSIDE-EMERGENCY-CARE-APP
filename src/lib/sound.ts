@@ -41,11 +41,26 @@ function load() {
   // often) then even allow it to start before the first tap
   const warm = () =>
     window.setTimeout(() => {
+      // only where the browser allows sound before a tap; elsewhere the first tap starts it (and the
+      // browser is not asked for audio it would refuse, with a console warning)
+      if (!soundAllowedNow()) return;
       musicReady = true;
       applyMusic();
     }, 800);
   if (document.readyState === "complete") warm();
   else window.addEventListener("load", warm, { once: true });
+}
+
+/** Sound can start now: after a tap, or where the browser already allows it (an installed app, a site used often). */
+function soundAllowedNow() {
+  if (unlocked || navigator.userActivation?.hasBeenActive) return true;
+  const nav = navigator as Navigator & { getAutoplayPolicy?: (type: "audiocontext") => string };
+  if (!nav.getAutoplayPolicy) return true; // no way to ask (Safari): try, as before
+  try {
+    return nav.getAutoplayPolicy("audiocontext") === "allowed";
+  } catch {
+    return true;
+  }
 }
 
 function unlock() {
@@ -56,6 +71,7 @@ function unlock() {
     if (unlocked) return;
     unlocked = true;
     for (const type of UNLOCK_EVENTS) window.removeEventListener(type, unlock, true);
+    if (ambienceWanted) startAmbience();
   };
   if (c?.state === "running") done();
   else c?.resume().then(() => c.state === "running" && done(), () => {});
@@ -344,13 +360,17 @@ function halt(loop: Loop) {
 }
 
 let amb: Loop | null = null;
+let ambienceWanted = false;
 export function startAmbience() {
   if (!getSoundPrefs().sfx) return;
+  ambienceWanted = true;
+  if (!soundAllowedNow()) return; // the first tap starts it
   amb ??= makeLoop("/audio/sfx/crowd.mp3");
   const loop = amb;
   loop.el.play().then(() => ramp(loop, 0.22, 900), () => {});
 }
 export function stopAmbience() {
+  ambienceWanted = false;
   const loop = amb;
   if (loop && !loop.el.paused) ramp(loop, 0, 500, () => loop.el.pause());
 }

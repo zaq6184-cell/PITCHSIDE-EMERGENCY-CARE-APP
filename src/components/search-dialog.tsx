@@ -106,6 +106,7 @@ export default function SearchDialog({ onClose }: { onClose: () => void }) {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             type="search"
+            name="q"
             enterKeyHint="go"
             autoComplete="off"
             spellCheck={false}

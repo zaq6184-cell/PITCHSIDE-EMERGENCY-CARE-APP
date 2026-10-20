@@ -66,10 +66,20 @@ export function snippet(text: string, words: string[], size = 110) {
     const i = lower.indexOf(w);
     if (i >= 0 && (at < 0 || i < at)) at = i;
   }
-  if (at < 0) return text.length > size ? `${text.slice(0, size).trimEnd()}…` : text;
-  const start = Math.max(0, at - Math.round(size * 0.3));
-  const piece = text.slice(start, start + size).trim();
-  return `${start > 0 ? "…" : ""}${piece}${start + size < text.length ? "…" : ""}`;
+  if (at < 0) at = 0;
+  let start = Math.max(0, at - Math.round(size * 0.3));
+  // begin and end on whole words, never part-way through one
+  if (start > 0 && /\S/.test(text[start - 1])) {
+    const space = text.indexOf(" ", start);
+    if (space >= 0 && space < at) start = space + 1;
+  }
+  let end = Math.min(text.length, start + size);
+  if (end < text.length && /\S/.test(text[end - 1]) && /\S/.test(text[end])) {
+    const space = text.lastIndexOf(" ", end);
+    if (space > Math.max(start, at)) end = space;
+  }
+  const piece = text.slice(start, end).trim();
+  return `${start > 0 ? "…" : ""}${piece}${end < text.length ? "…" : ""}`;
 }
 
 export function search<T extends Doc>(prepared: readonly Prepared<T>[], query: string, limit = 20): Hit<T>[] {

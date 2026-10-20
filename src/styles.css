@@ -160,6 +160,23 @@
   display: block;
 }
 
+/* install offers are in every built page: hidden before the first paint once the app is installed, and
+   the Home card once it is closed (marks set by installBootScript), so nothing jumps when the app starts */
+:root[data-installed] .install-offer,
+:root[data-install-card="off"] .install-card,
+.install-quick {
+  display: none;
+}
+
+/* the card's one-line "how to install" for this device only */
+:root[data-platform="ios"] .install-quick[data-quick="ios"],
+:root[data-platform="android"] .install-quick[data-quick="android"],
+:root[data-platform="desktop"] .install-quick[data-quick="desktop"],
+:root[data-platform="mac-safari"] .install-quick[data-quick="mac-safari"],
+:root[data-platform="firefox-desktop"] .install-quick[data-quick="firefox-desktop"] {
+  display: block;
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;

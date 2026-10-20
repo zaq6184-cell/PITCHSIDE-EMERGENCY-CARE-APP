@@ -240,7 +240,7 @@ function FocusPage() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 rounded-lg border border-line bg-paper p-2 active:scale-[0.99]"
               >
-                <img src={r.img} alt="" loading="lazy" className="h-16 w-20 shrink-0 rounded object-cover" />
+                <img src={r.img} alt="" {...imageSize(r.img)} loading="lazy" className="h-16 w-20 shrink-0 rounded object-cover" />
                 <span className="min-w-0">
                   <span className="block text-sm font-semibold leading-snug text-heading">{r.title}</span>
                   <span className="block text-xs leading-snug text-muted">{r.note}</span>

@@ -43,4 +43,16 @@ describe("search", () => {
     assert.ok(s.includes("fingerbreadths"));
     assert.ok(s.startsWith("…") && s.endsWith("…"));
   });
+
+  it("starts and ends a snippet on whole words", () => {
+    const text = "Kneel directly behind the head and hold it in line. Orange inserts the i-gel and gives one breath every tenth compression.";
+    const s = snippet(text, ["i-gel"], 50);
+    const words = new Set(text.split(" "));
+    const inner = s.replace(/^…/, "").replace(/…$/, "").split(" ");
+    assert.ok(inner.every((w) => words.has(w)), s);
+    assert.ok(s.includes("i-gel"));
+    assert.equal(snippet("Short text.", ["text"]), "Short text.");
+    const lead = snippet(text, ["nothing-matches"], 30);
+    assert.ok(lead.endsWith("…") && text.startsWith(lead.slice(0, -1)) && words.has(lead.slice(0, -1).split(" ").at(-1)!), lead);
+  });
 });

@@ -133,6 +133,7 @@ function PitchsidePage() {
                 <img
                   src={asset(`/img/fifa/onfield/${f}.jpg`)}
                   alt=""
+                  {...imageSize(`/img/fifa/onfield/${f}.jpg`)}
                   loading="lazy"
                   className="aspect-[3/4] w-full rounded-lg border border-line bg-white object-cover object-top"
                 />
@@ -165,7 +166,7 @@ function PitchsidePage() {
           <div className="grid grid-cols-2 gap-2">
             {["fecb-2", "fecb-3"].map((f) => (
               <ZoomImage key={f} src={asset(`/img/fifa/${f}.jpg`)} alt="FIFA Emergency Care Bag opened out, showing labelled compartments">
-                <img src={asset(`/img/fifa/${f}.jpg`)} alt="" loading="lazy" className="aspect-video w-full rounded-lg object-cover" />
+                <img src={asset(`/img/fifa/${f}.jpg`)} alt="" {...imageSize(`/img/fifa/${f}.jpg`)} loading="lazy" className="aspect-video w-full rounded-lg object-cover" />
               </ZoomImage>
             ))}
           </div>

@@ -151,6 +151,7 @@ function PlanPage() {
                     <label className="flex min-h-11 cursor-pointer items-start gap-3 py-1.5">
                       <input
                         type="checkbox"
+                        name={`check-${c.id}`}
                         checked={on}
                         onChange={(e) => {
                           const checks = { ...plan.checks, [c.id]: e.target.checked };

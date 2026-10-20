@@ -6,6 +6,7 @@ import {
   askSaveStatus,
   getInstallState,
   getServerInstallState,
+  INSTALL_CARD_KEY,
   type InstallState,
   type Platform,
   promptInstall,
@@ -21,32 +22,41 @@ export function useInstall(): InstallState {
   return useSyncExternalStore(subscribeInstall, getInstallState, getServerInstallState);
 }
 
-const DISMISS_KEY = "pec-install-card-hidden";
+/** The install card was closed less than a month ago. */
+function cardClosed() {
+  try {
+    return Number(localStorage.getItem(INSTALL_CARD_KEY) || 0) > Date.now();
+  } catch {
+    return false;
+  }
+}
 
-/** Home: a card inviting people to install, until they install or close it. */
+/**
+ * Home: a card inviting people to install, until they install or close it. It is in the built page and
+ * hidden before the first paint where it is not wanted (installBootScript, .install-card in styles.css),
+ * and it keeps the same height whether or not the browser offers a one-tap install — so the page below
+ * it never jumps when the app starts.
+ */
 export function InstallCard() {
   const s = useInstall();
-  const [hidden, setHidden] = useState(true);
+  const [hidden, setHidden] = useState(() => typeof window !== "undefined" && cardClosed());
+  const off = s.ready && (s.installed || hidden);
   useEffect(() => {
-    try {
-      const until = Number(localStorage.getItem(DISMISS_KEY) || 0);
-      setHidden(until > Date.now());
-    } catch {
-      setHidden(false);
-    }
-  }, []);
-  if (!s.ready || s.installed || hidden) return null;
+    // wanted after all (the browser offers the install again): lift the mark that hid it before the first paint
+    if (s.ready && !off) delete document.documentElement.dataset.installCard;
+  }, [s.ready, off]);
+  if (off) return null;
   const close = () => {
     tap();
     setHidden(true);
     try {
-      localStorage.setItem(DISMISS_KEY, String(Date.now() + 1000 * 60 * 60 * 24 * 30)); // a month
+      localStorage.setItem(INSTALL_CARD_KEY, String(Date.now() + 1000 * 60 * 60 * 24 * 30)); // a month
     } catch {
       // storage blocked
     }
   };
   return (
-    <div className="reveal relative overflow-hidden rounded-xl border border-gold/40 bg-paper shadow-card">
+    <div className="install-card reveal relative overflow-hidden rounded-xl border border-gold/40 bg-paper shadow-card">
       <button
         type="button"
         onClick={close}
@@ -61,7 +71,12 @@ export function InstallCard() {
           <p className="font-display text-[11px] font-semibold tracking-[0.16em] text-gold-ink">GET THE APP</p>
           <p className="font-display text-base font-bold leading-tight text-heading">Install on your phone or computer</p>
           <p className="mt-0.5 text-xs leading-snug text-muted">Opens full screen from your home screen and works offline at the pitch. Free, no account.</p>
-          {!s.canPrompt ? <p className="mt-1.5 text-xs leading-relaxed text-ink">{QUICK[s.platform]}</p> : null}
+          {/* every device's line is in the page; CSS shows this device's one (data-platform) from the first paint */}
+          {PLATFORMS.map((id) => (
+            <p key={id} data-quick={id} className="install-quick mt-1.5 text-xs leading-relaxed text-ink">
+              {QUICK[id]}
+            </p>
+          ))}
         </div>
       </div>
       <div className="flex gap-2 px-3.5 pb-3.5">
@@ -109,10 +124,14 @@ export function InstallHeaderButton() {
   const navigate = useNavigate();
   const onInstallPage = useRouterState({ select: (r) => r.location.pathname.startsWith("/install") });
   const [glow] = useState(() => !glowed);
+  const installed = s.ready && s.installed;
   useEffect(() => {
     if (s.ready) glowed = true;
-  }, [s.ready]);
-  if (!s.ready || s.installed || onInstallPage) return null;
+    // not installed after all (the browser offers the install again): lift the mark that hid it before the first paint
+    if (s.ready && !installed) delete document.documentElement.dataset.installed;
+  }, [s.ready, installed]);
+  // in the built page from the start, hidden before the first paint once installed (installBootScript)
+  if (installed || onInstallPage) return null;
   return (
     <button
       type="button"
@@ -125,7 +144,7 @@ export function InstallHeaderButton() {
       aria-label="Install the app"
       title="Install the app"
       className={cn(
-        "group grid min-h-11 shrink-0 place-items-center rounded-full px-0.5 outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-navy",
+        "install-offer group grid min-h-11 shrink-0 place-items-center rounded-full px-0.5 outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-navy",
         glow && "install-attn",
       )}
     >
@@ -180,6 +199,8 @@ const Key = ({ children }: { children: ReactNode }) => (
     {children}
   </span>
 );
+
+const PLATFORMS: Platform[] = ["ios", "android", "desktop", "mac-safari", "firefox-desktop"];
 
 /** The shortest way to install on each kind of device, for the card on Home. */
 const QUICK: Record<Platform, ReactNode> = {

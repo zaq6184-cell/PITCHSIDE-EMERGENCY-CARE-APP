@@ -18,12 +18,20 @@ declare global {
   }
 }
 
+/** Set once the app is installed on this device (the browser's appinstalled event). */
+const INSTALLED_KEY = "pec-installed";
+/** Until when the install card on Home stays closed (a time in ms). */
+export const INSTALL_CARD_KEY = "pec-install-card-hidden";
+
 /**
  * Runs in <head> before the first paint. Keeps the browser's install prompt for our own button (it can
  * fire before React starts) and marks the device type on <html> (data-platform), so the install page
- * shows this device's steps first from the start instead of jumping once the app loads.
+ * shows this device's steps first from the start instead of jumping once the app loads. It also marks
+ * an installed app (data-installed) and a closed install card (data-install-card="off"): the install
+ * offers are part of every built page and those marks hide them before they are drawn, so nothing on
+ * the page jumps when the app starts.
  */
-export const installBootScript = String.raw`window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pecBip=e});(function(u){document.documentElement.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1)?"ios":/Android/.test(u)?"android":/Firefox\//.test(u)?"firefox-desktop":/Macintosh/.test(u)&&/Safari\//.test(u)&&!/Chrome\/|Chromium\/|Edg\//.test(u)?"mac-safari":"desktop"})(navigator.userAgent);`;
+export const installBootScript = String.raw`window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pecBip=e});(function(u){document.documentElement.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1)?"ios":/Android/.test(u)?"android":/Firefox\//.test(u)?"firefox-desktop":/Macintosh/.test(u)&&/Safari\//.test(u)&&!/Chrome\/|Chromium\/|Edg\//.test(u)?"mac-safari":"desktop"})(navigator.userAgent);(function(d){var i=matchMedia("(display-mode: standalone)").matches||matchMedia("(display-mode: window-controls-overlay)").matches||navigator.standalone===true,h=false;try{i=i||localStorage.getItem("${INSTALLED_KEY}")==="1";h=Number(localStorage.getItem("${INSTALL_CARD_KEY}")||0)>Date.now()}catch(e){}if(i)d.dataset.installed="1";if(i||h)d.dataset.installCard="off"})(document.documentElement);`;
 
 const SERVER: InstallState = { ready: false, canPrompt: false, installed: false, platform: "desktop" };
 let state: InstallState = SERVER;
@@ -43,11 +51,21 @@ function standalone() {
   );
 }
 
+/** A saved value, or null where storage is blocked (cookies off, some private modes). */
+function stored(key: string) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
 function update() {
   state = {
     ready: true,
     canPrompt: Boolean(window.__pecBip),
-    installed: standalone() || localStorage.getItem("pec-installed") === "1",
+    // a browser offers the install only where the app is not installed, so its offer outranks the saved mark
+    installed: standalone() || (!window.__pecBip && stored(INSTALLED_KEY) === "1"),
     platform: detectPlatform(),
   };
   listeners.forEach((l) => l());
@@ -60,7 +78,7 @@ function start() {
     e.preventDefault();
     window.__pecBip = e as BeforeInstallPrompt;
     try {
-      localStorage.removeItem("pec-installed"); // the browser offers it again, so it is not installed here
+      localStorage.removeItem(INSTALLED_KEY); // the browser offers it again, so it is not installed here
     } catch {
       // storage blocked
     }
@@ -69,7 +87,7 @@ function start() {
   window.addEventListener("appinstalled", () => {
     window.__pecBip = undefined;
     try {
-      localStorage.setItem("pec-installed", "1");
+      localStorage.setItem(INSTALLED_KEY, "1");
     } catch {
       // storage blocked
     }

@@ -316,7 +316,7 @@ export function CprTrainer() {
 
       <div className="flex w-full items-center gap-2">
         <label className="flex min-h-11 flex-1 cursor-pointer items-center gap-2 rounded-xl border border-line bg-paper px-3 text-left text-sm">
-          <input type="checkbox" checked={guide} onChange={(e) => setGuide(e.target.checked)} className="size-4 accent-[#c9a227]" />
+          <input type="checkbox" name="guide-beat" checked={guide} onChange={(e) => setGuide(e.target.checked)} className="size-4 accent-[#c9a227]" />
           Guide beat at 110/min
         </label>
         <button
