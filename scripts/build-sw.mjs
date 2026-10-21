@@ -40,7 +40,10 @@ for (const f of files.sort()) {
 
 const template = readFileSync(join(root, "scripts/sw-template.js"), "utf8");
 const hash = createHash("sha256").update(template); // a change to the worker itself is a new version too
-for (const f of shell) hash.update(f).update(readFileSync(join(out, f)));
+// each prerendered page carries the router's build timestamps (u:1792…): left out, so rebuilding the same
+// app is the same version and installed apps are not asked to update for nothing
+const content = (f) => (f.endsWith(".html") ? readFileSync(join(out, f), "utf8").replace(/\bu:\d{12,}/g, "u:0") : readFileSync(join(out, f)));
+for (const f of shell) hash.update(f).update(content(f));
 const version = hash.digest("hex").slice(0, 12);
 const sw = template
   .replace('const VERSION = "__VERSION__";', `const VERSION = "${version}";`)

@@ -194,13 +194,13 @@ function ArPage() {
               <Note>
                 A phone that cannot do AR opens the team in 3D instead: drag to turn it, pinch to zoom.
               </Note>
-              <p className="pt-1 text-xs font-semibold uppercase tracking-wider text-muted">Live AR with step controls · Chrome</p>
+              <p className="pt-1 text-xs font-semibold uppercase tracking-wider text-muted">Live AR with steps · Chrome</p>
               <p className="text-sm leading-snug text-muted">
                 On phones where Chrome can run AR itself, a second button keeps you in the app and steps through the drill in the room.
               </p>
               <Steps
                 items={[
-                  { icon: Footprints, text: <>Tap <b>Live AR with step controls</b> and allow the camera.</> },
+                  { icon: Footprints, text: <>Tap <b>Live AR with steps</b> and allow the camera.</> },
                   { icon: ScanLine, text: <>Sweep the floor slowly until a gold ring appears, then tap the screen to put the team on it.</> },
                   { icon: Move, text: <>‹ › at the top step through the drill; <b>Turn</b> rotates the team; <b>Table top</b> shrinks it for a desk; tap the floor to move it.</> },
                   { icon: X, text: <>Tap ✕ to leave AR.</> },

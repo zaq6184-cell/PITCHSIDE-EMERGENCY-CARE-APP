@@ -1,7 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { Box, ChevronRight, Footprints, TriangleAlert } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { AR_FALLBACK, type ArDrill, type ArSupport, clampStep, detectAr, fallbackUrl, modelFile, quickLookHref, sceneViewerIntent } from "@/lib/ar";
+import {
+  AR_FALLBACK,
+  type ArDrill,
+  type ArSupport,
+  clampStep,
+  detectAr,
+  fallbackUrl,
+  modelFile,
+  quickLookHref,
+  sceneViewerIntent,
+} from "@/lib/ar";
 import { arTitle } from "@/lib/ar-steps";
 import { asset } from "@/lib/asset";
 import { tap } from "@/lib/sound";
@@ -33,7 +43,17 @@ const primary =
  * Google Play Services for AR can also run the team live here, stepping through the drill. On a computer,
  * a QR code opens the same step on a phone.
  */
-export function ArButton({ scenario = "arrest", step = 0, className, help = true }: { scenario?: ArDrill; step?: number; className?: string; help?: boolean }) {
+export function ArButton({
+  scenario = "arrest",
+  step = 0,
+  className,
+  help = true,
+}: {
+  scenario?: ArDrill;
+  step?: number;
+  className?: string;
+  help?: boolean;
+}) {
   const drill = scenario;
   const at = clampStep(drill, step);
   const [support, setSupport] = useState<ArSupport | null>(null);
@@ -66,11 +86,17 @@ export function ArButton({ scenario = "arrest", step = 0, className, help = true
     document.body.appendChild(root);
     try {
       const xr = (navigator as Navigator & { xr: XRSystem }).xr;
-      const session = await xr.requestSession("immersive-ar", { requiredFeatures: ["hit-test"], optionalFeatures: ["dom-overlay"], domOverlay: { root } });
+      const session = await xr.requestSession("immersive-ar", {
+        requiredFeatures: ["hit-test"],
+        optionalFeatures: ["dom-overlay"],
+        domOverlay: { root },
+      });
       setLive({ session, root });
     } catch {
       root.remove();
-      setNote("Live AR could not start: allow the camera when asked, and check Google Play Services for AR is installed and up to date.");
+      setNote(
+        "Live AR could not start: allow the camera when asked, and check Google Play Services for AR is installed and up to date.",
+      );
     }
   };
 
@@ -81,14 +107,26 @@ export function ArButton({ scenario = "arrest", step = 0, className, help = true
     });
   }, []);
 
-  const howTo = help ? (
-    <Link to="/ar" search={{ drill, step: at }} hash="ar-how" className="inline-flex min-h-10 items-center gap-1 self-start text-xs font-semibold text-gold-ink">
+  const howTo = (
+    <Link
+      to="/ar"
+      search={{ drill, step: at }}
+      hash="ar-how"
+      className="inline-flex min-h-10 items-center gap-1 text-xs font-semibold text-gold-ink"
+    >
       How to use AR
       <ChevronRight className="size-3.5" aria-hidden />
     </Link>
-  ) : null;
+  );
 
-  if (support === null) return <div className={cn("min-h-12", className)} aria-hidden="true" />;
+  // the same height before and after the page knows the device (a button and a row under it), so nothing
+  // below moves when it does
+  if (support === null)
+    return (
+      <div className={className} aria-hidden="true">
+        <div className="min-h-[5.875rem]" />
+      </div>
+    );
 
   // a computer or a phone without either viewer: hand over to a phone
   if (!support.android && !support.quicklook) {
@@ -96,19 +134,21 @@ export function ArButton({ scenario = "arrest", step = 0, className, help = true
     url.searchParams.set("drill", drill);
     url.searchParams.set("step", String(at));
     return (
-      <div className={cn("flex items-center gap-3 rounded-xl bg-note px-3 py-2.5", className)}>
-        <Suspense fallback={<div className="size-24 shrink-0 rounded-lg bg-paper" />}>
-          <QrCode text={url.href} className="size-24 shrink-0 rounded-lg" />
-        </Suspense>
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <p className="flex items-center gap-1.5 font-display text-sm font-bold tracking-wide text-heading">
-            <Box className="size-4 text-gold-ink" aria-hidden />
-            AR on your phone
-          </p>
-          <p className="text-xs leading-snug text-muted">
-            Scan to put this step on the floor in front of you — Android (Google's AR viewer) or iPhone and iPad (Safari).
-          </p>
-          {howTo}
+      <div className={className}>
+        <div className="flex min-h-[5.875rem] items-center gap-3">
+          <Suspense fallback={<div className="size-20 shrink-0 rounded-lg bg-paper" />}>
+            <QrCode text={url.href} className="size-20 shrink-0 rounded-lg" />
+          </Suspense>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <p className="flex items-center gap-1.5 font-display text-sm font-bold tracking-wide text-heading">
+              <Box className="size-4 text-gold-ink" aria-hidden />
+              AR on your phone
+            </p>
+            <p className="text-xs leading-snug text-muted">
+              Scan with a phone to put this step on the floor in front of you.
+            </p>
+            {help ? howTo : null}
+          </div>
         </div>
       </div>
     );
@@ -118,7 +158,10 @@ export function ArButton({ scenario = "arrest", step = 0, className, help = true
     <div className={cn("flex flex-col gap-1.5", className)}>
       {support.android ? (
         <a
-          href={sceneViewerIntent(absolute(modelFile(drill, at, "glb")), { title: arTitle(drill, at), fallback: fallbackUrl(window.location.href) })}
+          href={sceneViewerIntent(absolute(modelFile(drill, at, "glb")), {
+            title: arTitle(drill, at),
+            fallback: fallbackUrl(window.location.href),
+          })}
           onClick={() => tap()}
           className={primary}
         >
@@ -138,22 +181,35 @@ export function ArButton({ scenario = "arrest", step = 0, className, help = true
           See the team in your room (AR)
         </button>
       )}
-      {support.webxr ? (
-        <button
-          type="button"
-          onClick={() => void startLive()}
-          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-line bg-paper px-3 font-display text-sm font-semibold tracking-wide text-heading active:scale-[0.98]"
-        >
-          <Footprints className="size-4 text-gold-ink" aria-hidden />
-          Live AR with step controls
-        </button>
-      ) : null}
+      <div className="flex min-h-10 items-center justify-between gap-3">
+        {help ? (
+          howTo
+        ) : (
+          <span className="text-xs text-muted">
+            {support.android ? "Opens Google's AR viewer" : "Opens AR Quick Look"}
+          </span>
+        )}
+        {support.webxr ? (
+          <button
+            type="button"
+            onClick={() => void startLive()}
+            className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-line bg-paper px-3 font-display text-sm font-semibold tracking-wide text-heading active:scale-[0.98]"
+          >
+            <Footprints className="size-4 text-gold-ink" aria-hidden />
+            Live AR with steps
+          </button>
+        ) : null}
+      </div>
       {failed && support.android ? (
-        <p className="flex gap-2 rounded-lg border-l-4 border-[#d4a017] bg-[#d4a017]/10 px-3 py-2 text-xs leading-snug text-ink" role="status">
+        <p
+          className="flex gap-2 rounded-lg border-l-4 border-[#d4a017] bg-[#d4a017]/10 px-3 py-2 text-xs leading-snug text-ink"
+          role="status"
+        >
           <TriangleAlert className="mt-0.5 size-4 shrink-0 text-[#a87c00]" aria-hidden />
           <span>
-            Google's AR viewer did not open here. Open this page in Chrome (not inside WhatsApp or Instagram), and update the Google
-            app and Google Play Services for AR.{support.webxr ? " Or try Live AR above." : ""}
+            Google's AR viewer did not open here. Open this page in Chrome (not inside WhatsApp or
+            Instagram), and update the Google app and Google Play Services for AR.
+            {support.webxr ? " Or try Live AR above." : ""}
           </span>
         </p>
       ) : null}
@@ -162,10 +218,15 @@ export function ArButton({ scenario = "arrest", step = 0, className, help = true
           {note}
         </p>
       ) : null}
-      {howTo}
       {live ? (
         <Suspense fallback={null}>
-          <ArSession session={live.session} root={live.root} scenario={drill} startStep={at} onEnd={end} />
+          <ArSession
+            session={live.session}
+            root={live.root}
+            scenario={drill}
+            startStep={at}
+            onEnd={end}
+          />
         </Suspense>
       ) : null}
     </div>
