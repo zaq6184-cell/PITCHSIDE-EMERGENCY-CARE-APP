@@ -51,19 +51,26 @@ function load() {
   else window.addEventListener("load", warm, { once: true });
 }
 
-/** Sound can start now: after a tap, or where the browser already allows it (an installed app, a site used often). */
+/** Sound can start now: after a tap, or where the browser already allows it (an installed app). */
 function soundAllowedNow() {
   if (unlocked || navigator.userActivation?.hasBeenActive) return true;
-  const nav = navigator as Navigator & { getAutoplayPolicy?: (type: "audiocontext") => string };
-  if (!nav.getAutoplayPolicy) return true; // no way to ask (Safari): try, as before
-  try {
-    return nav.getAutoplayPolicy("audiocontext") === "allowed";
-  } catch {
-    return true;
+  const nav = navigator as Navigator & { getAutoplayPolicy?: (type: "audiocontext") => string; standalone?: boolean };
+  if (nav.getAutoplayPolicy) {
+    try {
+      return nav.getAutoplayPolicy("audiocontext") === "allowed";
+    } catch {
+      // fall through
+    }
   }
+  if (!navigator.userActivation) return true; // no way to tell: try, as before
+  // no way to ask (Chrome, Safari): an installed app may play before the first tap, a browser tab may not —
+  // there sound waits for the tap rather than being refused with a console warning
+  return window.matchMedia?.("(display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui)").matches || nav.standalone === true;
 }
 
 function unlock() {
+  // a touch's pointerdown does not count as a tap yet; its pointerup or touchend will
+  if (!soundAllowedNow()) return;
   const c = ctx();
   musicReady = true;
   applyMusic();
@@ -114,6 +121,8 @@ export function setSoundPrefs(next: Partial<SoundPrefs>) {
 let ac: AudioContext | null = null;
 function ctx() {
   if (typeof window === "undefined") return null;
+  // not before sound may start: the browser would refuse it and log a warning for every attempt
+  if (!ac && !soundAllowedNow()) return null;
   if (!ac) {
     const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AC) return null;
@@ -128,12 +137,12 @@ function buffer(url: string) {
   let p = buffers.get(url);
   if (!p) {
     const c = ctx();
-    p = c
-      ? fetch(url)
-          .then((r) => r.arrayBuffer())
-          .then((b) => c.decodeAudioData(b))
-          .catch(() => null)
-      : Promise.resolve(null);
+    // no audio engine yet (before the first tap): try again next time rather than remembering "none"
+    if (!c) return Promise.resolve(null);
+    p = fetch(url)
+      .then((r) => r.arrayBuffer())
+      .then((b) => c.decodeAudioData(b))
+      .catch(() => null);
     buffers.set(url, p);
   }
   return p;

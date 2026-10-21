@@ -184,7 +184,7 @@ export function PatientMonitor({ vitals, className }: { vitals: Vitals; classNam
 function Num({ label, value, unit, tone, big, small }: { label: string; value: string; unit?: string; tone: string; big?: boolean; small?: boolean }) {
   return (
     <div className="leading-none">
-      <p className="text-[9px] font-semibold tracking-[0.12em] text-white/55">{label}</p>
+      <p className="text-[10px] font-semibold tracking-[0.1em] text-white/65">{label}</p>
       <p className={cn("font-bold tabular-nums", tone, big ? "text-3xl" : small ? "text-sm" : "text-xl")}>
         {value}
         {unit ? <span className="text-[10px]">{unit}</span> : null}

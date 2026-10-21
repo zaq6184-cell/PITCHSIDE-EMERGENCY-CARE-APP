@@ -49,10 +49,10 @@ export function DiagramBase({ dimBag }: { dimBag?: boolean }) {
       <g opacity={dimBag ? 0.35 : 1}>
         <rect x="248" y="50" width="34" height="26" rx="4" fill="#2b4c80" className="stroke-heading" strokeWidth="1.5" />
         <rect x="286" y="56" width="22" height="20" rx="4" fill="#F2C811" className="stroke-heading" strokeWidth="1.5" />
-        <text x="265" y="90" fontSize="8.5" fontWeight="700" className="fill-muted" textAnchor="middle">
+        <text x="265" y="91" fontSize="10" fontWeight="700" className="fill-muted" textAnchor="middle">
           BAG
         </text>
-        <text x="297" y="90" fontSize="8.5" fontWeight="700" className="fill-muted" textAnchor="middle">
+        <text x="297" y="91" fontSize="10" fontWeight="700" className="fill-muted" textAnchor="middle">
           AED
         </text>
       </g>

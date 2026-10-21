@@ -232,7 +232,7 @@ export function AedTrainer() {
         ) : (
           <Loading3D />
         )}
-        <p className="pointer-events-none absolute left-2 top-2 rounded-full bg-[#0b1f3a]/80 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
+        <p className="pointer-events-none absolute left-2 top-2 rounded-full bg-[#0b1f3a]/90 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
           {STAGE_LABEL[stage]}
           {stage === "pads" ? ` · ${count}/2` : ""}
         </p>

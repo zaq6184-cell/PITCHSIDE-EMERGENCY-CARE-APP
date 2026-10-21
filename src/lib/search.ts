@@ -47,10 +47,13 @@ function wordScore(p: Prepared<unknown>, word: string, prefix: boolean) {
   const forms = [word, ...(ALIASES[word] ?? [])];
   let best = 0;
   for (const f of forms) {
-    const re = new RegExp(`(^| )${f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}${prefix ? "" : "($| |s )"}`);
+    const esc = f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`(^| )${esc}${prefix ? "" : "($| |s )"}`);
     const wholeTitle = re.test(p.title);
+    // a half-typed word that is already a whole word of the title ("ar" in "AR: …") beats one it only starts
+    const exactTitle = prefix && wholeTitle && new RegExp(`(^| )${esc}($| |s )`).test(`${p.title} `);
     const s =
-      (wholeTitle ? 12 : p.title.includes(f) ? 7 : 0) +
+      (exactTitle ? 13 : wholeTitle ? 12 : p.title.includes(f) ? 7 : 0) +
       (re.test(p.sub) ? 4 : p.sub.includes(f) ? 2 : 0) +
       (re.test(p.text) ? 2 : p.text.includes(f) ? 1 : 0);
     best = Math.max(best, f === word ? s : s * 0.8);

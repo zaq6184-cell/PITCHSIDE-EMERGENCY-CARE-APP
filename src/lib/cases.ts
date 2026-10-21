@@ -48,7 +48,7 @@ export type CaseDef = {
   teaching: string[];
 };
 
-const SHOCK_FEEDBACK = "Hands off, everyone clear, oxygen away from the chest unless it is on a closed loop such as an i-gel — then shock.";
+const SHOCK_FEEDBACK = "Hands off, everyone clear, any oxygen mask a metre away from the chest (a bag connected to an i-gel can stay on) — then shock.";
 
 export const CASES: CaseDef[] = [
   {
@@ -223,13 +223,13 @@ export const CASES: CaseDef[] = [
         vitals: { rhythm: "sinus-fast", hr: 148, spo2: 96, bp: "100/58", rr: 26, temp: 41.3 },
         choices: [
           { label: "Cold-water immersion at the pitch now — and call the ambulance", ok: true, feedback: "Cool first, transport second.", seconds: 180, next: "h3", effect: { cool: "cwi" } },
-          { label: "Ambulance to hospital now; cool on the way", ok: false, critical: true, feedback: "Cooling would only start at hospital, half an hour from now — far outside the window.", seconds: 180, next: "h3", effect: { cool: "transport" } },
-          { label: "Ice packs at the neck, armpits and groin while you wait", ok: false, feedback: "Far too slow on its own. Immerse him.", seconds: 180, next: "h3", effect: { cool: "packs" } },
+          { label: "Ambulance to hospital now; cool on the way", ok: false, critical: true, feedback: "Cooling would only start at hospital, half an hour from now — far outside the window. In the case, the team now immerses him at the pitch.", seconds: 180, next: "h3", effect: { cool: "transport" } },
+          { label: "Ice packs at the neck, armpits and groin while you wait", ok: false, feedback: "Far too slow on its own — about 0.03 °C a minute. In the case, the team now switches to immersion.", seconds: 180, next: "h3", effect: { cool: "packs" } },
         ],
       },
       {
         id: "h3",
-        text: "Cooling is under way. Ten minutes in, he says he feels cold and asks to get out.",
+        text: "He is in the tub. Six minutes in, he says he feels cold and asks to get out.",
         vitals: { rhythm: "sinus-fast", hr: 128, spo2: 97, bp: "104/62", rr: 22, temp: 40.1 },
         choices: [
           { label: "Keep cooling: stir, add ice, rectal temperature every 5 minutes", ok: true, feedback: "Cool until about 39 °C rectal, whatever he says he feels.", seconds: 300, next: "h4" },
@@ -288,6 +288,7 @@ export const finished = (run: Run) => run.stage === "end";
 
 /** Cooling rates and when cooling starts, for the heat case (see lib/heat.ts for the sources). */
 const COOL = { cwi: { rate: 0.2, delay: 0 }, packs: { rate: 0.03, delay: 0 }, transport: { rate: 0.2, delay: 30 }, shade: { rate: 0.01, delay: 0 } } as const;
+const PLAN_NAME = { cwi: "cold-water immersion", packs: "ice packs", transport: "transport first", shade: "shade and fluids" } as const;
 
 export type Outcome = { good: boolean; headline: string; detail: string; score: number; criticals: number; right: number; total: number };
 
@@ -297,17 +298,21 @@ export function outcome(c: CaseDef, run: Run): Outcome {
   const criticals = run.steps.filter((s) => s.critical).length;
   const total = run.steps.length;
   if (c.id === "heat") {
-    const m = COOL[run.cool ?? "shade"];
+    const plan = run.cool ?? "shade";
+    const m = COOL[plan];
     const startMin = (run.steps[0]?.at ?? 0) / 60; // recognition and the rectal temperature
     const coolingFrom = startMin + 3 + m.delay; // into the tub about 3 minutes later
     const startTemp = 41.3;
     const above = coolingFrom + Math.max(0, startTemp - 40.5) / m.rate;
     const toTarget = coolingFrom + Math.max(0, startTemp - 39) / m.rate;
-    const good = toTarget <= 30 && criticals === 0;
+    const inTime = toTarget <= 30;
+    const good = inTime && criticals === 0;
+    // a slower plan than the tub: the case went on with immersion, so this is what the plan would have meant
+    const yours = plan === "cwi" ? "" : `With your plan (${PLAN_NAME[plan]}): `;
     return {
       good,
-      headline: toTarget <= 30 ? `Below 39 °C about ${Math.round(toTarget)} minutes after the collapse` : `Below 39 °C only after about ${Math.round(toTarget)} minutes`,
-      detail: `About ${Math.round(above)} minutes above 40.5 °C. ${toTarget <= 30 ? "Inside the 30-minute window." : "Outside the 30-minute window — the longer above 40.5 °C, the greater the damage."}`,
+      headline: `${yours}${inTime ? `below 39 °C about ${Math.round(toTarget)} minutes after the collapse` : `below 39 °C only after about ${Math.round(toTarget)} minutes`}`.replace(/^./, (x) => x.toUpperCase()),
+      detail: `About ${Math.round(above)} minutes above 40.5 °C. ${inTime ? "Inside the 30-minute window." : "Outside the 30-minute window — the longer above 40.5 °C, the greater the damage."}${yours ? " In the case the team switched to cold-water immersion at the pitch, the plan that gets there in time." : ""}`,
       score: Math.max(0, Math.round(100 - Math.max(0, toTarget - 15) * 3 - criticals * 15)),
       criticals,
       right,

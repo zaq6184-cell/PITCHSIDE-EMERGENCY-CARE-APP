@@ -211,6 +211,10 @@ export const BLEEDING: Card = {
 
 // ------------------------------------------------------------------ Ottawa rules
 export type AnkleFindings = {
+  /** pain in the malleolar zone, around the ankle bones */
+  malleolarPain: boolean;
+  /** pain in the midfoot zone */
+  midfootPain: boolean;
   /** bone tenderness at the posterior edge or tip of the lateral malleolus (distal 6 cm) */
   lateralMalleolus: boolean;
   /** bone tenderness at the posterior edge or tip of the medial malleolus (distal 6 cm) */
@@ -223,11 +227,17 @@ export type AnkleFindings = {
   fourSteps: boolean;
 };
 
-/** Ottawa ankle and foot rules: an ankle X-ray, a foot X-ray, both or neither. */
+/**
+ * Ottawa ankle and foot rules: an ankle X-ray series for pain in the malleolar zone with tenderness at A or B,
+ * or unable to take four steps; a foot series for pain in the midfoot zone with tenderness at C or D, or
+ * unable to take four steps. Tenderness at a point counts as pain in its zone.
+ */
 export function ottawaAnkle(f: AnkleFindings) {
-  const ankle = f.lateralMalleolus || f.medialMalleolus || !f.fourSteps;
-  const foot = f.fifthMetatarsal || f.navicular || !f.fourSteps;
-  return { ankle, foot };
+  const ankleZone = f.malleolarPain || f.lateralMalleolus || f.medialMalleolus;
+  const footZone = f.midfootPain || f.fifthMetatarsal || f.navicular;
+  const ankle = ankleZone && (f.lateralMalleolus || f.medialMalleolus || !f.fourSteps);
+  const foot = footZone && (f.fifthMetatarsal || f.navicular || !f.fourSteps);
+  return { ankle, foot, ankleZone, footZone };
 }
 
 export type KneeFindings = {

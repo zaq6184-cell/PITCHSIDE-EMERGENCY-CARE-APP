@@ -23,12 +23,18 @@ function LivePage() {
   const [code, setCode] = useState("");
   const [typed, setTyped] = useState("");
 
+  // a join link opens the join form — on arrival, or when one is opened while this page is already showing
   useEffect(() => {
-    const c = codeFromHash(window.location.hash);
-    if (c) {
-      setCode(c);
-      setMode("join");
-    }
+    const read = () => {
+      const c = codeFromHash(window.location.hash);
+      if (c) {
+        setCode(c);
+        setMode("join");
+      }
+    };
+    read();
+    window.addEventListener("hashchange", read);
+    return () => window.removeEventListener("hashchange", read);
   }, []);
 
   return (

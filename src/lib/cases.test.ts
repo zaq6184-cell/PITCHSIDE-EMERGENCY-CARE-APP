@@ -57,4 +57,13 @@ describe("cases", () => {
     assert.equal(o.good, false);
     assert.match(o.headline, /only after/);
   });
+
+  it("says what a slower cooling plan would have meant, since the case goes on with immersion", () => {
+    const { c, run } = play("heat", (s) => (s === "h2" ? 2 : 0));
+    const o = outcome(c, run);
+    assert.match(o.headline, /^With your plan \(ice packs\): below 39 °C only after/);
+    assert.match(o.detail, /immersion/);
+    assert.equal(o.good, false);
+    assert.match(outcome(c, play("heat", () => 0).run).headline, /^Below 39 °C about \d+ minutes after the collapse$/);
+  });
 });

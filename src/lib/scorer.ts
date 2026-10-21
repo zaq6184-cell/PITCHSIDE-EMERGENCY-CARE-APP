@@ -61,6 +61,23 @@ export function flag(s: Session, id: FlagId, at: number): Session {
   return { ...s, flags: [...s.flags, { id, at }] };
 }
 
+/** The last mark or flag tapped, which `undo` takes back. */
+export function lastTap(s: Session): { kind: "mark"; id: MarkId; at: number } | { kind: "flag"; id: FlagId; at: number } | null {
+  const m = s.marks[s.marks.length - 1];
+  const f = s.flags[s.flags.length - 1];
+  if (f && (!m || f.at >= m.at)) return { kind: "flag", ...f };
+  return m ? { kind: "mark", ...m } : null;
+}
+
+/** Take back the last mark or flag (a mis-tap). Taking back the first compression drops the pauses too. */
+export function undo(s: Session): Session {
+  const last = lastTap(s);
+  if (!last) return s;
+  if (last.kind === "flag") return { ...s, flags: s.flags.slice(0, -1) };
+  const marks = s.marks.slice(0, -1);
+  return { ...s, marks, pauses: marks.some((m) => m.id === "cpr") ? s.pauses : [] };
+}
+
 /** Hands off (start a pause) or hands back on (end it). Only counts once compressions have started. */
 export function togglePause(s: Session, at: number): Session {
   if (firstAt(s, "cpr") == null) return s;

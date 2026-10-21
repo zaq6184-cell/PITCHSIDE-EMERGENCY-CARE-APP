@@ -149,7 +149,7 @@ export function MistakeGame() {
     <div>
       <div className="relative">
         <Stage key={cur.id} step={cur.step} phase={cue} scenario={cur.scenario} acting={[]} fault={cur.id} selected={picked} onSelect={who} />
-        <p className="pointer-events-none absolute left-2 top-2 max-w-[calc(100%-1rem)] truncate rounded-full bg-[#0b1f3a]/80 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
+        <p className="pointer-events-none absolute left-2 top-2 max-w-[calc(100%-1rem)] truncate rounded-full bg-[#0b1f3a]/90 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
           {cur.scenario === "arrest" ? "CARDIAC ARREST" : "NECK INJURY"} · STEP {cur.step} OF {steps} · {cur.title.toUpperCase()}
         </p>
         <p className="pointer-events-none absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-[#0b1f3a]/75 px-2.5 py-1 text-[11px] font-medium text-[#f7f4ee]">

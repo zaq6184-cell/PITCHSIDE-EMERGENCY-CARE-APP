@@ -1,8 +1,22 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { checks, compressionFraction, count, debriefText, DEFAULT_TARGETS, end, flag, longestPause, mark, newSession, parseSession, pausing, togglePause } from "./scorer.ts";
+import { checks, compressionFraction, count, debriefText, DEFAULT_TARGETS, end, flag, lastTap, longestPause, mark, newSession, parseSession, pausing, togglePause, undo } from "./scorer.ts";
 
 describe("scorer", () => {
+  it("takes back the last mark or flag after a mis-tap", () => {
+    let s = mark(mark(newSession(0), "enter", 12), "cpr", 30);
+    s = flag(s, "role", 31);
+    assert.equal(lastTap(s)?.kind, "flag");
+    s = undo(s);
+    assert.equal(s.flags.length, 0);
+    s = togglePause(togglePause(s, 40), 44);
+    s = undo(s); // the first compression: its pauses go with it
+    assert.equal(count(s, "cpr"), 0);
+    assert.equal(s.pauses.length, 0);
+    assert.equal(lastTap(s)?.id, "enter");
+    assert.equal(undo(undo(s)).marks.length, 0);
+  });
+
   it("records each mark once, except shocks", () => {
     let s = newSession(0);
     s = mark(mark(s, "cpr", 40), "cpr", 50);

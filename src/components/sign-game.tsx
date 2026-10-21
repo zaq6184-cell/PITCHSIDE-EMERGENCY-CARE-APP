@@ -106,7 +106,7 @@ export function SignGame() {
         ) : (
           <Loading3D />
         )}
-        <p className="pointer-events-none absolute left-2 top-2 rounded-full bg-[#0b1f3a]/80 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
+        <p className="pointer-events-none absolute left-2 top-2 rounded-full bg-[#0b1f3a]/90 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
           SIGN {i + 1} OF {round.length}
         </p>
         <p className="pointer-events-none absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-[#0b1f3a]/75 px-2.5 py-1 text-[11px] font-medium text-[#f7f4ee]">

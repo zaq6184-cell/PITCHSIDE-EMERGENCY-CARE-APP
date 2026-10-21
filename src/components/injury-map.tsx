@@ -321,7 +321,7 @@ const FOOT =
   "M30 8 L64 8 L62 84 C62 98 70 108 86 114 L128 124 C142 128 150 134 150 141 C150 147 145 150 138 150 L42 150 C30 150 22 143 22 132 C22 120 28 110 32 100 Z";
 
 function OttawaAnkle() {
-  const [f, setF] = useState<AnkleFindings>({ lateralMalleolus: false, medialMalleolus: false, fifthMetatarsal: false, navicular: false, fourSteps: true });
+  const [f, setF] = useState<AnkleFindings>({ malleolarPain: true, midfootPain: false, lateralMalleolus: false, medialMalleolus: false, fifthMetatarsal: false, navicular: false, fourSteps: true });
   const r = ottawaAnkle(f);
   const toggle = (k: keyof AnkleFindings) => () => {
     tap();
@@ -331,7 +331,26 @@ function OttawaAnkle() {
     <div className="flex flex-col gap-3 rounded-xl border border-line px-3 py-3">
       <div>
         <p className="font-display text-sm font-bold tracking-wide text-heading">OTTAWA ANKLE AND FOOT RULES</p>
-        <p className="text-xs leading-snug text-muted">For pain around the ankle or the midfoot. Press each bone point; tap the ones that are tender.</p>
+        <p className="text-xs leading-snug text-muted">For pain around the ankle or the midfoot. Say where it hurts, press each bone point and tap the ones that are tender.</p>
+      </div>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="w-full text-sm">Where does it hurt?</span>
+        {(
+          [
+            ["malleolarPain", "Around the ankle bones"],
+            ["midfootPain", "Midfoot"],
+          ] as const
+        ).map(([k, label]) => (
+          <button
+            key={k}
+            type="button"
+            aria-pressed={f[k]}
+            onClick={toggle(k)}
+            className={cn("min-h-9 rounded-full border px-3 text-xs font-semibold", f[k] ? "border-navy bg-navy text-gold" : "border-line bg-paper text-heading")}
+          >
+            {label}
+          </button>
+        ))}
       </div>
       <svg viewBox="0 0 330 178" className="block h-auto w-full" role="group" aria-label="Bone points on the outer and inner side of the foot">
         <text x={86} y={170} textAnchor="middle" className="fill-muted text-[10px] font-semibold tracking-[0.1em]">
@@ -373,8 +392,16 @@ function OttawaAnkle() {
       </ul>
       <YesNo label="Can take four steps — now and when checked again" value={f.fourSteps} onChange={(v) => setF((x) => ({ ...x, fourSteps: v }))} />
       <div className="grid grid-cols-2 gap-2" aria-live="polite">
-        <Verdict label="Ankle X-ray" yes={r.ankle} why={r.ankle ? (f.fourSteps ? "Tender at A or B." : "Cannot take four steps.") : "No tenderness at A or B, and walks."} />
-        <Verdict label="Foot X-ray" yes={r.foot} why={r.foot ? (f.fourSteps ? "Tender at C or D." : "Cannot take four steps.") : "No tenderness at C or D, and walks."} />
+        <Verdict
+          label="Ankle X-ray"
+          yes={r.ankle}
+          why={r.ankle ? (f.lateralMalleolus || f.medialMalleolus ? "Tender at A or B." : "Cannot take four steps, with pain around the ankle bones.") : r.ankleZone ? "No tenderness at A or B, and walks." : "No pain around the ankle bones."}
+        />
+        <Verdict
+          label="Foot X-ray"
+          yes={r.foot}
+          why={r.foot ? (f.fifthMetatarsal || f.navicular ? "Tender at C or D." : "Cannot take four steps, with midfoot pain.") : r.footZone ? "No tenderness at C or D, and walks." : "No midfoot pain."}
+        />
       </div>
       <p className="text-[11px] leading-snug text-muted">
         The rules decide who needs an X-ray; they do not clear a player to play on. Validated in adults, including in sports

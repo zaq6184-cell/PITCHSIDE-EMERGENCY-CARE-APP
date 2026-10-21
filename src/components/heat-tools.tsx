@@ -38,7 +38,8 @@ export function WbgtDial() {
   const cy = 150;
   const r = 118;
   const ang = (v: number) => Math.PI + ((Math.min(DIAL_MAX, Math.max(DIAL_MIN, v)) - DIAL_MIN) / (DIAL_MAX - DIAL_MIN)) * Math.PI;
-  const pt = (v: number, rr: number) => [cx + Math.cos(ang(v)) * rr, cy + Math.sin(ang(v)) * rr] as const;
+  // rounded: the built page and the browser can differ in the last digits of a cosine (a hydration mismatch)
+  const pt = (v: number, rr: number) => [Math.round((cx + Math.cos(ang(v)) * rr) * 100) / 100, Math.round((cy + Math.sin(ang(v)) * rr) * 100) / 100] as const;
   const arc = (a: number, b: number) => {
     const [x1, y1] = pt(a, r);
     const [x2, y2] = pt(b, r);

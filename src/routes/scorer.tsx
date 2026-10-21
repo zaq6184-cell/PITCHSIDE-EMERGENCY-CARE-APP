@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Check, ClipboardCheck, Flag, Hand, ImageDown, Play, RotateCcw, Settings2, Share2, Square, Zap } from "lucide-react";
+import { Check, ClipboardCheck, Flag, Hand, ImageDown, Play, RotateCcw, Settings2, Share2, Square, Undo2, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import {
@@ -14,6 +14,7 @@ import {
   flag,
   type FlagId,
   FLAGS,
+  lastTap,
   longestPause,
   mark,
   type MarkId,
@@ -26,6 +27,7 @@ import {
   type Session,
   type Targets,
   togglePause,
+  undo,
 } from "@/lib/scorer";
 import { shareOrCopy } from "@/lib/share";
 import { haptic, sfx, tap } from "@/lib/sound";
@@ -178,6 +180,7 @@ function Live({ s, now, targets, update, onEnd }: { s: Session; now: number; tar
   const pauseNow = open ? now - open.from : 0;
   const ccf = compressionFraction(s, now);
   const cprOn = firstAt(s, "cpr") != null;
+  const last = lastTap(s);
   return (
     <>
       <Panel>
@@ -257,6 +260,19 @@ function Live({ s, now, targets, update, onEnd }: { s: Session; now: number; tar
           );
         })}
       </div>
+
+      <button
+        type="button"
+        disabled={!last}
+        onClick={() => {
+          tap();
+          update((x) => undo(x));
+        }}
+        className="-mt-1 inline-flex min-h-10 items-center justify-center gap-1.5 self-center rounded-full px-3 text-xs font-semibold text-heading active:scale-95 disabled:opacity-40"
+      >
+        <Undo2 className="size-3.5" aria-hidden />
+        {last ? `Undo the last tap: ${last.kind === "mark" ? (MARKS.find((m) => m.id === last.id)?.label ?? last.id) : (FLAGS.find((f) => f.id === last.id)?.label ?? last.id)} (${mmss(last.at)})` : "Undo the last tap"}
+      </button>
 
       <Panel>
         <div className="flex flex-col gap-2 px-3.5 py-3">

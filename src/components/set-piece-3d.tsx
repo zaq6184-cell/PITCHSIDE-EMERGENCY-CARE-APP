@@ -328,7 +328,7 @@ function StepPlayer3D({
       <div ref={present.ref} className="present">
       <div className="stage-box relative">
         <Stage step={step} phase={phase} scenario={scenario} acting={cur.who} />
-        <p className="pointer-events-none absolute left-2 top-2 max-w-[calc(100%-1rem)] truncate rounded-full bg-[#0b1f3a]/75 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
+        <p className="pointer-events-none absolute left-2 top-2 max-w-[calc(100%-1rem)] truncate rounded-full bg-[#0b1f3a]/90 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
           STEP {cur.n} · {cur.title.toUpperCase()}
         </p>
         <div className={cn("absolute right-2 flex items-center gap-1.5", scenario === "arrest" ? "top-2" : "top-10")}>
