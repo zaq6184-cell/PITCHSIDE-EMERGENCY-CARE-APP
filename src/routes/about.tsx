@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Download } from "lucide-react";
+import { Box, ChevronRight, Download, GraduationCap, Images, Languages, ListChecks, type LucideIcon, Rotate3d, Sparkles, Timer } from "lucide-react";
 import { ShareAppButton } from "@/components/install-app";
 import { LanguageList } from "@/components/language-switch";
 import { SoundSettings } from "@/components/sound-control";
@@ -8,6 +8,7 @@ import { AppShell, JumpChips, Panel, SectionLabel } from "@/components/workshop"
 import { asset } from "@/lib/asset";
 import { LANGS } from "@/lib/i18n";
 import { aboutApp, disclaimer } from "@/lib/disclaimer";
+import { APP_VERSION, RELEASED, WHATS_NEW } from "@/lib/release";
 
 export const Route = createFileRoute("/about")({
   component: About,
@@ -21,6 +22,16 @@ const sections: { id: string; chip: string; title: string; paragraphs: string[] 
   { id: "about-copyright", chip: "Copyright", title: "COPYRIGHT", paragraphs: aboutApp.copyright },
   { id: "about-ai", chip: "Use of AI", title: "USE OF AI", paragraphs: aboutApp.ai },
 ];
+
+const NOTE_ICONS: Record<string, LucideIcon> = {
+  "live-timer": Timer,
+  languages: Languages,
+  kit: Box,
+  ar: Rotate3d,
+  pictures: Images,
+  tools: GraduationCap,
+  recheck: ListChecks,
+};
 
 function About() {
   return (
@@ -43,6 +54,12 @@ function About() {
               className="hidden h-auto w-full max-w-[18rem] rounded-lg outline-none dark:block"
             />
             <h1 className="mt-3 font-display text-xl font-bold tracking-wide text-heading">About the app</h1>
+            <p className="mt-0.5 text-xs text-muted">
+              {`Version ${APP_VERSION} · ${RELEASED}`} ·{" "}
+              <a href="#about-whats-new" className="font-semibold text-gold-ink underline underline-offset-2">
+                What's new
+              </a>
+            </p>
           </div>
         </Panel>
         <Link to="/install" className="block active:scale-[0.99]">
@@ -90,7 +107,31 @@ function About() {
             </div>
           </Panel>
         ) : null}
-        <JumpChips items={sections.map((s) => ({ id: s.id, label: s.chip }))} />
+        <JumpChips items={[{ id: "about-whats-new", label: "What's new" }, ...sections.map((s) => ({ id: s.id, label: s.chip }))]} />
+        <section id="about-whats-new" className="scroll-mt-24">
+          <Panel>
+            <div className="flex flex-col gap-2.5 px-3.5 py-3.5">
+              <SectionLabel>WHAT'S NEW</SectionLabel>
+              <p className="text-xs text-muted">{`Version ${APP_VERSION} · ${RELEASED}`}</p>
+              <ul className="flex flex-col gap-3">
+                {WHATS_NEW.map((n) => {
+                  const Icon = NOTE_ICONS[n.id] ?? Sparkles;
+                  return (
+                    <li key={n.id} className="flex gap-3">
+                      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-note text-gold-ink">
+                        <Icon className="size-[18px]" aria-hidden />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-display text-sm font-semibold tracking-wide text-heading">{n.title}</span>
+                        <span className="block text-sm leading-snug">{n.text}</span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </Panel>
+        </section>
         {sections.map((s) => (
           <section key={s.id} id={s.id} className="scroll-mt-24">
             <Panel>

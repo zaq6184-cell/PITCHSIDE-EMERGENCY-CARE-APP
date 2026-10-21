@@ -153,7 +153,7 @@ export function BadgeToaster() {
   if (!current) return null;
   const Icon = ICONS[current.id] ?? Trophy;
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 flex justify-center px-3.5">
+    <div className="badge-toast pointer-events-none fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 flex justify-center px-3.5">
       <div
         key={current.id}
         role="status"

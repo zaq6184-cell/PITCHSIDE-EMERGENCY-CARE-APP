@@ -23,6 +23,8 @@ import { Panel, SectionLabel } from "@/components/workshop";
 import {
   ADRENALINE_EVERY_MS,
   amiodaroneDose,
+  ARREST_KEY as KEY,
+  ARREST_VOICE_KEY as VOICE_KEY,
   type ArrestEventKind,
   type ArrestSession,
   checksDue,
@@ -43,9 +45,6 @@ import { shareOrCopy } from "@/lib/share";
 import { say, sfx, startMetronome, stopMetronome, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { useWakeLock } from "@/lib/wake-lock";
-
-const KEY = "pec-arrest-timer";
-const VOICE_KEY = "pec-arrest-voice";
 
 type Tone = "red" | "navy" | "gold" | "plain";
 const BUTTONS: { kind: ArrestEventKind; label: (s: ArrestSession) => string; icon: LucideIcon; tone: Tone }[] = [
@@ -259,6 +258,7 @@ export function ArrestTimer() {
               "The clock runs from the collapse. Tap each step as it happens.",
               "Every 2 minutes a whistle, a buzz and Black's voice call the rhythm check — swap the person compressing.",
               "At the end you get the timings for the debrief, ready to share. The screen stays on while it runs.",
+              "Need to look something up mid-arrest? The clock follows you to every page, and the rhythm check still sounds.",
             ].map((t) => (
               <li key={t} className="flex gap-2">
                 <ChevronRight className="mt-0.5 size-4 shrink-0 text-gold-ink" aria-hidden />

@@ -863,3 +863,12 @@ html.i18n-wait body {
     opacity: 1;
   }
 }
+
+/* a running arrest timer shows above the tab bar on every page (components/live-arrest.tsx): room for it under the page */
+html[data-arrest-live] main {
+  padding-bottom: calc(9.75rem + env(safe-area-inset-bottom));
+}
+/* and a badge toast rises above it rather than covering the clock (components/progress-ui.tsx) */
+html[data-arrest-live] .badge-toast {
+  bottom: calc(8.4rem + env(safe-area-inset-bottom));
+}

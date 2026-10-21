@@ -1,6 +1,7 @@
 import { createRootRoute, HeadContent, Outlet, ScriptOnce, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
+import { LiveArrestBar } from "@/components/live-arrest";
 import { BadgeToaster } from "@/components/progress-ui";
 import { SearchHost } from "@/components/search";
 import appCss from "../styles.css?url";
@@ -75,6 +76,7 @@ export const Route = createRootRoute({
           <Outlet />
           <SearchHost />
           <BadgeToaster />
+          <LiveArrestBar />
         </AuthProvider>
         <Scripts />
       </body>

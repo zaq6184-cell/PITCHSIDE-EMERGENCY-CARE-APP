@@ -4,6 +4,11 @@
  * protocol: rhythm check every 2 minutes, first shock within 3 minutes, and — only if trained —
  * adrenaline after the 3rd shock (at once if no shock is advised), amiodarone 300 mg then 150 mg.
  */
+/** Where the arrest timer keeps its run on this device, and whether its voice is on — read by the timer page and by
+ *  the live bar every other page shows while a run is going (components/live-arrest.tsx). */
+export const ARREST_KEY = "pec-arrest-timer";
+export const ARREST_VOICE_KEY = "pec-arrest-voice";
+
 export type ArrestEventKind = "cpr" | "aed" | "shock" | "noshock" | "adrenaline" | "amiodarone" | "airway" | "rosc" | "ambulance";
 export type ArrestEvent = { kind: ArrestEventKind; at: number };
 export type ArrestSession = { startedAt: number; events: ArrestEvent[]; endedAt?: number };

@@ -140,7 +140,7 @@ export const stations: Station[] = [
           {
             kind: "alert",
             title: "Presume sudden cardiac arrest (SCA) until proven otherwise",
-            text: "ENTER IMMEDIATELY → ASSESS → START CPR → APPLY AED WITHIN 30 SECONDS. Do not delay CPR / defibrillation for C-spine or fracture assessment in a non-contact collapse.",
+            text: "ENTER IMMEDIATELY → ASSESS → START CPR → APPLY THE AED WITHIN 30 SECONDS OF IT ARRIVING. Do not delay CPR / defibrillation for C-spine or fracture assessment in a non-contact collapse.",
           },
           {
             kind: "info",
