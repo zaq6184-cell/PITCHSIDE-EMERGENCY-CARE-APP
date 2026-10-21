@@ -1,0 +1,3 @@
+# 3D models for augmented reality: never touch their bytes
+*.glb binary
+*.usdz binary

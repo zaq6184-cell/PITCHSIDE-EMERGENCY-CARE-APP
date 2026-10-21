@@ -27,8 +27,9 @@ function musicFor(pathname: string): MusicScene {
 }
 
 /** Where Back goes when this page was the first one opened (from a shared link or a shortcut). */
-function parentOf(pathname: string): "/" | "/stations" | "/timer" | "/cases" {
+function parentOf(pathname: string): "/" | "/stations" | "/timer" | "/cases" | "/drill" {
   if (pathname.startsWith("/station/")) return "/stations";
+  if (pathname === "/ar" || pathname === "/ar/") return "/drill";
   if (pathname.startsWith("/case/")) return "/cases";
   if (pathname.startsWith("/plan") || pathname.startsWith("/arrest") || pathname.startsWith("/scorer")) return "/timer";
   return "/";
@@ -104,6 +105,8 @@ export function AppShell({
       ["/arrest", "Arrest timer · CPR clock and event log"],
       ["/rules", "Golden rules · FIFA key points"],
       ["/role", "Colour roles · FIFA PEAP positions"],
+      // after /arrest, which also starts with "/ar"
+      ["/ar", "AR · the team in your room"],
     ] as const
   ).find(([p]) => pathname.startsWith(p))?.[1];
 
@@ -252,7 +255,7 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
 }
 
 export type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer";
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar";
   icon: typeof Users;
   tint: string;
   ink: string;

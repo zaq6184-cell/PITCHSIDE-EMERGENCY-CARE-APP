@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { asset } from "@/lib/asset";
 import { useSceneVisibility } from "@/lib/use-scene-visibility";
 import { panFrom, voicePan } from "@/lib/view3d";
+import { facing, type Spot, SPOTS } from "@/lib/spots";
 import { type RoleId, workshop } from "@/lib/workshop";
 
 /**
@@ -21,20 +22,7 @@ import { type RoleId, workshop } from "@/lib/workshop";
  * the lift); "aed" is the close-up used by the AED pads trainer (aed-scene-3d.tsx).
  */
 export type Scenario = "arrest" | "spine" | "aed";
-export type Spot = { id: RoleId; color: string; x: number; z: number; face: number; stand?: boolean };
-
-/** A figure's front is its local -z; rotating by θ about y points it along (-sin θ, -cos θ). */
-const facing = (x: number, z: number, tx: number, tz: number) => Math.atan2(-(tx - x), -(tz - z));
-
-// Player's right is -x. The player lies along z: head ≈ -1.0, sternum ≈ -0.55, pelvis ≈ 0.1, legs ≈ 0.8.
-const SPOTS: Spot[] = [
-  { id: "orange", color: "#E36B12", x: 0, z: -1.66, face: facing(0, -1.66, 0, -1.0) },
-  { id: "green", color: "#1A7F45", x: 0.7, z: -1.14, face: facing(0.7, -1.14, 0.05, -0.62) },
-  { id: "red", color: "#C0392B", x: -0.62, z: -0.54, face: facing(-0.62, -0.54, 0, -0.54) },
-  { id: "blue", color: "#1F6AA5", x: -0.64, z: 0.2, face: facing(-0.64, 0.2, 0, 0.14) },
-  { id: "white", color: "#F4F4F1", x: -0.62, z: 0.96, face: facing(-0.62, 0.96, 0, 0.88) },
-  { id: "black", color: "#1C1C1C", x: 1.18, z: -0.2, face: facing(1.18, -0.2, 0, -0.45), stand: true },
-];
+export type { Spot } from "@/lib/spots";
 
 const SKIN: Record<RoleId, string> = { black: "#8d5524", orange: "#e0ac69", red: "#c68642", blue: "#a16e4b", white: "#f1c27d", green: "#6b4423" };
 const HAIR: Record<RoleId, string> = { black: "#15110e", orange: "#3a2a1e", red: "#120d0a", blue: "#2b1d14", white: "#1a1410", green: "#0d0a08" };
@@ -85,9 +73,17 @@ function rollAngle(step: number, t: number) {
   if (p < 6.4) return (1 - ease((p - 5) / 1.4)) * 0.55;
   return 0;
 }
+/**
+ * The log roll turns about the right shoulder and hip, which stay on the ground (half the player's width
+ * out from the middle), so the body rises on its side instead of sinking through the floor — which shows
+ * in augmented reality, where there is no grass to hide it.
+ */
+const ROLL_EDGE = 0.26;
+const rollShift = (a: number): [number, number] => [-ROLL_EDGE * (1 - Math.cos(a)), ROLL_EDGE * Math.sin(a)];
 function rollPoint(x: number, y: number, z: number, a: number): [number, number, number] {
   const yy = y - PLAYER_Y;
-  return [x * Math.cos(a) - yy * Math.sin(a), PLAYER_Y + x * Math.sin(a) + yy * Math.cos(a), z];
+  const [sx, sy] = rollShift(a);
+  return [x * Math.cos(a) - yy * Math.sin(a) + sx, PLAYER_Y + x * Math.sin(a) + yy * Math.cos(a) + sy, z];
 }
 
 // Stop-and-start carry, shortened for the screen: lift and move, then down for compressions.
@@ -803,9 +799,11 @@ export function Player({
     if (scenario === "spine") {
       const st = spineState(step, phase, since(t));
       const k = 1 - Math.exp(-dt * 8);
-      grp.position.y += (PLAYER_Y + st.py - grp.position.y) * k;
-      grp.position.z += (st.travel - grp.position.z) * k;
       grp.rotation.z += (st.roll - grp.rotation.z) * k;
+      const [sx, sy] = rollShift(grp.rotation.z);
+      grp.position.x = sx;
+      grp.position.y += (PLAYER_Y + st.py + sy - grp.position.y) * k;
+      grp.position.z += (st.travel - grp.position.z) * k;
       if (chest.current) chest.current.scale.y = 1;
       return;
     }
@@ -825,9 +823,12 @@ export function Player({
     }
     const c = compressionWith(fault, step, t);
     const shock = step === 3 && t % 5 > 4.72 ? 0.05 : 0;
-    grp.position.y = PLAYER_Y + shock + (step === 6 ? carryLift(t) : 0);
+    const roll = rollAngle(step, t);
+    const [sx, sy] = rollShift(roll);
+    grp.position.x = sx;
+    grp.position.y = PLAYER_Y + sy + shock + (step === 6 ? carryLift(t) : 0);
     grp.position.z = step === 6 ? carryTravel(t) : 0;
-    grp.rotation.z = rollAngle(step, t);
+    grp.rotation.z = roll;
     if (chest.current) chest.current.scale.y = 1 - c * 0.16;
   });
   return (

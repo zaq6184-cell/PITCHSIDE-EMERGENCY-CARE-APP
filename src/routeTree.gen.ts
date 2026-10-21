@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AedRouteImport } from './routes/aed'
+import { Route as ArRouteImport } from './routes/ar'
 import { Route as ArrestRouteImport } from './routes/arrest'
 import { Route as BagRouteImport } from './routes/bag'
 import { Route as CasesRouteImport } from './routes/cases'
@@ -48,6 +49,11 @@ const AboutRoute = AboutRouteImport.update({
 const AedRoute = AedRouteImport.update({
   id: '/aed',
   path: '/aed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArRoute = ArRouteImport.update({
+  id: '/ar',
+  path: '/ar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArrestRoute = ArrestRouteImport.update({
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/aed': typeof AedRoute
+  '/ar': typeof ArRoute
   '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cases': typeof CasesRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/aed': typeof AedRoute
+  '/ar': typeof ArRoute
   '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cases': typeof CasesRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/aed': typeof AedRoute
+  '/ar': typeof ArRoute
   '/arrest': typeof ArrestRoute
   '/bag': typeof BagRoute
   '/cases': typeof CasesRoute
@@ -249,6 +258,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/aed'
+    | '/ar'
     | '/arrest'
     | '/bag'
     | '/cases'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/aed'
+    | '/ar'
     | '/arrest'
     | '/bag'
     | '/cases'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/aed'
+    | '/ar'
     | '/arrest'
     | '/bag'
     | '/cases'
@@ -331,6 +343,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AedRoute: typeof AedRoute
+  ArRoute: typeof ArRoute
   ArrestRoute: typeof ArrestRoute
   BagRoute: typeof BagRoute
   CasesRoute: typeof CasesRoute
@@ -376,6 +389,13 @@ declare module '@tanstack/react-router' {
       path: '/aed'
       fullPath: '/aed'
       preLoaderRoute: typeof AedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ar': {
+      id: '/ar'
+      path: '/ar'
+      fullPath: '/ar'
+      preLoaderRoute: typeof ArRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/arrest': {
@@ -539,6 +559,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AedRoute: AedRoute,
+  ArRoute: ArRoute,
   ArrestRoute: ArrestRoute,
   BagRoute: BagRoute,
   CasesRoute: CasesRoute,

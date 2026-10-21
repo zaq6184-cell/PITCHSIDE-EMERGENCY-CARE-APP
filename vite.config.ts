@@ -218,6 +218,7 @@ export default defineConfig(({ command, isPreview }) => ({
               { path: "/case/heat" },
               { path: "/scorer" },
               { path: "/live" },
+              { path: "/ar" },
             ],
           }
         : undefined,

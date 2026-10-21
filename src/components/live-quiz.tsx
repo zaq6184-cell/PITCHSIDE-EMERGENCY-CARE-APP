@@ -1,8 +1,8 @@
 import { Check, ChevronRight, Crown, Loader2, Play, Trophy, Users, Wifi, WifiOff, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { joinRoom } from "trystero";
-import { encode } from "uqr";
 import { Confetti } from "@/components/confetti";
+import { QrCode } from "@/components/qr-code";
 import { Panel, SectionLabel } from "@/components/workshop";
 import {
   APP_ID,
@@ -27,22 +27,6 @@ import { cn } from "@/lib/utils";
 import { roleTag, workshop } from "@/lib/workshop";
 
 type Room = ReturnType<typeof joinRoom>;
-
-/** A QR code drawn as one SVG path (dark modules), with a quiet zone. */
-export function QrCode({ text, className }: { text: string; className?: string }) {
-  const qr = useMemo(() => encode(text, { border: 2 }), [text]);
-  const d = useMemo(() => {
-    let out = "";
-    qr.data.forEach((row, y) => row.forEach((on, x) => (on ? (out += `M${x} ${y}h1v1h-1z`) : null)));
-    return out;
-  }, [qr]);
-  return (
-    <svg viewBox={`0 0 ${qr.size} ${qr.size}`} className={className} role="img" aria-label={`QR code for ${text}`} shapeRendering="crispEdges">
-      <rect width={qr.size} height={qr.size} fill="#ffffff" />
-      <path d={d} fill="#0b1f3a" />
-    </svg>
-  );
-}
 
 const ROLE = Object.fromEntries(workshop.roles.map((r) => [r.id, r])) as Record<Colour, (typeof workshop.roles)[number]>;
 const ORDER: Colour[] = ["black", "orange", "red", "blue", "white", "green"];

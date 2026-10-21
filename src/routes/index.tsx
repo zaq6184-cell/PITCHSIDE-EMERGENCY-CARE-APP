@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Bone,
+  Box,
   Brain,
   BriefcaseMedical,
   PersonStanding,
@@ -175,6 +176,7 @@ function Home() {
             { to: "/guides", icon: PlayCircle, tint: "#E4EFF8", ink: "#1F6AA5", title: "Films", sub: "Links to FIFA's films" },
             { to: "/cases", icon: MonitorPlay, tint: "#FBE9E7", ink: "#C0392B", title: "Case simulator", sub: "Make the calls with a live monitor · arrest, ball to the chest, heat stroke", wide: true },
             { to: "/aed", icon: Zap, tint: "#F6EFD6", ink: "#8A6D10", title: "AED pads trainer", sub: "Place the pads in 3D · everyone clear · shock", wide: true },
+            { to: "/ar", icon: Box, tint: "#E4EFF8", ink: "#1F6AA5", title: "AR · the team in your room", sub: "Put the 3D team on the floor at full size · how to use it", wide: true },
             { to: "/quiz", icon: Gamepad2, tint: "#F6EFD6", ink: "#8A6D10", title: "Test yourself", sub: "Quiz · place the team · hand signals", wide: true },
           ]}
         />

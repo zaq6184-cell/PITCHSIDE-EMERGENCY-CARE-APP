@@ -255,6 +255,24 @@
   z-index: 80;
   pointer-events: none;
 }
+/* live AR: the "finding the floor" icon sweeps side to side, the way the phone should move */
+.ar-scan {
+  animation: ar-scan 1.8s ease-in-out infinite;
+}
+@keyframes ar-scan {
+  0%,
+  100% {
+    transform: translateX(-4px) rotate(-8deg);
+  }
+  50% {
+    transform: translateX(4px) rotate(8deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ar-scan {
+    animation: none;
+  }
+}
 
 /* install offers are in every built page: hidden before the first paint once the app is installed, and
    the Home card once it is closed (marks set by installBootScript), so nothing jumps when the app starts */

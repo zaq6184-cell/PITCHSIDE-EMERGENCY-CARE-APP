@@ -18,7 +18,7 @@ export type Target =
   | { to: "/station/$id"; id: string; hash?: string }
   | { to: "/drill"; neck?: boolean; mistakes?: boolean }
   | {
-      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer";
+      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar";
       hash?: string;
     };
 
@@ -113,7 +113,7 @@ const PAGES: Entry[] = [
   { id: "pack", kind: "tool", title: "Pack the bag", sub: "Game · emergency bag trays", text: "Drag items into the FIFA emergency bag trays and pouches; faulty or out-of-date kit goes in the replace bin; critical fails.", target: { to: "/bag", hash: "pack" } },
   { id: "mistakes", kind: "tool", title: "Spot the mistake", sub: "Team drills in 3D · find the error", text: `Planted errors in the 3D drills. ${MISTAKES.map((m) => `${m.what}. ${m.why}`).join(" ")}`, target: { to: "/drill", mistakes: true } },
   { id: "signs", kind: "tool", title: "Spot the sign (concussion)", sub: "FOCUS · visible signs in 3D", text: `Visible signs of concussion acted out in 3D. ${SIGNS.map((s) => `${s.name}: ${s.what}`).join(" ")}`, target: { to: "/focus", hash: "focus-signs" } },
-  { id: "ar", kind: "tool", title: "AR: the team on your table", sub: "Team drills in 3D · augmented reality", text: "Augmented reality: put the 3D team on a table or the floor through the phone's camera and walk around the set piece. WebXR on Android Chrome, AR Quick Look on iPhone.", target: { to: "/drill" } },
+  { id: "ar", kind: "tool", title: "AR: the team in your room", sub: "Augmented reality · how to use it", text: "Augmented reality: put the 3D team on the floor or a table through the phone's camera and walk round each step of the set piece. Google's AR viewer on Android, AR Quick Look on iPhone and iPad, live AR in Chrome. Numbered PEAP marks. How to use it, troubleshooting, teaching ideas.", target: { to: "/ar" } },
 ];
 
 let cache: Entry[] | null = null;
