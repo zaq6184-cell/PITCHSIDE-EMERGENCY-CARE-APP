@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronRight, MonitorPlay, Smartphone } from "lucide-react";
 import { lazy, Suspense, useEffect, useState } from "react";
+import { ScenePicture } from "@/components/scene-picture";
 import { AppShell, Note, Panel } from "@/components/workshop";
 import { codeFromHash, isRoomCode } from "@/lib/live";
+import { LIVE_PIC } from "@/lib/scene-images";
 import { tap } from "@/lib/sound";
 
 // the room code needs a browser, so the quiz itself loads only once someone hosts or joins
@@ -41,6 +43,7 @@ function LivePage() {
     <AppShell tab="home" heading="Live class quiz">
       <div className="flex flex-col gap-3.5">
         <Panel>
+          <ScenePicture pic={LIVE_PIC} />
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">LIVE CLASS QUIZ</p>
             <p className="mt-0.5 font-display text-xl font-bold leading-tight">Everyone answers from their phone</p>

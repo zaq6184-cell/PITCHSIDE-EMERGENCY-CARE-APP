@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, ClipboardCheck, Flag, Hand, ImageDown, Play, RotateCcw, Settings2, Share2, Square, Undo2, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { ScenePicture } from "@/components/scene-picture";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import {
   CCF_TARGET,
@@ -29,6 +30,7 @@ import {
   togglePause,
   undo,
 } from "@/lib/scorer";
+import { SCORER_PIC } from "@/lib/scene-images";
 import { shareOrCopy } from "@/lib/share";
 import { haptic, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
@@ -97,6 +99,7 @@ function ScorerPage() {
     <AppShell tab="timer">
       <div className="flex flex-col gap-3.5">
         <Panel>
+          <ScenePicture pic={SCORER_PIC} />
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">FOR INSTRUCTORS</p>
             <h1 className="mt-0.5 font-display text-xl font-bold leading-tight">Practical scorer</h1>

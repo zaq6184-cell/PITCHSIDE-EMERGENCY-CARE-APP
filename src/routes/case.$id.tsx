@@ -1,8 +1,10 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { CasePlayer } from "@/components/case-player";
+import { ScenePicture } from "@/components/scene-picture";
 import { AppShell, Panel } from "@/components/workshop";
 import { getCase } from "@/lib/cases";
+import { CASE_PICS } from "@/lib/scene-images";
 
 export const Route = createFileRoute("/case/$id")({
   component: CasePage,
@@ -20,6 +22,7 @@ function CasePage() {
     <AppShell tab="drill">
       <div className="flex flex-col gap-3.5">
         <Panel>
+          <ScenePicture pic={CASE_PICS[c.id]} />
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">CASE · {c.short.toUpperCase()}</p>
             <h1 className="mt-0.5 font-display text-xl font-bold leading-tight">{c.title}</h1>

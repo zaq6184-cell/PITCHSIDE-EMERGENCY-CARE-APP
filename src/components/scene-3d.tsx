@@ -1,6 +1,7 @@
 import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { type ReactNode, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { KitModel } from "@/components/kit-model";
 import { asset } from "@/lib/asset";
 import { useSceneVisibility } from "@/lib/use-scene-visibility";
 import { panFrom, voicePan } from "@/lib/view3d";
@@ -957,14 +958,16 @@ function SpineGear({ step, phase, fault }: { step: number; phase: number; fault?
       </group>
       {/* extrication collar: firm band round the neck with the dark chin support on top */}
       <group ref={collar} position={[0, 0.0, -0.8]} visible={false}>
-        <mesh rotation={[Math.PI / 2, 0, 0]} scale={[0.088, 0.12, 0.082]}>
-          <cylinderGeometry args={[1, 1, 1, 20, 1, true]} />
-          <meshStandardMaterial color="#ece6d6" roughness={0.6} side={THREE.DoubleSide} />
-        </mesh>
-        <mesh position={[0, 0.078, -0.04]} scale={[0.12, 0.024, 0.07]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#2b2f36" roughness={0.6} />
-        </mesh>
+        <KitModel name="collar">
+          <mesh rotation={[Math.PI / 2, 0, 0]} scale={[0.088, 0.12, 0.082]}>
+            <cylinderGeometry args={[1, 1, 1, 20, 1, true]} />
+            <meshStandardMaterial color="#ece6d6" roughness={0.6} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[0, 0.078, -0.04]} scale={[0.12, 0.024, 0.07]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#2b2f36" roughness={0.6} />
+          </mesh>
+        </KitModel>
       </group>
       {/* straps over chest, pelvis and legs */}
       {STRAPS.map(([z, y], i) => (
@@ -1018,6 +1021,9 @@ function Kit({ step }: { step: number }) {
   const pads = useRef<THREE.Group>(null);
   const scoop = useRef<THREE.Group>(null);
   const flash = useRef<THREE.PointLight>(null);
+  // how brightly the AED and the oxygen cylinder light up, for the models and their stand-ins alike
+  const aedGlow = useRef(0.05);
+  const cylGlow = useRef(0.03);
   const tubeGeo = useMemo(
     () =>
       new THREE.TubeGeometry(
@@ -1031,9 +1037,11 @@ function Kit({ step }: { step: number }) {
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
     const shock = step === 3 && t % 5 > 4.7;
-    if (aed.current) aed.current.emissiveIntensity = step === 3 ? (shock ? 2.6 : 0.4 + Math.sin(t * 6) * 0.3) : 0.05;
+    aedGlow.current = step === 3 ? (shock ? 2.6 : 0.4 + Math.sin(t * 6) * 0.3) : 0.05;
+    cylGlow.current = step === 4 ? 0.5 + Math.sin(t * 3) * 0.3 : 0.03;
+    if (aed.current) aed.current.emissiveIntensity = aedGlow.current;
     if (flash.current) flash.current.intensity = shock ? 16 : 0;
-    if (cyl.current) cyl.current.emissiveIntensity = step === 4 ? 0.5 + Math.sin(t * 3) * 0.3 : 0.03;
+    if (cyl.current) cyl.current.emissiveIntensity = cylGlow.current;
     if (bag.current) {
       const beat = (t * CPR_HZ) % 10 < 0.9;
       bag.current.scale.set(1, step === 4 && beat ? 0.7 : 1, 1);
@@ -1051,19 +1059,18 @@ function Kit({ step }: { step: number }) {
   return (
     <group>
       {/* emergency bag at the head, the AED open beside Green */}
-      <mesh position={[1.3, 0.16, -1.6]} rotation={[0, 0.5, 0]} castShadow>
-        <boxGeometry args={[0.62, 0.32, 0.42]} />
-        <meshStandardMaterial color="#22406e" roughness={0.75} />
-      </mesh>
+      <EmergencyBag />
       <group position={[1.02, 0, -0.6]} rotation={[0, -0.3, 0]}>
-        <mesh position={[0, 0.08, 0]} castShadow>
-          <boxGeometry args={[0.34, 0.16, 0.28]} />
-          <meshStandardMaterial ref={aed} color="#F2C811" emissive="#FFD34D" emissiveIntensity={0.05} roughness={0.5} />
-        </mesh>
-        <mesh position={[0, 0.22, -0.14]} rotation={[-0.35, 0, 0]} castShadow>
-          <boxGeometry args={[0.34, 0.26, 0.03]} />
-          <meshStandardMaterial color="#d6ad10" roughness={0.5} />
-        </mesh>
+        <KitModel name="aed" glow={aedGlow}>
+          <mesh position={[0, 0.08, 0]} castShadow>
+            <boxGeometry args={[0.34, 0.16, 0.28]} />
+            <meshStandardMaterial ref={aed} color="#F2C811" emissive="#FFD34D" emissiveIntensity={0.05} roughness={0.5} />
+          </mesh>
+          <mesh position={[0, 0.22, -0.14]} rotation={[-0.35, 0, 0]} castShadow>
+            <boxGeometry args={[0.34, 0.26, 0.03]} />
+            <meshStandardMaterial color="#d6ad10" roughness={0.5} />
+          </mesh>
+        </KitModel>
       </group>
       {/* AED pads on the chest: below the right collarbone, and on the left side */}
       <group ref={pads}>
@@ -1079,44 +1086,70 @@ function Kit({ step }: { step: number }) {
       <pointLight ref={flash} position={[0.3, 0.9, -0.5]} color="#FFF3B0" intensity={0} distance={7} />
       {/* bag valve at the head, oxygen tubing back to the cylinder */}
       <group ref={bag} position={[0.2, 0.3, -1.3]} rotation={[0, 0, Math.PI / 2]}>
-        <mesh scale={[0.09, 0.15, 0.09]}>
-          <sphereGeometry args={[1, 16, 12]} />
-          <meshStandardMaterial color="#cfe6ee" roughness={0.3} transparent opacity={0.85} />
-        </mesh>
+        <KitModel name="bvm">
+          <mesh scale={[0.09, 0.15, 0.09]}>
+            <sphereGeometry args={[1, 16, 12]} />
+            <meshStandardMaterial color="#cfe6ee" roughness={0.3} transparent opacity={0.85} />
+          </mesh>
+        </KitModel>
       </group>
       <mesh ref={tube} geometry={tubeGeo}>
         <meshStandardMaterial color="#d6ecf3" roughness={0.3} transparent opacity={0.9} />
       </mesh>
-      <Cylinder glow={cyl} />
-      {/* scoop below the feet, basket beyond it */}
+      <Cylinder glow={cyl} level={cylGlow} />
+      {/* long spinal board below the feet (a scoop can also be used), basket beyond it */}
       <group ref={scoop} position={[0, 0.03, 3.3]}>
-        {[-0.24, 0.24].map((sx) => (
-          <mesh key={sx} position={[sx, 0, 0]} castShadow>
-            <boxGeometry args={[0.2, 0.05, 1.9]} />
-            <meshStandardMaterial color="#F2C811" roughness={0.5} />
-          </mesh>
-        ))}
+        <group position={[0, -0.025, 0]}>
+          <KitModel name="board">
+            {[-0.24, 0.24].map((sx) => (
+              <mesh key={sx} position={[sx, 0.025, 0]} castShadow>
+                <boxGeometry args={[0.2, 0.05, 1.9]} />
+                <meshStandardMaterial color="#F2C811" roughness={0.5} />
+              </mesh>
+            ))}
+          </KitModel>
+        </group>
       </group>
-      <mesh position={[0, 0.09, 5.6]} castShadow>
-        <boxGeometry args={[0.72, 0.16, 2.1]} />
-        <meshStandardMaterial color="#E36B12" roughness={0.6} />
-      </mesh>
+      <group position={[0, 0, 5.6]}>
+        <KitModel name="basket">
+          <mesh position={[0, 0.09, 0]} castShadow>
+            <boxGeometry args={[0.72, 0.16, 2.1]} />
+            <meshStandardMaterial color="#E36B12" roughness={0.6} />
+          </mesh>
+        </KitModel>
+      </group>
     </group>
   );
 }
 
-/** The oxygen cylinder beside Blue. */
-function Cylinder({ glow }: { glow?: React.RefObject<THREE.MeshStandardMaterial | null> }) {
+/** The emergency bag at the head, on Green's side. */
+function EmergencyBag() {
   return (
-    <group>
-      <mesh position={[-0.3, 0.1, 0.6]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-        <cylinderGeometry args={[0.09, 0.09, 0.62, 18]} />
-        <meshStandardMaterial ref={glow} color="#f2f2f2" emissive="#9AD0FF" emissiveIntensity={0.03} roughness={0.35} metalness={0.25} />
-      </mesh>
-      <mesh position={[-0.3, 0.1, 0.25]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.035, 0.05, 0.08, 10]} />
-        <meshStandardMaterial color="#9aa3ad" roughness={0.3} metalness={0.8} />
-      </mesh>
+    <group position={[1.3, 0, -1.6]} rotation={[0, 0.5, 0]}>
+      <KitModel name="bag">
+        <mesh position={[0, 0.16, 0]} castShadow>
+          <boxGeometry args={[0.62, 0.32, 0.42]} />
+          <meshStandardMaterial color="#22406e" roughness={0.75} />
+        </mesh>
+      </KitModel>
+    </group>
+  );
+}
+
+/** The oxygen cylinder beside Blue, its valve towards the head. */
+function Cylinder({ glow, level }: { glow?: React.RefObject<THREE.MeshStandardMaterial | null>; level?: React.RefObject<number> }) {
+  return (
+    <group position={[-0.3, 0.1, 0.56]}>
+      <KitModel name="oxygen" glow={level} glowColor="#9AD0FF">
+        <mesh position={[0, 0, 0.04]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+          <cylinderGeometry args={[0.09, 0.09, 0.62, 18]} />
+          <meshStandardMaterial ref={glow} color="#f2f2f2" emissive="#9AD0FF" emissiveIntensity={0.03} roughness={0.35} metalness={0.25} />
+        </mesh>
+        <mesh position={[0, 0, -0.31]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.035, 0.05, 0.08, 10]} />
+          <meshStandardMaterial color="#9aa3ad" roughness={0.3} metalness={0.8} />
+        </mesh>
+      </KitModel>
     </group>
   );
 }
@@ -1127,6 +1160,7 @@ function SpineKit({ step, phase }: { step: number; phase: number }) {
   const basket = useRef<THREE.Group>(null);
   const tube = useRef<THREE.Mesh>(null);
   const cyl = useRef<THREE.MeshStandardMaterial>(null);
+  const cylGlow = useRef(0.03);
   const since = useSince(step, phase);
   const tubeGeo = useMemo(
     () =>
@@ -1156,56 +1190,64 @@ function SpineKit({ step, phase }: { step: number; phase: number }) {
     }
     const gear = spineGear(step, phase, s);
     if (tube.current) tube.current.visible = gear.mask > 0.5 && step < 7;
-    if (cyl.current) cyl.current.emissiveIntensity = step === 2 && s > 3.4 && s < 6.6 ? 0.5 + Math.sin(t * 3) * 0.3 : 0.03;
+    cylGlow.current = step === 2 && s > 3.4 && s < 6.6 ? 0.5 + Math.sin(t * 3) * 0.3 : 0.03;
+    if (cyl.current) cyl.current.emissiveIntensity = cylGlow.current;
   });
   return (
     <group>
-      <mesh position={[1.3, 0.16, -1.6]} rotation={[0, 0.5, 0]} castShadow>
-        <boxGeometry args={[0.62, 0.32, 0.42]} />
-        <meshStandardMaterial color="#22406e" roughness={0.75} />
-      </mesh>
+      <EmergencyBag />
       {/* the AED comes to every incident: here it stays closed */}
-      <mesh position={[1.02, 0.08, -0.6]} rotation={[0, -0.3, 0]} castShadow>
-        <boxGeometry args={[0.34, 0.16, 0.28]} />
-        <meshStandardMaterial color="#F2C811" roughness={0.5} />
-      </mesh>
-      <Cylinder glow={cyl} />
+      <group position={[1.02, 0, -0.6]} rotation={[0, -0.3, 0]}>
+        <KitModel name="aed">
+          <mesh position={[0, 0.08, 0]} castShadow>
+            <boxGeometry args={[0.34, 0.16, 0.28]} />
+            <meshStandardMaterial color="#F2C811" roughness={0.5} />
+          </mesh>
+        </KitModel>
+      </group>
+      <Cylinder glow={cyl} level={cylGlow} />
       <mesh ref={tube} geometry={tubeGeo} visible={false}>
         <meshStandardMaterial color="#d6ecf3" roughness={0.3} transparent opacity={0.9} />
       </mesh>
       {/* scoop: two blades joined at the head and foot ends */}
       <group ref={scoop} position={[SCOOP_REST[0], 0.03, SCOOP_REST[1]]}>
-        {[-0.24, 0.24].map((sx) => (
-          <mesh key={sx} position={[sx, 0, 0]} castShadow receiveShadow>
-            <boxGeometry args={[0.2, 0.05, 1.9]} />
-            <meshStandardMaterial color="#F2C811" roughness={0.5} />
-          </mesh>
-        ))}
-        {[-0.95, 0.95].map((sz) => (
-          <mesh key={sz} position={[0, 0.005, sz]} castShadow>
-            <boxGeometry args={[0.7, 0.05, 0.08]} />
-            <meshStandardMaterial color="#d9b10e" roughness={0.5} />
-          </mesh>
-        ))}
+        <group position={[0, -0.025, 0]}>
+          <KitModel name="scoop">
+            {[-0.24, 0.24].map((sx) => (
+              <mesh key={sx} position={[sx, 0.025, 0]} castShadow receiveShadow>
+                <boxGeometry args={[0.2, 0.05, 1.9]} />
+                <meshStandardMaterial color="#F2C811" roughness={0.5} />
+              </mesh>
+            ))}
+            {[-0.95, 0.95].map((sz) => (
+              <mesh key={sz} position={[0, 0.03, sz]} castShadow>
+                <boxGeometry args={[0.7, 0.05, 0.08]} />
+                <meshStandardMaterial color="#d9b10e" roughness={0.5} />
+              </mesh>
+            ))}
+          </KitModel>
+        </group>
       </group>
       {/* basket stretcher: a tray with low walls, 2–3 lengths below the feet */}
       <group ref={basket} position={[0, 0, 5.6]}>
-        <mesh position={[0, 0.015, 0]} receiveShadow>
-          <boxGeometry args={[0.72, 0.03, 2.1]} />
-          <meshStandardMaterial color="#E36B12" roughness={0.6} />
-        </mesh>
-        {[-0.36, 0.36].map((sx) => (
-          <mesh key={sx} position={[sx, 0.085, 0]} castShadow>
-            <boxGeometry args={[0.035, 0.17, 2.1]} />
+        <KitModel name="basket">
+          <mesh position={[0, 0.015, 0]} receiveShadow>
+            <boxGeometry args={[0.72, 0.03, 2.1]} />
             <meshStandardMaterial color="#E36B12" roughness={0.6} />
           </mesh>
-        ))}
-        {[-1.05, 1.05].map((sz) => (
-          <mesh key={sz} position={[0, 0.085, sz]} castShadow>
-            <boxGeometry args={[0.72, 0.17, 0.035]} />
-            <meshStandardMaterial color="#E36B12" roughness={0.6} />
-          </mesh>
-        ))}
+          {[-0.36, 0.36].map((sx) => (
+            <mesh key={sx} position={[sx, 0.085, 0]} castShadow>
+              <boxGeometry args={[0.035, 0.17, 2.1]} />
+              <meshStandardMaterial color="#E36B12" roughness={0.6} />
+            </mesh>
+          ))}
+          {[-1.05, 1.05].map((sz) => (
+            <mesh key={sz} position={[0, 0.085, sz]} castShadow>
+              <boxGeometry args={[0.72, 0.17, 0.035]} />
+              <meshStandardMaterial color="#E36B12" roughness={0.6} />
+            </mesh>
+          ))}
+        </KitModel>
       </group>
     </group>
   );

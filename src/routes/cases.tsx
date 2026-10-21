@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import { AppShell, Note, Panel } from "@/components/workshop";
 import { CASES } from "@/lib/cases";
 import { EMPTY, getProgress, subscribeProgress } from "@/lib/progress";
+import { CASE_PICS } from "@/lib/scene-images";
 
 export const Route = createFileRoute("/cases")({
   component: CasesPage,
@@ -41,9 +42,15 @@ function CasesPage() {
             return (
               <Link key={c.id} to="/case/$id" params={{ id: c.id }} className="block active:scale-[0.99]">
                 <Panel>
-                  <div className="flex items-center gap-3 px-3.5 py-3.5">
-                    <span className="tint-chip grid size-12 shrink-0 place-items-center rounded-2xl" style={{ "--tint": tint, "--ink": ink } as React.CSSProperties}>
-                      <Icon className="size-6" aria-hidden />
+                  <div className="flex items-center gap-3 px-3 py-3">
+                    <span className="relative shrink-0">
+                      <img src={CASE_PICS[c.id].small} alt="" width={640} height={360} loading="lazy" className="block aspect-video w-28 rounded-xl bg-navy object-cover" />
+                      <span
+                        className="tint-chip absolute -bottom-1.5 -right-1.5 grid size-8 place-items-center rounded-full ring-2 ring-paper"
+                        style={{ "--tint": tint, "--ink": ink } as React.CSSProperties}
+                      >
+                        <Icon className="size-4" aria-hidden />
+                      </span>
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-1.5 font-display text-[11px] font-semibold tracking-[0.14em] text-muted">

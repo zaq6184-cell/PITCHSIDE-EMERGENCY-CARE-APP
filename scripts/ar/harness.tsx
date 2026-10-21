@@ -14,6 +14,7 @@ import { USDZExporter } from "three/examples/jsm/exporters/USDZExporter.js";
 import { PeapMarks } from "../../src/components/peap-marks";
 import { SetPiece } from "../../src/components/scene-3d";
 import { type DrillSegment, drillTimeline, stateAt, type TimelineEvent } from "../../src/lib/drill-timeline";
+import { KIT_FOR, preloadKit } from "../../src/lib/kit-models";
 import { spineCallouts, spineSteps } from "../../src/lib/spine-drill";
 import { drillCallouts } from "../../src/lib/voice";
 import { workshop } from "../../src/lib/workshop";
@@ -63,6 +64,7 @@ export async function exportStep(
 ) {
   const W = view.width;
   const H = view.height;
+  await preloadKit(KIT_FOR[scenario]); // the real kit, not its stand-ins
   const canvas = document.createElement("canvas");
   canvas.style.cssText = `position:fixed;left:0;top:0;width:${W}px;height:${H}px`;
   document.body.appendChild(canvas);
@@ -208,6 +210,7 @@ export async function recordDrill(scenario: Scenario, { fps = 15, durations, lea
   const steps = scenario === "spine" ? spineSteps : workshop.steps;
   const { segments, length } = drillTimeline(script, steps, durations, lead);
   const frames = Math.floor((length / 1000) * fps) + 1;
+  await preloadKit(KIT_FOR[scenario]); // the real kit, not its stand-ins
   const W = 720;
   const H = 480;
   const canvas = document.createElement("canvas");

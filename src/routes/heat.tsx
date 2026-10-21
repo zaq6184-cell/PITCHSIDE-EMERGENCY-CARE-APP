@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Brain, ChevronRight, Droplets, Footprints, HeartPulse, Thermometer, Zap } from "lucide-react";
 import { CoolingSimulator, WbgtDial } from "@/components/heat-tools";
+import { ScenePicture } from "@/components/scene-picture";
 import { AppShell, JumpChips, Panel, SectionLabel } from "@/components/workshop";
+import { HEAT_PIC } from "@/lib/scene-images";
 
 export const Route = createFileRoute("/heat")({
   component: HeatPage,
@@ -34,6 +36,7 @@ function HeatPage() {
     <AppShell tab="home">
       <div className="flex flex-col gap-3.5">
         <Panel>
+          <ScenePicture pic={HEAT_PIC} />
           <div className="bg-navy px-3.5 py-3 text-on-navy">
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">HEAT ILLNESS</p>
             <h1 className="mt-0.5 font-display text-xl font-bold leading-tight">Exertional heat stroke — cool first, transport second</h1>

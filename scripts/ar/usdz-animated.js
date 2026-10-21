@@ -2,8 +2,8 @@
  * three.js's USDZExporter (r170, MIT licence, https://github.com/mrdoob/three.js), with one addition for the
  * AR models: `options.animation` writes each mesh's transform as time samples, so AR Quick Look plays the
  * team moving (and shows a play/pause scrubber for clips of 10 seconds or more). Also two texture inputs
- * get the types USD's schema asks for (string varname, float2 in), which r170 wrote as tokens. Used only by
- * scripts/ar/harness.tsx; the app itself never loads it.
+ * get the types USD's schema asks for (string varname, float2 in), which r170 wrote as tokens, and the kit
+ * models' pictures go in as JPEG. Used only by scripts/ar/harness.tsx; the app itself never loads it.
  */
 import {
 	NoColorSpace,
@@ -134,9 +134,10 @@ class USDZExporter {
 			}
 
 			const canvas = imageToCanvas( texture.image, texture.flipY, options.maxTextureSize );
-			const blob = await new Promise( resolve => canvas.toBlob( resolve, 'image/png', 1 ) );
+			const jpeg = textureExtension( texture ) === 'jpg';
+			const blob = await new Promise( resolve => canvas.toBlob( resolve, jpeg ? 'image/jpeg' : 'image/png', jpeg ? 0.85 : 1 ) );
 
-			files[ `textures/Texture_${ id }.png` ] = new Uint8Array( await blob.arrayBuffer() );
+			files[ `textures/Texture_${ id }.${ textureExtension( texture ) }` ] = new Uint8Array( await blob.arrayBuffer() );
 
 		}
 
@@ -541,6 +542,13 @@ function buildPrimvars( attributes ) {
 
 // Materials
 
+/** Pictures without transparency that ask for it (texture.userData.mimeType, as GLTFExporter reads it) go in as JPEG: far smaller than PNG. */
+function textureExtension( texture ) {
+
+	return texture.userData.mimeType === 'image/jpeg' ? 'jpg' : 'png';
+
+}
+
 function buildMaterials( materials, textures, quickLookCompatible = false ) {
 
 	const array = [];
@@ -638,7 +646,7 @@ function buildMaterial( material, textures, quickLookCompatible = false ) {
 		def Shader "Texture_${ texture.id }_${ mapType }"
 		{
 			uniform token info:id = "UsdUVTexture"
-			asset inputs:file = @textures/Texture_${ id }.png@
+			asset inputs:file = @textures/Texture_${ id }.${ textureExtension( texture ) }@
 			float2 inputs:st.connect = </Materials/Material_${ material.id }/Transform2d_${ mapType }.outputs:result>
 			${ color !== undefined ? 'float4 inputs:scale = ' + buildColor4( color ) : '' }
 			token inputs:sourceColorSpace = "${ texture.colorSpace === NoColorSpace ? 'raw' : 'sRGB' }"

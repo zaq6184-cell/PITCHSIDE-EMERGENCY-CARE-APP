@@ -282,7 +282,7 @@ function ArPage() {
               { icon: Sun, text: "Light: a well-lit room. In the dark the phone cannot see the floor." },
               { icon: ScanLine, text: "Floor: matt, with some pattern — carpet, tiles, wood. Plain white, black or shiny floors are hard to follow." },
               { icon: Volume2, text: "Sound: volume up, silent mode off. On Android the call-outs play with the moving team; AR Quick Look on iPhone shows the moves without sound." },
-              { icon: Wifi, text: "Internet: each step downloads once — up to about 0.8 MB on Android and 2 MB on iPhone; the whole drill about 2 MB on Android and 4 MB on iPhone." },
+              { icon: Wifi, text: "Internet: each step downloads once — up to about 1.3 MB on Android and 3 MB on iPhone; the whole drill about 2.5 MB on Android and 5 MB on iPhone." },
               { icon: Smartphone, text: "Android: the guide open in Chrome, with the Google app and Google Play Services for AR. iPhone and iPad: Safari, with iOS up to date." },
               { icon: ShieldAlert, text: "Safety: keep the floor clear, and look up from the screen when you walk." },
             ].map((r) => (
