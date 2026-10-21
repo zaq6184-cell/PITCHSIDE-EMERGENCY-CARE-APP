@@ -20,6 +20,7 @@ export const LANGS: { code: Lang; name: string; english: string }[] = [
       { code: "es", name: "Español", english: "Spanish" },
       { code: "fr", name: "Français", english: "French" },
       { code: "pt", name: "Português", english: "Portuguese" },
+      { code: "ms", name: "Bahasa Malaysia", english: "Malay" },
       { code: "de", name: "Deutsch", english: "German" },
     ] as const
   ).filter((l) => l.code in I18N_FILES),
@@ -164,7 +165,8 @@ function pieces(s: string, depth: number): string | null {
     const note = lookup(m[2], depth + 1);
     if (main !== null || note !== null) return `${main ?? m[1]} (${note ?? m[2]})`;
   }
-  m = /^([\s\S]*[A-Za-z][\s\S]*?) (\d+)$/.exec(s);
+  // …or a time ("CPR 1:00")
+  m = /^([\s\S]*[A-Za-z][\s\S]*?) (\d[\d:.,]*)$/.exec(s);
   if (m) {
     const t = lookup(m[1], depth + 1);
     if (t !== null) return `${t} ${m[2]}`;
@@ -219,6 +221,19 @@ function skipped(node: Node | null) {
   return SKIP_TAGS.has(el.tagName) || Boolean(el.closest('[translate="no"]'));
 }
 
+/**
+ * The English of whatever was translated before it joined the page. React builds new parts of the page away from
+ * it, so a node cannot yet see that it will sit inside translate="no"; once it is attached, `restore` puts the
+ * English back (the app's name in the top bar is one such part).
+ */
+const english = new WeakMap<Node, { text?: string; attrs?: Map<string, string> }>();
+const remember = (n: Node, change: { text?: string; attr?: [string, string] }) => {
+  const e = english.get(n) ?? {};
+  if (change.text !== undefined) e.text = change.text;
+  if (change.attr) (e.attrs ??= new Map()).set(...change.attr);
+  english.set(n, e);
+};
+
 function install() {
   const nodeValue = Object.getOwnPropertyDescriptor(Node.prototype, "nodeValue");
   const textContent = Object.getOwnPropertyDescriptor(Node.prototype, "textContent");
@@ -228,23 +243,52 @@ function install() {
   Object.defineProperty(Node.prototype, "nodeValue", {
     ...nodeValue,
     set(this: Node, v: string | null) {
-      setValue.call(this, this.nodeType === 3 && typeof v === "string" && !skipped(this) ? translate(v) : v);
+      const t = this.nodeType === 3 && typeof v === "string" && !skipped(this) ? translate(v) : v;
+      if (t !== v && typeof v === "string") remember(this, { text: v });
+      setValue.call(this, t);
     },
   });
   Object.defineProperty(Node.prototype, "textContent", {
     ...textContent,
     set(this: Node, v: string | null) {
-      setContent.call(this, typeof v === "string" && (this.nodeType === 1 || this.nodeType === 3) && !skipped(this) ? translate(v) : v);
+      const t = typeof v === "string" && (this.nodeType === 1 || this.nodeType === 3) && !skipped(this) ? translate(v) : v;
+      if (t !== v && typeof v === "string") remember(this, { text: v });
+      setContent.call(this, t);
     },
   });
   const createTextNode = Document.prototype.createTextNode;
   Document.prototype.createTextNode = function (this: Document, data: string) {
-    return createTextNode.call(this, translate(data));
+    const t = translate(data);
+    const node = createTextNode.call(this, t);
+    if (t !== data) remember(node, { text: data });
+    return node;
   };
   const setAttribute = Element.prototype.setAttribute;
   Element.prototype.setAttribute = function (this: Element, name: string, value: string) {
-    setAttribute.call(this, name, ATTRS.has(name) && typeof value === "string" && !skipped(this) ? translate(value) : value);
+    const t = ATTRS.has(name) && typeof value === "string" && !skipped(this) ? translate(value) : value;
+    if (t !== value) remember(this, { attr: [name, value] });
+    setAttribute.call(this, name, t);
   };
+  // put the English back in anything that turns out to sit inside translate="no" once it is attached
+  const restore = (root: Node) => {
+    const walk = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    for (let n: Node | null = root; n; n = walk.nextNode()) {
+      const e = english.get(n);
+      if (!e) continue;
+      english.delete(n);
+      if (e.text !== undefined) (n.nodeType === 3 ? setValue : setContent).call(n, e.text);
+      e.attrs?.forEach((v, a) => setAttribute.call(n as Element, a, v));
+    }
+  };
+  // React inserts a whole new part of the page at once: the translate="no" region may be the part, sit inside
+  // one already on the page, or lie somewhere within it
+  const settle = (n: Node) => {
+    if (skipped(n)) restore(n);
+    else if (n.nodeType === 1) (n as Element).querySelectorAll('[translate="no"]').forEach(restore);
+  };
+  new MutationObserver((records) => {
+    for (const r of records) r.addedNodes.forEach(settle);
+  }).observe(document.body, { childList: true, subtree: true });
   const title = Object.getOwnPropertyDescriptor(Document.prototype, "title");
   if (title?.set) {
     const setTitle = title.set;

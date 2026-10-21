@@ -88,7 +88,7 @@ function PitchsidePage() {
 
         <Section title="PEAP & ROLE CARDS">
           <p className="text-sm leading-snug">
-            The <b>Pre-Match Emergency Action Plan</b> links each key intervention to a pre-assigned colour role, so the team
+            <b>The Pre-Match Emergency Action Plan</b> links each key intervention to a pre-assigned colour role, so the team
             prepares proactively instead of reacting. Use and rehearse it in <b>all</b> football settings — training and matches —
             adapted to the site and the expertise available.
           </p>

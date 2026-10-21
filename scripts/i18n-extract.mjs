@@ -36,6 +36,12 @@ function walk(dir) {
 }
 
 const norm = (s) => s.replace(/\s+/g, " ").trim();
+// a CSS class: a variant or arbitrary value (":", "[…]", "/"), a utility that stands alone ("flex", "relative"),
+// or a utility with its value ("gap-2", "items-center", "min-w-0"); a label ending in a colon ("{0}: tender") is
+// never one, nor a word that only looks like a prefix ("min" in "2 min", "ml" in "10 ml")
+const STANDALONE = /^!?(?:flex|grid|block|inline|hidden|contents|table|truncate|relative|absolute|fixed|sticky|static|uppercase|lowercase|capitalize|underline|italic|antialiased|isolate|shrink|grow|border|rounded|shadow|ring|outline|transition|group|peer|container|invisible|visible|sr-only|not-sr-only|tabular-nums)$/;
+const PREFIX = /^!?-?(?:flex|grid|inline|items|justify|content|self|place|text|bg|border|rounded|shadow|font|leading|tracking|overflow|cursor|select|pointer|transition|duration|ease|delay|animate|opacity|ring|outline|fill|stroke|w|h|min|max|size|p[xytblr]?|m[xytblr]?|gap|space|divide|z|order|col|row|aspect|object|backdrop|blur|scale|rotate|translate|origin|whitespace|break|list|decoration|underline|shrink|grow|basis|inset|top|left|right|bottom|marker|accent|caret|appearance|resize|snap|touch|will|mix|line-clamp|tabular)-/;
+const classLike = (w) => !/:$/.test(w) && (/[:[\]/]/.test(w) || STANDALONE.test(w) || PREFIX.test(w));
 // JSX text reaches the page with its entities decoded ("GCS &lt; 15" shows as "GCS < 15")
 const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
 const decode = (s) =>
@@ -48,17 +54,21 @@ function readsAsText(s) {
   if (/^(https?:|mailto:|tel:|data:|\/|\.\/|#|@|[a-z]+:\/\/)/.test(s)) return false;
   if (/^[\w.-]+\.(png|jpe?g|webp|svg|mp3|mp4|glb|usdz|json|pdf|css|js|ts|tsx)$/i.test(s)) return false;
   if (/^[a-z0-9_.:/-]+$/.test(s)) return false; // ids, keys, slugs, single lowercase words
-  if (/^[A-Z0-9_]+$/.test(s) && s.length <= 3) return false; // short codes
+  // short codes stay as they are — except the few that other languages write their own way (CPR is RCP in Spanish,
+  // HR is FC), and the scorer's timeline labels ("IN", "GO")
+  if (/^(?:CPR|HR|RR|IN|GO)$/.test(s)) return true;
+  if (/^[A-Z0-9_]+$/.test(s) && s.length <= 3) return false;
   if (/^\[|^[\w-]*\{\d\}[\w-]*$/.test(s)) return false; // selectors and ids built from a pattern ("tab-{0}")
   // media queries ("(min-width: 640px)", "(hover: none)", not "(studies: 0.15–0.35)"), SVG transforms, selectors, code
   if (/^\((?:[a-z]+-[\w-]+|hover|pointer|orientation|color|monochrome|resolution|scan|grid|update):|^(rotate|translate|scale|matrix)\(|\[data-|function\s*\(|=>|localStorage\./.test(s)) return false;
   if (/^\d{3} \d+px |^\d+px( \d+px)*$|; (autoplay|gyroscope)/.test(s)) return false; // canvas fonts, sizes, iframe permissions
+  if (/\b[\w-]+=[\w-]/.test(s)) return false; // key=value lists (the viewport meta, a query string)
   const words = s.split(" ");
   // one word: a real word ("Pause", "Needles", "SCORE", "Hands-off", "Name(s)"), not a video id or a camelCase name
   if (words.length === 1 && !/^(?:[A-Z]?[a-z]+(?:-[a-z]+)*(?:\(s\))?|[A-Z][A-Z]+(?:-[A-Z]+)*)[.!?:…]?$/.test(s.replace(/\{\d\}/g, ""))) return false;
-  // class lists: every word has a dash, colon or bracket and no capitals outside brackets ("flex items-center text-[#1A7F45]")
-  // (a word ending in a colon is a label, "{0}: tender", never a class)
-  if (words.length > 1 && words.every((w) => (/[-:[\]/]/.test(w) && !/:$/.test(w)) || /^[a-z]+$/.test(w)) && words.some((w) => /[-:[\]]/.test(w)) && !/[A-Z]/.test(s.replace(/\[[^\]]*\]/g, ""))) return false;
+  // class lists: every word reads as a class ("flex items-center gap-2 text-[#1A7F45]"), with no capitals outside
+  // brackets. A word with a hyphen is not enough on its own: "i-gel in" and "non-contact collapse" are text.
+  if (words.length > 1 && words.every(classLike) && !/[A-Z]/.test(s.replace(/\[[^\]]*\]/g, ""))) return false;
   return true;
 }
 
