@@ -11,6 +11,8 @@ import { voicePan } from "@/lib/view3d";
 import { canRender3D } from "@/lib/webgl";
 import { useSwipe } from "@/lib/gestures";
 import { record, step as did } from "@/lib/progress";
+// the pacing is shared with the AR models and their narration (lib/drill-timeline.ts)
+import { DEFAULT_HOLD_MS, LEAD_MS, REST_MIN_MS, SFX_MS, VOICE_GAP_MS, VOICE_MIN_MS } from "@/lib/drill-timeline";
 import { type DrillStep, spineCallouts, spineSteps } from "@/lib/spine-drill";
 import { type Callout, callouts, drillCallouts } from "@/lib/voice";
 import { type RoleId, roleTag, workshop } from "@/lib/workshop";
@@ -274,7 +276,7 @@ function StepPlayer3D({
       if (!firstRun.current) sfx("whoosh", 0.3);
       firstRun.current = false;
       const t0 = Date.now();
-      await wait(400);
+      await wait(LEAD_MS);
       for (const id of script[step] ?? []) {
         if (cancelled) return;
         if (id === "cue") {
@@ -288,22 +290,22 @@ function StepPlayer3D({
         if (id.startsWith("sfx:")) {
           const name = id.slice(4) as SfxName;
           sfx(name, name === "siren" ? 0.35 : 0.6);
-          await wait(1400);
+          await wait(SFX_MS);
           continue;
         }
         const c = callouts[id];
         if (c) setCaption(c);
         const started = Date.now();
         await say(id, false, c ? (voicePan[c.role] ?? 0) : 0);
-        const left = 2300 - (Date.now() - started); // keep each caption up long enough to read
+        const left = VOICE_MIN_MS - (Date.now() - started); // keep each caption up long enough to read
         if (left > 0) await wait(left);
-        await wait(200);
+        await wait(VOICE_GAP_MS);
       }
       if (cancelled) return;
       setCaption(null);
       if (autoRef.current) {
-        const rest = (steps[step - 1]?.hold ?? 9000) - (Date.now() - t0);
-        await wait(Math.max(rest, 1200));
+        const rest = (steps[step - 1]?.hold ?? DEFAULT_HOLD_MS) - (Date.now() - t0);
+        await wait(Math.max(rest, REST_MIN_MS));
         if (!cancelled && autoRef.current) onStepRef.current(step >= steps.length ? 1 : step + 1);
       }
     };

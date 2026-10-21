@@ -1,19 +1,36 @@
 #!/usr/bin/env node
 /**
- * Builds the augmented-reality models from the app's own 3D set piece, one per drill step:
- *   public/ar/<drill>-<step>.glb   Android: Google's AR viewer (Scene Viewer)
- *   public/ar/<drill>-<step>.usdz  iPhone and iPad: AR Quick Look
+ * Builds the augmented-reality models from the app's own 3D set piece, with the team moving:
+ *   public/ar/<drill>-<step>.glb   Android: Google's AR viewer (Scene Viewer) — glTF animation
+ *   public/ar/<drill>-<step>.usdz  iPhone and iPad: AR Quick Look — USD time samples
  *   public/ar/<drill>-<step>.webp  the preview picture on the AR page
- * Run it with the dev server going (npm run dev), after changing the 3D team or the steps:
+ *   public/ar/<drill>-<step>.mp3   the step's call-outs, timed to the animation (Scene Viewer plays it with
+ *                                  the model, in a loop)
+ * <step> is 0 (the team in place, still) … the last step, or "all" for the whole drill end to end.
+ * Each drill is recorded once on the 3D drill player's own timeline (src/lib/drill-timeline.ts), so the
+ * moves and the voices land where they do in the app. Run it with the dev server going (npm run dev),
+ * after changing the 3D team, the steps or the call-outs:
  *   node scripts/build-ar-models.mjs [http://127.0.0.1:8080]
+ * Needs ffmpeg and ffprobe on the PATH for the narration.
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { chromium } from "playwright";
 
 const BASE = (process.argv[2] ?? "http://127.0.0.1:8080").replace(/\/$/, "");
-const OUT = new URL("../public/ar/", import.meta.url);
-// the steps after "the team in place" (0): the arrest drill has 6, the neck injury drill 7
-const DRILLS = { arrest: 6, spine: 7 };
+const ROOT = new URL("../", import.meta.url);
+const OUT = new URL("public/ar/", ROOT);
+const AUDIO = new URL("public/audio/", ROOT);
+const FPS = 15;
+const DRILLS = ["arrest", "spine"];
+// the 3D drill player plays these effects at these levels (components/set-piece-3d.tsx)
+const SFX_VOLUME = { shock: 0.6, siren: 0.35 };
+
+const path = (u) => decodeURIComponent(u.pathname).replace(/^\/([A-Za-z]:)/, "$1");
+const probe = (file) => Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString().trim());
+
+// how long each recorded call-out is: the timeline holds each one at least this long
+const durations = Object.fromEntries(readdirSync(new URL("voice/", AUDIO)).map((f) => [f.replace(/\.mp3$/, ""), probe(path(new URL(`voice/${f}`, AUDIO)))]));
 
 mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
@@ -24,24 +41,43 @@ await page.evaluate(() => document.fonts.ready);
 
 // everything is written at the end: a change in public/ makes the dev server reload the page mid-run
 const files = [];
-for (const [drill, last] of Object.entries(DRILLS)) {
-  for (let step = 0; step <= last; step++) {
-    // the neck drill's last step shows the lift: the basket brought to the player, raised on Black's count
-    const opts = drill === "spine" && step === 7 ? { phase: 2, settleMs: 1300 } : {};
-    const r = await page.evaluate(
-      async ([d, s, o]) => {
-        const m = await import("/scripts/ar/harness.tsx");
-        return m.exportStep(d, s, o);
-      },
-      [drill, step, opts],
-    );
+const narration = [];
+for (const drill of DRILLS) {
+  const rec = await page.evaluate(
+    async ([d, opts]) => (await import("/scripts/ar/harness.tsx")).recordDrill(d, opts),
+    [drill, { fps: FPS, durations }],
+  );
+  console.log(`${drill}: ${rec.frames} frames, ${(rec.length / 1000).toFixed(1)} s`);
+  for (const seg of rec.segments) {
+    const r = await page.evaluate(async (name) => (await import("/scripts/ar/harness.tsx")).exportSegment(name), seg.name);
+    const name = `${drill}-${seg.name}`;
     const glb = Buffer.from(r.glb, "base64");
     const usdz = Buffer.from(r.usdz, "base64");
     const webp = Buffer.from(r.picture.split(",")[1], "base64");
-    files.push([`${drill}-${step}.glb`, glb], [`${drill}-${step}.usdz`, usdz], [`${drill}-${step}.webp`, webp]);
-    console.log(`${drill}-${step}: glb ${(glb.length / 1024).toFixed(0)} KB, usdz ${(usdz.length / 1024).toFixed(0)} KB, webp ${(webp.length / 1024).toFixed(0)} KB`);
+    files.push([`${name}.glb`, glb], [`${name}.usdz`, usdz], [`${name}.webp`, webp]);
+    if (seg.name !== "0") narration.push({ name, lengthMs: r.lengthMs, events: r.events });
+    console.log(`  ${name}: ${(r.lengthMs / 1000).toFixed(1)} s, ${r.tracks} moving parts · glb ${(glb.length / 1024).toFixed(0)} KB, usdz ${(usdz.length / 1024).toFixed(0)} KB`);
   }
+  await page.evaluate(async () => (await import("/scripts/ar/harness.tsx")).finishDrill());
 }
 await browser.close();
 for (const [name, data] of files) writeFileSync(new URL(name, OUT), data);
-console.log(`total ${(files.reduce((n, [, d]) => n + d.length, 0) / 1048576).toFixed(1)} MB in public/ar/`);
+
+// the narration: each call-out and effect at its moment, mixed, exactly as long as the animation
+for (const { name, lengthMs, events } of narration) {
+  const clips = events.filter((e) => e.kind === "voice" || e.kind === "sfx");
+  const out = path(new URL(`${name}.mp3`, OUT));
+  const secs = (lengthMs / 1000).toFixed(3);
+  const args = ["-y", "-v", "error"];
+  clips.forEach((e) => args.push("-i", path(new URL(e.kind === "voice" ? `voice/${e.id}.mp3` : `sfx/${e.name}.mp3`, AUDIO))));
+  // silence underneath, so the track runs the animation's full length even where nobody speaks
+  args.push("-f", "lavfi", "-t", secs, "-i", "anullsrc=r=44100:cl=mono");
+  const chains = clips.map((e, i) => `[${i}:a]aformat=sample_rates=44100:channel_layouts=mono,volume=${e.kind === "sfx" ? (SFX_VOLUME[e.name] ?? 0.6) : 1},adelay=${Math.round(e.at)}[a${i}]`);
+  const inputs = clips.map((_, i) => `[a${i}]`).join("") + `[${clips.length}:a]`;
+  args.push("-filter_complex", `${chains.join(";")}${chains.length ? ";" : ""}${inputs}amix=inputs=${clips.length + 1}:normalize=0:dropout_transition=0,atrim=0:${secs}[out]`);
+  args.push("-map", "[out]", "-t", secs, "-ac", "1", "-ar", "44100", "-c:a", "libmp3lame", "-b:a", "64k", out);
+  execFileSync("ffmpeg", args);
+  console.log(`  ${name}.mp3: ${probe(out).toFixed(2)} s for a ${secs} s animation, ${clips.length} sounds`);
+}
+const total = files.reduce((n, [, d]) => n + d.length, 0);
+console.log(`models ${(total / 1048576).toFixed(1)} MB in public/ar/, plus ${narration.length} narration tracks`);

@@ -25,8 +25,10 @@ function walk(dir) {
 }
 
 const files = walk(out).map((p) => relative(out, p).split(sep).join("/"));
-// install-dialog screenshots and the share card are never needed offline
-const skip = (f) => f === "sw.js" || f === ".nojekyll" || f === "404.html" || f === "og.jpg" || f.startsWith("__grok/") || f.startsWith("screenshots/");
+// install-dialog screenshots and the share card are never needed offline, nor the AR models' call-outs
+// (Google's AR viewer downloads those itself, past the service worker)
+const skip = (f) =>
+  f === "sw.js" || f === ".nojekyll" || f === "404.html" || f === "og.jpg" || f.startsWith("__grok/") || f.startsWith("screenshots/") || /^ar\/.*\.mp3$/.test(f);
 const shell = [];
 const media = [];
 for (const f of files.sort()) {

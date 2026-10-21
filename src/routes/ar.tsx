@@ -1,22 +1,23 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Box, Check, ExternalLink, Footprints, Hand, Lightbulb, Move, ScanLine, ShieldAlert, Smartphone, Sun, Wifi, X } from "lucide-react";
+import { Box, Check, ExternalLink, Footprints, Hand, Lightbulb, Move, Play, ScanLine, ShieldAlert, Smartphone, Sun, Video, Volume2, Wifi, X } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { ArButton } from "@/components/ar-button";
 import { AppShell, JumpChips, Note, Panel, SectionLabel } from "@/components/workshop";
-import { AR_STEPS, type ArDrill, clampStep, detectAr, modelFile } from "@/lib/ar";
+import { AR_STEPS, type ArClip, type ArDrill, clampClip, detectAr, modelFile } from "@/lib/ar";
 import { AR_DRILL_NAME, arStepTitle } from "@/lib/ar-steps";
 import { asset, imageSize } from "@/lib/asset";
 import { tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
-type Search = { drill?: ArDrill; step?: number };
+type Search = { drill?: ArDrill; step?: ArClip };
 
 export const Route = createFileRoute("/ar")({
   component: ArPage,
   validateSearch: (s: Record<string, unknown>): Search => {
     const drill = s.drill === "spine" || s.drill === "arrest" ? s.drill : undefined;
-    const step = Number(s.step);
-    return { ...(drill ? { drill } : {}), ...(Number.isFinite(step) && s.step !== undefined ? { step: clampStep(drill ?? "arrest", step) } : {}) };
+    const step = s.step === "all" ? "all" : Number(s.step);
+    const named = step === "all" || (Number.isFinite(step) && s.step !== undefined);
+    return { ...(drill ? { drill } : {}), ...(named ? { step: clampClip(drill ?? "arrest", step) } : {}) };
   },
   head: () => ({ meta: [{ title: "AR · the team in your room · Pitchside Emergency Care" }] }),
 });
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/ar")({
 const noSubscribe = () => () => {};
 const PLAY_AR = "https://play.google.com/store/apps/details?id=com.google.ar.core";
 const ARCORE_PHONES = "https://developers.google.com/ar/devices";
+/** How long the whole drill plays in AR (the length scripts/build-ar-models.mjs gives it: 65 s and 91 s). */
+const WHOLE: Record<ArDrill, string> = { arrest: "about a minute", spine: "about a minute and a half" };
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
@@ -63,9 +66,9 @@ function ArPage() {
   // hydrated (no hydration mismatch); on visits from inside the app it is there from the first frame
   const ready = useSyncExternalStore(noSubscribe, () => true, () => false);
   const drill: ArDrill = (ready && search.drill) || "arrest";
-  const step = ready && search.step !== undefined ? clampStep(drill, search.step) : 0;
+  const step: ArClip = ready && search.step !== undefined ? clampClip(drill, search.step) : 0;
   const navigate = useNavigate({ from: "/ar" });
-  const pick = (d: ArDrill, s: number) => {
+  const pick = (d: ArDrill, s: ArClip) => {
     tap();
     void navigate({ search: { drill: d, step: s }, replace: true, resetScroll: false });
   };
@@ -86,8 +89,9 @@ function ArPage() {
             <p className="font-display text-xs font-semibold tracking-[0.14em] text-gold">AUGMENTED REALITY</p>
             <h1 className="mt-0.5 font-display text-xl font-bold leading-tight">The team in your room</h1>
             <p className="mt-1 text-sm text-gold-soft">
-              Put the medical team on the floor in front of you at full size — the same 3D team as the drills — and walk round each
-              step of the set piece. Each colour's number is on the floor behind them.
+              Put the medical team on the floor in front of you at full size — the same 3D team as the drills — and watch them work
+              through each step of the set piece, or the whole drill, with their call-outs. Walk round them: each colour's number is
+              on the floor behind them.
             </p>
           </div>
           <figure>
@@ -128,13 +132,41 @@ function ArPage() {
           </div>
           <figure className="overflow-hidden rounded-xl bg-note">
             <img src={asset(modelFile(drill, step, "webp"))} alt="" width={720} height={480} className="block h-auto w-full" />
-            <figcaption className="border-t border-line bg-paper px-3 py-2 font-display text-sm font-bold tracking-wide text-heading">
-              {step > 0 ? `STEP ${step} OF ${count} · ` : ""}
-              {arStepTitle(drill, step).toUpperCase()}
+            <figcaption className="border-t border-line bg-paper px-3 py-2">
+              <span className="block font-display text-sm font-bold tracking-wide text-heading">
+                {step === "all" ? `ALL ${count} STEPS · ` : step > 0 ? `STEP ${step} OF ${count} · ` : ""}
+                {arStepTitle(drill, step).toUpperCase()}
+              </span>
+              <span className="mt-0.5 block text-xs leading-snug text-muted">
+                {step === 0
+                  ? "The team still, in place, ready to start."
+                  : step === "all"
+                    ? `Every step in order, ${WHOLE[drill]}: the team moves, with the call-outs on Android.`
+                    : "The team moves through the step, again and again, with the call-outs on Android."}
+              </span>
             </figcaption>
           </figure>
           <ArButton scenario={drill} step={step} help={false} />
           <div className="-mx-1 grid grid-cols-2 gap-2 min-[480px]:grid-cols-3" aria-label="Steps">
+            <button
+              type="button"
+              aria-pressed={step === "all"}
+              onClick={() => pick(drill, "all")}
+              className={cn(
+                "col-span-full flex overflow-hidden rounded-xl border text-left transition-colors active:scale-[0.98]",
+                step === "all" ? "border-navy ring-2 ring-gold" : "border-line",
+              )}
+            >
+              <img src={asset(modelFile(drill, "all", "webp"))} alt="" width={720} height={480} loading="lazy" className="block h-auto w-2/5 shrink-0 self-center bg-note" />
+              <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 bg-paper px-3 py-2">
+                <span className="flex items-center gap-1 font-display text-[11px] font-semibold tracking-[0.12em] text-muted">
+                  <Play className="size-3" aria-hidden />
+                  ALL {count} STEPS
+                </span>
+                <span className="text-sm font-semibold leading-tight text-heading">The whole drill</span>
+                <span className="text-xs leading-snug text-muted">Start to finish, {WHOLE[drill]}</span>
+              </span>
+            </button>
             {Array.from({ length: count + 1 }, (_, i) => i).map((i) => (
               <button
                 key={i}
@@ -184,41 +216,61 @@ function ArPage() {
               <p className="text-xs font-semibold uppercase tracking-wider text-muted">Google's AR viewer</p>
               <Steps
                 items={[
-                  { icon: Box, text: <>Tap <b>See the team in your room (AR)</b>. Google's AR viewer opens over the app — the first time, allow the camera.</> },
+                  { icon: Box, text: <>Tap <b>See the team in your room (AR)</b> — or <b>Play the whole drill in AR</b>. Google's AR viewer opens over the app; the first time, allow the camera.</> },
                   { icon: ScanLine, text: <>Hold the phone at chest height, pointing at the floor, and sweep it slowly from side to side until the team appears.</> },
-                  { icon: Footprints, text: <>The team stands on the floor at full size, the player's feet towards you. Walk round it: each colour's number is on the floor behind them — Black 1, Orange 2, Red 3, Blue 4, White 5, Green 6.</> },
+                  { icon: Play, text: <>The team stands on the floor at full size, the player's feet towards you, and works through the step again and again. Turn the sound up: each colour's call-outs play in time with the moves.</> },
+                  { icon: Footprints, text: <>Walk round it: each colour's number is on the floor behind them — Black 1, Orange 2, Red 3, Blue 4, White 5, Green 6.</> },
                   { icon: Hand, text: <>Pinch with two fingers to make it smaller (desk size for a small group), drag with one finger to move it, twist two fingers to turn it.</> },
                   { icon: X, text: <>Tap the back arrow (top left) to come back, choose another step and open it the same way.</> },
                 ]}
               />
               <Note>
-                A phone that cannot do AR opens the team in 3D instead: drag to turn it, pinch to zoom.
+                A phone that cannot do AR opens the team in 3D instead, still moving: drag to turn it, pinch to zoom.
               </Note>
               <p className="pt-1 text-xs font-semibold uppercase tracking-wider text-muted">Live AR with steps · Chrome</p>
               <p className="text-sm leading-snug text-muted">
-                On phones where Chrome can run AR itself, a second button keeps you in the app and steps through the drill in the room.
+                On phones where Chrome can run AR itself, a second button keeps you in the app: the drill plays live in the room, and you
+                control it.
               </p>
               <Steps
                 items={[
                   { icon: Footprints, text: <>Tap <b>Live AR with steps</b> and allow the camera.</> },
                   { icon: ScanLine, text: <>Sweep the floor slowly until a gold ring appears, then tap the screen to put the team on it.</> },
+                  { icon: Play, text: <>The step plays with the call-outs and captions. The gold button pauses and plays it; <b>Slow</b> runs it at half speed; <b>Play all</b> goes through every step in turn.</> },
                   { icon: Move, text: <>‹ › at the top step through the drill; <b>Turn</b> rotates the team; <b>Table top</b> shrinks it for a desk; tap the floor to move it.</> },
                   { icon: X, text: <>Tap ✕ to leave AR.</> },
                 ]}
               />
+              <Note>
+                <span className="inline-flex items-center gap-1 font-semibold text-heading">
+                  <Video className="size-3.5 text-gold-ink" aria-hidden />
+                  Make a video:
+                </span>{" "}
+                record the screen while the team plays — swipe down from the top twice and tap <b>Screen record</b>, with media sound on
+                so the call-outs are on it.
+              </Note>
             </>
           ) : (
             <>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted">AR Quick Look · Safari</p>
               <Steps
                 items={[
-                  { icon: Box, text: <>In Safari, tap <b>See the team in your room (AR)</b>. AR Quick Look opens.</> },
+                  { icon: Box, text: <>In Safari, tap <b>See the team in your room (AR)</b> — or <b>Play the whole drill in AR</b>. AR Quick Look opens.</> },
                   { icon: Smartphone, text: <>If the team shows on a white background, tap <b>AR</b> at the top.</> },
                   { icon: ScanLine, text: <>Move the phone slowly over the floor; the team appears at full size, with each colour's number on the floor behind them.</> },
-                  { icon: Hand, text: <>Pinch to resize, drag to move, twist two fingers to turn. The round white button takes a photo.</> },
+                  { icon: Play, text: <>The team works through the step again and again, without sound. On longer steps and the whole drill, a time bar at the bottom lets you go back and forth.</> },
+                  { icon: Hand, text: <>Pinch to resize, drag to move, twist two fingers to turn.</> },
                   { icon: X, text: <>Tap ✕ (top left) to come back to the app.</> },
                 ]}
               />
+              <Note>
+                <span className="inline-flex items-center gap-1 font-semibold text-heading">
+                  <Video className="size-3.5 text-gold-ink" aria-hidden />
+                  Make a video:
+                </span>{" "}
+                record the screen — open Control Center and tap <b>Screen Recording</b>. Where the round white button shows, a tap takes a
+                photo and a long press records a video. For the call-outs, use the 3D drills in the app.
+              </Note>
             </>
           )}
         </Section>
@@ -229,8 +281,9 @@ function ArPage() {
               { icon: Move, text: "Space: about 4 × 5 m of clear floor for full size — or shrink the team to fit a desk." },
               { icon: Sun, text: "Light: a well-lit room. In the dark the phone cannot see the floor." },
               { icon: ScanLine, text: "Floor: matt, with some pattern — carpet, tiles, wood. Plain white, black or shiny floors are hard to follow." },
-              { icon: Wifi, text: "Internet: each step downloads once — about 0.3 MB on Android, 0.7 MB on iPhone." },
-              { icon: Smartphone, text: "Android: the guide open in Chrome, with the Google app and Google Play Services for AR. iPhone and iPad: Safari, iOS 12 or later." },
+              { icon: Volume2, text: "Sound: volume up, silent mode off. On Android the call-outs play with the moving team; AR Quick Look on iPhone shows the moves without sound." },
+              { icon: Wifi, text: "Internet: each step downloads once — up to about 0.8 MB on Android and 2 MB on iPhone; the whole drill about 2 MB on Android and 4 MB on iPhone." },
+              { icon: Smartphone, text: "Android: the guide open in Chrome, with the Google app and Google Play Services for AR. iPhone and iPad: Safari, with iOS up to date." },
               { icon: ShieldAlert, text: "Safety: keep the floor clear, and look up from the screen when you walk." },
             ].map((r) => (
               <li key={r.text} className="flex gap-2.5">
@@ -272,6 +325,14 @@ function ArPage() {
                 ),
               },
               { q: "The team never appears", a: "Turn on more light, move the phone more slowly, aim at a floor with some pattern, and step back so more of it is in view." },
+              {
+                q: "The team does not move",
+                a: "Start is the team in place, standing still: choose a step or the whole drill to see them work. If a step stays still, update the Google app (Android) or iOS (iPhone).",
+              },
+              {
+                q: "There is no sound",
+                a: "Turn the volume up and the silent switch off. The call-outs play on Android, in Google's AR viewer and in Live AR. AR Quick Look on iPhone plays no sound: the 3D drills in the app have the voices.",
+              },
               { q: "It is too big for the room", a: "Pinch to shrink it, or turn it so the player lies along the longest side of the room." },
               { q: "The team drifts or floats", a: "Sweep the floor a little longer before it appears, and avoid shiny floors and people walking through the view." },
               { q: "Nothing happens on an iPhone", a: "Use Safari: other browsers on iPhone may not open AR Quick Look." },
@@ -294,10 +355,12 @@ function ArPage() {
           <ul className="flex flex-col gap-2 text-sm leading-snug">
             {[
               "Full size on the floor: each trainee kneels at their colour's numbered mark, beside their AR colour, and you step through the drill together.",
+              "Watch, then do: play a step in AR, then the group runs the same step on the floor beside the AR team.",
+              "Step by step: open step 1, then ask what each colour does next before you open step 2. In Live AR, pause on a moment to ask, and use Slow to show each move at half speed.",
+              "The whole drill: play it start to finish, and ask the group to call each step before it comes.",
               "Table top on a desk: a quick briefing for a small group — turn it to show each side of the player.",
-              "Step by step: open step 1, then ask what each colour does next before you open step 2.",
               "Spot the difference: compare the AR team with your own set-up at the touchline or in the medical room.",
-              "Photos for your slides: take one in AR (iPhone: the round button; Android: a screenshot).",
+              "Photos and videos for your slides: a screenshot, or record the screen while the team plays (see How to use it).",
             ].map((t) => (
               <li key={t} className="flex gap-2.5">
                 <Check className="mt-0.5 size-4 shrink-0 text-[#1A7F45]" aria-hidden />

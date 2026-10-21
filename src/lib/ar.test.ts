@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { AR_FALLBACK, AR_STEPS, arSupportFrom, clampStep, fallbackUrl, modelFile, quickLookHref, sceneViewerIntent } from "./ar.ts";
+import { AR_FALLBACK, AR_STEPS, arSupportFrom, clampClip, clampStep, fallbackUrl, hasNarration, modelFile, quickLookHref, sceneViewerIntent } from "./ar.ts";
 
 describe("augmented reality", () => {
   it("names one model per drill step, and keeps the step in range", () => {
@@ -11,6 +11,16 @@ describe("augmented reality", () => {
     assert.equal(clampStep("spine", Number.NaN), 0);
   });
 
+  it("has the whole drill as a clip, and narration for every clip that moves", () => {
+    assert.equal(modelFile("spine", "all", "glb"), "/ar/spine-all.glb");
+    assert.equal(modelFile("arrest", 3, "mp3"), "/ar/arrest-3.mp3");
+    assert.equal(clampClip("arrest", "all"), "all");
+    assert.equal(clampClip("arrest", 42), AR_STEPS.arrest);
+    assert.equal(hasNarration(0), false);
+    assert.equal(hasNarration(2), true);
+    assert.equal(hasNarration("all"), true);
+  });
+
   it("opens Google's AR viewer in AR where it can, with the model's address encoded and a way back", () => {
     const url = sceneViewerIntent("https://example.org/app/ar/arrest-4.glb", { title: "Step 4: Airway", fallback: "https://example.org/app/ar#ar-unavailable" });
     assert.match(url, /^intent:\/\/arvr\.google\.com\/scene-viewer\/1\.0\?/);
@@ -19,6 +29,13 @@ describe("augmented reality", () => {
     assert.match(url, /&file=https%3A%2F%2Fexample\.org%2Fapp%2Far%2Farrest-4\.glb#Intent;/);
     assert.match(url, /package=com\.google\.android\.googlequicksearchbox;/);
     assert.match(url, /S\.browser_fallback_url=https%3A%2F%2Fexample\.org%2Fapp%2Far%23ar-unavailable;end;$/);
+    assert.doesNotMatch(url, /sound=/);
+  });
+
+  it("gives Google's AR viewer the narration to loop with the animation", () => {
+    const url = sceneViewerIntent("https://example.org/ar/arrest-all.glb", { title: "Whole drill", fallback: "https://example.org/ar", sound: "https://example.org/ar/arrest-all.mp3" });
+    assert.match(url, /sound=https%3A%2F%2Fexample\.org%2Far%2Farrest-all\.mp3/);
+    assert.ok(url.indexOf("sound=") < url.indexOf("&file="));
   });
 
   it("lets Quick Look resize the model, and marks the way back when the viewer cannot open", () => {
