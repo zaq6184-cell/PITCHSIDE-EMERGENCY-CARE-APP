@@ -3,9 +3,10 @@ import { Check, ChevronRight, Gamepad2, Hand, MapPin, QrCode, RotateCcw, Trophy,
 import { useEffect, useMemo, useState } from "react";
 import { Confetti } from "@/components/confetti";
 import { HandSignalGame } from "@/components/hand-signal-game";
-import { DIAGRAM_VIEWBOX, DiagramBase, MARKS, PositionDiagram, RoleDisc } from "@/components/position-diagram";
+import { DiagramBase, PositionDiagram, RoleDisc } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
+import { DIAGRAM_VIEWBOX, MARKS } from "@/lib/position-marks";
 import { record, step as did } from "@/lib/progress";
 import { haptic, say, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
@@ -376,7 +377,7 @@ function PlaceTheTeam() {
                   key={m.id}
                   role="button"
                   tabIndex={0}
-                  aria-label={`Spot ${m.where}${chip ? `, holding ${chip}` : ", empty"}`}
+                  aria-label={chip ? `Spot ${m.where}, holding ${chip}` : `Spot ${m.where}, empty`}
                   onClick={() => drop(m.id)}
                   onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && drop(m.id)}
                   className="cursor-pointer outline-none"

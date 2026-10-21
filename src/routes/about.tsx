@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, Download } from "lucide-react";
 import { ShareAppButton } from "@/components/install-app";
+import { LanguageList } from "@/components/language-switch";
 import { SoundSettings } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { AppShell, JumpChips, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
+import { LANGS } from "@/lib/i18n";
 import { aboutApp, disclaimer } from "@/lib/disclaimer";
 
 export const Route = createFileRoute("/about")({
@@ -74,6 +76,20 @@ function About() {
             <SoundSettings />
           </div>
         </Panel>
+        {LANGS.length > 1 ? (
+          <Panel>
+            <div className="px-3.5 py-2.5">
+              <p className="font-display text-sm font-semibold tracking-wide text-heading">Language</p>
+              <p className="text-xs leading-snug text-muted">
+                English is the reference version; the others are translations of it. The voices stay in English, with captions. Also in
+                the top bar.
+              </p>
+              <div className="mt-2">
+                <LanguageList />
+              </div>
+            </div>
+          </Panel>
+        ) : null}
         <JumpChips items={sections.map((s) => ({ id: s.id, label: s.chip }))} />
         {sections.map((s) => (
           <section key={s.id} id={s.id} className="scroll-mt-24">

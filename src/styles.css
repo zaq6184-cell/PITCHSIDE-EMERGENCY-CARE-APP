@@ -852,3 +852,14 @@ html[data-vt="back"]::view-transition-new(main-content) {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* a chosen language (lib/i18n.ts): the page waits for its translations, at most 1.6 s, so English does not flash first */
+html.i18n-wait body {
+  opacity: 0;
+  animation: i18n-show 0.15s 1.6s forwards;
+}
+@keyframes i18n-show {
+  to {
+    opacity: 1;
+  }
+}

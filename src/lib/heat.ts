@@ -7,6 +7,7 @@
  * mandatory in both halves above WBGT 32 °C. At the 2026 World Cup every match had a 3-minute hydration break
  * 22 minutes into each half, whatever the heat. The competition's own rules always decide.
  */
+/** `label` is the whole phrase ("High risk"), so it reads the same wherever it shows — and translates as one. */
 export type Zone = { id: "low" | "high" | "very" | "extreme"; from: number; label: string; actions: string[]; who: string };
 
 export const ZONES: Zone[] = [
@@ -20,7 +21,7 @@ export const ZONES: Zone[] = [
   {
     id: "high",
     from: 26,
-    label: "High",
+    label: "High risk",
     actions: [
       "Cooling breaks around the 30th minute of each half.",
       "Ice towels, cold drinks and shade ready for every break.",
@@ -32,7 +33,7 @@ export const ZONES: Zone[] = [
   {
     id: "very",
     from: 28,
-    label: "Very high",
+    label: "Very high risk",
     actions: [
       "FIFPRO advises delaying or rescheduling — raise it with the match officials and organisers.",
       "If play goes ahead: cooling breaks in both halves, the tub ready at the pitch, a cooling plan for every substitute.",
@@ -42,7 +43,7 @@ export const ZONES: Zone[] = [
   {
     id: "extreme",
     from: 32,
-    label: "Extreme",
+    label: "Extreme risk",
     actions: [
       "FIFA: cooling breaks mandatory in both halves; the organisers decide on suspending or cancelling.",
       "FIFPRO: matches and training should be rescheduled.",

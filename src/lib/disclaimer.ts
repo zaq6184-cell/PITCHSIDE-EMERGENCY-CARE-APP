@@ -27,5 +27,6 @@ export const aboutApp = {
   ],
   ai: [
     "AI tools helped to make this app, including its software, illustrations, voices and music. The content was checked against FIFA's published documents; if anything here differs, follow FIFA's documents.",
+    "The Spanish, French and Portuguese versions were translated from the English with AI tools. English is the reference version: where a translation is unclear or seems to differ, follow the English and FIFA's documents.",
   ],
 };

@@ -1,11 +1,7 @@
 import { Music, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { getServerSoundPrefs, getSoundPrefs, say, type SoundPrefs, setSoundPrefs, subscribeSound } from "@/lib/sound";
-
-export function useSoundPrefs(): SoundPrefs {
-  return useSyncExternalStore(subscribeSound, getSoundPrefs, getServerSoundPrefs);
-}
+import { say, setSoundPrefs, useSoundPrefs } from "@/lib/sound";
 
 /** Small on/off switch, the same look as the dark-mode switch. */
 export function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
@@ -90,8 +86,9 @@ export function SoundButton() {
     };
   }, [open]);
 
+  // not positioned itself: the panel hangs from the right end of the header's buttons, so it stays on screen
   return (
-    <div ref={box} className="relative">
+    <div ref={box}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

@@ -1,9 +1,8 @@
 import { HeartPulse, MessageCircle, RotateCcw, Smartphone } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSoundPrefs } from "@/components/sound-control";
 import { createCompressionDetector } from "@/lib/compression-detector";
 import { record, step as did } from "@/lib/progress";
-import { haptic, say, startMetronome, stopMetronome, tapClick } from "@/lib/sound";
+import { haptic, say, startMetronome, stopMetronome, tapClick, useSoundPrefs } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { useWakeLock } from "@/lib/wake-lock";
 

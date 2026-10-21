@@ -51,7 +51,7 @@ export function WbgtDial() {
   const tone = ZONE_TONE[zone.id];
   return (
     <div className="flex flex-col gap-3">
-      <svg viewBox="0 0 320 172" className="mx-auto block h-auto w-full max-w-sm" role="img" aria-label={`WBGT ${wbgt} °C: ${zone.label} risk. ${zone.who}.`}>
+      <svg viewBox="0 0 320 172" className="mx-auto block h-auto w-full max-w-sm" role="img" aria-label={`WBGT ${wbgt} °C: ${zone.label}. ${zone.who}.`}>
         {ZONES.map((z, i) => (
           <path key={z.id} d={arc(bounds[i][0] + (i ? 0.12 : 0), bounds[i][1] - (i + 1 < ZONES.length ? 0.12 : 0))} stroke={ZONE_TONE[z.id]} strokeWidth={18} fill="none" opacity={z.id === zone.id ? 1 : 0.32} />
         ))}
@@ -86,7 +86,7 @@ export function WbgtDial() {
           max={DIAL_MAX}
           step={0.5}
           value={wbgt}
-          aria-valuetext={`${wbgt} degrees, ${zone.label} risk`}
+          aria-valuetext={`${wbgt} degrees, ${zone.label}`}
           onChange={(e) => setWbgt(Number(e.target.value))}
           className="range-gold w-full"
           style={{ "--fill": `${((wbgt - DIAL_MIN) / (DIAL_MAX - DIAL_MIN)) * 100}%` } as React.CSSProperties}
@@ -96,7 +96,7 @@ export function WbgtDial() {
       <div className="rounded-xl border-l-4 bg-note px-3 py-2.5" style={{ borderColor: tone }} aria-live="polite">
         <p className="flex items-center gap-2 font-display text-sm font-bold tracking-wide text-heading">
           {zone.id === "low" ? <CheckCircle2 className="size-4" style={{ color: tone }} aria-hidden /> : <TriangleAlert className="size-4" style={{ color: tone }} aria-hidden />}
-          {zone.label.toUpperCase()} RISK
+          {zone.label.toUpperCase()}
         </p>
         <p className="mt-0.5 text-xs leading-snug text-muted">{zone.who}</p>
         <ul className="mt-1.5 flex list-disc flex-col gap-1 pl-5 text-sm leading-snug">

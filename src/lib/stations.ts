@@ -10,7 +10,8 @@ export const COLLAR_SIZING_ALT =
 /** Content blocks rendered by the station page. Copy is taken from the station handouts — do not invent protocol. */
 export type Block =
   | { kind: "text"; text: string }
-  | { kind: "list"; items: string[]; ordered?: boolean }
+  /** an item with a lead shows it in bold, as on the FOCUS page */
+  | { kind: "list"; items: (string | { lead: string; text: string })[]; ordered?: boolean }
   | { kind: "defs"; items: { term: string; text: string }[] }
   | { kind: "table"; head: string[]; rows: string[][] }
   | { kind: "remember"; text: string }
@@ -1434,7 +1435,7 @@ export const stations: Station[] = [
       },
       {
         title: "After a suspected concussion",
-        blocks: [{ kind: "list", items: afterConcussion.map((a) => `${a.lead} ${a.text}`) }],
+        blocks: [{ kind: "list", items: afterConcussion }],
       },
       {
         title: "Graduated return to football",

@@ -158,7 +158,8 @@ export function PatientMonitor({ vitals, className }: { vitals: Vitals; classNam
     <div
       className={cn("overflow-hidden rounded-xl bg-[#04101f] text-white shadow-card ring-1 ring-white/10", className)}
       role="img"
-      aria-label={`Monitor: ${label}. Heart rate ${hr}${vitals.spo2 ? `, oxygen saturation ${vitals.spo2}%` : ""}${vitals.bp ? `, blood pressure ${vitals.bp}` : ""}${vitals.temp ? `, temperature ${vitals.temp} °C` : ""}.`}
+      // one sentence a reading, so each is found in the translations
+      aria-label={[`Monitor: ${label}.`, `Heart rate ${hr}.`, vitals.spo2 ? `Oxygen saturation ${vitals.spo2}%.` : "", vitals.bp ? `Blood pressure ${vitals.bp}.` : "", vitals.temp ? `Temperature ${vitals.temp} °C.` : ""].filter(Boolean).join(" ")}
     >
       <div className="grid grid-cols-[1fr_auto]">
         <div className="relative min-w-0">

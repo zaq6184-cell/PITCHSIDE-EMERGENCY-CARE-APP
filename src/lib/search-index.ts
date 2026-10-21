@@ -34,7 +34,7 @@ function blockText(b: Block): string {
     case "info":
       return [b.title, b.text].filter(Boolean).join(". ");
     case "list":
-      return b.items.join(" ");
+      return b.items.map((t) => (typeof t === "string" ? t : `${t.lead} ${t.text}`)).join(" ");
     case "defs":
       return b.items.map((d) => `${d.term}: ${d.text}`).join(" ");
     case "table":

@@ -18,7 +18,7 @@ import { shareOrCopy, siteUrl } from "@/lib/share";
 import { sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
-export function useInstall(): InstallState {
+function useInstall(): InstallState {
   return useSyncExternalStore(subscribeInstall, getInstallState, getServerInstallState);
 }
 

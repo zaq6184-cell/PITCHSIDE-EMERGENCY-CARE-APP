@@ -1,4 +1,5 @@
 import { asset } from "@/lib/asset";
+import { translateText } from "@/lib/i18n";
 
 /** This guide's public address: the page the app opens on. */
 export function siteUrl() {
@@ -9,7 +10,9 @@ export function siteUrl() {
  * Opens the device's share sheet (WhatsApp, Messages, email …); where there is none, copies the text
  * instead. Nothing is sent anywhere unless the person picks where it goes.
  */
-export async function shareOrCopy(data: { title: string; text: string; url?: string }): Promise<"shared" | "copied" | "cancelled" | "failed"> {
+export async function shareOrCopy(raw: { title: string; text: string; url?: string }): Promise<"shared" | "copied" | "cancelled" | "failed"> {
+  // in the reader's language, like the page it came from
+  const data = { ...raw, title: translateText(raw.title), text: translateText(raw.text) };
   if (typeof navigator.share === "function") {
     try {
       await navigator.share(data);

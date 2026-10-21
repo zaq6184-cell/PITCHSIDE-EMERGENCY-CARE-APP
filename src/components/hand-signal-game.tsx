@@ -67,7 +67,7 @@ function OneHand({ count, flip = false }: { count: number; flip?: boolean }) {
 export function HandSignal({ n, className }: { n: number; className?: string }) {
   const two = n > 5;
   return (
-    <svg viewBox={two ? "0 0 250 160" : "0 0 120 160"} className={className} role="img" aria-label={`Hand signal: ${n} ${n === 1 ? "finger" : "fingers"}`}>
+    <svg viewBox={two ? "0 0 250 160" : "0 0 120 160"} className={className} role="img" aria-label={n === 1 ? "Hand signal: 1 finger" : `Hand signal: ${n} fingers`}>
       {two ? (
         <>
           <OneHand count={5} flip />
@@ -286,7 +286,7 @@ export function HandSignalGame() {
                     type="button"
                     disabled={Boolean(answer)}
                     onClick={() => choose(n)}
-                    aria-label={`${n} ${n === 1 ? "finger" : "fingers"}`}
+                    aria-label={n === 1 ? "1 finger" : `${n} fingers`}
                     className={cn(
                       "relative grid min-h-20 place-items-center rounded-xl border border-line bg-paper transition-all duration-200 active:scale-95",
                       answer && !isAnswer && !isWrong && "opacity-40",

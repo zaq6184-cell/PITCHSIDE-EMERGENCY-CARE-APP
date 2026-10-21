@@ -4,6 +4,7 @@ import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { AR_FALLBACK, type ArClip, type ArDrill, type ArSupport, clampClip, detectAr, fallbackUrl, hasNarration, modelFile, quickLookHref, sceneViewerIntent } from "@/lib/ar";
 import { arTitle } from "@/lib/ar-steps";
 import { asset } from "@/lib/asset";
+import { useTranslate } from "@/lib/i18n";
 import { tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +39,7 @@ export function ArButton({ scenario = "arrest", step = 0, className, help = true
   const drill = scenario;
   const at = clampClip(drill, step);
   const label = at === "all" ? "Play the whole drill in AR" : "See the team in your room (AR)";
+  const t = useTranslate(); // the title Google's AR viewer shows travels in the link, past the page
   const [support, setSupport] = useState<ArSupport | null>(null);
   const [live, setLive] = useState<{ session: XRSession; root: HTMLElement } | null>(null);
   const [note, setNote] = useState("");
@@ -130,7 +132,7 @@ export function ArButton({ scenario = "arrest", step = 0, className, help = true
       {support.android ? (
         <a
           href={sceneViewerIntent(absolute(modelFile(drill, at, "glb")), {
-            title: arTitle(drill, at),
+            title: t(arTitle(drill, at)),
             fallback: fallbackUrl(window.location.href),
             // the call-outs, looping in time with the team
             sound: hasNarration(at) ? absolute(modelFile(drill, at, "mp3")) : undefined,

@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { asset } from "@/lib/asset";
 
 /**
@@ -89,6 +90,11 @@ export const getSoundPrefs = (): SoundPrefs => {
   return prefs;
 };
 export const getServerSoundPrefs = (): SoundPrefs => DEFAULTS;
+
+/** The sound settings, kept up to date in a component. */
+export function useSoundPrefs(): SoundPrefs {
+  return useSyncExternalStore(subscribeSound, getSoundPrefs, getServerSoundPrefs);
+}
 
 export function subscribeSound(l: () => void) {
   listeners.add(l);

@@ -184,7 +184,7 @@ export function LiveHost() {
             className="inline-flex min-h-14 w-full max-w-sm items-center justify-center gap-2 rounded-2xl bg-navy font-display text-lg font-bold tracking-wide text-gold shadow-card active:scale-[0.98] disabled:opacity-40"
           >
             <Play className="size-5" aria-hidden />
-            Start · {list.length} {list.length === 1 ? "player" : "players"}
+            Start · {list.length === 1 ? "1 player" : `${list.length} players`}
           </button>
         </div>
       </Panel>

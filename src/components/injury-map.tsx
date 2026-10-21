@@ -259,7 +259,7 @@ function Point({ x, y, label, on, onToggle, name }: { x: number; y: number; labe
       role="checkbox"
       tabIndex={0}
       aria-checked={on}
-      aria-label={`${name}: ${on ? "tender" : "not tender"}`}
+      aria-label={on ? `${name}: tender` : `${name}: not tender`}
       onClick={onToggle}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

@@ -6,6 +6,7 @@ import { SearchHost } from "@/components/search";
 import appCss from "../styles.css?url";
 import { asset } from "@/lib/asset";
 import { useEffect } from "react";
+import { i18nBootScript, startI18n } from "@/lib/i18n";
 import { installBootScript, registerServiceWorker } from "@/lib/install";
 import { themeBootScript } from "@/lib/theme";
 
@@ -64,10 +65,12 @@ export const Route = createRootRoute({
         <HeadContent />
         <ScriptOnce>{themeBootScript}</ScriptOnce>
         <ScriptOnce>{installBootScript}</ScriptOnce>
+        <ScriptOnce>{i18nBootScript}</ScriptOnce>
       </head>
       <body className="bg-bg text-ink">
         <PreviewHostBridge />
         <PwaRegister />
+        <LanguageStart />
         <AuthProvider>
           <Outlet />
           <SearchHost />
@@ -78,6 +81,14 @@ export const Route = createRootRoute({
     </html>
   ),
 });
+
+/** The chosen language takes over once React has hydrated the built page (lib/i18n.ts). */
+function LanguageStart() {
+  useEffect(() => {
+    void startI18n();
+  }, []);
+  return null;
+}
 
 /** Offline use and installing: the service worker is registered in the published site only. */
 function PwaRegister() {

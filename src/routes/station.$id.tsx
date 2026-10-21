@@ -10,6 +10,7 @@ import { PositionDiagram } from "@/components/position-diagram";
 import { AppShell, JumpChips, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { imageSize } from "@/lib/asset";
 import { setTransitionDirection, useSwipe } from "@/lib/gestures";
+import { useTranslate } from "@/lib/i18n";
 import { moduleCover } from "@/lib/module-covers";
 import { record, step as did } from "@/lib/progress";
 import { haptic } from "@/lib/sound";
@@ -33,6 +34,7 @@ function StationPage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
   const s = getStation(id);
+  const t = useTranslate(); // a chip is cut from the title, so it is cut from the translated title
   const i = s ? stations.indexOf(s) : -1;
   const prev = stations[i - 1];
   const next = stations[i + 1];
@@ -78,7 +80,7 @@ function StationPage() {
         </Panel>
 
         {s.sections.length > 5 ? (
-          <JumpChips items={s.sections.map((sec) => ({ id: slug(sec.title), label: shortTitle(sec.title) }))} />
+          <JumpChips items={s.sections.map((sec) => ({ id: slug(sec.title), label: shortTitle(t(sec.title)) }))} />
         ) : null}
 
         {s.sections.map((sec) => (
@@ -139,6 +141,16 @@ function StationPage() {
   );
 }
 
+function ListItem({ t }: { t: string | { lead: string; text: string } }) {
+  return typeof t === "string" ? (
+    <li>{t}</li>
+  ) : (
+    <li>
+      <b>{t.lead}</b> {t.text}
+    </li>
+  );
+}
+
 function BlockView({ b }: { b: Block }) {
   switch (b.kind) {
     case "text":
@@ -147,13 +159,13 @@ function BlockView({ b }: { b: Block }) {
       return b.ordered ? (
         <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm leading-snug marker:text-muted">
           {b.items.map((t) => (
-            <li key={t}>{t}</li>
+            <ListItem key={typeof t === "string" ? t : t.lead} t={t} />
           ))}
         </ol>
       ) : (
         <ul className="flex list-disc flex-col gap-1 pl-5 text-sm leading-snug marker:text-gold">
           {b.items.map((t) => (
-            <li key={t}>{t}</li>
+            <ListItem key={typeof t === "string" ? t : t.lead} t={t} />
           ))}
         </ul>
       );

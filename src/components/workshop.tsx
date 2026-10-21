@@ -2,6 +2,7 @@ import { Link, useCanGoBack, useRouter, useRouterState } from "@tanstack/react-r
 import { ArrowLeft, ArrowUp, BookOpen, ChevronRight, ClipboardList, Info, ListOrdered, PlayCircle, Search, Timer, Users, Volume2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { InstallHeaderButton, OfflineBanner } from "@/components/install-app";
+import { LanguageButton } from "@/components/language-switch";
 import { openSearch } from "@/lib/search-open";
 import { SoundButton } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -124,10 +125,16 @@ export function AppShell({
             <img src={asset("/brand/logo-mark.svg")} alt="" width={36} height={36} className="size-8 rounded-full min-[380px]:size-9" />
           </Link>
           <div className="min-w-0">
-            <p className="truncate font-display text-[14px] font-bold leading-tight tracking-[0.04em] text-on-navy min-[380px]:text-[15px] min-[380px]:tracking-[0.06em]">
-              {workshop.event}
+            {/* phones: the name on two lines, as in the logo lockup, so it is never cut short beside the buttons;
+                wider screens: the name on one line and the page under it. The name is not translated. */}
+            <p
+              translate="no"
+              className="font-display text-[14px] font-bold leading-[1.15] tracking-[0.04em] text-on-navy min-[380px]:text-[15px] min-[380px]:tracking-[0.06em] min-[480px]:truncate min-[480px]:leading-tight"
+            >
+              <span className="block min-[480px]:inline">{workshop.event.split(" ")[0]}</span>{" "}
+              <span className="block truncate min-[480px]:inline">{workshop.event.split(" ").slice(1).join(" ")}</span>
             </p>
-            <p className="truncate text-[11px] leading-snug text-gold-soft">
+            <p className="hidden truncate text-[11px] leading-snug text-gold-soft min-[480px]:block">
               {bag
                 ? "FIFA Emergency Care Bag · Green brings this"
                 : guides
@@ -141,8 +148,9 @@ export function AppShell({
                         : workshop.title}
             </p>
           </div>
-          <div className="-my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center">
+          <div className="relative -my-1.5 -mr-1.5 ml-auto flex shrink-0 items-center">
             <InstallHeaderButton />
+            <LanguageButton />
             <SoundButton />
             <ThemeSwitch />
           </div>
@@ -241,7 +249,8 @@ function TabLink({
       >
         <Icon className="size-[18px]" strokeWidth={active ? 2.4 : 1.8} />
       </span>
-      {label}
+      {/* a long word in another language ends in … rather than running into the next tab */}
+      <span className="max-w-full truncate px-0.5">{label}</span>
     </Link>
   );
 }

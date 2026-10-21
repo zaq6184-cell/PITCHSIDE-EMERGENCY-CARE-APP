@@ -2,11 +2,10 @@ import { Check, ListChecks, Maximize2, Minimize2, RotateCcw, Volume2, X, Zap } f
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { AedStage, AedView } from "@/components/aed-scene-3d";
 import { Loading3D, Safe } from "@/components/set-piece-3d";
-import { useSoundPrefs } from "@/components/sound-control";
 import { RoleChip } from "@/components/workshop";
 import { judgeTap, PAD_CHOICES, PAD_TARGETS, type PadId, type Tap } from "@/lib/aed-pads";
 import { record, step as did } from "@/lib/progress";
-import { aedCharge, haptic, say, setSoundPrefs, sfx, startMetronome, stopMetronome, stopVoice, tap as tapSound } from "@/lib/sound";
+import { aedCharge, haptic, say, setSoundPrefs, sfx, startMetronome, stopMetronome, stopVoice, tap as tapSound, useSoundPrefs } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { aedPrompts, callouts } from "@/lib/voice";
 import { useFullscreen } from "@/lib/use-fullscreen";
@@ -151,7 +150,8 @@ export function AedTrainer() {
       sfx("correct", 0.45);
       haptic(15);
       if (!(next.right && next.left)) {
-        setHint(`${verdict.pad === "right" ? "Right" : "Left"} pad on — now the other one. 1 of 2 on.`);
+        // whole sentences, so each reads naturally once translated
+        setHint(verdict.pad === "right" ? "Right pad on — now the other one. 1 of 2 on." : "Left pad on — now the other one. 1 of 2 on.");
         return;
       }
       setHint("Both pads on. Hands off for the analysis.");
@@ -353,7 +353,7 @@ export function AedTrainer() {
             <p className="font-display text-base font-bold text-heading">Shock delivered in {took(result.seconds)}</p>
             <ul className="mt-1.5 flex flex-col gap-1 text-sm leading-snug">
               <Outcome ok={result.wrong === 0}>
-                {result.wrong === 0 ? "Both pads in the right place first time." : `Pads: ${result.wrong} wrong ${result.wrong === 1 ? "tap" : "taps"} before both were right.`}
+                {result.wrong === 0 ? "Both pads in the right place first time." : result.wrong === 1 ? "Pads: 1 wrong tap before both were right." : `Pads: ${result.wrong} wrong taps before both were right.`}
               </Outcome>
               <Outcome ok={result.unsafe === 0}>
                 {result.unsafe === 0

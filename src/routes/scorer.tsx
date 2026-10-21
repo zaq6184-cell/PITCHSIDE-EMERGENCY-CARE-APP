@@ -30,6 +30,7 @@ import {
   togglePause,
   undo,
 } from "@/lib/scorer";
+import { translateText as T } from "@/lib/i18n";
 import { SCORER_PIC } from "@/lib/scene-images";
 import { shareOrCopy } from "@/lib/share";
 import { haptic, sfx, tap } from "@/lib/sound";
@@ -542,17 +543,20 @@ async function shareImage(s: Session, targets: Targets): Promise<"shared" | "sav
     x.fillRect(0, 196, W, 8);
     x.fillStyle = "#c9a227";
     x.font = "600 30px 'Barlow Condensed', sans-serif";
-    x.fillText("PITCHSIDE EMERGENCY CARE · PRACTICAL DEBRIEF", 60, 78);
+    // the words drawn here are in the reader's language, like the page (T passes English through)
+    x.fillText(T("PITCHSIDE EMERGENCY CARE · PRACTICAL DEBRIEF"), 60, 78);
     x.fillStyle = "#f7f4ee";
     x.font = "700 56px 'Barlow Condensed', sans-serif";
-    x.fillText("Cardiac arrest set piece", 60, 146);
+    x.fillText(T("Cardiac arrest set piece"), 60, 146);
     x.font = "400 28px 'Source Sans 3', sans-serif";
     x.fillStyle = "#d4c9a8";
-    x.fillText(`${new Date(s.startedAt).toLocaleString()} · run time ${mmss(t)}`, 60, 182);
+    x.fillText(`${new Date(s.startedAt).toLocaleString()} · ${T(`Run time ${mmss(t)}`)}`, 60, 182);
     let y = 280;
     const ccf = compressionFraction(s, t);
     const longest = longestPause(s, t);
-    const row = (label: string, value: string, ok: boolean | null) => {
+    const row = (en: string, enValue: string, ok: boolean | null) => {
+      const label = T(en);
+      const value = T(enValue);
       x.fillStyle = "#1b1b1b";
       x.font = "400 36px 'Source Sans 3', sans-serif";
       x.fillText(label, 60, y);
@@ -574,25 +578,25 @@ async function shareImage(s: Session, targets: Targets): Promise<"shared" | "sav
       y += 10;
       x.fillStyle = "#c0392b";
       x.font = "700 34px 'Barlow Condensed', sans-serif";
-      x.fillText("POINTS TO DISCUSS", 60, y);
+      x.fillText(T("POINTS TO DISCUSS"), 60, y);
       y += 52;
       x.fillStyle = "#1b1b1b";
       x.font = "400 32px 'Source Sans 3', sans-serif";
       for (const f of s.flags.slice(0, 6)) {
-        x.fillText(`${mmss(f.at)} · ${FLAGS.find((k) => k.id === f.id)?.label ?? f.id}`, 60, y);
+        x.fillText(`${mmss(f.at)} · ${T(FLAGS.find((k) => k.id === f.id)?.label ?? f.id)}`, 60, y);
         y += 46;
       }
     }
     x.fillStyle = "#5b6470";
     x.font = "400 24px 'Source Sans 3', sans-serif";
-    x.fillText("Study aid — for training only.", 60, H - 50);
+    x.fillText(T("Study aid — for training only."), 60, H - 50);
     const blob = await new Promise<Blob | null>((r) => c.toBlob(r, "image/png"));
     if (!blob) return "failed";
     const file = new File([blob], "set-piece-debrief.png", { type: "image/png" });
     const nav = navigator as Navigator & { canShare?: (d: { files: File[] }) => boolean };
     if (nav.canShare?.({ files: [file] })) {
       try {
-        await navigator.share({ files: [file], title: "Set piece debrief" });
+        await navigator.share({ files: [file], title: T("Set piece debrief") });
         return "shared";
       } catch (e) {
         if ((e as Error)?.name === "AbortError") return "shared"; // closed the share sheet
