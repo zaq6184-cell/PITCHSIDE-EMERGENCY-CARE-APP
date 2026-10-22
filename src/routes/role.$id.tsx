@@ -7,7 +7,7 @@ import { AppShell, Note, Panel, SayLine, SectionLabel } from "@/components/works
 import { setTransitionDirection, useSwipe } from "@/lib/gestures";
 import { roleImage } from "@/lib/role-images";
 import { record, step as did } from "@/lib/progress";
-import { haptic } from "@/lib/sound";
+import { haptic, say, stopVoice } from "@/lib/sound";
 import { getRole, isRoleId, roleTag, roleWord, voiceId, workshop } from "@/lib/workshop";
 import { FIFA_ROLE_CARDS_PDF, fifaRoleCards } from "@/lib/fifa-roles";
 
@@ -34,6 +34,14 @@ function RoleCard() {
   const swipe = useSwipe<HTMLDivElement>((d) => (d === "left" ? go(next, "forward") : go(prev, "back")));
   useEffect(() => {
     if (isRoleId(id)) record(did.role, id);
+  }, [id]);
+  // each role opens with its colour's call-out, however it was opened (a card, a disc, a swipe). Browsers allow it
+  // once the person has tapped on the page, so a role opened straight from a link starts without it.
+  useEffect(() => {
+    const role = isRoleId(id) ? getRole(id) : undefined;
+    if (!role) return;
+    void say(voiceId(role, 0));
+    return () => stopVoice();
   }, [id]);
   if (!isRoleId(id)) return <Navigate to="/" />;
   const r = getRole(id);

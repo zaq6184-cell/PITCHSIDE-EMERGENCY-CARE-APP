@@ -1,7 +1,7 @@
 import { Music, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { say, setSoundPrefs, useSoundPrefs } from "@/lib/sound";
+import { say, setSoundPrefs, useSoundPrefs, useSoundRunning } from "@/lib/sound";
 
 /** Small on/off switch, the same look as the dark-mode switch. */
 export function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
@@ -68,9 +68,12 @@ export function SoundSettings({ tone = "card" }: { tone?: "card" | "panel" }) {
 /** Speaker button in the top bar; opens a small panel with the two switches. */
 export function SoundButton() {
   const p = useSoundPrefs();
+  const running = useSoundRunning();
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   const on = p.sfx || p.music;
+  // browsers hold sound back until the first tap: until then the speaker breathes, so people know one tap starts it
+  const waiting = on && !running;
 
   useEffect(() => {
     if (!open) return;
@@ -94,10 +97,10 @@ export function SoundButton() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label={on ? "Sound is on — sound settings" : "Sound is off — sound settings"}
+        aria-label={waiting ? "Sound is on and starts with your first tap — sound settings" : on ? "Sound is on — sound settings" : "Sound is off — sound settings"}
         className="relative grid size-11 place-items-center rounded-full text-on-navy transition-transform duration-150 active:scale-95"
       >
-        <span className={cn("grid size-8 place-items-center rounded-full", on ? "bg-gold text-on-gold" : "bg-white/10")}>
+        <span className={cn("grid size-8 place-items-center rounded-full", on ? "bg-gold text-on-gold" : "bg-white/10", waiting && "animate-pulse")}>
           {on ? <Volume2 className="size-[18px]" aria-hidden /> : <VolumeX className="size-[18px]" aria-hidden />}
         </span>
         {!on ? <span className="absolute right-1.5 top-1.5 size-2 animate-ping rounded-full bg-gold" aria-hidden /> : null}

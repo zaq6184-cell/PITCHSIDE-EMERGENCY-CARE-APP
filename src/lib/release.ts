@@ -2,12 +2,17 @@
  * This release of the app: its version (the same as package.json's — release.test.ts checks), when it came
  * out, and what is new in it, newest first. Shown on the About page.
  */
-export const APP_VERSION = "1.0.1";
+export const APP_VERSION = "1.0.2";
 export const RELEASED = "October 2026";
 
 export type ReleaseNote = { id: string; title: string; text: string };
 
 export const WHATS_NEW: ReleaseNote[] = [
+  {
+    id: "role-voices",
+    title: "Roles speak as they open",
+    text: "Open a colour from the Roles tab, the diagram or with a swipe, and you hear its call-out. Phones allow sound only after a first tap: until then, the speaker at the top pulses gently.",
+  },
   {
     id: "music",
     title: "Background music starts reliably",

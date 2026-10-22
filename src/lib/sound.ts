@@ -87,6 +87,7 @@ function unlock() {
     unlocked = true;
     for (const type of UNLOCK_EVENTS) window.removeEventListener(type, unlock, true);
     if (ambienceWanted) startAmbience();
+    listeners.forEach((l) => l());
   };
   if (c?.state === "running") done();
   else c?.resume().then(() => c.state === "running" && done(), () => {});
@@ -101,6 +102,14 @@ export const getServerSoundPrefs = (): SoundPrefs => DEFAULTS;
 /** The sound settings, kept up to date in a component. */
 export function useSoundPrefs(): SoundPrefs {
   return useSyncExternalStore(subscribeSound, getSoundPrefs, getServerSoundPrefs);
+}
+
+/**
+ * Whether sound can play now. False until the first tap where the browser asks for one (every browser tab, an
+ * iPhone), and again after a call or the background stopped the audio engine until the next tap.
+ */
+export function useSoundRunning(): boolean {
+  return useSyncExternalStore(subscribeSound, () => ac?.state === "running", () => true);
 }
 
 export function subscribeSound(l: () => void) {
@@ -145,7 +154,9 @@ function ctx() {
     // or "interrupted" on iPhones): it starts again when the app is back, or at the latest with the next tap
     c.addEventListener("statechange", () => {
       if (c.state !== "running" && c.state !== "closed") armUnlock();
+      listeners.forEach((l) => l());
     });
+    queueMicrotask(() => listeners.forEach((l) => l()));
   }
   if (ac.state !== "running" && ac.state !== "closed") void ac.resume().catch(() => {});
   return ac;

@@ -78,7 +78,7 @@ export function RoleDisc({ id, x, y, r = 25 }: { id: RoleId; x: number; y: numbe
 const hear = (id: RoleId) => void say(`${id}-1`);
 
 /**
- * `linkRoles`: each disc opens that colour's role page (with a whoosh and that colour's call-out);
+ * `linkRoles`: each disc opens that colour's role page with a whoosh (the page then plays that colour's call-out);
  * the highlighted disc replays its own call-out instead.
  */
 export function PositionDiagram({ highlight, caption, linkRoles }: { highlight?: RoleId; caption?: string; linkRoles?: boolean }) {
@@ -142,7 +142,6 @@ export function PositionDiagram({ highlight, caption, linkRoles }: { highlight?:
                 haptic(10);
                 setTransitionDirection(highlight && order.indexOf(m.id) < order.indexOf(highlight) ? "back" : "forward");
                 sfx("whoosh", 0.25);
-                hear(m.id);
               }}
             >
               {disc}

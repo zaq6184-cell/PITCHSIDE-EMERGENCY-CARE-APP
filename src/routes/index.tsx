@@ -33,6 +33,7 @@ import { AppShell, Note, Panel, SectionLabel, Tiles } from "@/components/worksho
 import { asset } from "@/lib/asset";
 import { about, aboutApp, disclaimer } from "@/lib/disclaimer";
 import { fifaDownloads } from "@/lib/fifa-links";
+import { haptic, sfx } from "@/lib/sound";
 import { roleTag, workshop } from "@/lib/workshop";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -57,6 +58,11 @@ function Home() {
                 key={r.id}
                 to="/role/$id"
                 params={{ id: r.id }}
+                // like a disc in the diagram: a whoosh, and the role page opens with that colour's call-out
+                onClick={() => {
+                  haptic(10);
+                  sfx("whoosh", 0.25);
+                }}
                 className={`shine relative flex min-h-[5.5rem] flex-col justify-end overflow-hidden rounded-xl px-3 pb-2.5 pt-3 transition-transform duration-150 ease-out active:scale-95${r.id === "black" ? " dark:outline dark:outline-1 dark:outline-white/25" : ""}`}
                 style={
                   {
