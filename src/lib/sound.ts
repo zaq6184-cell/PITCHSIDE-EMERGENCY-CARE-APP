@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { asset } from "@/lib/asset";
+import { readSoundPrefs, SOUND_DEFAULTS as DEFAULTS, type SoundPrefs, writeSoundPrefs } from "@/lib/sound-prefs";
 
 /**
  * Sound for the guide: effects, spoken call-outs, a CPR rhythm click, stadium ambience and music that suits
@@ -7,12 +8,11 @@ import { asset } from "@/lib/asset";
  * starts then. Either switch remembers the person's choice on this device only. Files load when first needed.
  */
 export type SfxName = "whistle" | "correct" | "wrong" | "whoosh" | "cheer" | "shock" | "siren";
-export type SoundPrefs = { sfx: boolean; music: boolean };
+export type { SoundPrefs };
 /** The music for a page: Home's theme, a calm study loop, the drill at CPR tempo, the quiz — or none (Tools). */
 export type MusicScene = "theme" | "study" | "drill" | "quiz" | "none";
 
 const KEY = "pec-sound";
-const DEFAULTS: SoundPrefs = { sfx: true, music: true };
 let prefs: SoundPrefs = DEFAULTS;
 let loaded = false;
 let unlocked = false;
@@ -25,12 +25,13 @@ function load() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
   try {
-    const v = JSON.parse(localStorage.getItem(KEY) || "{}") as Partial<SoundPrefs>;
-    prefs = { sfx: v.sfx ?? DEFAULTS.sfx, music: v.music ?? DEFAULTS.music };
+    prefs = readSoundPrefs(localStorage.getItem(KEY));
   } catch {
     prefs = DEFAULTS;
   }
-  for (const type of UNLOCK_EVENTS) window.addEventListener(type, unlock, true);
+  armUnlock();
+  // a track that failed to download (no signal) is fetched again once the connection is back
+  window.addEventListener("online", applyMusic);
   document.addEventListener("visibilitychange", () => {
     applyMusic();
     if (document.visibilityState !== "visible") {
@@ -67,6 +68,12 @@ function soundAllowedNow() {
   // no way to ask (Chrome, Safari): an installed app may play before the first tap, a browser tab may not —
   // there sound waits for the tap rather than being refused with a console warning
   return window.matchMedia?.("(display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui)").matches || nav.standalone === true;
+}
+
+/** Start sound with the next tap or key press: the first one, or the first after the audio engine was stopped. */
+function armUnlock() {
+  unlocked = false;
+  for (const type of UNLOCK_EVENTS) window.addEventListener(type, unlock, true);
 }
 
 function unlock() {
@@ -108,7 +115,7 @@ export function setSoundPrefs(next: Partial<SoundPrefs>) {
   const was = prefs;
   prefs = { ...prefs, ...next };
   try {
-    localStorage.setItem(KEY, JSON.stringify(prefs));
+    localStorage.setItem(KEY, writeSoundPrefs(prefs));
   } catch {
     // storage blocked: the choice lasts for this visit
   }
@@ -132,9 +139,15 @@ function ctx() {
   if (!ac) {
     const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AC) return null;
-    ac = new AC();
+    const c = new AC();
+    ac = c;
+    // a phone call, another app's sound or the app going to the background stops the audio engine ("suspended",
+    // or "interrupted" on iPhones): it starts again when the app is back, or at the latest with the next tap
+    c.addEventListener("statechange", () => {
+      if (c.state !== "running" && c.state !== "closed") armUnlock();
+    });
   }
-  if (ac.state === "suspended") void ac.resume().catch(() => {});
+  if (ac.state !== "running" && ac.state !== "closed") void ac.resume().catch(() => {});
   return ac;
 }
 
@@ -431,12 +444,14 @@ function applyMusic() {
     }
   }
   if (!want || scene === "none" || !musicReady) return;
+  ctx(); // the music plays through the audio engine: wake it if a call or the background stopped it
   let loop = players.get(scene);
   if (!loop) {
     loop = makeLoop(TRACKS[scene]);
     players.set(scene, loop);
   }
   const current = loop;
+  if (current.el.error) current.el.load(); // the download failed (no signal): try it again
   if (current.el.paused) current.el.play().then(() => ramp(current, musicLevel(), 1500), () => {});
   else ramp(current, musicLevel(), 400);
 }

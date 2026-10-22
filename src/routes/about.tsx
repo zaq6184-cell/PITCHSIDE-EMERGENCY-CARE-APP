@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Box, ChevronRight, Download, GraduationCap, Images, Languages, ListChecks, type LucideIcon, Rotate3d, Sparkles, Timer } from "lucide-react";
+import { Box, ChevronRight, Download, GraduationCap, Images, Languages, ListChecks, type LucideIcon, Music, Rotate3d, Sparkles, Timer } from "lucide-react";
 import { ShareAppButton } from "@/components/install-app";
 import { LanguageList } from "@/components/language-switch";
 import { SoundSettings } from "@/components/sound-control";
@@ -24,6 +24,7 @@ const sections: { id: string; chip: string; title: string; paragraphs: string[] 
 ];
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
+  music: Music,
   "live-timer": Timer,
   languages: Languages,
   kit: Box,

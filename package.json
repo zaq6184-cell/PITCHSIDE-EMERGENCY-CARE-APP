@@ -1,6 +1,6 @@
 {
   "name": "app-builder-workspace",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -20,7 +20,7 @@
     "check:auth": "node scripts/check-auth-invariant.mjs",
     "sw": "node scripts/build-sw.mjs",
     "image-sizes": "node scripts/image-sizes.mjs",
-    "test": "node --test \"scripts/**/*.test.mjs\" &&node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/lib/arrest-log.test.ts src/lib/match-plan.test.ts src/lib/aed-pads.test.ts src/lib/progress.test.ts src/lib/compression-detector.test.ts src/lib/search.test.ts src/lib/survival.test.ts src/lib/lightning.test.ts src/lib/heat.test.ts src/lib/injuries.test.ts src/lib/pack-bag.test.ts src/lib/cases.test.ts src/lib/scorer.test.ts src/lib/mistakes.test.ts src/lib/concussion-signs.test.ts src/lib/live.test.ts src/lib/ar.test.ts src/lib/drill-timeline.test.ts src/lib/release.test.ts",
+    "test": "node --test \"scripts/**/*.test.mjs\" &&node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts src/lib/arrest-log.test.ts src/lib/match-plan.test.ts src/lib/aed-pads.test.ts src/lib/progress.test.ts src/lib/compression-detector.test.ts src/lib/search.test.ts src/lib/survival.test.ts src/lib/lightning.test.ts src/lib/heat.test.ts src/lib/injuries.test.ts src/lib/pack-bag.test.ts src/lib/cases.test.ts src/lib/scorer.test.ts src/lib/mistakes.test.ts src/lib/concussion-signs.test.ts src/lib/live.test.ts src/lib/ar.test.ts src/lib/drill-timeline.test.ts src/lib/release.test.ts src/lib/sound-prefs.test.ts",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

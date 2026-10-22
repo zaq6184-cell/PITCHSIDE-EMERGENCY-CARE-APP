@@ -145,11 +145,35 @@ async function fromRange(full, rangeHeader) {
   });
 }
 
-async function media(request) {
+/**
+ * A sound (the music, a voice) is played in byte ranges, which are not saved: the first time it plays, a whole copy
+ * is saved in the background, so next time it starts at once — and plays offline. Not the AR call-outs: Google's
+ * AR viewer downloads those itself.
+ */
+const saving = new Set();
+async function saveWhole(url) {
+  if (saving.has(url)) return;
+  saving.add(url);
+  try {
+    const res = await fetch(url);
+    if (res.ok && res.status === 200) await (await caches.open(MEDIA_CACHE)).put(url, res);
+  } catch {
+    // no connection: it is saved the next time it plays
+  } finally {
+    saving.delete(url);
+  }
+}
+
+async function media(request, event) {
   const cache = await caches.open(MEDIA_CACHE);
   const range = request.headers.get("range");
   const hit = await cache.match(request.url);
-  if (range) return hit ? fromRange(hit, range) : fetch(request);
+  if (range) {
+    if (hit) return fromRange(hit, range);
+    const path = new URL(request.url).pathname;
+    if (/\.mp3$/.test(path) && !/\/ar\/[^/]*$/.test(path)) event.waitUntil(saveWhole(request.url));
+    return fetch(request);
+  }
   const refresh = fetch(request)
     .then((res) => {
       if (res.ok && res.status === 200) cache.put(request.url, res.clone());
@@ -165,7 +189,7 @@ self.addEventListener("fetch", (event) => {
   const path = new URL(req.url).pathname;
   if (req.mode === "navigate") return event.respondWith(page(req));
   if (/\/assets\/|\.(?:js|css|woff2)$/.test(path)) return event.respondWith(cacheFirst(req, ASSETS));
-  if (/\.(?:png|jpe?g|webp|svg|gif|mp3|mp4|pdf|webmanifest|json)$/.test(path)) return event.respondWith(media(req));
+  if (/\.(?:png|jpe?g|webp|svg|gif|mp3|mp4|pdf|webmanifest|json)$/.test(path)) return event.respondWith(media(req, event));
 });
 
 /** "Save everything for offline": fetch every picture, sound, film and document once, reporting progress. */

@@ -2,12 +2,17 @@
  * This release of the app: its version (the same as package.json's — release.test.ts checks), when it came
  * out, and what is new in it, newest first. Shown on the About page.
  */
-export const APP_VERSION = "1.0.0";
+export const APP_VERSION = "1.0.1";
 export const RELEASED = "October 2026";
 
 export type ReleaseNote = { id: string; title: string; text: string };
 
 export const WHATS_NEW: ReleaseNote[] = [
+  {
+    id: "music",
+    title: "Background music starts reliably",
+    text: "On by default, it starts with your first tap, or as the app opens where the phone allows. It now comes back after a phone call or another app, plays offline once heard, and an old saved setting no longer keeps it off.",
+  },
   {
     id: "live-timer",
     title: "Live arrest timer on every page",
