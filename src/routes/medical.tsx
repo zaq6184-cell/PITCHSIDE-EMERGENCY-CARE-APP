@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Activity, Briefcase, Candy, ChevronRight, ClipboardList, Hand, HeartPulse, type LucideIcon, Phone, Syringe, Wind } from "lucide-react";
 import { AppShell, JumpChips, Note, Panel } from "@/components/workshop";
 import { MEDICAL, MEDICAL_INTRO, MEDICAL_RULE, MEDICAL_TEAM, type MedicalCard, type MedicalId } from "@/lib/medical";
+import { MEDICAL_PICS } from "@/lib/scene-images";
 
 export const Route = createFileRoute("/medical")({
   component: MedicalPage,
@@ -36,8 +37,9 @@ function Label({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Card({ c }: { c: MedicalCard }) {
+function Card({ c, first }: { c: MedicalCard; first: boolean }) {
   const Icon = ICONS[c.id];
+  const pic = MEDICAL_PICS[c.id];
   return (
     <section id={`med-${c.id}`} className="scroll-mt-24">
       <Panel>
@@ -49,6 +51,19 @@ function Card({ c }: { c: MedicalCard }) {
             <h2 className="font-display text-lg font-bold leading-tight tracking-wide text-heading">{c.title}</h2>
             <span className="block text-xs leading-snug text-muted">{c.sub}</span>
           </span>
+        </div>
+        {/* the card's key action, as a picture */}
+        <div className="relative bg-navy">
+          <img
+            src={pic.src}
+            alt={pic.alt}
+            width={960}
+            height={540}
+            loading={first ? "eager" : "lazy"}
+            decoding="async"
+            className="img-in block aspect-video w-full object-cover outline-none"
+          />
+          <p className="absolute right-2 top-2 z-[1] rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">AI-generated illustration</p>
         </div>
         <div className="flex flex-col gap-3.5 px-3.5 py-3.5">
           <div>
@@ -109,8 +124,8 @@ function MedicalPage() {
           </div>
         </Panel>
         <JumpChips items={MEDICAL.map((c) => ({ id: `med-${c.id}`, label: CHIPS[c.id] }))} />
-        {MEDICAL.map((c) => (
-          <Card key={c.id} c={c} />
+        {MEDICAL.map((c, i) => (
+          <Card key={c.id} c={c} first={i === 0} />
         ))}
         <Panel>
           <ul className="divide-y divide-line">

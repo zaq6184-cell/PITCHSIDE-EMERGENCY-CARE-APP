@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  BadgeCheck,
   Box,
   Camera,
   ChevronRight,
@@ -115,6 +116,8 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
+  "medical-fifa": BadgeCheck,
+  "medical-pictures": Images,
   medical: Stethoscope,
   handover: ClipboardList,
   privacy: ShieldCheck,

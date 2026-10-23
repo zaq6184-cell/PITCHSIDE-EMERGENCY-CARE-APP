@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ClipboardList, Clock, HeartPulse, RotateCcw, Share2, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ScenePicture } from "@/components/scene-picture";
 import { AppShell, Panel, SectionLabel } from "@/components/workshop";
 import { ARREST_KEY, type ArrestSession, count, parseSession } from "@/lib/arrest-log";
 import { AVPU, EMPTY_HANDOVER, type Handover, handoverLines, INJURIES, isEmpty, MECHANISMS, TREATMENTS } from "@/lib/handover";
 import { translateText } from "@/lib/i18n";
+import { HANDOVER_PIC } from "@/lib/scene-images";
 import { shareOrCopy } from "@/lib/share";
 import { tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
@@ -149,6 +151,7 @@ function HandoverPage() {
     <AppShell tab="timer">
       <div className="flex flex-col gap-3.5">
         <Panel>
+          <ScenePicture pic={HANDOVER_PIC} />
           <div className="flex flex-col gap-2 px-3.5 py-3.5">
             <div className="flex items-center gap-3">
               <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-note text-gold-ink">

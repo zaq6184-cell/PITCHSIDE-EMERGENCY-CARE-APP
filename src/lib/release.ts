@@ -2,12 +2,22 @@
  * This release of the app: its version (the same as package.json's — release.test.ts checks), when it came
  * out, and what is new in it, newest first. Shown on the About page.
  */
-export const APP_VERSION = "1.1.0";
+export const APP_VERSION = "1.2.0";
 export const RELEASED = "October 2026";
 
 export type ReleaseNote = { id: string; title: string; text: string };
 
 export const WHATS_NEW: ReleaseNote[] = [
+  {
+    id: "medical-fifa",
+    title: "Medical cards checked against the FIFA manual",
+    text: "The five cards now follow chapters 4 and 5 of the FIFA Emergency Care Manual and its bag list: the 1:10 000 adrenaline warning, inhaler puffs every 60 seconds, glucose rather than sports drinks, midazolam for a long seizure and back blows from behind. The handover can now record glucagon and a benzodiazepine.",
+  },
+  {
+    id: "medical-pictures",
+    title: "Pictures for the medical cards and the handover",
+    text: "Each medical emergency card shows its key action, such as the auto-injector into the thigh, the inhaler through a spacer and back blows, and the handover page shows the team leader handing over at the ambulance. AI-generated, and labelled as such.",
+  },
   {
     id: "medical",
     title: "Medical emergency cards",

@@ -1,10 +1,13 @@
 import { asset } from "@/lib/asset";
+import type { MedicalId } from "@/lib/medical";
 
 /**
- * AI-generated scene pictures (Higgsfield) for the case simulator and the page headers, in the same style
- * as the role pictures. A case picture shows the moment before the first decision, so it never gives the
- * answer away; the cooling picture shows the technique the heat page teaches (whole body in stirred iced
- * water, the head held). Brand logos removed.
+ * AI-generated scene pictures (Higgsfield) for the case simulator, the page headers and the medical emergency
+ * cards, in the same style as the role pictures. A case picture shows the moment before the first decision, so it
+ * never gives the answer away; the cooling picture and the medical cards' pictures show the technique the page
+ * teaches (whole body in stirred iced water with the head held; the auto-injector into the thigh; the inhaler
+ * through a spacer; glucose gel, with no sports drink, as the FIFA manual warns they hold too little sugar; the head
+ * cushioned, not restrained; back blows from behind). Brand logos removed.
  */
 export type ScenePic = { src: string; alt: string };
 
@@ -27,3 +30,31 @@ export const SCORER_PIC = pic(
   "scorer",
   "An instructor with a tablet scores a trainee in a red bib giving chest compressions on a manikin, while trainees in other colours wait their turn",
 );
+export const HANDOVER_PIC = pic(
+  "handover",
+  "At the open doors of an ambulance beside a floodlit pitch, the team leader in a black bib reads the handover from his phone to two paramedics, one writing on a clipboard, while the player lies awake on the trolley under a blanket",
+);
+
+/** One picture per medical emergency card, each showing the card's key action (960 × 540: they sit inside a card). */
+export const MEDICAL_PICS: Record<MedicalId, ScenePic> = {
+  anaphylaxis: pic(
+    "medical-anaphylaxis",
+    "A medic in a green bib presses an adrenaline auto-injector into the thigh of a player in a purple kit who lies flat with a red rash on his neck, while a second medic phones for the ambulance",
+  ),
+  asthma: pic(
+    "medical-asthma",
+    "A breathless player in a purple kit sits on the bench and breathes in through a spacer from his reliever inhaler, while a medic kneels in front of him counting the puffs on her fingers",
+  ),
+  hypo: pic(
+    "medical-hypo",
+    "A pale, sweaty player in a purple kit sits on the grass while a medic kneels beside him, offering glucose gel and holding a blood glucose meter",
+  ),
+  seizure: pic(
+    "medical-seizure",
+    "A player in a purple kit lies on the grass; a medic in an orange bib cushions his head on a folded towel without holding him down, and a second medic times it on her watch",
+  ),
+  choking: pic(
+    "medical-choking",
+    "A choking player in a purple kit leans forward with a hand at his throat while a medic standing behind him supports his chest and gives back blows to his upper back with the heel of her hand",
+  ),
+};
