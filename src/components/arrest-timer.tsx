@@ -43,6 +43,7 @@ import {
 } from "@/lib/arrest-log";
 import { shareOrCopy } from "@/lib/share";
 import { say, sfx, startMetronome, stopMetronome, tap } from "@/lib/sound";
+import { translateText } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { useWakeLock } from "@/lib/wake-lock";
 
@@ -217,7 +218,7 @@ export function ArrestTimer() {
   }
 
   function clear() {
-    if (running && !window.confirm("Stop and clear this timer and its log?")) return;
+    if (running && !window.confirm(translateText("Stop and clear this timer and its log?"))) return;
     tap();
     setBeat(false);
     setAlarm(false);

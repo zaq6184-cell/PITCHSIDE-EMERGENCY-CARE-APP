@@ -21,10 +21,12 @@ import { Route as DrillRouteImport } from './routes/drill'
 import { Route as FifaRouteImport } from './routes/fifa'
 import { Route as FocusRouteImport } from './routes/focus'
 import { Route as GuidesRouteImport } from './routes/guides'
+import { Route as HandoverRouteImport } from './routes/handover'
 import { Route as HeatRouteImport } from './routes/heat'
 import { Route as InjuriesRouteImport } from './routes/injuries'
 import { Route as InstallRouteImport } from './routes/install'
 import { Route as LiveRouteImport } from './routes/live'
+import { Route as MedicalRouteImport } from './routes/medical'
 import { Route as PitchsideRouteImport } from './routes/pitchside'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as QuizRouteImport } from './routes/quiz'
@@ -96,6 +98,11 @@ const GuidesRoute = GuidesRouteImport.update({
   path: '/guides',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HandoverRoute = HandoverRouteImport.update({
+  id: '/handover',
+  path: '/handover',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HeatRoute = HeatRouteImport.update({
   id: '/heat',
   path: '/heat',
@@ -114,6 +121,11 @@ const InstallRoute = InstallRouteImport.update({
 const LiveRoute = LiveRouteImport.update({
   id: '/live',
   path: '/live',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedicalRoute = MedicalRouteImport.update({
+  id: '/medical',
+  path: '/medical',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PitchsideRoute = PitchsideRouteImport.update({
@@ -180,10 +192,12 @@ export interface FileRoutesByFullPath {
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
+  '/handover': typeof HandoverRoute
   '/heat': typeof HeatRoute
   '/injuries': typeof InjuriesRoute
   '/install': typeof InstallRoute
   '/live': typeof LiveRoute
+  '/medical': typeof MedicalRoute
   '/pitchside': typeof PitchsideRoute
   '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
@@ -208,10 +222,12 @@ export interface FileRoutesByTo {
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
+  '/handover': typeof HandoverRoute
   '/heat': typeof HeatRoute
   '/injuries': typeof InjuriesRoute
   '/install': typeof InstallRoute
   '/live': typeof LiveRoute
+  '/medical': typeof MedicalRoute
   '/pitchside': typeof PitchsideRoute
   '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
@@ -237,10 +253,12 @@ export interface FileRoutesById {
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
+  '/handover': typeof HandoverRoute
   '/heat': typeof HeatRoute
   '/injuries': typeof InjuriesRoute
   '/install': typeof InstallRoute
   '/live': typeof LiveRoute
+  '/medical': typeof MedicalRoute
   '/pitchside': typeof PitchsideRoute
   '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
@@ -267,10 +285,12 @@ export interface FileRouteTypes {
     | '/fifa'
     | '/focus'
     | '/guides'
+    | '/handover'
     | '/heat'
     | '/injuries'
     | '/install'
     | '/live'
+    | '/medical'
     | '/pitchside'
     | '/plan'
     | '/quiz'
@@ -295,10 +315,12 @@ export interface FileRouteTypes {
     | '/fifa'
     | '/focus'
     | '/guides'
+    | '/handover'
     | '/heat'
     | '/injuries'
     | '/install'
     | '/live'
+    | '/medical'
     | '/pitchside'
     | '/plan'
     | '/quiz'
@@ -323,10 +345,12 @@ export interface FileRouteTypes {
     | '/fifa'
     | '/focus'
     | '/guides'
+    | '/handover'
     | '/heat'
     | '/injuries'
     | '/install'
     | '/live'
+    | '/medical'
     | '/pitchside'
     | '/plan'
     | '/quiz'
@@ -352,10 +376,12 @@ export interface RootRouteChildren {
   FifaRoute: typeof FifaRoute
   FocusRoute: typeof FocusRoute
   GuidesRoute: typeof GuidesRoute
+  HandoverRoute: typeof HandoverRoute
   HeatRoute: typeof HeatRoute
   InjuriesRoute: typeof InjuriesRoute
   InstallRoute: typeof InstallRoute
   LiveRoute: typeof LiveRoute
+  MedicalRoute: typeof MedicalRoute
   PitchsideRoute: typeof PitchsideRoute
   PlanRoute: typeof PlanRoute
   QuizRoute: typeof QuizRoute
@@ -454,6 +480,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/handover': {
+      id: '/handover'
+      path: '/handover'
+      fullPath: '/handover'
+      preLoaderRoute: typeof HandoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/heat': {
       id: '/heat'
       path: '/heat'
@@ -480,6 +513,13 @@ declare module '@tanstack/react-router' {
       path: '/live'
       fullPath: '/live'
       preLoaderRoute: typeof LiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/medical': {
+      id: '/medical'
+      path: '/medical'
+      fullPath: '/medical'
+      preLoaderRoute: typeof MedicalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pitchside': {
@@ -568,10 +608,12 @@ const rootRouteChildren: RootRouteChildren = {
   FifaRoute: FifaRoute,
   FocusRoute: FocusRoute,
   GuidesRoute: GuidesRoute,
+  HandoverRoute: HandoverRoute,
   HeatRoute: HeatRoute,
   InjuriesRoute: InjuriesRoute,
   InstallRoute: InstallRoute,
   LiveRoute: LiveRoute,
+  MedicalRoute: MedicalRoute,
   PitchsideRoute: PitchsideRoute,
   PlanRoute: PlanRoute,
   QuizRoute: QuizRoute,

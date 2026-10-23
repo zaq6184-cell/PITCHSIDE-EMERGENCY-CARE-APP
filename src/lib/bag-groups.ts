@@ -98,7 +98,7 @@ export const bagGroups: BagGroup[] = [
   {
     id: "drugs",
     title: "Emergency drugs pouch",
-    tray: "Right tray — removable · Green on Black’s order",
+    tray: "Right tray — removable · Green on Black's order",
     items: [
       { name: "Adrenaline 1:10 000", qty: "10 ml prefilled ×1" },
       { name: "Emerade / Epi-Pen" },

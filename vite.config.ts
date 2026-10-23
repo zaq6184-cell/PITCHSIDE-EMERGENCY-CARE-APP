@@ -219,6 +219,8 @@ export default defineConfig(({ command, isPreview }) => ({
               { path: "/scorer" },
               { path: "/live" },
               { path: "/ar" },
+              { path: "/medical" },
+              { path: "/handover" },
             ],
           }
         : undefined,

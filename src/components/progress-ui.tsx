@@ -5,6 +5,7 @@ import { Confetti } from "@/components/confetti";
 import { Panel, SectionLabel } from "@/components/workshop";
 import { type Badge, BADGES, EMPTY, earnedCount, getProgress, nextBadge, onBadge, type Progress, resetProgress, subscribeProgress } from "@/lib/progress";
 import { haptic, sfx } from "@/lib/sound";
+import { translateText } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 function useProgress(): Progress {
@@ -126,7 +127,7 @@ export function TrainingCard() {
           <button
             type="button"
             onClick={() => {
-              if (window.confirm("Clear your badges and progress on this device?")) resetProgress();
+              if (window.confirm(translateText("Clear your badges and progress on this device?"))) resetProgress();
             }}
             className="min-h-8 px-1 underline underline-offset-2"
           >

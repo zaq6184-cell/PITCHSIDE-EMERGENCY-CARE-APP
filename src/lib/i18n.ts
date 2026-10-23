@@ -118,10 +118,19 @@ function lookup(s: string, depth = 0): string | null {
       if (!/[A-Za-z]/.test(part)) return part;
       // a part keeps its outer spaces, like a whole piece of text (" Inside FIFA's 3-minute target.")
       const [, lead, core, tail] = /^(\s*)([\s\S]*?)(\s*)$/.exec(part) ?? ["", "", part, ""];
-      return lead + (lookup(core, depth + 1) ?? core) + tail;
+      return lead + capturedPart(core, depth + 1) + tail;
     });
   }
   return pieces(s, depth);
+}
+
+/**
+ * A part a pattern captured. A list run together with middle dots ("CPR from 15:42 · 2 shocks") is translated item by
+ * item; otherwise the first item's own pattern ("CPR from {0}") would take the rest of the list as its part.
+ */
+function capturedPart(core: string, depth: number): string {
+  if (core.includes(" · ") && !exact.has(core)) return core.split(" · ").map((x) => (/[A-Za-z]/.test(x) ? (lookup(x, depth) ?? x) : x)).join(" · ");
+  return lookup(core, depth) ?? core;
 }
 
 /**
@@ -186,6 +195,8 @@ export function translate(text: string): string {
     if (memo.size > 4000) memo.clear(); // timers and scores make endless new strings
     memo.set(core, t);
     if (t === null && misses.size < 2000 && !outputs.has(core)) misses.add(core);
+    // a translation put together from patterns and pieces is not reported as missing when it passes through again
+    else if (t !== null && outputs.size < 50_000) outputs.add(t);
   }
   return t === null ? text : m[1] + t + m[3];
 }

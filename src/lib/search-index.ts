@@ -6,6 +6,7 @@ import { REGIONS } from "@/lib/injuries";
 import { MISTAKES } from "@/lib/mistakes";
 import { fifaSca } from "@/lib/fifa-sca";
 import { focusStages } from "@/lib/focus";
+import { MEDICAL } from "@/lib/medical";
 import type { Doc } from "@/lib/search";
 import { spineSteps } from "@/lib/spine-drill";
 import { type Block, sectionSlug, stations } from "@/lib/stations";
@@ -18,7 +19,7 @@ export type Target =
   | { to: "/station/$id"; id: string; hash?: string }
   | { to: "/drill"; neck?: boolean; mistakes?: boolean }
   | {
-      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar";
+      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover";
       hash?: string;
     };
 
@@ -81,6 +82,7 @@ const PAGES: Entry[] = [
   { id: "stations", kind: "page", title: "Skill modules", sub: "Study notes for the workshop", text: stations.map((s) => `${s.short} ${s.title}`).join(" "), target: { to: "/stations" } },
   { id: "install", kind: "page", title: "Install the app", sub: "Phone, tablet or computer", text: "Add to home screen offline download app.", target: { to: "/install" } },
   { id: "about", kind: "page", title: "About the app", sub: "Credits and disclaimer", text: "About credits sources disclaimer.", target: { to: "/about" } },
+  { id: "privacy", kind: "page", title: "Privacy", sub: "About · kept on this device only", text: "Privacy, confidential, data stored locally on this device only, permissions, camera, motion sensors, no account, no tracking, no cookies, delete my data.", target: { to: "/about", hash: "about-privacy" } },
   {
     id: "cases",
     kind: "tool",
@@ -97,6 +99,30 @@ const PAGES: Entry[] = [
     sub: "Cool first, transport second",
     text: `Exertional heat stroke, WBGT heat risk, cooling breaks, hydration breaks, World Cup 2026, rectal temperature, cold-water immersion, ice towels, tarp. ${ZONES.map((z) => `${z.label}: ${z.actions.join(" ")}`).join(" ")} ${METHODS.map((m) => m.name).join(" ")}`,
     target: { to: "/heat" },
+  },
+  {
+    id: "medical",
+    kind: "page",
+    title: "Medical emergencies",
+    sub: "Anaphylaxis, asthma, low blood sugar, seizure, choking",
+    text: `Medical emergencies on match day, adult doses, if trained. ${MEDICAL.map((c) => `${c.title} ${c.sub}`).join(" ")}`,
+    target: { to: "/medical" },
+  },
+  ...MEDICAL.map((c) => ({
+    id: `medical-${c.id}`,
+    kind: "section" as const,
+    title: c.title,
+    sub: `Medical emergencies · ${c.sub}`,
+    text: [...c.recognise, ...c.steps, ...c.trained, c.call, c.football].join(" "),
+    target: { to: "/medical" as const, hash: `med-${c.id}` },
+  })),
+  {
+    id: "handover",
+    kind: "tool",
+    title: "Handover to the ambulance crew",
+    sub: "Tools · ATMIST, from the arrest timer",
+    text: "Handover, ATMIST, age, time of injury or collapse, mechanism, injuries or illness, signs, vital signs, AVPU, pulse, blood pressure, SpO2, treatment, ambulance crew, paramedics, hospital, share.",
+    target: { to: "/handover" },
   },
   {
     id: "injuries",

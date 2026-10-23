@@ -48,7 +48,7 @@ export function FifaSkillZoneList() {
     <section id="films-skill" className="flex scroll-mt-24 flex-col gap-3">
       <SectionLabel>FIFA SKILL ZONE</SectionLabel>
       <p className="text-sm leading-snug text-muted">
-        FIFA’s pitchside technique films: sideline, set-up, Hands On 1-2-3, cervical spine and lower limb.
+        FIFA's pitchside technique films: sideline, set-up, Hands On 1-2-3, cervical spine and lower limb.
       </p>
       <VideoList clips={fifaSkillList} />
     </section>

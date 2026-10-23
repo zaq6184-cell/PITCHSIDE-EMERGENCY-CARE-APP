@@ -30,7 +30,7 @@ function GuidesPage() {
             <span className="block font-display text-xs font-semibold tracking-[0.14em] text-gold">
               FIFA: SUDDEN CARDIAC ARREST
             </span>
-            <span className="block text-sm leading-snug">FIFA’s signs, steps, infographics and downloads</span>
+            <span className="block text-sm leading-snug">FIFA's signs, steps, infographics and downloads</span>
           </span>
           <ChevronRight className="size-5 shrink-0 text-gold" />
         </Link>
@@ -39,7 +39,7 @@ function GuidesPage() {
         <section id="films-focus" className="flex scroll-mt-24 flex-col gap-3">
           <SectionLabel>CONCUSSION — FOCUS</SectionLabel>
           <p className="text-sm leading-snug text-muted">
-            FIFA’s on-pitch concussion assessment film.{" "}
+            FIFA's on-pitch concussion assessment film.{" "}
             <Link to="/focus" className="font-medium text-heading underline underline-offset-2">
               Open the FOCUS protocol
             </Link>

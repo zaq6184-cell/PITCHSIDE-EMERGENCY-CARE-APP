@@ -53,10 +53,10 @@ function readsAsText(s) {
   if (!/[A-Za-z]{2}/.test(s)) return false;
   if (/^(https?:|mailto:|tel:|data:|\/|\.\/|#|@|[a-z]+:\/\/)/.test(s)) return false;
   if (/^[\w.-]+\.(png|jpe?g|webp|svg|mp3|mp4|glb|usdz|json|pdf|css|js|ts|tsx)$/i.test(s)) return false;
-  if (/^[a-z0-9_.:/-]+$/.test(s)) return false; // ids, keys, slugs, single lowercase words
   // short codes stay as they are — except the few that other languages write their own way (CPR is RCP in Spanish,
-  // HR is FC), and the scorer's timeline labels ("IN", "GO")
-  if (/^(?:CPR|HR|RR|IN|GO)$/.test(s)) return true;
+  // HR is FC), the scorer's timeline labels ("IN", "GO") and the i-gel, a name every language keeps
+  if (/^(?:CPR|HR|RR|IN|GO|i-gel)$/.test(s)) return true;
+  if (/^[a-z0-9_.:/-]+$/.test(s)) return false; // ids, keys, slugs, single lowercase words
   if (/^[A-Z0-9_]+$/.test(s) && s.length <= 3) return false;
   if (/^\[|^[\w-]*\{\d\}[\w-]*$/.test(s)) return false; // selectors and ids built from a pattern ("tab-{0}")
   // media queries ("(min-width: 640px)", "(hover: none)", not "(studies: 0.15–0.35)"), SVG transforms, selectors, code

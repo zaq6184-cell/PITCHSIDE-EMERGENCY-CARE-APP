@@ -2,12 +2,27 @@
  * This release of the app: its version (the same as package.json's — release.test.ts checks), when it came
  * out, and what is new in it, newest first. Shown on the About page.
  */
-export const APP_VERSION = "1.0.2";
+export const APP_VERSION = "1.1.0";
 export const RELEASED = "October 2026";
 
 export type ReleaseNote = { id: string; title: string; text: string };
 
 export const WHATS_NEW: ReleaseNote[] = [
+  {
+    id: "medical",
+    title: "Medical emergency cards",
+    text: "Anaphylaxis, asthma, low blood sugar, seizure and choking: what to recognise, what the team does, the adult doses if trained, and when to call the ambulance, with the points that matter in football.",
+  },
+  {
+    id: "handover",
+    title: "Handover to the ambulance crew",
+    text: "An ATMIST card (Age, Time, Mechanism, Injuries, Signs, Treatment) that fills in from the arrest timer, ready to read out or share. Nothing is saved.",
+  },
+  {
+    id: "privacy",
+    title: "Privacy, in plain words",
+    text: "Everything stays on this device. The About page says what the app keeps, the two permissions it may ask for and when it goes online, with a button to delete your data.",
+  },
   {
     id: "role-voices",
     title: "Roles speak as they open",

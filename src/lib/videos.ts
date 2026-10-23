@@ -116,7 +116,7 @@ export const fifaClips: FifaClip[] = [
     source: "U.S. Soccer",
     duration: "4:14",
     poster: asset("/img/videos/ussoccer-cpr.jpg"),
-    why: "Pitchside demo: hands-only CPR, pad placement, shock, then back on compressions. Matches this drill’s first minutes.",
+    why: "Pitchside demo: hands-only CPR, pad placement, shock, then back on compressions. Matches this drill's first minutes.",
   },
   {
     youtubeId: "NgvVPdP5u30",

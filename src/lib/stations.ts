@@ -65,7 +65,7 @@ export const stations: Station[] = [
         blocks: [
           {
             kind: "text",
-            text: "A pitchside emergency should be rehearsed before kickoff: clear plan, clear roles, correct positioning, ready equipment and closed-loop communication.",
+            text: "A pitchside emergency should be rehearsed before kick-off: clear plan, clear roles, correct positioning, ready equipment and closed-loop communication.",
           },
           {
             kind: "list",
@@ -78,7 +78,7 @@ export const stations: Station[] = [
         ],
       },
       {
-        title: "Before kickoff: 5 key PEAP components",
+        title: "Before kick-off: 5 key PEAP components",
         blocks: [
           {
             kind: "cards",
@@ -352,7 +352,7 @@ export const stations: Station[] = [
             items: [
               { term: "Before match", text: "M-CRET: Meet – Call – Position – Check – Train" },
               { term: "Non-contact collapse", text: "SCA → CPR → AED the moment it arrives. The team leader calls any lift." },
-              { term: "Leadership", text: "Hands off – eyes up. Command and confirm." },
+              { term: "Leadership", text: "Hands off — eyes up. Command and confirm." },
               { term: "Extrication (trauma)", text: "Orange commands. Tilt – Scoop – Strap – Basket." },
             ],
           },
@@ -1281,7 +1281,7 @@ export const stations: Station[] = [
           {
             kind: "alert",
             title: "Follow local authority",
-            text: "Drugs and quantities must follow the event medical director’s standing orders, prescriber authority, national regulations, formulary and local SOP. Do not place prescription medicines into a generic football bag without an approved medication protocol.",
+            text: "Drugs and quantities must follow the event medical director's standing orders, prescriber authority, national regulations, formulary and local SOP. Do not place prescription medicines into a generic football bag without an approved medication protocol.",
           },
           {
             kind: "table",

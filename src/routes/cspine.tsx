@@ -221,8 +221,8 @@ function CspinePage() {
 
         <Section id="cs-setpiece" title="THE SET PIECE — BY COLOUR">
           <p className="text-xs leading-snug text-muted">
-            Colours match the FIFA Pre-Match Emergency Action Plan roles. May flip all positions depending on the site
-            of injury and hazards.
+            Colours match the FIFA Pre-Match Emergency Action Plan roles. Positions may all be flipped depending on the
+            site of injury and hazards.
           </p>
           <ol className="flex flex-col gap-2.5">
             {setPiece.map((st, i) => (

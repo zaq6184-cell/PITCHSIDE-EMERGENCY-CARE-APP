@@ -5,6 +5,7 @@ import { AppShell, Note, Panel, RoleChip, SectionLabel } from "@/components/work
 import { CHECKLIST, COLOURS, EMPTY_PLAN, isBlank, type MatchPlan, parsePlan, planText, prettyDate, telHref } from "@/lib/match-plan";
 import { shareOrCopy, siteUrl } from "@/lib/share";
 import { sfx, tap } from "@/lib/sound";
+import { translateText } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { getRole, workshop } from "@/lib/workshop";
 
@@ -57,7 +58,7 @@ function PlanPage() {
   }
 
   function clearAll() {
-    if (!window.confirm("Clear the whole plan and the checklist on this device?")) return;
+    if (!window.confirm(translateText("Clear the whole plan and the checklist on this device?"))) return;
     tap();
     setPlan(EMPTY_PLAN);
     setView("edit");

@@ -1,29 +1,123 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Box, ChevronRight, Download, GraduationCap, Images, Languages, ListChecks, type LucideIcon, Music, Rotate3d, Sparkles, Timer, Volume2 } from "lucide-react";
+import {
+  Box,
+  Camera,
+  ChevronRight,
+  ClipboardList,
+  Download,
+  GraduationCap,
+  Images,
+  Languages,
+  ListChecks,
+  type LucideIcon,
+  Music,
+  Rotate3d,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Stethoscope,
+  Timer,
+  Trash2,
+  Volume2,
+} from "lucide-react";
 import { ShareAppButton } from "@/components/install-app";
 import { LanguageList } from "@/components/language-switch";
 import { SoundSettings } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { AppShell, JumpChips, Panel, SectionLabel } from "@/components/workshop";
 import { asset } from "@/lib/asset";
-import { LANGS } from "@/lib/i18n";
-import { aboutApp, disclaimer } from "@/lib/disclaimer";
+import { LANGS, translateText } from "@/lib/i18n";
+import { aboutApp, disclaimer, privacy } from "@/lib/disclaimer";
+import { deleteMyData } from "@/lib/privacy";
 import { APP_VERSION, RELEASED, WHATS_NEW } from "@/lib/release";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/about")({
   component: About,
   head: () => ({ meta: [{ title: "About the app · Pitchside Emergency Care" }] }),
 });
 
-const sections: { id: string; chip: string; title: string; paragraphs: string[] }[] = [
+/** A section of plain paragraphs, or (privacy) one with its own layout. */
+const sections: { id: string; chip: string; title: string; paragraphs?: string[] }[] = [
   { id: "about-purpose", chip: "Purpose", title: "PURPOSE OF THE APP", paragraphs: aboutApp.purpose },
   { id: "about-developers", chip: "Developers", title: "DEVELOPERS", paragraphs: aboutApp.developers },
   { id: "about-disclaimer", chip: "Disclaimer", title: "DISCLAIMER", paragraphs: disclaimer.paragraphs },
+  { id: "about-privacy", chip: "Privacy", title: "PRIVACY" },
   { id: "about-copyright", chip: "Copyright", title: "COPYRIGHT", paragraphs: aboutApp.copyright },
   { id: "about-ai", chip: "Use of AI", title: "USE OF AI", paragraphs: aboutApp.ai },
 ];
 
+const DELETE_CONFIRM = "Delete your settings, progress, logs, plans and scorer sessions from this device? This cannot be undone.";
+const SUBHEAD = "font-display text-sm font-semibold tracking-wide text-heading";
+
+/** What the app keeps, the permissions it may ask for, when it goes online, and how to delete your data. */
+function PrivacyBody() {
+  return (
+    <>
+      <p className="flex items-start gap-2.5 rounded-lg bg-note px-2.5 py-2 text-sm leading-snug">
+        <ShieldCheck className="mt-0.5 size-5 shrink-0 text-gold-ink" aria-hidden />
+        <span>{privacy.intro}</span>
+      </p>
+      <h3 className={SUBHEAD}>Kept on this device only</h3>
+      <ul className="flex list-disc flex-col gap-1 pl-5 text-sm leading-snug marker:text-gold">
+        {privacy.kept.map((k) => (
+          <li key={k.lead}>
+            <b>{k.lead}</b> {k.text}
+          </li>
+        ))}
+      </ul>
+      <p className="text-xs leading-snug text-muted">{privacy.keptNote}</p>
+      <h3 className={SUBHEAD}>Permissions the app may ask for</h3>
+      <ul className="flex flex-col gap-2.5">
+        {privacy.permissions.map((p) => {
+          const Icon = p.id === "camera" ? Camera : Smartphone;
+          return (
+            <li key={p.id} className="flex gap-3">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-note text-gold-ink">
+                <Icon className="size-[18px]" aria-hidden />
+              </span>
+              <span className="min-w-0">
+                <span className={cn("block", SUBHEAD)}>{p.name}</span>
+                <span className="block text-xs leading-snug text-muted">{p.when}</span>
+                <span className="mt-0.5 block text-sm leading-snug">{p.why}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="text-sm leading-snug">{privacy.optional}</p>
+      <p className="text-sm leading-snug">{privacy.noPermission}</p>
+      <p className="text-sm leading-snug">{privacy.never}</p>
+      <h3 className={SUBHEAD}>When the app goes online</h3>
+      <ul className="flex list-disc flex-col gap-1 pl-5 text-sm leading-snug marker:text-gold">
+        {privacy.online.map((o) => (
+          <li key={o.lead}>
+            <b>{o.lead}</b> {o.text}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-1 rounded-lg border border-line px-3 py-2.5">
+        <h3 className={SUBHEAD}>Delete your data</h3>
+        <p className="mt-0.5 text-xs leading-snug text-muted">{privacy.deleteText}</p>
+        <button
+          type="button"
+          onClick={() => {
+            if (window.confirm(translateText(DELETE_CONFIRM))) deleteMyData();
+          }}
+          className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg bg-danger-fill px-3.5 font-display text-sm font-semibold tracking-wide text-white active:scale-[0.98]"
+        >
+          <Trash2 className="size-4" aria-hidden />
+          Delete my data on this device
+        </button>
+      </div>
+    </>
+  );
+}
+
 const NOTE_ICONS: Record<string, LucideIcon> = {
+  medical: Stethoscope,
+  handover: ClipboardList,
+  privacy: ShieldCheck,
   "role-voices": Volume2,
   music: Music,
   "live-timer": Timer,
@@ -139,11 +233,15 @@ function About() {
             <Panel>
               <div className="flex flex-col gap-2.5 px-3.5 py-3.5">
                 <SectionLabel>{s.title}</SectionLabel>
-                {s.paragraphs.map((p) => (
-                  <p key={p} className="text-sm leading-snug">
-                    {p}
-                  </p>
-                ))}
+                {s.paragraphs ? (
+                  s.paragraphs.map((p) => (
+                    <p key={p} className="text-sm leading-snug">
+                      {p}
+                    </p>
+                  ))
+                ) : (
+                  <PrivacyBody />
+                )}
               </div>
             </Panel>
           </section>
