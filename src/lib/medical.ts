@@ -1,14 +1,15 @@
 /**
- * Medical emergencies on match day, as pitchside cards for an adult player. They follow chapters 4 and 5 of the FIFA
- * Emergency Care Manual (choking and anaphylaxis; medical emergencies) and the drugs on its emergency bag checklist
- * (Station 5), with the UK guidelines the manual itself uses named on each card. Steps first for everyone, then what a
- * trained clinician adds, with the adult doses the manual gives. Every card starts from the same rule as the rest of
- * the app: a collapsed player who is not breathing normally is in cardiac arrest.
+ * Medical emergencies on match day, as pitchside cards for an adult player. They follow chapters 4, 5 and 8 of the FIFA
+ * Emergency Care Manual (choking and anaphylaxis; medical emergencies; the female athlete) and the drugs on its
+ * emergency bag checklist (Station 5), with the UK guidelines the manual itself uses named on each card. Steps first for
+ * everyone, then what a trained clinician adds, with the adult doses the manual gives. Every card starts from the same
+ * rule as the rest of the app: a collapsed player who is not breathing normally is in cardiac arrest.
  */
-export type MedicalId = "anaphylaxis" | "asthma" | "hypo" | "seizure" | "choking";
+export type MedicalId = "chest" | "anaphylaxis" | "asthma" | "hypo" | "seizure" | "choking" | "female";
 
-export type MedicalCard = {
-  id: MedicalId;
+/** One emergency as a pitchside card; the cold and altitude cards share the shape. */
+export type CareCard<Id extends string = string> = {
+  id: Id;
   title: string;
   sub: string;
   recognise: string[];
@@ -19,8 +20,10 @@ export type MedicalCard = {
   source: string;
 };
 
+export type MedicalCard = CareCard<MedicalId>;
+
 export const MEDICAL_INTRO =
-  "Not every collapse is cardiac or trauma. These cards follow chapters 4 and 5 of the FIFA Emergency Care Manual, with the adult doses it gives. Give drugs only within your training, follow your local protocols, and afterwards complete any anti-doping follow-up.";
+  "Not every collapse is cardiac or trauma. These cards follow chapters 4, 5 and 8 of the FIFA Emergency Care Manual, with the adult doses it gives. Give drugs only within your training, follow your local protocols, and afterwards complete any anti-doping follow-up.";
 
 export const MEDICAL_RULE = "First, every time: a collapsed player who is not breathing normally is in cardiac arrest. Start CPR and get the AED on.";
 
@@ -28,6 +31,33 @@ export const MEDICAL_TEAM =
   "The set piece still applies: Black makes sure the ambulance is called and leads; Blue brings the oxygen, Green the bag and the AED.";
 
 export const MEDICAL: MedicalCard[] = [
+  {
+    id: "chest",
+    title: "Chest pain",
+    sub: "Treat it as the heart until shown otherwise",
+    recognise: [
+      "Heart pain: crushing or tight, in the centre of the chest, possibly spreading to either arm or the jaw. Any chest pain brought on by exercise is a warning sign, and unusual (atypical) pain is common too.",
+      "More worrying with paleness, sweating or breathlessness, or with pain at rest in someone known to have heart disease. Likelier over 35, as in staff, and with smoking, high blood pressure, high cholesterol or a family history; unlikely, but possible, in younger players.",
+      "Other causes that kill: a tearing pain through to the back, perhaps with a different blood pressure in each arm (aortic dissection); sudden breathlessness with a fast pulse, sharp pain on breathing, a cough or coughed-up blood (pulmonary embolism, more likely after travel, surgery or hormones); a collapsed lung (pneumothorax).",
+      "Sharp pain, worse breathing in or lying down and eased by leaning forward, often after a viral illness: pericarditis.",
+      "A deadly cause can look well at first, with normal observations.",
+    ],
+    steps: [
+      "Stop all exercise: sit or lie down, whichever is more comfortable.",
+      "Call the ambulance.",
+      "Aspirin 300 mg to chew, unless allergic or the pain tears through to the back.",
+      "Stay with them, with the AED ready. If they collapse and stop breathing normally, start CPR and get the AED on.",
+    ],
+    trained: [
+      "Possible heart attack: GTN spray and aspirin 300 mg, both on the FIFA bag checklist. Measure the SpO₂ and give oxygen to keep it at 94% or above.",
+      "An ECG if you have one, looking for ischaemia or a heart attack. A normal ECG does not rule out heart disease: with any concern, refer to hospital.",
+      "Possible aortic dissection: no aspirin, no large IV fluid boluses and no pushing the systolic pressure above 90 mmHg; oxygen, IV morphine and urgent transfer.",
+      "Possible pulmonary embolism: oxygen if breathless, pain relief and urgent transfer. A normal ECG does not rule it out.",
+    ],
+    call: "Any chest pain that could come from the heart, the aorta or the lungs, any fainting or breathlessness, or any doubt.",
+    football: "Fainting or chest pain on exertion, an unexplained seizure, or unusual breathlessness or tiredness with exercise can warn of heart disease: no more football until a cardiac assessment. After a viral illness, chest pain and then growing breathlessness on exercise can mean myocarditis, which can cause sudden cardiac arrest.",
+    source: "FIFA Emergency Care Manual, chapter 5: chest pain; chapter 3: myocarditis and cardiovascular screening.",
+  },
   {
     id: "anaphylaxis",
     title: "Anaphylaxis",
@@ -153,5 +183,31 @@ export const MEDICAL: MedicalCard[] = [
     call: "Severe choking, any unresponsiveness, and whenever abdominal thrusts were needed.",
     football: "A player cannot swallow their tongue. In a collapsed player, open the airway (a jaw thrust if the neck may be injured) instead of reaching into the mouth, and lift out a loose mouthguard you can see.",
     source: "FIFA Emergency Care Manual, chapter 4: choking and anaphylaxis, with the Resuscitation Council UK adult choking algorithm (2021).",
+  },
+  {
+    id: "female",
+    title: "Lower abdominal pain or bleeding",
+    sub: "In a female player: gynaecological emergencies",
+    recognise: [
+      "Sudden lower abdominal pain, often with nausea, vomiting or fainting: possibly an ectopic pregnancy, a twisted or burst ovarian cyst, bleeding from an ovary or a pelvic infection. Period pain is common, and appendicitis can look the same.",
+      "Dizziness or fainting on standing, or signs of shock: something serious, so always hospital. Shoulder-tip pain strongly suggests internal bleeding.",
+      "An ectopic pregnancy can rupture with no vaginal bleeding at all.",
+      "A kick or knee to the groin, or the legs forced apart into the splits, can injure the genital area: the bleeding can be heavy, with a large bruise (haematoma).",
+    ],
+    steps: [
+      "Talk in private, with a chaperone: what she tells you matters most.",
+      "Lie her down, legs raised if she feels faint or looks pale, and keep her warm.",
+      "Fainting, shoulder-tip pain, heavy bleeding or any sign of shock: call the ambulance.",
+      "Genital injury: an ice pack, and firm pressure with gauze, applied by the player herself where possible.",
+    ],
+    trained: [
+      "Oxygen to keep SpO₂ above 90%; check the pulse and blood pressure.",
+      "Low blood pressure: IV access and 250–500 mL of crystalloid, aiming for a systolic pressure of at least 90 mmHg.",
+      "Pain relief only by slow, diluted IV titration.",
+      "Bleeding: check that it is vaginal, not from the urethra or the rectum. Severe genital bleeding: gauze packing, resuscitation as above and hospital at once.",
+    ],
+    call: "Pain with fainting or dizziness on standing, shoulder-tip pain, heavy or continuing bleeding, or any sign of shock.",
+    football: "With more than 40 million women and girls playing, these emergencies happen at matches and training. Examine only in private with a chaperone; if her story is not worrying, the abdomen and the observations are often enough. A pain score helps compare with her usual periods and shows the trend.",
+    source: "FIFA Emergency Care Manual, chapter 8: the female athlete.",
   },
 ];

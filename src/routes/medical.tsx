@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Activity, Briefcase, Candy, ChevronRight, ClipboardList, Hand, HeartPulse, type LucideIcon, Phone, Syringe, Wind } from "lucide-react";
-import { AppShell, JumpChips, Note, Panel } from "@/components/workshop";
-import { MEDICAL, MEDICAL_INTRO, MEDICAL_RULE, MEDICAL_TEAM, type MedicalCard, type MedicalId } from "@/lib/medical";
+import { Activity, Briefcase, Candy, ChevronRight, ClipboardList, Hand, HeartCrack, HeartPulse, type LucideIcon, Syringe, Venus, Wind } from "lucide-react";
+import { CareCardView } from "@/components/care-card";
+import { AppShell, JumpChips, Panel } from "@/components/workshop";
+import { MEDICAL, MEDICAL_INTRO, MEDICAL_RULE, MEDICAL_TEAM, type MedicalId } from "@/lib/medical";
 import { MEDICAL_PICS } from "@/lib/scene-images";
 
 export const Route = createFileRoute("/medical")({
@@ -9,8 +10,16 @@ export const Route = createFileRoute("/medical")({
   head: () => ({ meta: [{ title: "Medical emergencies · Pitchside Emergency Care" }] }),
 });
 
-const ICONS: Record<MedicalId, LucideIcon> = { anaphylaxis: Syringe, asthma: Wind, hypo: Candy, seizure: Activity, choking: Hand };
-const CHIPS: Record<MedicalId, string> = { anaphylaxis: "Anaphylaxis", asthma: "Asthma", hypo: "Low blood sugar", seizure: "Seizure", choking: "Choking" };
+const ICONS: Record<MedicalId, LucideIcon> = { chest: HeartCrack, anaphylaxis: Syringe, asthma: Wind, hypo: Candy, seizure: Activity, choking: Hand, female: Venus };
+const CHIPS: Record<MedicalId, string> = {
+  chest: "Chest pain",
+  anaphylaxis: "Anaphylaxis",
+  asthma: "Asthma",
+  hypo: "Low blood sugar",
+  seizure: "Seizure",
+  choking: "Choking",
+  female: "Women's health",
+};
 
 const ROW = "flex items-center gap-3 px-3.5 py-3 active:bg-cream";
 
@@ -27,90 +36,9 @@ function RowBody({ Icon, label, sub }: { Icon: LucideIcon; label: string; sub: s
   );
 }
 
-/** A card's own small heading, styled like the section labels. */
-function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="font-display text-xs font-semibold tracking-[0.14em] text-heading">
-      {children}
-      <span className="mt-1 block h-[3px] w-8 rounded-full bg-gold" aria-hidden="true" />
-    </h3>
-  );
-}
-
-function Card({ c, first }: { c: MedicalCard; first: boolean }) {
-  const Icon = ICONS[c.id];
-  const pic = MEDICAL_PICS[c.id];
-  return (
-    <section id={`med-${c.id}`} className="scroll-mt-24">
-      <Panel>
-        <div className="flex items-center gap-3 border-b border-line px-3.5 py-3">
-          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-note text-gold-ink">
-            <Icon className="size-6" aria-hidden />
-          </span>
-          <span className="min-w-0">
-            <h2 className="font-display text-lg font-bold leading-tight tracking-wide text-heading">{c.title}</h2>
-            <span className="block text-xs leading-snug text-muted">{c.sub}</span>
-          </span>
-        </div>
-        {/* the card's key action, as a picture */}
-        <div className="relative bg-navy">
-          <img
-            src={pic.src}
-            alt={pic.alt}
-            width={960}
-            height={540}
-            loading={first ? "eager" : "lazy"}
-            decoding="async"
-            className="img-in block aspect-video w-full object-cover outline-none"
-          />
-          <p className="absolute right-2 top-2 z-[1] rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">AI-generated illustration</p>
-        </div>
-        <div className="flex flex-col gap-3.5 px-3.5 py-3.5">
-          <div>
-            <Label>RECOGNISE</Label>
-            <ul className="mt-2 flex list-disc flex-col gap-1 pl-5 text-sm leading-snug marker:text-gold">
-              {c.recognise.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <Label>WHAT TO DO</Label>
-            <ol className="mt-2 flex list-decimal flex-col gap-1 pl-5 text-sm leading-snug marker:font-semibold marker:text-gold-ink">
-              {c.steps.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ol>
-          </div>
-          <div className="rounded-lg bg-note px-3 py-2.5">
-            <Label>IF TRAINED</Label>
-            <ul className="mt-2 flex list-disc flex-col gap-1 pl-5 text-sm leading-snug marker:text-gold">
-              {c.trained.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
-          </div>
-          <p className="flex items-start gap-2.5 rounded-lg border border-danger/30 px-3 py-2 text-sm leading-snug">
-            <Phone className="mt-0.5 size-4 shrink-0 text-danger" aria-hidden />
-            <span>
-              <b>Call the ambulance:</b> {c.call}
-            </span>
-          </p>
-          <Note>
-            <b className="text-heading">In football:</b> {c.football}
-          </Note>
-          <p className="text-[11px] leading-snug text-muted">
-            <span className="font-semibold">Source:</span> {c.source}
-          </p>
-        </div>
-      </Panel>
-    </section>
-  );
-}
-
 function MedicalPage() {
   return (
-    <AppShell tab="timer">
+    <AppShell tab="home">
       <div className="flex flex-col gap-3.5">
         <Panel>
           <div className="flex flex-col gap-2.5 px-3.5 py-3.5">
@@ -125,7 +53,7 @@ function MedicalPage() {
         </Panel>
         <JumpChips items={MEDICAL.map((c) => ({ id: `med-${c.id}`, label: CHIPS[c.id] }))} />
         {MEDICAL.map((c, i) => (
-          <Card key={c.id} c={c} first={i === 0} />
+          <CareCardView key={c.id} c={c} anchor={`med-${c.id}`} icon={ICONS[c.id]} pic={MEDICAL_PICS[c.id]} eager={i === 0} />
         ))}
         <Panel>
           <ul className="divide-y divide-line">

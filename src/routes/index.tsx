@@ -16,6 +16,7 @@ import {
   Gamepad2,
   HeartPulse,
   ListOrdered,
+  MountainSnow,
   PlayCircle,
   Stethoscope,
   Timer,
@@ -169,8 +170,10 @@ function Home() {
         <SectionLabel>MORE PITCHSIDE TOPICS</SectionLabel>
         <Tiles
           items={[
+            { to: "/medical", icon: Stethoscope, tint: "#EFE8F7", ink: "#6B3FA0", title: "Medical emergencies", sub: "Chest pain · anaphylaxis · asthma · seizure · low blood sugar · choking", wide: true },
+            { to: "/injuries", icon: PersonStanding, tint: "#E4EFF8", ink: "#1F6AA5", title: "Injury map", sub: "Tap where it hurts · face and teeth · Ottawa rules", wide: true },
             { to: "/heat", icon: ThermometerSun, tint: "#FDEBDD", ink: "#B3541E", title: "Heat illness", sub: "Heat risk · cool first, transport second" },
-            { to: "/injuries", icon: PersonStanding, tint: "#E4EFF8", ink: "#1F6AA5", title: "Injury map", sub: "Tap where it hurts · Ottawa rules" },
+            { to: "/environment", icon: MountainSnow, tint: "#E4EFF8", ink: "#1F6AA5", title: "Cold and altitude", sub: "Hypothermia · frostbite · altitude sickness" },
           ]}
         />
         <SectionLabel>STUDY</SectionLabel>

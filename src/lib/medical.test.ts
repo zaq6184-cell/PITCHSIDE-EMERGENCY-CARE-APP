@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import { MEDICAL } from "./medical.ts";
 
 describe("medical emergencies", () => {
-  it("has the five cards, each complete", () => {
+  it("has the seven cards, each complete", () => {
     assert.deepEqual(
       MEDICAL.map((c) => c.id),
-      ["anaphylaxis", "asthma", "hypo", "seizure", "choking"],
+      ["chest", "anaphylaxis", "asthma", "hypo", "seizure", "choking", "female"],
     );
     for (const c of MEDICAL) {
       assert.ok(c.title && c.sub && c.call && c.football && c.source, c.id);
@@ -36,10 +36,20 @@ describe("medical emergencies", () => {
     assert.match(all("seizure"), /5 minutes or more/);
     assert.match(all("seizure"), /midazolam 10 mg/);
     assert.match(all("choking"), /5 back blows/);
+    assert.match(all("chest"), /Aspirin 300 mg to chew/);
+    assert.match(all("chest"), /GTN spray/);
+    assert.match(all("chest"), /94% or above/);
+    assert.match(all("female"), /250–500 mL of crystalloid/);
+    assert.match(all("female"), /SpO₂ above 90%/);
+    assert.match(all("female"), /vaginal, not from the urethra or the rectum/);
+  });
+
+  it("names its FIFA chapter first on every card", () => {
+    for (const c of MEDICAL) assert.match(c.source, /^FIFA Emergency Care Manual, chapter \d/, c.id);
   });
 
   it("rules out cardiac arrest where a collapse can hide one", () => {
-    for (const id of ["anaphylaxis", "asthma", "seizure", "choking"]) {
+    for (const id of ["chest", "anaphylaxis", "asthma", "seizure", "choking"]) {
       const c = MEDICAL.find((m) => m.id === id)!;
       assert.match([...c.recognise, ...c.steps].join(" "), /CPR|breathing/, id);
     }

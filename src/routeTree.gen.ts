@@ -18,6 +18,7 @@ import { Route as BagRouteImport } from './routes/bag'
 import { Route as CasesRouteImport } from './routes/cases'
 import { Route as CspineRouteImport } from './routes/cspine'
 import { Route as DrillRouteImport } from './routes/drill'
+import { Route as EnvironmentRouteImport } from './routes/environment'
 import { Route as FifaRouteImport } from './routes/fifa'
 import { Route as FocusRouteImport } from './routes/focus'
 import { Route as GuidesRouteImport } from './routes/guides'
@@ -81,6 +82,11 @@ const CspineRoute = CspineRouteImport.update({
 const DrillRoute = DrillRouteImport.update({
   id: '/drill',
   path: '/drill',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnvironmentRoute = EnvironmentRouteImport.update({
+  id: '/environment',
+  path: '/environment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FifaRoute = FifaRouteImport.update({
@@ -189,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/cases': typeof CasesRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
+  '/environment': typeof EnvironmentRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByTo {
   '/cases': typeof CasesRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
+  '/environment': typeof EnvironmentRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
@@ -250,6 +258,7 @@ export interface FileRoutesById {
   '/cases': typeof CasesRoute
   '/cspine': typeof CspineRoute
   '/drill': typeof DrillRoute
+  '/environment': typeof EnvironmentRoute
   '/fifa': typeof FifaRoute
   '/focus': typeof FocusRoute
   '/guides': typeof GuidesRoute
@@ -282,6 +291,7 @@ export interface FileRouteTypes {
     | '/cases'
     | '/cspine'
     | '/drill'
+    | '/environment'
     | '/fifa'
     | '/focus'
     | '/guides'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/cases'
     | '/cspine'
     | '/drill'
+    | '/environment'
     | '/fifa'
     | '/focus'
     | '/guides'
@@ -342,6 +353,7 @@ export interface FileRouteTypes {
     | '/cases'
     | '/cspine'
     | '/drill'
+    | '/environment'
     | '/fifa'
     | '/focus'
     | '/guides'
@@ -373,6 +385,7 @@ export interface RootRouteChildren {
   CasesRoute: typeof CasesRoute
   CspineRoute: typeof CspineRoute
   DrillRoute: typeof DrillRoute
+  EnvironmentRoute: typeof EnvironmentRoute
   FifaRoute: typeof FifaRoute
   FocusRoute: typeof FocusRoute
   GuidesRoute: typeof GuidesRoute
@@ -457,6 +470,13 @@ declare module '@tanstack/react-router' {
       path: '/drill'
       fullPath: '/drill'
       preLoaderRoute: typeof DrillRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/environment': {
+      id: '/environment'
+      path: '/environment'
+      fullPath: '/environment'
+      preLoaderRoute: typeof EnvironmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fifa': {
@@ -605,6 +625,7 @@ const rootRouteChildren: RootRouteChildren = {
   CasesRoute: CasesRoute,
   CspineRoute: CspineRoute,
   DrillRoute: DrillRoute,
+  EnvironmentRoute: EnvironmentRoute,
   FifaRoute: FifaRoute,
   FocusRoute: FocusRoute,
   GuidesRoute: GuidesRoute,

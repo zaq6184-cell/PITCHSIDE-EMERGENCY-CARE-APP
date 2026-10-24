@@ -89,7 +89,9 @@ function load(dict: Record<string, string>) {
       exact.set(k, v);
       upper.set(k.toUpperCase(), v);
     }
-    outputs.add(v).add(v.toLocaleUpperCase(lang));
+    // kept as translate() sees text: the build puts no-break spaces between numbers and units, translate() reads them as spaces
+    const seen = v.replace(/\u00a0/g, " ");
+    outputs.add(seen).add(seen.toLocaleUpperCase(lang));
   }
   // the most specific pattern first
   patterns.sort((a, b) => b.weight - a.weight);
@@ -196,7 +198,7 @@ export function translate(text: string): string {
     memo.set(core, t);
     if (t === null && misses.size < 2000 && !outputs.has(core)) misses.add(core);
     // a translation put together from patterns and pieces is not reported as missing when it passes through again
-    else if (t !== null && outputs.size < 50_000) outputs.add(t);
+    else if (t !== null && outputs.size < 50_000) outputs.add(t.replace(/\u00a0/g, " "));
   }
   return t === null ? text : m[1] + t + m[3];
 }

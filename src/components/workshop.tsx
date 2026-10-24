@@ -32,7 +32,7 @@ function parentOf(pathname: string): "/" | "/stations" | "/timer" | "/cases" | "
   if (pathname.startsWith("/station/")) return "/stations";
   if (pathname === "/ar" || pathname === "/ar/") return "/drill";
   if (pathname.startsWith("/case/")) return "/cases";
-  if (pathname.startsWith("/plan") || pathname.startsWith("/arrest") || pathname.startsWith("/scorer") || pathname.startsWith("/medical") || pathname.startsWith("/handover")) return "/timer";
+  if (pathname.startsWith("/plan") || pathname.startsWith("/arrest") || pathname.startsWith("/scorer") || pathname.startsWith("/handover")) return "/timer";
   return "/";
 }
 
@@ -93,6 +93,7 @@ export function AppShell({
       ["/pitchside", "FIFA Health & Medical · pitchside emergency care"],
       ["/quiz", "Test yourself · quizzes and games"],
       ["/heat", "Heat illness · cool first, transport second"],
+      ["/environment", "Cold and altitude · FIFA environmental emergencies"],
       ["/injuries", "Injury map · tap where it hurts"],
       ["/cases", "Case simulator · make the calls"],
       ["/scorer", "Practical scorer · for instructors"],
@@ -266,7 +267,7 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
 }
 
 export type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover";
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover" | "/environment";
   icon: typeof Users;
   tint: string;
   ink: string;

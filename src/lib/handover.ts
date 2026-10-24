@@ -49,8 +49,8 @@ export const EMPTY_HANDOVER: Handover = {
 };
 
 export const MECHANISMS = ["Collapsed, no contact", "Head impact", "Collision with a player", "Fall", "Struck by the ball", "Heat", "Illness"];
-export const INJURIES = ["Cardiac arrest", "Concussion", "Neck injury", "Limb fracture", "Heat illness", "Anaphylaxis", "Asthma attack", "Low blood sugar", "Seizure", "Choking"];
-export const TREATMENTS = ["CPR", "AED", "i-gel", "Oxygen", "Head held (MILS)", "Collar", "Scoop", "Splint", "Cooling", "IM adrenaline", "Salbutamol", "Glucose", "Glucagon", "Benzodiazepine"];
+export const INJURIES = ["Cardiac arrest", "Concussion", "Neck injury", "Limb fracture", "Pelvic injury", "Heat illness", "Hypothermia", "Chest pain", "Anaphylaxis", "Asthma attack", "Low blood sugar", "Seizure", "Choking"];
+export const TREATMENTS = ["CPR", "AED", "i-gel", "Oxygen", "Head held (MILS)", "Collar", "Scoop", "Pelvic binder", "Splint", "Cooling", "Rewarming", "IM adrenaline", "Salbutamol", "Aspirin", "GTN", "Glucose", "Glucagon", "Benzodiazepine"];
 /** What the arrest timer's own log already says, so these taps are not repeated beside it. */
 const ARREST_COVERS = new Set(["CPR", "AED", "i-gel"]);
 

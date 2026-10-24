@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { getRegion, ottawaAnkle, ottawaKnee, REGIONS } from "./injuries.ts";
+import { BLEEDING, getRegion, ottawaAnkle, ottawaKnee, type RegionId, REGIONS, TOOTH_MINUTES, toothClock } from "./injuries.ts";
 
 const none = { malleolarPain: true, midfootPain: false, lateralMalleolus: false, medialMalleolus: false, fifthMetatarsal: false, navicular: false, fourSteps: true };
 const xray = (f: typeof none) => {
@@ -42,5 +42,41 @@ describe("injuries", () => {
     for (const r of REGIONS) assert.ok(r.cards.length > 0, r.id);
     assert.equal(getRegion("knee")?.ottawa, "knee");
     assert.equal(getRegion("ankle")?.ottawa, "ankle");
+    assert.equal(getRegion("head")?.toothClock, true);
+  });
+
+  it("covers FIFA's trauma chapter: pelvis, flail chest, tension pneumothorax, posterior collarbone, elbow", () => {
+    const all = REGIONS.flatMap((r) => r.cards.map((c) => c.title)).join(" | ");
+    for (const t of ["Possible pelvic fracture", "Dislocated hip", "Flail chest", "Tension pneumothorax", "Collarbone driven in at the breastbone", "Dislocated elbow", "Jaw and cheekbone", "Fracture-dislocated ankle"]) {
+      assert.ok(all.includes(t), t);
+    }
+  });
+
+  it("cites the bleeding rule as Law 5 and the tooth as 30 minutes", () => {
+    const text = JSON.stringify([REGIONS, BLEEDING]);
+    assert.ok(!text.includes("Law 4"));
+    assert.match(BLEEDING.lines.join(" "), /\(Law 5\)/);
+    assert.match(getRegion("head")!.cards.find((c) => c.title === "Knocked-out tooth")!.lines.join(" "), /within 30 minutes/);
+  });
+
+  it("keeps the details FIFA gives", () => {
+    const card = (region: RegionId, title: string) => getRegion(region)!.cards.find((c) => c.title === title)!.lines.join(" ");
+    assert.match(card("head", "Nose"), /usually on both sides/);
+    assert.match(card("head", "Knocked-out tooth"), /upper or lower jaw/);
+    assert.match(card("head", "Knocked-out tooth"), /iced salt water/);
+    assert.match(card("chest", "Tension pneumothorax"), /only with shock, collapse or a peri-arrest state/);
+    assert.match(card("chest", "Ribs"), /No Entonox \(gas and air\) for a possible rib fracture or pneumothorax/);
+    assert.doesNotMatch(card("abdomen", "A knee or collision to the belly, lower ribs or back"), /left shoulder/);
+    assert.match(card("abdomen", "A knee or collision to the belly, lower ribs or back"), /90 mmHg, no higher/);
+  });
+
+  it("tooth clock: replant, hurry in the last 10 minutes, then late", () => {
+    assert.deepEqual(toothClock(0), { elapsed: 0, left: TOOTH_MINUTES * 60, stage: "replant" });
+    assert.equal(toothClock(19 * 60_000).stage, "replant");
+    assert.equal(toothClock(20 * 60_000).stage, "hurry");
+    assert.equal(toothClock(29 * 60_000 + 59_000).stage, "hurry");
+    assert.equal(toothClock(30 * 60_000).stage, "late");
+    assert.equal(toothClock(45 * 60_000).left, 0);
+    assert.equal(toothClock(-5000).elapsed, 0);
   });
 });

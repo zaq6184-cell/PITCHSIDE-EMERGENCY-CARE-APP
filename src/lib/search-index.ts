@@ -1,6 +1,7 @@
 import { bagGroups } from "@/lib/bag";
 import { CASES } from "@/lib/cases";
 import { SIGNS } from "@/lib/concussion-signs";
+import { ALTITUDE, COLD, SHELTER } from "@/lib/environment";
 import { METHODS, ZONES } from "@/lib/heat";
 import { REGIONS } from "@/lib/injuries";
 import { MISTAKES } from "@/lib/mistakes";
@@ -19,7 +20,7 @@ export type Target =
   | { to: "/station/$id"; id: string; hash?: string }
   | { to: "/drill"; neck?: boolean; mistakes?: boolean }
   | {
-      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover";
+      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover" | "/environment";
       hash?: string;
     };
 
@@ -101,10 +102,26 @@ const PAGES: Entry[] = [
     target: { to: "/heat" },
   },
   {
+    id: "environment",
+    kind: "page",
+    title: "Cold and altitude",
+    sub: "Hypothermia · frostbite · altitude sickness",
+    text: `Environmental emergencies, cold weather, shivering, hypothermia, frostbite, chilblains, cold urticaria, altitude, acute mountain sickness, HACE, HAPE, staged ascent, acclimatisation, altitude planner. ${SHELTER.map((s) => s.text).join(" ")}`,
+    target: { to: "/environment" },
+  },
+  ...[...COLD, ...ALTITUDE].map((c) => ({
+    id: `environment-${c.id}`,
+    kind: "section" as const,
+    title: c.title,
+    sub: `Cold and altitude · ${c.sub}`,
+    text: [...c.recognise, ...c.steps, ...c.trained, c.call, c.football].join(" "),
+    target: { to: "/environment" as const, hash: `env-${c.id}` },
+  })),
+  {
     id: "medical",
     kind: "page",
     title: "Medical emergencies",
-    sub: "Anaphylaxis, asthma, low blood sugar, seizure, choking",
+    sub: "Chest pain, anaphylaxis, asthma, low blood sugar, seizure, choking, women's health",
     text: `Medical emergencies on match day, adult doses, if trained. ${MEDICAL.map((c) => `${c.title} ${c.sub}`).join(" ")}`,
     target: { to: "/medical" },
   },

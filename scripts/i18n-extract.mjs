@@ -54,8 +54,8 @@ function readsAsText(s) {
   if (/^(https?:|mailto:|tel:|data:|\/|\.\/|#|@|[a-z]+:\/\/)/.test(s)) return false;
   if (/^[\w.-]+\.(png|jpe?g|webp|svg|mp3|mp4|glb|usdz|json|pdf|css|js|ts|tsx)$/i.test(s)) return false;
   // short codes stay as they are — except the few that other languages write their own way (CPR is RCP in Spanish,
-  // HR is FC), the scorer's timeline labels ("IN", "GO") and the i-gel and SpO₂, which every language keeps
-  if (/^(?:CPR|HR|RR|IN|GO|i-gel|SpO₂)$/.test(s)) return true;
+  // HR is FC, GTN is NTG), the scorer's timeline labels ("IN", "GO") and the i-gel and SpO₂, which every language keeps
+  if (/^(?:CPR|HR|RR|IN|GO|GTN|i-gel|SpO₂)$/.test(s)) return true;
   if (/^[a-z0-9_.:/-]+$/.test(s)) return false; // ids, keys, slugs, single lowercase words
   if (/^[A-Z0-9_]+$/.test(s) && s.length <= 3) return false;
   if (/^\[|^[\w-]*\{\d\}[\w-]*$/.test(s)) return false; // selectors and ids built from a pattern ("tab-{0}")
@@ -64,8 +64,8 @@ function readsAsText(s) {
   if (/^\d{3} \d+px |^\d+px( \d+px)*$|; (autoplay|gyroscope)/.test(s)) return false; // canvas fonts, sizes, iframe permissions
   if (/\b[\w-]+=[\w-]/.test(s)) return false; // key=value lists (the viewport meta, a query string)
   const words = s.split(" ");
-  // one word: a real word ("Pause", "Needles", "SCORE", "Hands-off", "Name(s)"), not a video id or a camelCase name
-  if (words.length === 1 && !/^(?:[A-Z]?[a-z]+(?:-[a-z]+)*(?:\(s\))?|[A-Z][A-Z]+(?:-[A-Z]+)*)[.!?:…]?$/.test(s.replace(/\{\d\}/g, ""))) return false;
+  // one word: a real word ("Pause", "Needles", "SCORE", "Hands-off", "Name(s)", "Bogotá"), not a video id or a camelCase name
+  if (words.length === 1 && !/^(?:\p{Lu}?\p{Ll}+(?:-\p{Ll}+)*(?:\(s\))?|\p{Lu}\p{Lu}+(?:-\p{Lu}+)*)[.!?:…]?$/u.test(s.replace(/\{\d\}/g, ""))) return false;
   // class lists: every word reads as a class ("flex items-center gap-2 text-[#1A7F45]"), with no capitals outside
   // brackets. A word with a hyphen is not enough on its own: "i-gel in" and "non-contact collapse" are text.
   if (words.length > 1 && words.every(classLike) && !/[A-Z]/.test(s.replace(/\[[^\]]*\]/g, ""))) return false;

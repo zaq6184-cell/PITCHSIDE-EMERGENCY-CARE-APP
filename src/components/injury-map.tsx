@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, Droplet, ScanLine, TriangleAlert } from "lucide-react";
-import { useState } from "react";
-import { type AnkleFindings, BLEEDING, type Card, getRegion, type KneeFindings, ottawaAnkle, ottawaKnee, type RegionId, REGIONS } from "@/lib/injuries";
+import { ChevronRight, Droplet, ScanLine, Timer, TriangleAlert } from "lucide-react";
+import { useEffect, useState } from "react";
+import { type AnkleFindings, BLEEDING, type Card, getRegion, type KneeFindings, ottawaAnkle, ottawaKnee, type RegionId, REGIONS, toothClock } from "@/lib/injuries";
 import { haptic, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +18,7 @@ const SPOTS: Spot[] = [
   { id: "neck", dot: [110, 77], shapes: <rect x={96} y={68} width={28} height={18} rx={6} /> },
   { id: "chest", dot: [88, 114], shapes: <path d="M76 90 L144 90 L146 150 L74 150 Z" /> },
   { id: "abdomen", dot: [110, 180], shapes: <path d="M74 150 L146 150 L140 212 L80 212 Z" /> },
+  { id: "hip", dot: [110, 230], shapes: <path d="M80 212 L140 212 L146 246 L74 246 Z" /> },
   {
     id: "shoulder",
     dot: [60, 98],
@@ -81,7 +82,7 @@ const SPOTS: Spot[] = [
 ];
 
 /** Big regions first, so the small ones (neck, shoulders, knees, feet) sit on top and win the tap. */
-const DRAW_ORDER: RegionId[] = ["chest", "abdomen", "arm", "thigh", "leg", "head", "neck", "shoulder", "knee", "ankle"];
+const DRAW_ORDER: RegionId[] = ["chest", "abdomen", "hip", "arm", "thigh", "leg", "head", "neck", "shoulder", "knee", "ankle"];
 
 /** A footballer from the front, in kit. Decorative: the tap targets sit on top. */
 function Figure() {
@@ -232,6 +233,7 @@ export function InjuryMap() {
             {region.cards.map((c) => (
               <CardView key={c.title} c={c} />
             ))}
+            {region.toothClock ? <ToothClock /> : null}
             {region.ottawa === "ankle" ? <OttawaAnkle /> : null}
             {region.ottawa === "knee" ? <OttawaKnee /> : null}
             {region.link ? (
@@ -248,6 +250,72 @@ export function InjuryMap() {
           <p className="text-center text-sm text-muted">Tap the figure, or a part of the body above.</p>
         )}
       </div>
+    </div>
+  );
+}
+
+// ------------------------------------------------------------------ the tooth clock
+const mmss = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+/** A knocked-out tooth: 30 minutes to get it back in its socket. Kept in memory only, like the handover. */
+function ToothClock() {
+  const [start, setStart] = useState<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (start === null) return;
+    const id = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, [start]);
+  if (start === null) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          tap();
+          haptic(12);
+          setNow(Date.now());
+          setStart(Date.now());
+        }}
+        className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-gold/60 bg-note px-3 py-2 font-display text-sm font-semibold tracking-wide text-heading active:scale-[0.98]"
+      >
+        <Timer className="size-4 shrink-0 text-gold-ink" aria-hidden />
+        Tooth out: start the 30-minute clock
+      </button>
+    );
+  }
+  const c = toothClock(now - start);
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-1.5 rounded-lg border-l-4 px-3 py-2.5",
+        c.stage === "replant" ? "border-gold bg-note" : c.stage === "hurry" ? "border-[#b3541e] bg-[#b3541e]/10" : "border-danger bg-danger/8",
+      )}
+      role="timer"
+      aria-live="off"
+    >
+      <p className="font-display text-xs font-semibold tracking-[0.14em] text-heading">
+        {c.stage === "late" ? "PAST 30 MINUTES" : "TIME LEFT TO REPLANT"}
+      </p>
+      <p className="font-display text-3xl font-bold leading-none tabular-nums text-heading" translate="no">
+        {c.stage === "late" ? mmss(c.elapsed) : mmss(c.left)}
+      </p>
+      <p className="text-sm leading-snug">
+        {c.stage === "replant"
+          ? "Hold it by the crown, rinse it in milk, saline or saliva, and press it firmly back into its socket."
+          : c.stage === "hurry"
+            ? "Under 10 minutes left: replant it now if you can."
+            : "Still replant it if you can, or keep it in saliva or cold milk, and get the player to a dentist now."}
+      </p>
+      <button
+        type="button"
+        onClick={() => {
+          tap();
+          setStart(null);
+        }}
+        className="self-start text-xs font-semibold text-gold-ink underline underline-offset-2"
+      >
+        Stop the clock
+      </button>
     </div>
   );
 }

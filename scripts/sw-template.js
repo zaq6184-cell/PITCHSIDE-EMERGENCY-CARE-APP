@@ -146,9 +146,9 @@ async function fromRange(full, rangeHeader) {
 }
 
 /**
- * A sound (the music, a voice) is played in byte ranges, which are not saved: the first time it plays, a whole copy
- * is saved in the background, so next time it starts at once — and plays offline. Not the AR call-outs: Google's
- * AR viewer downloads those itself.
+ * A sound (the music, a voice) or a film (the medical cards' loops, the intro) is played in byte ranges, which are not
+ * saved: the first time it plays, a whole copy is saved in the background, so next time it starts at once — and plays
+ * offline. Not the AR call-outs: Google's AR viewer downloads those itself.
  */
 const saving = new Set();
 async function saveWhole(url) {
@@ -171,7 +171,7 @@ async function media(request, event) {
   if (range) {
     if (hit) return fromRange(hit, range);
     const path = new URL(request.url).pathname;
-    if (/\.mp3$/.test(path) && !/\/ar\/[^/]*$/.test(path)) event.waitUntil(saveWhole(request.url));
+    if (/\.(?:mp3|mp4)$/.test(path) && !/\/ar\/[^/]*$/.test(path)) event.waitUntil(saveWhole(request.url));
     return fetch(request);
   }
   const refresh = fetch(request)

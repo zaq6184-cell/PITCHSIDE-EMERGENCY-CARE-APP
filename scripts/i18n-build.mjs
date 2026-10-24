@@ -16,6 +16,8 @@ const dir = join(root, "i18n");
 const out = join(root, "public", "i18n");
 const strings = JSON.parse(readFileSync(join(dir, "strings.json"), "utf8"));
 const holes = (s) => (s.match(/\{\d\}/g) ?? []).sort().join("");
+/** A no-break space between a number (or a {n} part) and its unit, so "40 °C" or "90 %" never splits across lines. */
+const keepUnits = (t) => t.replace(/([\d}]) (°C|%|mmHg|mmol\/L|mg\/dL|mg\/kg|L\/min|mL|mg|kg|km|cm|mm|g|m|s|min|h)(?![\p{L}\d])/gu, "$1\u00a0$2");
 
 mkdirSync(out, { recursive: true });
 for (const f of readdirSync(out)) rmSync(join(out, f));
@@ -37,7 +39,7 @@ for (const f of readdirSync(dir).filter((n) => /^[a-z]{2}\.json$/.test(n)).sort(
       problems += 1;
       continue;
     }
-    dict[s] = t;
+    dict[s] = keepUnits(t);
   }
   const json = JSON.stringify(dict);
   const name = `${code}-${createHash("sha256").update(json).digest("hex").slice(0, 10)}.json`;

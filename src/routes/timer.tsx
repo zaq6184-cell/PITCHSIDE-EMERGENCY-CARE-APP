@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ClipboardCheck, ClipboardList, ClipboardPen, Stethoscope, Timer, Zap } from "lucide-react";
+import { ClipboardCheck, ClipboardList, ClipboardPen, Timer, Zap } from "lucide-react";
 import { CprTrainer } from "@/components/cpr-trainer";
 import { LightningTool } from "@/components/lightning-tool";
 import { DashTimer } from "@/components/dash-timer";
@@ -15,14 +15,13 @@ function TimerPage() {
   return (
     <AppShell
       tab="timer"
-      heading="Match-day tools: match plan, arrest timer, medical emergencies, handover, carry timer, CPR rhythm trainer and lightning tool"
+      heading="Match-day tools: match plan, arrest timer, handover, carry timer, CPR rhythm trainer and lightning tool"
     >
       <div className="flex flex-col gap-3.5">
         <Tiles
           items={[
             { to: "/plan", icon: ClipboardCheck, tint: "#E3F2E8", ink: "#1A7F45", title: "Match plan", sub: "FIFA PEAP on your phone · names, hospital, checklist", wide: true },
             { to: "/arrest", icon: Timer, tint: "#FBE9E7", ink: "#C0392B", title: "Arrest timer", sub: "CPR clock · 2-minute checks · shock and drug log", wide: true },
-            { to: "/medical", icon: Stethoscope, tint: "#E4EFF8", ink: "#1F6AA5", title: "Medical emergencies", sub: "Anaphylaxis, asthma, low blood sugar, seizure, choking", wide: true },
             { to: "/handover", icon: ClipboardList, tint: "#EFE8F7", ink: "#6B3FA0", title: "Handover", sub: "ATMIST for the ambulance crew · from the arrest timer", wide: true },
             { to: "/aed", icon: Zap, tint: "#F6EFD6", ink: "#8A6D10", title: "AED pads trainer", sub: "Place the pads in 3D · everyone clear · shock", wide: true },
             { to: "/scorer", icon: ClipboardPen, tint: "#E3F2E8", ink: "#1A7F45", title: "Practical scorer", sub: "For instructors: time a team on the manikin, then debrief", wide: true },

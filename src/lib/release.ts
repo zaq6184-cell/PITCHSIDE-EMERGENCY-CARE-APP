@@ -2,12 +2,52 @@
  * This release of the app: its version (the same as package.json's — release.test.ts checks), when it came
  * out, and what is new in it, newest first. Shown on the About page.
  */
-export const APP_VERSION = "1.2.0";
+export const APP_VERSION = "1.3.0";
 export const RELEASED = "October 2026";
 
 export type ReleaseNote = { id: string; title: string; text: string };
 
 export const WHATS_NEW: ReleaseNote[] = [
+  {
+    id: "fifa-recheck",
+    title: "Everything new checked against FIFA",
+    text: "Each new card and page was checked line by line against the FIFA Emergency Care Manual. Cardiac arrest in the cold now follows FIFA: adrenaline withheld and shocks delayed until 30 °C. Heat stroke can come with cool, sweaty skin, and is treated as heat stroke when no rectal temperature can be taken. The chest pain, women's health, cold, altitude, eye, nose, tooth, chest, abdomen and pelvis cards gained FIFA's details.",
+  },
+  {
+    id: "medical-clips",
+    title: "Medical emergency cards come to life",
+    text: "Each medical emergency card now plays a short, silent loop of its key action, made with Higgsfield from its picture and labelled AI-generated. It starts when the card is on screen, stops when it scrolls away, and people who ask for reduced motion or data saving keep the still picture.",
+  },
+  {
+    id: "more-topics",
+    title: "Medical emergencies moved to More pitchside topics",
+    text: "Medical emergencies now sits on the home page under More pitchside topics, with the Injury map, Heat illness and the new Cold and altitude page. The Tools tab keeps the match-day tools.",
+  },
+  {
+    id: "chest-female",
+    title: "Chest pain and women's health cards",
+    text: "Two new medical cards from the FIFA manual: chest pain (aspirin, GTN and the other causes to rule out) and lower abdominal pain or bleeding in a female player.",
+  },
+  {
+    id: "environment",
+    title: "Cold and altitude",
+    text: "FIFA's environmental chapter on one page: S.H.E.L.T.E.R., hypothermia, frostbite, cold urticaria, mountain sickness, HACE and HAPE, with an altitude planner that shows the band, the risk and the days to allow for a staged ascent.",
+  },
+  {
+    id: "injury-fifa",
+    title: "Injury map checked against FIFA",
+    text: "A new hip and pelvis area; the jaw and cheekbone, flail chest, tension pneumothorax, elbow and collarbone dislocations and the fracture-dislocated ankle; a 30-minute clock for a knocked-out tooth; and the bleeding rule correctly cited as Law 5.",
+  },
+  {
+    id: "heat-fifa",
+    title: "Heat illness, aligned with FIFA",
+    text: "WBGT measured 90 and 60 minutes before kick-off, ice water at 1–17 °C, a blood glucose check, legs raised for heat exhaustion, and a warning about low sodium.",
+  },
+  {
+    id: "language-recheck",
+    title: "Languages rechecked",
+    text: "Every page was checked again in all five languages: a number and its unit now stay together on one line, and the new pages are translated in full.",
+  },
   {
     id: "medical-fifa",
     title: "Medical cards checked against the FIFA manual",

@@ -28,7 +28,7 @@ const SIGNS = [
   { icon: Footprints, title: "Staggering or collapse", text: "Unsteady, falls, or collapses — often late in a hot match or session." },
   { icon: Zap, title: "Seizure", text: "A fit or a fall in consciousness." },
   { icon: Thermometer, title: "Rectal temperature above 40 °C", text: "The only reliable reading after exercise. Oral, ear, forehead and armpit readings miss heat stroke." },
-  { icon: HeartPulse, title: "Fast pulse, low blood pressure", text: "Breathing fast; the skin may still be sweating — wet skin does not rule it out." },
+  { icon: HeartPulse, title: "Fast pulse, low blood pressure", text: "Breathing fast; the skin may be sweaty and even cool — that does not rule it out." },
 ];
 
 function HeatPage() {
@@ -44,7 +44,7 @@ function HeatPage() {
           </div>
           <ul className="flex list-disc flex-col gap-1.5 px-3.5 py-3 pl-8 text-sm leading-snug marker:text-gold">
             <li>Suspect it in any player who collapses or behaves oddly in the heat.</li>
-            <li>Measure a rectal temperature: above 40 °C with a change in thinking is heat stroke.</li>
+            <li>Measure a rectal temperature: above 40 °C with a change in thinking is heat stroke. Cannot measure it? Treat it as heat stroke anyway.</li>
             <li>Cool in stirred cold water until about 39 °C — then transport. Call the ambulance at once, but cooling comes first.</li>
           </ul>
         </Panel>
@@ -61,8 +61,8 @@ function HeatPage() {
 
         <Section id="heat-risk" title="HEAT RISK TODAY">
           <p className="text-sm leading-snug text-muted">
-            WBGT combines air temperature, humidity, sun and wind. Measure it at the pitch before kick-off and again at half-time,
-            then drag the reading.
+            WBGT combines air temperature, humidity, sun and wind. FIFA measures it at the pitch 90 and 60 minutes before kick-off;
+            check it again at half-time, then drag the reading.
           </p>
           <WbgtDial />
         </Section>
@@ -82,8 +82,14 @@ function HeatPage() {
             ))}
           </ul>
           <p className="rounded-lg border-l-4 border-gold bg-cream px-3 py-2 text-sm leading-snug">
-            <span className="font-semibold text-heading">Heat exhaustion: </span>tired, dizzy, sick or with cramps, but thinking clearly
-            and a temperature below 40 °C — shade, cooling and fluids. Any change in thinking: treat it as heat stroke.
+            <span className="font-semibold text-heading">Heat exhaustion: </span>weak, dizzy, with a headache or nausea, perhaps
+            collapsed, but thinking clearly and with a rectal temperature below 40 °C — shade, lie flat with the legs raised, loosen the
+            kit, and fluids by mouth if not nauseous. Any change in thinking: check the glucose and treat it as heat stroke.
+          </p>
+          <p className="rounded-lg border-l-4 border-gold bg-cream px-3 py-2 text-sm leading-snug">
+            <span className="font-semibold text-heading">Check the blood glucose too: </span>a low sugar often comes with heat stroke and
+            needs its own treatment. Confused with a rectal temperature below 40 °C? Think of low sugar, or of low sodium from drinking
+            too much water (hyponatraemia): hospital.
           </p>
         </Section>
 
@@ -100,8 +106,8 @@ function HeatPage() {
             {[
               "On hot days, before kick-off: a tub (or a tarp), water and plenty of ice at the pitch, a rectal thermometer, towels and a sheet.",
               "Call the ambulance — then cool. Take off the kit quickly and lower the player into the water up to the neck, head out, supported under the armpits with a sheet or towel.",
-              "Ice water, about 2–15 °C. Keep stirring it and keep adding ice.",
-              "Rectal temperature every 5 minutes; a probe left in place is best.",
+              "Ice water, about 1–17 °C. Keep stirring it and keep adding ice.",
+              "Rectal temperature every 5 minutes; a probe left in place is best. Check the blood glucose as well.",
               "Out of the water at about 39 °C, so the player does not overcool. Dry, keep checking, then transfer to hospital.",
               "No tub? Ice water in a tarp held around the player, or ice-water towels over the whole body, swapped every few minutes.",
             ].map((line, i) => (
@@ -143,7 +149,7 @@ function HeatPage() {
         </Section>
 
         <p className="px-1 text-[11px] leading-snug text-muted">
-          Sources: NATA position statement on exertional heat illnesses; ACSM expert consensus statement on exertional heat illness
+          Sources: the FIFA Emergency Care Manual, chapter 9 (heat illness); NATA position statement on exertional heat illnesses; ACSM expert consensus statement on exertional heat illness
           (2023); ILCOR first-aid review of cooling techniques; Society of Critical Care Medicine heat stroke guidance; FIFPRO heat
           guidelines (2023); FIFA's World Cup 2026 hydration breaks. A study aid — follow your competition's rules and local
           protocols.
