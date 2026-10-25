@@ -1,32 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  BadgeCheck,
-  BookCheck,
-  Box,
   Camera,
   ChevronRight,
-  ClipboardList,
   Download,
-  GraduationCap,
-  HeartCrack,
   ImageIcon,
-  Images,
-  Languages,
-  LayoutGrid,
-  ListChecks,
   type LucideIcon,
-  MountainSnow,
-  Music,
-  PersonStanding,
-  Rotate3d,
   ShieldCheck,
   Smartphone,
   Sparkles,
-  Stethoscope,
-  ThermometerSun,
-  Timer,
   Trash2,
-  Volume2,
 } from "lucide-react";
 import { ShareAppButton } from "@/components/install-app";
 import { LanguageList } from "@/components/language-switch";
@@ -124,27 +106,6 @@ function PrivacyBody() {
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
   "medical-stills": ImageIcon,
-  "fifa-recheck": BookCheck,
-  "more-topics": LayoutGrid,
-  "chest-female": HeartCrack,
-  environment: MountainSnow,
-  "injury-fifa": PersonStanding,
-  "heat-fifa": ThermometerSun,
-  "language-recheck": Languages,
-  "medical-fifa": BadgeCheck,
-  "medical-pictures": Images,
-  medical: Stethoscope,
-  handover: ClipboardList,
-  privacy: ShieldCheck,
-  "role-voices": Volume2,
-  music: Music,
-  "live-timer": Timer,
-  languages: Languages,
-  kit: Box,
-  ar: Rotate3d,
-  pictures: Images,
-  tools: GraduationCap,
-  recheck: ListChecks,
 };
 
 function About() {
