@@ -2,21 +2,21 @@
  * This release of the app: its version (the same as package.json's — release.test.ts checks), when it came
  * out, and what is new in it, newest first. Shown on the About page.
  */
-export const APP_VERSION = "1.3.0";
+export const APP_VERSION = "1.3.1";
 export const RELEASED = "October 2026";
 
 export type ReleaseNote = { id: string; title: string; text: string };
 
 export const WHATS_NEW: ReleaseNote[] = [
   {
+    id: "medical-stills",
+    title: "Still pictures on the medical cards",
+    text: "The medical emergency cards show their still pictures again, each with its key action, in place of the short animated loops.",
+  },
+  {
     id: "fifa-recheck",
     title: "Everything new checked against FIFA",
     text: "Each new card and page was checked line by line against the FIFA Emergency Care Manual. Cardiac arrest in the cold now follows FIFA: adrenaline withheld and shocks delayed until 30 °C. Heat stroke can come with cool, sweaty skin, and is treated as heat stroke when no rectal temperature can be taken. The chest pain, women's health, cold, altitude, eye, nose, tooth, chest, abdomen and pelvis cards gained FIFA's details.",
-  },
-  {
-    id: "medical-clips",
-    title: "Medical emergency cards come to life",
-    text: "Each medical emergency card now plays a short, silent loop of its key action, made with Higgsfield from its picture and labelled AI-generated. It starts when the card is on screen, stops when it scrolls away, and people who ask for reduced motion or data saving keep the still picture.",
   },
   {
     id: "more-topics",

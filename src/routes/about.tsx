@@ -5,11 +5,11 @@ import {
   Box,
   Camera,
   ChevronRight,
-  Clapperboard,
   ClipboardList,
   Download,
   GraduationCap,
   HeartCrack,
+  ImageIcon,
   Images,
   Languages,
   LayoutGrid,
@@ -123,8 +123,8 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
+  "medical-stills": ImageIcon,
   "fifa-recheck": BookCheck,
-  "medical-clips": Clapperboard,
   "more-topics": LayoutGrid,
   "chest-female": HeartCrack,
   environment: MountainSnow,

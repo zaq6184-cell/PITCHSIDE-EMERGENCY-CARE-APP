@@ -1,51 +1,7 @@
 import { type LucideIcon, Phone } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import { Note, Panel } from "@/components/workshop";
 import type { CareCard } from "@/lib/medical";
 import type { ScenePic } from "@/lib/scene-images";
-import { cn } from "@/lib/utils";
-
-/**
- * The card's animated loop, laid over its picture: it loads the first time the card scrolls into view, plays while the
- * card is on screen and fades in once it is moving. The picture underneath keeps the alt text and the layout, and stays
- * on its own for people who ask for less motion or for data saving.
- */
-function CardClip({ src }: { src: string }) {
-  const ref = useRef<HTMLVideoElement>(null);
-  const [moving, setMoving] = useState(false);
-  useEffect(() => {
-    const v = ref.current;
-    if (!v || typeof IntersectionObserver === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          if (!v.getAttribute("src")) v.setAttribute("src", src);
-          v.play().catch(() => {
-            // autoplay refused (low power, data saver): the picture stays
-          });
-        } else v.pause();
-      },
-      { threshold: 0.35 },
-    );
-    io.observe(v);
-    return () => io.disconnect();
-  }, [src]);
-  return (
-    <video
-      ref={ref}
-      muted
-      loop
-      playsInline
-      preload="none"
-      aria-hidden="true"
-      tabIndex={-1}
-      onPlaying={() => setMoving(true)}
-      className={cn("absolute inset-0 block h-full w-full object-cover transition-opacity duration-700", moving ? "opacity-100" : "opacity-0")}
-    />
-  );
-}
 
 /** A card's own small heading, styled like the section labels. */
 export function CardLabel({ children }: { children: React.ReactNode }) {
@@ -87,7 +43,6 @@ export function CareCardView({ c, anchor, icon: Icon, pic, eager = false }: { c:
               decoding="async"
               className="img-in block aspect-video w-full object-cover outline-none"
             />
-            {pic.video ? <CardClip src={pic.video} /> : null}
             <p className="absolute right-2 top-2 z-[1] rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">AI-generated illustration</p>
           </div>
         ) : null}
