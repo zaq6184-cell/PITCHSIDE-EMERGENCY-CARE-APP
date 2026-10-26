@@ -100,12 +100,8 @@ export function InstallCard() {
             s.canPrompt ? "border border-line bg-paper text-heading" : "bg-navy text-gold",
           )}
         >
-          {s.canPrompt ? "More" : (
-            <>
-              <Download className="size-4" aria-hidden />
-              How to install
-            </>
-          )}
+          {s.canPrompt ? null : <Download className="size-4" aria-hidden />}
+          How to install
         </Link>
       </div>
     </div>

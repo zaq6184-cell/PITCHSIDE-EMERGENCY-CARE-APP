@@ -9,9 +9,12 @@ import type { MedicalId } from "@/lib/medical";
  * the thigh; the inhaler through a spacer; glucose gel, with no sports drink, as the FIFA manual warns they hold too
  * little sugar; the head cushioned, not restrained; back blows from behind; a chaperone present). Brand logos removed.
  */
-export type ScenePic = { src: string; alt: string };
+/** `video`: a short silent loop of the same scene (Higgsfield image-to-video), played over the picture where motion is welcome. */
+export type ScenePic = { src: string; alt: string; video?: string };
 
 const pic = (name: string, alt: string): ScenePic => ({ src: asset(`/img/scenes/${name}.webp`), alt });
+/** A medical card's picture with its animated loop. */
+const card = (name: string, alt: string): ScenePic => ({ ...pic(name, alt), video: asset(`/video/${name}.mp4`) });
 /** A case's picture also comes small, for the list of cases. */
 const casePic = (name: string, alt: string) => ({ ...pic(name, alt), small: asset(`/img/scenes/${name}-sm.webp`) });
 
@@ -42,31 +45,31 @@ export const ENVIRONMENT_PIC = pic(
 
 /** One picture per medical emergency card, each showing the card's key action (960 × 540: they sit inside a card). */
 export const MEDICAL_PICS: Record<MedicalId, ScenePic> = {
-  chest: pic(
+  chest: card(
     "medical-chest",
     "A pale, sweating coach in his fifties sits on the team bench with a hand pressed to the centre of his chest, while a medic kneeling in front of him offers an aspirin tablet, the defibrillator case beside them",
   ),
-  female: pic(
+  female: card(
     "medical-female",
     "In a quiet treatment room a female player in a purple kit lies on a couch under a blanket while a female doctor checks the pulse at her wrist and a second member of staff stands by as a chaperone",
   ),
-  anaphylaxis: pic(
+  anaphylaxis: card(
     "medical-anaphylaxis",
     "A medic in a green bib presses an adrenaline auto-injector into the thigh of a player in a purple kit who lies flat with a red rash on his neck, while a second medic phones for the ambulance",
   ),
-  asthma: pic(
+  asthma: card(
     "medical-asthma",
     "A breathless player in a purple kit sits on the bench and breathes in through a spacer from his reliever inhaler, while a medic kneels in front of him counting the puffs on her fingers",
   ),
-  hypo: pic(
+  hypo: card(
     "medical-hypo",
     "A pale, sweaty player in a purple kit sits on the grass while a medic kneels beside him, offering glucose gel and holding a blood glucose meter",
   ),
-  seizure: pic(
+  seizure: card(
     "medical-seizure",
     "A player in a purple kit lies on the grass; a medic in an orange bib cushions his head on a folded towel without holding him down, and a second medic times it on her watch",
   ),
-  choking: pic(
+  choking: card(
     "medical-choking",
     "A choking player in a purple kit leans forward with a hand at his throat while a medic standing behind him supports his chest and gives back blows to his upper back with the heel of her hand",
   ),

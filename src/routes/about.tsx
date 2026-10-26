@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Camera,
   ChevronRight,
+  Clapperboard,
   Download,
-  ImageIcon,
+  ListChecks,
   type LucideIcon,
   ShieldCheck,
   Smartphone,
@@ -105,7 +106,8 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
-  "medical-stills": ImageIcon,
+  "medical-clips": Clapperboard,
+  recheck: ListChecks,
 };
 
 function About() {

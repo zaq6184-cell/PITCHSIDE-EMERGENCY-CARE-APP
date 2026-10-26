@@ -143,6 +143,16 @@ function useInView<T extends HTMLElement>() {
 }
 
 /** Home: turn the scene, tap a colour, read what that role does — and hear what they say. */
+/** The link to a role's card: a whole phrase per colour, so each language can put the colour where it belongs. */
+const OPEN_ROLE: Record<RoleId, string> = {
+  black: "Open the black role",
+  orange: "Open the orange role",
+  red: "Open the red role",
+  blue: "Open the blue role",
+  white: "Open the white role",
+  green: "Open the green role",
+};
+
 export function RoleExplorer3D() {
   const [sel, setSel] = useState<RoleId | undefined>();
   const [caption, setCaption] = useState<Callout | null>(null);
@@ -201,7 +211,7 @@ export function RoleExplorer3D() {
               params={{ id: role.id }}
               className="mt-1 inline-flex min-h-10 items-center gap-1 font-display text-sm font-semibold tracking-wide text-gold-ink"
             >
-              Open the {role.name.toLowerCase()} role
+              {OPEN_ROLE[role.id]}
               <ChevronRight className="size-4" aria-hidden />
             </Link>
           </div>
