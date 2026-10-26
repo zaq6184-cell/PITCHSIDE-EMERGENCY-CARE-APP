@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Bone, ChevronLeft, ChevronRight, HeartPulse, Repeat } from "lucide-react";
 import { PositionDiagram } from "@/components/position-diagram";
 import { roleIcons } from "@/components/role-icon";
+import { ScenePicture } from "@/components/scene-picture";
 import { AppShell, Note, Panel, SayLine, SectionLabel } from "@/components/workshop";
 import { setTransitionDirection, useSwipe } from "@/lib/gestures";
 import { roleImage } from "@/lib/role-images";
@@ -53,19 +54,7 @@ function RoleCard() {
     <AppShell tab="home">
       <div ref={swipe} className="flex flex-col gap-3">
         <Panel>
-          <div className="flare relative overflow-hidden bg-navy">
-            <img
-              key={pic.src}
-              src={pic.src}
-              alt={pic.alt}
-              width={1280}
-              height={720}
-              className="kenburns img-in block aspect-video w-full object-cover outline-none"
-            />
-            <p className="absolute right-2 top-2 z-[1] rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">
-              AI-generated illustration
-            </p>
-          </div>
+          <ScenePicture key={pic.src} pic={pic} />
           <div
             className="relative overflow-hidden px-3.5 py-3.5"
             style={{

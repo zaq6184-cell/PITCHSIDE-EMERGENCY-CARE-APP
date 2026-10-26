@@ -4,7 +4,6 @@ import {
   ChevronRight,
   Clapperboard,
   Download,
-  ListChecks,
   type LucideIcon,
   ShieldCheck,
   Smartphone,
@@ -106,8 +105,7 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
-  "medical-clips": Clapperboard,
-  recheck: ListChecks,
+  "premium-clips": Clapperboard,
 };
 
 function About() {

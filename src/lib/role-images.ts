@@ -17,6 +17,7 @@ const alts: Record<RoleId, string> = {
   green: "Medic in a green bib kneeling at the player's head on his left side, holding the AED pads, with the emergency bag and AED open beside her",
 };
 
+/** The header picture, its small copy for lists, and its animated loop (Higgsfield, Kling 3.0 Pro, from the picture). */
 export function roleImage(id: RoleId) {
-  return { src: asset(`/img/roles/role-${id}.webp`), small: asset(`/img/roles/role-${id}-sm.webp`), alt: alts[id] };
+  return { src: asset(`/img/roles/role-${id}.webp`), small: asset(`/img/roles/role-${id}-sm.webp`), alt: alts[id], video: asset(`/video/role-${id}.mp4`) };
 }
