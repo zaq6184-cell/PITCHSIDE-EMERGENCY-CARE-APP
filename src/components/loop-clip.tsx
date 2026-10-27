@@ -5,8 +5,10 @@ import { cn } from "@/lib/utils";
  * A picture's animated loop, laid over it: it loads the first time the picture scrolls into view, plays while it is
  * on screen and fades in once it is moving. The picture underneath keeps the alt text and the layout, and stays on its
  * own for people who ask for less motion or for data saving. Give it `key={src}` where the picture can change in place.
+ * `className` adds to the video's classes: `kenburns` keeps the picture's slow drift going under a loop that barely
+ * moves (mount the two together so their drifts stay in step).
  */
-export function LoopClip({ src }: { src: string }) {
+export function LoopClip({ src, className }: { src: string; className?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [moving, setMoving] = useState(false);
   useEffect(() => {
@@ -38,7 +40,7 @@ export function LoopClip({ src }: { src: string }) {
       aria-hidden="true"
       tabIndex={-1}
       onPlaying={() => setMoving(true)}
-      className={cn("absolute inset-0 block h-full w-full object-cover transition-opacity duration-700", moving ? "opacity-100" : "opacity-0")}
+      className={cn("absolute inset-0 block h-full w-full object-cover transition-opacity duration-700", moving ? "opacity-100" : "opacity-0", className)}
     />
   );
 }

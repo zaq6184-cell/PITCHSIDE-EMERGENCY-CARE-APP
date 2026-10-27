@@ -17,7 +17,20 @@ const alts: Record<RoleId, string> = {
   green: "Medic in a green bib kneeling at the player's head on his left side, holding the AED pads, with the emergency bag and AED open beside her",
 };
 
-/** The header picture, its small copy for lists, and its animated loop (Higgsfield, Kling 3.0 Pro, from the picture). */
+/**
+ * Each role's animated loop in public/video (Higgsfield, Kling 3.0 Pro, from the picture). Red's was re-timed to about
+ * 110 compressions a minute (the guidelines' 100–120), under a new name because the service worker keeps media by URL.
+ */
+const clips: Record<RoleId, string> = {
+  black: "role-black",
+  orange: "role-orange",
+  red: "role-red-v2",
+  blue: "role-blue",
+  white: "role-white",
+  green: "role-green",
+};
+
+/** The header picture, its small copy for lists, and its animated loop. */
 export function roleImage(id: RoleId) {
-  return { src: asset(`/img/roles/role-${id}.webp`), small: asset(`/img/roles/role-${id}-sm.webp`), alt: alts[id], video: asset(`/video/role-${id}.mp4`) };
+  return { src: asset(`/img/roles/role-${id}.webp`), small: asset(`/img/roles/role-${id}-sm.webp`), alt: alts[id], video: asset(`/video/${clips[id]}.mp4`) };
 }

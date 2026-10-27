@@ -3,6 +3,7 @@ import { Box, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AedTrainer } from "@/components/aed-trainer";
 import { FifaClipCard } from "@/components/fifa-video";
+import { LoopClip } from "@/components/loop-clip";
 import { SpineDrill3D } from "@/components/set-piece-3d";
 import { SurvivalSlider } from "@/components/survival-chart";
 import { ZoomImage } from "@/components/zoom-image";
@@ -57,7 +58,8 @@ function StationPage() {
         <Panel>
           <div className="bg-navy text-on-navy">
             {cover ? (
-              <div className="flare relative overflow-hidden">
+              // keyed, so the picture and its loop start their drift together on every module
+              <div key={cover.src} className="flare relative overflow-hidden">
                 <img
                   src={cover.src}
                   alt={cover.alt}
@@ -65,6 +67,7 @@ function StationPage() {
                   height={720}
                   className="kenburns img-in block aspect-video w-full object-cover outline-none"
                 />
+                <LoopClip src={cover.video} className="kenburns" />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-navy to-transparent" />
                 <p className="absolute right-2 top-2 z-[1] rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">
                   AI-generated illustration

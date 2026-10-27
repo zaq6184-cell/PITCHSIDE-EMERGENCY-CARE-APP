@@ -10,14 +10,19 @@ const video = (name) => new URL(`public/video/${name}.mp4`, root);
 
 const scenes = [...read("src/lib/scene-images.ts").matchAll(/animated\(\s*"([a-z0-9-]+)"/g)].map((m) => m[1]);
 const cases = [...read("src/lib/scene-images.ts").matchAll(/casePic\("([a-z0-9-]+)"/g)].map((m) => m[1]);
-const roles = read("src/lib/workshop.ts").match(/export type RoleId = ([^;]+);/)[1].match(/"([a-z]+)"/g).map((s) => `role-${s.slice(1, -1)}`);
-const named = [...scenes, ...cases, ...(read("src/lib/role-images.ts").includes("/video/role-${id}.mp4") ? roles : [])];
+// role-images.ts names each role's clip; module-covers.ts gives every module its own
+const roles = [...read("src/lib/role-images.ts").matchAll(/^\s*[a-z]+: "(role-[a-z0-9-]+)",/gm)].map((m) => m[1]);
+const covers = read("src/lib/module-covers.ts");
+const modules = covers.includes("/video/module-${id}.mp4") ? [...covers.matchAll(/^\s*"(\d+)": "/gm)].map((m) => `module-${m[1]}`) : [];
+const named = [...scenes, ...cases, ...roles, ...modules];
 
 describe("animated pictures", () => {
-  it("finds the medical cards, the cases, the heat and handover headers and the six roles", () => {
-    for (const n of ["medical-chest", "medical-female", "case-vf", "case-commotio", "case-heat", "heat-cooling", "handover", "role-black", "role-green"]) {
+  it("finds the medical cards, the cases, every page header, the six roles and the six modules", () => {
+    for (const n of ["medical-chest", "medical-female", "case-vf", "case-commotio", "case-heat", "heat-cooling", "handover", "live-quiz", "scorer", "env-cold-altitude", "module-1", "module-6"]) {
       assert.ok(named.includes(n), n);
     }
+    assert.equal(roles.length, 6, `role clips: ${roles.join(", ")}`);
+    assert.equal(modules.length, 6, `module clips: ${modules.join(", ")}`);
   });
 
   it("has a clip for every animated picture, each under 600 KB", () => {

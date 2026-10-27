@@ -105,7 +105,7 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
-  "premium-clips": Clapperboard,
+  "flow-clips": Clapperboard,
 };
 
 function About() {

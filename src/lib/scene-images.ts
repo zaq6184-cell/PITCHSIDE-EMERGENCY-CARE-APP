@@ -9,7 +9,7 @@ import type { MedicalId } from "@/lib/medical";
  * the thigh; the inhaler through a spacer; glucose gel, with no sports drink, as the FIFA manual warns they hold too
  * little sugar; the head cushioned, not restrained; back blows from behind; a chaperone present). Brand logos removed.
  */
-/** `video`: a short silent loop of the same scene (Higgsfield image-to-video), played over the picture where motion is welcome: the medical cards, the cases and the heat and handover headers. */
+/** `video`: a short silent loop of the same scene made from the picture (Higgsfield's Kling; Google Flow's Veo 3.1 for the live quiz, scorer and cold-and-altitude headers), played over it: the medical cards, the cases and every page header. */
 export type ScenePic = { src: string; alt: string; video?: string };
 
 const pic = (name: string, alt: string): ScenePic => ({ src: asset(`/img/scenes/${name}.webp`), alt });
@@ -28,8 +28,8 @@ export const HEAT_PIC = animated(
   "heat-cooling",
   "Cold-water immersion at the pitch side: a player lies in a tub of iced water up to the neck, one medic holding his head, another stirring the water",
 );
-export const LIVE_PIC = pic("live-quiz", "Medical staff on a training course answering a live quiz on their phones, a chart of the answers on the screen behind them");
-export const SCORER_PIC = pic(
+export const LIVE_PIC = animated("live-quiz", "Medical staff on a training course answering a live quiz on their phones, a chart of the answers on the screen behind them");
+export const SCORER_PIC = animated(
   "scorer",
   "An instructor with a tablet scores a trainee in a red bib giving chest compressions on a manikin, while trainees in other colours wait their turn",
 );
@@ -38,7 +38,7 @@ export const HANDOVER_PIC = animated(
   "At the open doors of an ambulance beside a floodlit pitch, the team leader in a black bib reads the handover from his phone to two paramedics, one writing on a clipboard, while the player lies awake on the trolley under a blanket",
 );
 
-export const ENVIRONMENT_PIC = pic(
+export const ENVIRONMENT_PIC = animated(
   "env-cold-altitude",
   "A mountain stadium at dusk, snowy peaks behind the floodlights: a medic wraps a shivering player in a purple kit in a foil blanket while a second medic clips a pulse oximeter onto his finger",
 );
