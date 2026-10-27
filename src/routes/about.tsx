@@ -105,7 +105,7 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
-  "ar-live-161": Box,
+  "ar-solid-162": Box,
 };
 
 function About() {

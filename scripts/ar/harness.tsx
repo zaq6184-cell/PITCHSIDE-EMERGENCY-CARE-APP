@@ -45,6 +45,21 @@ function visibleBox(root: THREE.Object3D) {
   return box;
 }
 
+/**
+ * The team's materials are see-through only so the app can dim a role: at full opacity they go out solid, as Google's
+ * AR viewer draws a see-through (glTF BLEND) part without depth and limbs show through bodies. The parts that are
+ * meant to be see-through (the mask, the oxygen tubing) stay so. Returns the undo.
+ */
+function solid(root: THREE.Object3D) {
+  const made = new Set<THREE.MeshStandardMaterial>();
+  root.traverse((o) => {
+    const mat = (o as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined;
+    if ((o as THREE.Mesh).isMesh && mat?.transparent && mat.opacity === 1 && !mat.map && !mat.alphaMap) made.add(mat);
+  });
+  made.forEach((m) => (m.transparent = false));
+  return () => made.forEach((m) => (m.transparent = true));
+}
+
 /** Hands the renderer's state out of the React tree, and frames the team for the preview picture. */
 function Grab({ onState }: { onState: (s: RootState) => void }) {
   const state = useThree();
@@ -132,8 +147,10 @@ export async function exportStep(
       hidden.push(o);
     }
   });
+  const undo = solid(g);
   const glb = (await new GLTFExporter().parseAsync(g, { binary: true, onlyVisible: true })) as ArrayBuffer;
   const usdz = await new USDZExporter().parseAsync(g, { quickLookCompatible: true });
+  undo();
   hidden.forEach((o) => (o.visible = true));
   root.unmount();
   canvas.remove();
@@ -379,7 +396,8 @@ export async function exportSegment(name: string) {
     });
   }
   const clip = tracks.length ? new THREE.AnimationClip(`${r.scenario}-${name}`, (count - 1) / fps, tracks) : null;
-  const glb = (await new GLTFExporter().parseAsync(r.team, { binary: true, onlyVisible: true, animations: clip ? [clip] : [] })) as ArrayBuffer;
+  const undo = solid(r.team);
+  const glb =(await new GLTFExporter().parseAsync(r.team, { binary: true, onlyVisible: true, animations: clip ? [clip] : [] })) as ArrayBuffer;
 
   // USDZ: each mesh's place over time (or, for the team in place, as it stands)
   let usdz: Uint8Array;
@@ -404,6 +422,7 @@ export async function exportSegment(name: string) {
     nodes.forEach((o, i) => (o.visible = r.shown[f0 * N + i] === 1 && (!(o as THREE.Mesh).isMesh || isStandard(o))));
     usdz = await new AnimatedUSDZExporter().parseAsync(r.team, { quickLookCompatible: true });
   }
+  undo();
   const events: TimelineEvent[] = seg.events.map((e) => ({ ...e, at: e.at - seg.start }));
   return { glb: base64(new Uint8Array(glb)), usdz: base64(usdz), lengthMs: Math.round(((count - 1) / fps) * 1000), tracks: tracks.length, events };
 }
