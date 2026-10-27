@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { AR_FALLBACK, AR_STEPS, arSupportFrom, cardClip, cardPicture, clampClip, clampStep, fallbackUrl, hasNarration, modelFile, quickLookHref, sceneViewerIntent } from "./ar.ts";
+import { AR_FALLBACK, AR_STEPS, arPath, arSupportFrom, cardClip, cardPicture, clampClip, clampStep, closedAtOnce, fallbackUrl, hasNarration, modelFile, quickLookHref, sceneViewerIntent, VIEWER_GONE_MS } from "./ar.ts";
 
 describe("augmented reality", () => {
   it("names one model per drill step, and keeps the step in range", () => {
@@ -55,5 +55,19 @@ describe("augmented reality", () => {
     const pixel = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Mobile Safari/537.36";
     assert.deepEqual(arSupportFrom(pixel, false, true), { android: true, quicklook: false, webxr: true });
     assert.equal(arSupportFrom("Mozilla/5.0 (Windows NT 10.0; Win64; x64)", false, false).android, false);
+  });
+
+  it("runs Live AR in the app wherever the browser can, and Google's AR viewer only on Android phones that cannot", () => {
+    assert.equal(arPath({ android: true, quicklook: false, webxr: true }), "live");
+    assert.equal(arPath({ android: true, quicklook: false, webxr: false }), "viewer");
+    assert.equal(arPath({ android: false, quicklook: true, webxr: false }), "quicklook");
+    assert.equal(arPath({ android: false, quicklook: false, webxr: false }), "phone");
+  });
+
+  it("takes a quick return from Google's AR viewer as the viewer closing by itself", () => {
+    assert.equal(closedAtOnce(120), true);
+    assert.equal(closedAtOnce(VIEWER_GONE_MS - 1), true);
+    assert.equal(closedAtOnce(VIEWER_GONE_MS), false);
+    assert.equal(closedAtOnce(45_000), false);
   });
 });

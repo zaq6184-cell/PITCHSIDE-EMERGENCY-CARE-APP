@@ -226,30 +226,17 @@ function ArPage() {
           </div>
           {os === "android" ? (
             <>
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted">Google's AR viewer</p>
-              <Steps
-                items={[
-                  { icon: Box, text: <>Tap <b>See the team in your room (AR)</b> — or <b>Play the whole drill in AR</b>. Google's AR viewer opens over the app; the first time, allow the camera.</> },
-                  { icon: ScanLine, text: <>Hold the phone at chest height, pointing at the floor, and sweep it slowly from side to side until the team appears.</> },
-                  { icon: Play, text: <>The team stands on the floor at full size, the player's feet towards you, and works through the step again and again. Turn the sound up: each colour's call-outs play in time with the moves.</> },
-                  { icon: Footprints, text: <>Walk round it: each colour's number is on the floor behind them — Black 1, Orange 2, Red 3, Blue 4, White 5, Green 6.</> },
-                  { icon: Hand, text: <>Pinch with two fingers to make it smaller (desk size for a small group), drag with one finger to move it, twist two fingers to turn it.</> },
-                  { icon: X, text: <>Tap the back arrow (top left) to come back, choose another step and open it the same way.</> },
-                ]}
-              />
-              <Note>
-                A phone that cannot do AR opens the team in 3D instead, still moving: drag to turn it, pinch to zoom.
-              </Note>
-              <p className="pt-1 text-xs font-semibold uppercase tracking-wider text-muted">Live AR with steps · Chrome</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted">Live AR · Chrome</p>
               <p className="text-sm leading-snug text-muted">
-                On phones where Chrome can run AR itself, a second button keeps you in the app: the drill plays live in the room, and you
+                On phones where Chrome can run AR itself, the AR button keeps you in the app: the drill plays live in the room, and you
                 control it.
               </p>
               <Steps
                 items={[
-                  { icon: Footprints, text: <>Tap <b>Live AR with steps</b> and allow the camera.</> },
+                  { icon: Box, text: <>Tap <b>See the team in your room (AR)</b> — or <b>Play the whole drill in AR</b> — and allow the camera the first time.</> },
                   { icon: ScanLine, text: <>Sweep the floor slowly until a gold ring appears, then tap the screen to put the team on it.</> },
                   { icon: Play, text: <>The step plays with the call-outs and captions. The gold button pauses and plays it; <b>Slow</b> runs it at half speed; <b>Play all</b> goes through every step in turn.</> },
+                  { icon: Footprints, text: <>Walk round it: each colour's number is on the floor behind them — Black 1, Orange 2, Red 3, Blue 4, White 5, Green 6.</> },
                   { icon: Move, text: <>‹ › at the top step through the drill; <b>Turn</b> rotates the team; <b>Table top</b> shrinks it for a desk; tap the floor to move it.</> },
                   { icon: X, text: <>Tap ✕ to leave AR.</> },
                 ]}
@@ -261,6 +248,21 @@ function ArPage() {
                 </span>{" "}
                 record the screen while the team plays — swipe down from the top twice and tap <b>Screen record</b>, with media sound on
                 so the call-outs are on it.
+              </Note>
+              <p className="pt-1 text-xs font-semibold uppercase tracking-wider text-muted">Google's AR viewer</p>
+              <p className="text-sm leading-snug text-muted">
+                The link under the AR button opens the step in Google's own AR viewer instead: it places the team by itself and plays the step
+                again and again, with the call-outs. On phones where Chrome cannot run AR, the AR button itself opens it.
+              </p>
+              <Steps
+                items={[
+                  { icon: ScanLine, text: <>Hold the phone at chest height, pointing at the floor, and sweep it slowly from side to side until the team appears.</> },
+                  { icon: Hand, text: <>Pinch with two fingers to make it smaller (desk size for a small group), drag with one finger to move it, twist two fingers to turn it.</> },
+                  { icon: X, text: <>Tap the back arrow (top left) to come back.</> },
+                ]}
+              />
+              <Note>
+                A phone that cannot do AR opens the team in 3D instead, still moving: drag to turn it, pinch to zoom.
               </Note>
             </>
           ) : (
@@ -296,7 +298,7 @@ function ArPage() {
               { icon: ScanLine, text: "Floor: matt, with some pattern — carpet, tiles, wood. Plain white, black or shiny floors are hard to follow." },
               { icon: Volume2, text: "Sound: volume up, silent mode off. On Android the call-outs play with the moving team; AR Quick Look on iPhone shows the moves without sound." },
               { icon: Wifi, text: "Internet: each step downloads once — up to about 1.3 MB on Android and 3 MB on iPhone; the whole drill about 2.5 MB on Android and 5 MB on iPhone." },
-              { icon: Smartphone, text: "Android: the guide open in Chrome, with the Google app and Google Play Services for AR. iPhone and iPad: Safari, with iOS up to date." },
+              { icon: Smartphone, text: "Android: the guide open in Chrome, with Google Play Services for AR up to date. iPhone and iPad: Safari, with iOS up to date." },
               { icon: ShieldAlert, text: "Safety: keep the floor clear, and look up from the screen when you walk." },
             ].map((r) => (
               <li key={r.text} className="flex gap-2.5">
@@ -314,8 +316,8 @@ function ArPage() {
                 q: "The button does nothing, or opens a web page",
                 a: (
                   <>
-                    Open the guide in Chrome — not inside WhatsApp, Instagram or Facebook (use ⋮ → Open in Chrome). Update the Google
-                    app, and install or update{" "}
+                    Open the guide in Chrome — not inside WhatsApp, Instagram or Facebook (use ⋮ → Open in Chrome). Allow the camera when
+                    asked, and install or update{" "}
                     <a href={PLAY_AR} {...ext}>
                       Google Play Services for AR
                       <ExternalLink className="size-3" aria-hidden />
@@ -323,6 +325,10 @@ function ArPage() {
                     .
                   </>
                 ),
+              },
+              {
+                q: "Google's AR viewer flashes and closes",
+                a: "That is a fault in recent versions of the Google app, not in the guide. Use the AR button: on most Android phones it runs Live AR here in Chrome. Or clear the Google app's cache (Settings → Apps → Google → Storage → Clear cache) and try again.",
               },
               {
                 q: "It shows the team in 3D, but no AR",

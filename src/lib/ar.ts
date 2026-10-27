@@ -1,10 +1,11 @@
 /**
- * Augmented reality: the 3D team on the floor in front of you, moving. scripts/build-ar-models.mjs records
- * each drill from the app's own 3D set piece and builds a model per step — and one of the whole drill —
- * with the team in motion: GLB for Android, opened in Google's AR viewer (Scene Viewer, part of the Google
- * app) with the step's call-outs as its sound, and USDZ for iPhone and iPad, opened in AR Quick Look.
- * Chrome on phones with Google Play Services for AR can also run the team live in the app (WebXR), with
- * play, pause, slow motion and the call-outs. Plain functions, tested with `node --test`.
+ * Augmented reality: the 3D team on the floor in front of you, moving. Where the browser can run AR itself
+ * (WebXR: Chrome on phones with Google Play Services for AR), the team runs live in the app, with play, pause,
+ * slow motion and the call-outs. Elsewhere a ready-made model opens in the phone's own viewer:
+ * scripts/build-ar-models.mjs records each drill from the app's own 3D set piece and builds a model per step —
+ * and one of the whole drill — with the team in motion: GLB for Android, opened in Google's AR viewer (Scene
+ * Viewer, part of the Google app) with the step's call-outs as its sound, and USDZ for iPhone and iPad, opened
+ * in AR Quick Look. Plain functions, tested with `node --test`.
  */
 export type ArDrill = "arrest" | "spine";
 /** A step (0 is the team in place, still), or the whole drill end to end. */
@@ -66,6 +67,19 @@ export type ArSupport = {
 export function arSupportFrom(userAgent: string, quicklook: boolean, webxr: boolean): ArSupport {
   return { android: /Android/i.test(userAgent), quicklook, webxr };
 }
+
+/**
+ * What the AR button does here: Live AR in the app wherever the browser can run it, else Google's AR viewer on
+ * Android, AR Quick Look on iPhone and iPad, and a QR code for a phone anywhere else. Live AR comes first because
+ * Google's AR viewer has been closing as soon as it opens on many phones (a fault in the Google app, October 2026);
+ * it stays a link under the button.
+ */
+export type ArPath = "live" | "viewer" | "quicklook" | "phone";
+export const arPath = (s: ArSupport): ArPath => (s.webxr ? "live" : s.android ? "viewer" : s.quicklook ? "quicklook" : "phone");
+
+/** Back on the page this soon (ms) after Google's AR viewer opened: it closed by itself. A look at a step takes longer. */
+export const VIEWER_GONE_MS = 2500;
+export const closedAtOnce = (awayMs: number) => awayMs < VIEWER_GONE_MS;
 
 export async function detectAr(): Promise<ArSupport> {
   let webxr = false;

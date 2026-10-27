@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  Box,
   Camera,
   ChevronRight,
-  Clapperboard,
   Download,
   type LucideIcon,
   ShieldCheck,
@@ -105,7 +105,7 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
-  "moving-pictures-160": Clapperboard,
+  "ar-live-161": Box,
 };
 
 function About() {
