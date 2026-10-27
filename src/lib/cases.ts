@@ -124,7 +124,7 @@ export const CASES: CaseDef[] = [
         vitals: { rhythm: "sinus", hr: 112, spo2: 91, bp: "102/64", rr: 14 },
         choices: [
           { label: "Check the pulse, oxygen on, bring the ambulance onto the pitch", ok: true, feedback: "Return of circulation: oxygen, monitor, and the ambulance comes to the player.", seconds: 30, next: "end" },
-          { label: "Carry him to the touchline straight away", ok: false, feedback: "Carrying is a last resort — the ambulance or a buggy comes onto the pitch to the player.", seconds: 25, next: "end" },
+          { label: "Carry him to the touchline straight away", ok: false, feedback: "Carrying is a last resort — the ambulance comes onto the pitch to the player.", seconds: 25, next: "end" },
         ],
       },
     ],
@@ -328,7 +328,7 @@ export function outcome(c: CaseDef, run: Run): Outcome {
   return {
     good,
     headline: `First shock ${mmss(shock)} after the collapse`,
-    detail: `Compressions from ${mmss(cpr)}. Estimated chance of survival: about ${Math.round(chance)}% of what an immediate shock would give.${shock <= 3 ? " Inside FIFA's 3-minute target." : " Later than FIFA's 3-minute target."}`,
+    detail: `Compressions from ${mmss(cpr)}. Estimated chance of survival: about ${Math.round(chance)}% of what an immediate shock would give.${shock <= 3 ? " Inside the 3-minute target." : " Later than the 3-minute target."}`,
     score: Math.round(chance - criticals * 10),
     criticals,
     right,

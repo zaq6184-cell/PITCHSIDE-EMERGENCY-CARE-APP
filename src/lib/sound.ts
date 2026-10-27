@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { asset } from "@/lib/asset";
 import { readSoundPrefs, SOUND_DEFAULTS as DEFAULTS, type SoundPrefs, writeSoundPrefs } from "@/lib/sound-prefs";
+import { voiceFile } from "@/lib/voice-files";
 
 /**
  * Sound for the guide: effects, spoken call-outs, a CPR rhythm click, stadium ambience and music that suits
@@ -208,9 +209,12 @@ function tick(freq = 660, volume = 0.06, length = 0.07, at?: number) {
   o.stop(t + length + 0.02);
 }
 
+/** The effects were recorded at different levels: "wrong" sat about 11 dB below "correct", so it gets a lift. */
+const SFX_TRIM: Partial<Record<SfxName, number>> = { wrong: 2.8 };
+
 export function sfx(name: SfxName, volume = 0.55) {
   if (!getSoundPrefs().sfx) return;
-  void playBuffer(asset(`/audio/sfx/${name}.mp3`), volume);
+  void playBuffer(asset(`/audio/sfx/${name}.mp3`), volume * (SFX_TRIM[name] ?? 1));
 }
 
 export function tap() {
@@ -325,7 +329,7 @@ let voiceEl: HTMLAudioElement | null = null;
 export function say(id: string, force = false, pan = 0): Promise<void> {
   if (typeof window === "undefined" || (!force && !getSoundPrefs().sfx)) return Promise.resolve();
   stopVoice();
-  const el = new Audio(asset(`/audio/voice/${id}.mp3`));
+  const el = new Audio(asset(`/audio/voice/${voiceFile(id)}.mp3`));
   voiceEl = el;
   if (pan && ac && ac.state === "running") {
     try {
@@ -429,11 +433,12 @@ export function stopAmbience() {
   if (loop && !loop.el.paused) ramp(loop, 0, 500, () => loop.el.pause());
 }
 
+/** The -v2 files loop end to start with no gap, jump or click (the end crossfades into the beginning). */
 const TRACKS: Record<Exclude<MusicScene, "none">, string> = {
-  theme: "/audio/music/theme.mp3",
-  study: "/audio/music/study.mp3",
-  drill: "/audio/music/drill.mp3",
-  quiz: "/audio/music/quiz.mp3",
+  theme: "/audio/music/theme-v2.mp3",
+  study: "/audio/music/study-v2.mp3",
+  drill: "/audio/music/drill-v2.mp3",
+  quiz: "/audio/music/quiz-v2.mp3",
 };
 const MUSIC_VOLUME = 0.28;
 let scene: MusicScene = "theme";

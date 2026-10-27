@@ -128,7 +128,7 @@ export function SurvivalSlider() {
             minutes to the first shock
           </text>
 
-          {/* FIFA's target: the first shock within 3 minutes */}
+          {/* the target: the first shock within 3 minutes */}
           <rect x={xs(0)} y={Y0} width={xs(TARGET_MINUTES) - xs(0)} height={Y1 - Y0} className="fill-gold" opacity={0.12} />
           <text textAnchor="middle" className="fill-heading text-[10px] font-semibold">
             <tspan x={xs(TARGET_MINUTES / 2)} y={Y1 - 19}>
@@ -227,7 +227,7 @@ export function SurvivalSlider() {
         <span>
           Collapse at <span className="font-semibold tabular-nums">63:00</span> → first shock at{" "}
           <span className={cn("font-semibold tabular-nums", late && "text-danger")}>{matchClock(63, shown)}</span>
-          {late ? " — later than FIFA's 3-minute target." : " — inside FIFA's 3-minute target."}
+          {late ? " — later than the 3-minute target." : " — inside the 3-minute target."}
         </span>
       </p>
 

@@ -6,7 +6,10 @@
  */
 export const DECLINE = { none: [7, 10], cpr: [3, 4] } as const;
 
-/** FIFA's target for the first shock, in minutes from collapse (FIFA on-field protocols). */
+/**
+ * The aim for the first shock, in minutes from collapse — from the sports-medicine consensus and NATA sources in
+ * Module 1, not from FIFA's documents (FIFA gives the "up to 10% a minute" decline).
+ */
 export const TARGET_MINUTES = 3;
 
 /** FIFA Sudden Death Registry, 2014–2018: survival of players who received CPR, with and without an AED. */

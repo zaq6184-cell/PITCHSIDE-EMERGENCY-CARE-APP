@@ -31,8 +31,8 @@ function TimerPage() {
           <div className="px-3.5 pt-4">
             <SectionLabel>10-SECOND CARRY TIMER · LAST RESORT</SectionLabel>
             <p className="mt-2 text-sm leading-snug text-muted">
-              First choice: the ambulance or a buggy comes onto the pitch to the player, with a mechanical CPR device (LUCAS) where
-              available. Carry only when neither can reach the player.
+              First choice: the ambulance comes onto the pitch to the player, with a mechanical CPR device (LUCAS) where available.
+              Carry only when the ambulance cannot reach the player.
             </p>
           </div>
           <DashTimer />

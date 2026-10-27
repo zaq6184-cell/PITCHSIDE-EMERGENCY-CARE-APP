@@ -211,7 +211,7 @@ function Drill() {
         <p className="text-xs leading-snug text-muted">
           {neck
             ? "Hold the head (MILS) → airway with the neck held → breathing, circulation, disability → collar → log roll or tilt onto the scoop → straps, blocks, tape → release → basket and lift with six."
-            : "Recognise → compressions → AED and shock → airway and oxygen → prepare the transfer (ambulance or buggy to the player) → carry only as a last resort."}
+            : "Recognise → compressions → AED and shock → airway and oxygen → prepare the transfer (the ambulance to the player) → carry only as a last resort."}
         </p>
         <Link to="/guides" className="block active:scale-[0.99]">
           <Panel>

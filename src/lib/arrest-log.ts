@@ -109,7 +109,7 @@ export function prompts(s: ArrestSession, now: number): string[] {
   if (dose === 300 && shocks >= 3) out.push("If trained: amiodarone 300 mg (after the 3rd shock).");
   if (dose === 150 && shocks >= 5) out.push("If trained: amiodarone 150 mg (after the 5th shock).");
   if (shocks >= 3 && (adrenaline || count(s, "amiodarone") > 0))
-    out.push("Team leader: plan the move — the ambulance or a buggy onto the pitch to the player, and a mechanical CPR device (LUCAS) if available. 10-second carries only as a last resort.");
+    out.push("Team leader: plan the move — the ambulance onto the pitch to the player, and a mechanical CPR device (LUCAS) if available. 10-second carries only as a last resort.");
   return out;
 }
 

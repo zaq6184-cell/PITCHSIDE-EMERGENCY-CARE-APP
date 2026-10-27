@@ -10,14 +10,17 @@
  * Each drill is recorded once on the 3D drill player's own timeline (src/lib/drill-timeline.ts), so the
  * moves and the voices land where they do in the app. Run it with the dev server going (npm run dev),
  * after changing the 3D team, the steps or the call-outs:
- *   node scripts/build-ar-models.mjs [http://127.0.0.1:8080]
+ *   node scripts/build-ar-models.mjs [http://127.0.0.1:8080] [--audio-only]
  * Needs ffmpeg and ffprobe on the PATH for the narration.
  */
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { chromium } from "playwright";
 
-const BASE = (process.argv[2] ?? "http://127.0.0.1:8080").replace(/\/$/, "");
+// --audio-only rewrites only the narration (.mp3), e.g. after a call-out is re-recorded or re-levelled at the same
+// length; the models and pictures stay as they are
+const AUDIO_ONLY = process.argv.includes("--audio-only");
+const BASE = (process.argv.slice(2).find((a) => !a.startsWith("--")) ?? "http://127.0.0.1:8080").replace(/\/$/, "");
 const ROOT = new URL("../", import.meta.url);
 const OUT = new URL("public/ar/", ROOT);
 const AUDIO = new URL("public/audio/", ROOT);
@@ -29,8 +32,13 @@ const SFX_VOLUME = { shock: 0.6, siren: 0.35 };
 const path = (u) => decodeURIComponent(u.pathname).replace(/^\/([A-Za-z]:)/, "$1");
 const probe = (file) => Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString().trim());
 
+// a call-out whose recording was replaced keeps its id but plays a new file (src/lib/voice-files.ts)
+const VOICE_FILES = Object.fromEntries([...readFileSync(new URL("src/lib/voice-files.ts", ROOT), "utf8").matchAll(/^\s*"([a-z0-9-]+)": "([a-z0-9-]+)",/gm)].map((m) => [m[1], m[2]]));
+const voiceFile = (id) => VOICE_FILES[id] ?? id;
+
 // how long each recorded call-out is: the timeline holds each one at least this long
 const durations = Object.fromEntries(readdirSync(new URL("voice/", AUDIO)).map((f) => [f.replace(/\.mp3$/, ""), probe(path(new URL(`voice/${f}`, AUDIO)))]));
+for (const [id, file] of Object.entries(VOICE_FILES)) durations[id] = durations[file];
 
 mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
@@ -61,7 +69,7 @@ for (const drill of DRILLS) {
   await page.evaluate(async () => (await import("/scripts/ar/harness.tsx")).finishDrill());
 }
 await browser.close();
-for (const [name, data] of files) writeFileSync(new URL(name, OUT), data);
+if (!AUDIO_ONLY) for (const [name, data] of files) writeFileSync(new URL(name, OUT), data);
 
 // the narration: each call-out and effect at its moment, mixed, exactly as long as the animation
 for (const { name, lengthMs, events } of narration) {
@@ -69,7 +77,7 @@ for (const { name, lengthMs, events } of narration) {
   const out = path(new URL(`${name}.mp3`, OUT));
   const secs = (lengthMs / 1000).toFixed(3);
   const args = ["-y", "-v", "error"];
-  clips.forEach((e) => args.push("-i", path(new URL(e.kind === "voice" ? `voice/${e.id}.mp3` : `sfx/${e.name}.mp3`, AUDIO))));
+  clips.forEach((e) => args.push("-i", path(new URL(e.kind === "voice" ? `voice/${voiceFile(e.id)}.mp3` : `sfx/${e.name}.mp3`, AUDIO))));
   // silence underneath, so the track runs the animation's full length even where nobody speaks
   args.push("-f", "lavfi", "-t", secs, "-i", "anullsrc=r=44100:cl=mono");
   const chains = clips.map((e, i) => `[${i}:a]aformat=sample_rates=44100:channel_layouts=mono,volume=${e.kind === "sfx" ? (SFX_VOLUME[e.name] ?? 0.6) : 1},adelay=${Math.round(e.at)}[a${i}]`);
@@ -80,4 +88,4 @@ for (const { name, lengthMs, events } of narration) {
   console.log(`  ${name}.mp3: ${probe(out).toFixed(2)} s for a ${secs} s animation, ${clips.length} sounds`);
 }
 const total = files.reduce((n, [, d]) => n + d.length, 0);
-console.log(`models ${(total / 1048576).toFixed(1)} MB in public/ar/, plus ${narration.length} narration tracks`);
+console.log(AUDIO_ONLY ? `${narration.length} narration tracks (models left as they were)` : `models ${(total / 1048576).toFixed(1)} MB in public/ar/, plus ${narration.length} narration tracks`);

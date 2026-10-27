@@ -365,7 +365,7 @@ export const stations: Station[] = [
     id: "2",
     short: "Cardiac arrest",
     title: "Approach to Pitchside Cardiac Arrest",
-    subtitle: "Part 1 — BLS + AED · Part 2 — the transfer: ambulance or buggy to the player, mechanical CPR, and the 10-second carry only as a last resort",
+    subtitle: "Part 1 — BLS + AED · Part 2 — the transfer: the ambulance to the player, mechanical CPR, and the 10-second carry only as a last resort",
     sections: [
       {
         title: "Team member roles & equipment",
@@ -471,7 +471,7 @@ export const stations: Station[] = [
           },
           {
             kind: "text",
-            text: "Moving the player: after the third shock and medications, the team leader considers moving the player. FIFA's current advice is to bring the ambulance — or a buggy — onto the pitch to the player, and to fit a mechanical chest-compression device (LUCAS), where available and the team is trained on it, so compressions continue during the move. The 10-second stop-and-start carry is a last resort.",
+            text: "Moving the player: after the third shock and medications, the team leader considers moving the player. FIFA's advice is to bring the ambulance onto the pitch to the player wherever possible, and to fit a mechanical chest-compression device (LUCAS), where available and the team is trained on it, so compressions continue during the move. The 10-second stop-and-start carry is a last resort.",
           },
         ],
       },
@@ -864,7 +864,7 @@ export const stations: Station[] = [
             items: [
               "The team leader coordinates; maintain spinal alignment.",
               "Position the player centrally.",
-              "Secure torso and pelvis before the head, then the legs.",
+              "Secure the torso and pelvis first, then the legs.",
               "Straps snug enough to control movement without impairing breathing or circulation.",
               "Secure the head last while manual stabilisation is maintained.",
               "Reassess ABC and neurological status.",
@@ -1346,6 +1346,7 @@ export const stations: Station[] = [
               "Oxygen is clipped to the outside of the bag (cannot be flown) — stadiums should provide it.",
               "IV fluids and drugs are added per the clinician / local protocol — they count as medication.",
               "Check the bag against the checklist before AND after every match: batteries charged, adjuncts replaced, everything in date.",
+              "The bag page follows FIFA's current factsheet from the bag's supplier, which differs slightly from this 2022 list: for example 14G and 18G cannulas, and the Philips HeartStart FRx AED.",
             ],
           },
           { kind: "text", text: "Other recommended pitchside kit (FIFA):" },

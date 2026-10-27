@@ -65,7 +65,7 @@ export const workshop = {
     { tag: "Every 10th", text: "With an i-gel: continuous compressions, one breath every 10th compression (~10/min)." },
     { tag: "15 L/min", text: "Oxygen to the bag reservoir." },
     { tag: "2 min", text: "Rhythm check every 2 minutes. Rotate the person doing compressions." },
-    { tag: "Transfer", text: "Ambulance or buggy onto the pitch to the player; mechanical CPR (LUCAS) where available." },
+    { tag: "Transfer", text: "The ambulance onto the pitch to the player; mechanical CPR (LUCAS) where available." },
     { tag: "≤ 10 s", text: "Carry only as a last resort — never more than 10 seconds without CPR." },
     { tag: "≥ 2 min", text: "After each carry: player down and at least 2 minutes of compressions." },
   ],
@@ -83,7 +83,7 @@ export const workshop = {
       arrest: [
         "Call the cardiac arrest out loud and make sure the ambulance is called.",
         "Check that compressions are running and that the AED goes on the moment it arrives.",
-        "Plan the move early: the ambulance or a buggy onto the pitch to the player, and a mechanical CPR device (LUCAS) if available. Carrying is a last resort.",
+        "Plan the move early: the ambulance onto the pitch to the player, and a mechanical CPR device (LUCAS) if available. Carrying is a last resort.",
         "If the team is trained: direct IV/IO access and the drugs after the 3rd shock.",
       ],
       trauma: [
@@ -147,6 +147,7 @@ export const workshop = {
         "Check for signs of life: breathing and carotid pulse together, no more than 10 seconds.",
         "Commence chest compressions at once — 5–6 cm, 100–120/min, full recoil. 30:2 until the i-gel is in, then continuous.",
         "Keep compressing while the AED pads go on.",
+        "At the 2-minute rhythm check, hand over the compressions and look for reversible causes.",
       ],
       trauma: [
         "Assess the player using A-c-B-C-D-E and treat what you find.",
@@ -278,7 +279,7 @@ export const workshop = {
       who: ["black", "orange", "white", "blue"],
       lines: [
         "After the third shock and medications, the team leader considers moving the player.",
-        "Best: the ambulance — or a buggy — comes onto the pitch to the player. Agree this before the match.",
+        "Best: the ambulance comes onto the pitch to the player. Agree this before the match.",
         "A mechanical chest-compression device (LUCAS), where available and the team is trained on it, is fitted before the move so compressions continue.",
         "Log roll on Orange's count — Red chest, Blue pelvis, White legs — onto a long spinal board (a scoop can also be used). Strap the player, the board and the AED together as one unit.",
       ],
@@ -289,7 +290,7 @@ export const workshop = {
       time: "≤ 10 s each",
       who: ["black", "green"],
       lines: [
-        "Only if no ambulance, buggy or mechanical CPR device can reach the player: the 10-second stop-and-start carry.",
+        "Only if the ambulance cannot reach the player and there is no mechanical CPR device: the 10-second stop-and-start carry.",
         "On Black's command, lift and carry for no more than 10 seconds — Green counts out loud.",
         "Then put the player down and give at least 2 minutes of compressions before the next carry. Repeat until the player is inside the ambulance.",
         "Destination: a hospital with 24/7 coronary angiography, agreed before the match. Continue CPR en route.",
@@ -304,13 +305,13 @@ export const workshop = {
     "With an i-gel: continuous compressions, ~10 breaths/min (every 10th compression). Face mask + OPA/NPA: 30:2, two people.",
     "Before a shock the person shocking checks that everyone is clear and that oxygen is removed — unless it is on a closed loop such as an LMA (FIFA on-field protocols, 2025). The 2022 manual's older advice was to turn the oxygen off or disconnect it.",
     "After a shock: no pulse check — restart CPR immediately. Rhythm check every 2 minutes.",
-    "Transfer: considered after the third shock and medications, at the team leader's discretion. Best: the ambulance or a buggy comes onto the pitch to the player, with a mechanical CPR device (LUCAS) where available. The 10-second stop-and-start carry is a last resort: player, board (or scoop) and AED strapped as one unit, no more than 10 s without CPR, then at least 2 minutes of compressions.",
+    "Transfer: considered after the third shock and medications, at the team leader's discretion. Best: the ambulance comes onto the pitch to the player, with a mechanical CPR device (LUCAS) where available. The 10-second stop-and-start carry is a last resort: player, board (or scoop) and AED strapped as one unit, no more than 10 s without CPR, then at least 2 minutes of compressions.",
     "ALS if trained: adrenaline 1 mg IV after the 3rd shock (shockable) or as soon as possible (non-shockable), every 3–5 min; amiodarone 300 mg after the 3rd shock, 150 mg after the 5th.",
     "Reversible causes (4 Hs & 4 Ts) — only once compressions, AED and airway are running: hypoxia, hypovolaemia, hypo/hyperthermia and tension pneumothorax are the pitchside ones.",
     "Destination: a hospital with 24/7 coronary angiography, agreed before the match.",
   ],
   dashRules: [
-    "First choice: the ambulance or a buggy comes onto the pitch to the player, with a mechanical CPR device (LUCAS) where available. Carrying is a last resort.",
+    "First choice: the ambulance comes onto the pitch to the player, with a mechanical CPR device (LUCAS) where available. Carrying is a last resort.",
     "Moving the player is considered after the third shock and medications; the team leader decides.",
     "Carry only on the team leader's command, and never for more than 10 seconds — count out loud.",
     "At “Ten seconds!”: player down, compressions at once.",

@@ -68,7 +68,7 @@ describe("reminders", () => {
     const s = session(["cpr", 5], ["aed", 60], ["shock", 90], ["shock", 210], ["shock", 330], ["adrenaline", 340], ["amiodarone", 345]);
     assert.ok(!mentions(prompts(s, at(500)), "every 3–5 minutes"));
     assert.ok(mentions(prompts(s, at(520)), "every 3–5 minutes — last dose 3:00 ago"));
-    assert.ok(mentions(prompts(s, at(520)), "plan the move — the ambulance or a buggy"));
+    assert.ok(mentions(prompts(s, at(520)), "plan the move — the ambulance onto the pitch"));
     assert.ok(!mentions(prompts(s, at(520)), "amiodarone 150 mg"));
   });
   it("give amiodarone 150 mg after the 5th shock", () => {

@@ -118,7 +118,7 @@ function lookup(s: string, depth = 0): string | null {
     return p.out.replace(/\{(\d)\}/g, (_, n: string) => {
       const part = m[p.order.indexOf(Number(n)) + 1] ?? "";
       if (!/[A-Za-z]/.test(part)) return part;
-      // a part keeps its outer spaces, like a whole piece of text (" Inside FIFA's 3-minute target.")
+      // a part keeps its outer spaces, like a whole piece of text (" Inside the 3-minute target.")
       const [, lead, core, tail] = /^(\s*)([\s\S]*?)(\s*)$/.exec(part) ?? ["", "", part, ""];
       return lead + capturedPart(core, depth + 1) + tail;
     });
