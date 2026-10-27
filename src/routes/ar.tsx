@@ -2,8 +2,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Box, Check, ExternalLink, Footprints, Hand, Lightbulb, Move, Play, ScanLine, ShieldAlert, Smartphone, Sun, Video, Volume2, Wifi, X } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { ArButton } from "@/components/ar-button";
+import { LoopClip } from "@/components/loop-clip";
 import { AppShell, JumpChips, Note, Panel, SectionLabel } from "@/components/workshop";
-import { AR_STEPS, type ArClip, type ArDrill, clampClip, detectAr, modelFile } from "@/lib/ar";
+import { AR_STEPS, type ArClip, type ArDrill, cardClip, cardPicture, clampClip, detectAr } from "@/lib/ar";
 import { AR_DRILL_NAME, arStepTitle } from "@/lib/ar-steps";
 import { asset, imageSize } from "@/lib/asset";
 import { tap } from "@/lib/sound";
@@ -95,12 +96,15 @@ function ArPage() {
             </p>
           </div>
           <figure>
-            <img
-              src={asset("/img/ar/ar-phone.webp")}
-              alt="A phone held over a sports-hall floor, showing the 3D medical team doing CPR on the floor through its camera"
-              {...imageSize("/img/ar/ar-phone.webp")}
-              className="block h-auto w-full"
-            />
+            <div className="relative">
+              <img
+                src={asset("/img/ar/ar-phone-v2.webp")}
+                alt="A phone held over a sports-hall floor, showing the 3D medical team doing CPR on the floor through its camera"
+                {...imageSize("/img/ar/ar-phone-v2.webp")}
+                className="block h-auto w-full"
+              />
+              <LoopClip src={asset("/video/ar-phone.mp4")} />
+            </div>
             <figcaption className="px-3.5 py-2 text-[11px] leading-snug text-muted">What you see: the team on the floor through the phone's camera (illustration).</figcaption>
           </figure>
         </Panel>
@@ -131,7 +135,10 @@ function ArPage() {
             ))}
           </div>
           <figure className="overflow-hidden rounded-xl bg-note">
-            <img src={asset(modelFile(drill, step, "webp"))} alt="" width={720} height={480} className="block h-auto w-full" />
+            <div className="relative">
+              <img src={asset(cardPicture(drill, step))} alt="" width={720} height={480} className="block h-auto w-full" />
+              <LoopClip key={cardClip(drill, step)} src={asset(cardClip(drill, step))} />
+            </div>
             <figcaption className="border-t border-line bg-paper px-3 py-2">
               <span className="block font-display text-sm font-bold tracking-wide text-heading">
                 {step === "all" ? `ALL ${count} STEPS · ` : step > 0 ? `STEP ${step} OF ${count} · ` : ""}
@@ -157,7 +164,10 @@ function ArPage() {
                 step === "all" ? "border-navy ring-2 ring-gold" : "border-line",
               )}
             >
-              <img src={asset(modelFile(drill, "all", "webp"))} alt="" width={720} height={480} loading="lazy" className="block h-auto w-2/5 shrink-0 self-center bg-note" />
+              <span className="relative block w-2/5 shrink-0 self-center bg-note">
+                <img src={asset(cardPicture(drill, "all"))} alt="" width={720} height={480} loading="lazy" className="block h-auto w-full" />
+                <LoopClip key={drill} src={asset(cardClip(drill, "all", true))} />
+              </span>
               <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 bg-paper px-3 py-2">
                 <span className="flex items-center gap-1 font-display text-[11px] font-semibold tracking-[0.12em] text-muted">
                   <Play className="size-3" aria-hidden />
@@ -178,7 +188,10 @@ function ArPage() {
                   i === step ? "border-navy ring-2 ring-gold" : "border-line",
                 )}
               >
-                <img src={asset(modelFile(drill, i, "webp"))} alt="" width={720} height={480} loading="lazy" className="block h-auto w-full bg-note" />
+                <span className="relative block bg-note">
+                  <img src={asset(cardPicture(drill, i))} alt="" width={720} height={480} loading="lazy" className="block h-auto w-full" />
+                  <LoopClip key={`${drill}-${i}`} src={asset(cardClip(drill, i, true))} />
+                </span>
                 <span className="flex min-h-11 flex-col justify-center bg-paper px-2 py-1.5">
                   <span className="font-display text-[11px] font-semibold tracking-[0.12em] text-muted">{i === 0 ? "START" : `STEP ${i}`}</span>
                   <span className="text-xs font-semibold leading-tight text-heading">{arStepTitle(drill, i)}</span>

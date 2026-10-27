@@ -16,8 +16,15 @@ export const AR_STEPS: Record<ArDrill, number> = { arrest: 6, spine: 7 };
 export const clampStep = (drill: ArDrill, step: number) => Math.max(0, Math.min(AR_STEPS[drill], Math.round(step) || 0));
 export const clampClip = (drill: ArDrill, clip: ArClip): ArClip => (clip === "all" ? "all" : clampStep(drill, clip));
 
-/** A model, its preview picture or its narration, as a path in public/ (put it through `asset()` for the address). */
-export const modelFile = (drill: ArDrill, clip: ArClip, ext: "glb" | "usdz" | "webp" | "mp3") => `/ar/${drill}-${clampClip(drill, clip)}.${ext}`;
+/** A model or its narration, as a path in public/ (put it through `asset()` for the address). */
+export const modelFile = (drill: ArDrill, clip: ArClip, ext: "glb" | "usdz" | "mp3") => `/ar/${drill}-${clampClip(drill, clip)}.${ext}`;
+
+/**
+ * The AR page's moving pictures of a clip (scripts/build-ar-cards.mjs): its loop on a pitch-green ground, big for the
+ * chosen step or small for the cards, and the loop's first frame, the picture under it. Paths in public/, as above.
+ */
+export const cardClip = (drill: ArDrill, clip: ArClip, small = false) => `/video/ar-${drill}-${clampClip(drill, clip)}${small ? "-sm" : ""}.mp4`;
+export const cardPicture = (drill: ArDrill, clip: ArClip) => `/img/ar-cards/${drill}-${clampClip(drill, clip)}.webp`;
 
 /** Every clip but the team in place moves, and has its call-outs as a narration track. */
 export const hasNarration = (clip: ArClip) => clip !== 0;

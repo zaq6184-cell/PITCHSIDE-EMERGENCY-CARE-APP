@@ -1,14 +1,22 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { AR_FALLBACK, AR_STEPS, arSupportFrom, clampClip, clampStep, fallbackUrl, hasNarration, modelFile, quickLookHref, sceneViewerIntent } from "./ar.ts";
+import { AR_FALLBACK, AR_STEPS, arSupportFrom, cardClip, cardPicture, clampClip, clampStep, fallbackUrl, hasNarration, modelFile, quickLookHref, sceneViewerIntent } from "./ar.ts";
 
 describe("augmented reality", () => {
   it("names one model per drill step, and keeps the step in range", () => {
     assert.equal(modelFile("arrest", 4, "glb"), "/ar/arrest-4.glb");
     assert.equal(modelFile("spine", 0, "usdz"), "/ar/spine-0.usdz");
-    assert.equal(modelFile("arrest", 99, "webp"), `/ar/arrest-${AR_STEPS.arrest}.webp`);
+    assert.equal(modelFile("arrest", 99, "glb"), `/ar/arrest-${AR_STEPS.arrest}.glb`);
     assert.equal(clampStep("spine", -3), 0);
     assert.equal(clampStep("spine", Number.NaN), 0);
+  });
+
+  it("gives every clip a moving picture, big and small, over its first frame", () => {
+    assert.equal(cardClip("arrest", 3), "/video/ar-arrest-3.mp4");
+    assert.equal(cardClip("spine", "all", true), "/video/ar-spine-all-sm.mp4");
+    assert.equal(cardClip("spine", 99, true), `/video/ar-spine-${AR_STEPS.spine}-sm.mp4`);
+    assert.equal(cardPicture("arrest", 0), "/img/ar-cards/arrest-0.webp");
+    assert.equal(cardPicture("spine", "all"), "/img/ar-cards/spine-all.webp");
   });
 
   it("has the whole drill as a clip, and narration for every clip that moves", () => {

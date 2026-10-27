@@ -3,7 +3,7 @@ import { asset } from "@/lib/asset";
 /**
  * AI-generated header pictures for the six skill modules: kit on a floodlit pitch, no people, no marks. Each has a
  * quiet silent loop made from it (Google Flow, Omni 1.1 Flash: grass, fabric and floodlight flare stir; mist asked of
- * the models came out as smoke), played on the module's page under the picture's own slow drift. The list keeps stills.
+ * the models came out as smoke), played under the picture's own slow drift on the module's page and in the list.
  */
 const alts: Record<string, string> = {
   "1": "Six training bibs in the role colours — black, orange, red, blue, white and green — laid in a row on a floodlit pitch",

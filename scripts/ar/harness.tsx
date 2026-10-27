@@ -327,7 +327,7 @@ function pose(r: Recording, f: number) {
 
 /**
  * One stretch of the recording — a step ("0" … "7") or the whole drill ("all") — as an animated GLB and
- * USDZ, a preview picture, and its call-outs with times from its start (for the narration track).
+ * USDZ, and its call-outs with times from its start (for the narration track).
  */
 export async function exportSegment(name: string) {
   const r = rec;
@@ -341,19 +341,6 @@ export async function exportSegment(name: string) {
   const f1 = Math.min(r.frames - 1, Math.round(((seg.start + seg.length) / 1000) * fps));
   const count = f1 - f0 + 1;
   const animated = name !== "0";
-
-  // the preview: a moment well into the stretch, framed from the feet end
-  pose(r, f0 + Math.round((count - 1) * (name === "all" ? 0.3 : 0.55)));
-  const box = visibleBox(r.team);
-  const centre = box.getCenter(new THREE.Vector3());
-  const radius = box.getSize(new THREE.Vector3()).length() / 2;
-  const cam = r.state.camera as THREE.PerspectiveCamera;
-  cam.aspect = 720 / 480;
-  cam.position.copy(centre).addScaledVector(new THREE.Vector3(0.32, 0.62, 0.72).normalize(), (radius / Math.sin((cam.fov * Math.PI) / 360)) * 0.62);
-  cam.lookAt(centre);
-  cam.updateProjectionMatrix();
-  r.draw(r.state.scene, cam);
-  const picture = r.canvas.toDataURL("image/webp", 0.86);
 
   // the parts that show at some moment of the stretch go out; the rest (and the selection rings) stay behind
   const ever = new Uint8Array(N);
@@ -418,7 +405,61 @@ export async function exportSegment(name: string) {
     usdz = await new AnimatedUSDZExporter().parseAsync(r.team, { quickLookCompatible: true });
   }
   const events: TimelineEvent[] = seg.events.map((e) => ({ ...e, at: e.at - seg.start }));
-  return { glb: base64(new Uint8Array(glb)), usdz: base64(usdz), picture, lengthMs: Math.round(((count - 1) / fps) * 1000), tracks: tracks.length, events };
+  return { glb: base64(new Uint8Array(glb)), usdz: base64(usdz), lengthMs: Math.round(((count - 1) / fps) * 1000), tracks: tracks.length, events };
+}
+
+// ------------------------------------------------------------------ moving cards (the AR page's previews)
+type CardView = { width: number; height: number; dir: [number, number, number]; fit: number };
+const CARD_VIEW: CardView = { width: 720, height: 480, dir: [0.32, 0.62, 0.72], fit: 0.62 };
+let cardView: { centre: THREE.Vector3; dir: THREE.Vector3; dist: number; width: number; height: number } | null = null;
+
+/**
+ * Frames a stretch for scripts/build-ar-cards.mjs: the team as it shows at a moment well into the stretch (the preview
+ * moment), seen from the feet end, a little to the side and high, or with another view (the AR page's phone picture is
+ * portrait, from further round); returns the stretch's frames and the preview frame, where its loop starts.
+ */
+export function cardFraming(name: string, view: CardView = CARD_VIEW) {
+  const r = rec;
+  if (!r) throw new Error("record a drill first");
+  const seg = name === "all" ? { start: 0, length: r.length } : r.segments.find((x) => String(x.step) === name);
+  if (!seg) throw new Error(`no segment ${name}`);
+  const f0 = Math.round((seg.start / 1000) * r.fps);
+  const f1 = Math.min(r.frames - 1, Math.round(((seg.start + seg.length) / 1000) * r.fps));
+  const preview = f0 + Math.round((f1 - f0) * (name === "all" ? 0.3 : 0.55));
+  pose(r, preview);
+  const box = visibleBox(r.team);
+  const radius = box.getSize(new THREE.Vector3()).length() / 2;
+  const fov = (r.state.camera as THREE.PerspectiveCamera).fov;
+  cardView = {
+    centre: box.getCenter(new THREE.Vector3()),
+    dir: new THREE.Vector3(...view.dir).normalize(),
+    dist: (radius / Math.sin((fov * Math.PI) / 360)) * view.fit,
+    width: view.width,
+    height: view.height,
+  };
+  return { f0, f1, preview };
+}
+
+/** Recorded frames as WebP pictures (transparent background) with cardFraming's view; `sway` turns the camera round the team (degrees, one per frame). */
+export function renderCardFrames(frames: number[], sway?: number[]) {
+  const r = rec;
+  const v = cardView;
+  if (!r || !v) throw new Error("frame a stretch first");
+  const gl = r.state.gl;
+  if (r.canvas.width !== v.width || r.canvas.height !== v.height) gl.setSize(v.width, v.height, false);
+  const cam = r.state.camera as THREE.PerspectiveCamera;
+  const up = new THREE.Vector3(0, 1, 0);
+  return frames.map((f, i) => {
+    pose(r, f);
+    const d = v.dir.clone();
+    if (sway) d.applyAxisAngle(up, (sway[i] * Math.PI) / 180);
+    cam.aspect = v.width / v.height;
+    cam.position.copy(v.centre).addScaledVector(d, v.dist);
+    cam.lookAt(v.centre);
+    cam.updateProjectionMatrix();
+    r.draw(r.state.scene, cam);
+    return r.canvas.toDataURL("image/webp", 0.92);
+  });
 }
 
 export function finishDrill() {
@@ -426,4 +467,5 @@ export function finishDrill() {
   rec.root.unmount();
   rec.canvas.remove();
   rec = null;
+  cardView = null;
 }

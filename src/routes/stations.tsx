@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Bandage, Brain, BriefcaseMedical, ChevronRight, HeartPulse, Stethoscope, Users } from "lucide-react";
+import { LoopClip } from "@/components/loop-clip";
 import { SearchBar } from "@/components/search";
 import { AppShell, Note, Panel, SectionLabel } from "@/components/workshop";
 import { moduleCover } from "@/lib/module-covers";
@@ -39,8 +40,10 @@ function ModuleBadge({ id }: { id: string }) {
 function ModuleCover({ id }: { id: string }) {
   const cover = moduleCover(id);
   if (!cover) return null;
+  // each card's slow drift starts at its own point; the loop drifts with its picture
+  const drift = { animationDelay: `-${Number(id) * 5}s` };
   return (
-    <div className="overflow-hidden">
+    <div className="relative overflow-hidden">
       <img
         src={cover.small}
         alt=""
@@ -48,8 +51,9 @@ function ModuleCover({ id }: { id: string }) {
         height={405}
         loading={id === "1" ? "eager" : "lazy"}
         className="kenburns block aspect-[12/5] w-full object-cover object-[50%_72%] outline-none"
-        style={{ animationDelay: `-${Number(id) * 5}s` }}
+        style={drift}
       />
+      <LoopClip src={cover.video} className="kenburns object-[50%_72%]" style={drift} />
     </div>
   );
 }

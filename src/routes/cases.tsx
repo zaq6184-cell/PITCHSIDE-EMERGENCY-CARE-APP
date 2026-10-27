@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, CircleCheck, HeartPulse, Thermometer, Volleyball } from "lucide-react";
 import { useSyncExternalStore } from "react";
+import { LoopClip } from "@/components/loop-clip";
 import { AppShell, Note, Panel } from "@/components/workshop";
 import { CASES } from "@/lib/cases";
 import { EMPTY, getProgress, subscribeProgress } from "@/lib/progress";
@@ -44,7 +45,10 @@ function CasesPage() {
                 <Panel>
                   <div className="flex items-center gap-3 px-3 py-3">
                     <span className="relative shrink-0">
-                      <img src={CASE_PICS[c.id].small} alt="" width={640} height={360} loading="lazy" className="block aspect-video w-28 rounded-xl bg-navy object-cover" />
+                      <span className="relative block w-28 overflow-hidden rounded-xl">
+                        <img src={CASE_PICS[c.id].small} alt="" width={640} height={360} loading="lazy" className="block aspect-video w-full bg-navy object-cover" />
+                        <LoopClip src={CASE_PICS[c.id].smallVideo} />
+                      </span>
                       <span
                         className="tint-chip absolute -bottom-1.5 -right-1.5 grid size-8 place-items-center rounded-full ring-2 ring-paper"
                         style={{ "--tint": tint, "--ink": ink } as React.CSSProperties}

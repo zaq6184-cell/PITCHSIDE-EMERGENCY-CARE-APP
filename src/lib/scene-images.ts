@@ -15,10 +15,10 @@ export type ScenePic = { src: string; alt: string; video?: string };
 const pic = (name: string, alt: string): ScenePic => ({ src: asset(`/img/scenes/${name}.webp`), alt });
 /** A picture with its animated loop, made from the picture itself (`/video/<name>.mp4`). */
 const animated = (name: string, alt: string): ScenePic => ({ ...pic(name, alt), video: asset(`/video/${name}.mp4`) });
-/** A case's picture also comes small, for the list of cases. */
-const casePic = (name: string, alt: string) => ({ ...animated(name, alt), small: asset(`/img/scenes/${name}-sm.webp`) });
+/** A case's picture, and its loop, also come small, for the list of cases. */
+const casePic = (name: string, alt: string) => ({ ...animated(name, alt), small: asset(`/img/scenes/${name}-sm.webp`), smallVideo: asset(`/video/${name}-sm.mp4`) });
 
-export const CASE_PICS: Record<"vf" | "commotio" | "heat", ScenePic & { small: string }> = {
+export const CASE_PICS: Record<"vf" | "commotio" | "heat", ScenePic & { small: string; smallVideo: string }> = {
   vf: casePic("case-vf", "An evening match under floodlights: a player in a purple kit lies face down, alone, while other players and the referee turn towards him"),
   commotio: casePic("case-commotio", "A player in a purple kit falls backwards, his hands at his chest, as the ball rebounds after striking him in the chest"),
   heat: casePic("case-heat", "A hot, hazy afternoon match: a flushed, sweating player in a purple kit stumbles with a hand on his head while a teammate holds his arm and waves for help"),

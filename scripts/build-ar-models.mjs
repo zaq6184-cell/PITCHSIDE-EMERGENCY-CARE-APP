@@ -3,10 +3,10 @@
  * Builds the augmented-reality models from the app's own 3D set piece, with the team moving:
  *   public/ar/<drill>-<step>.glb   Android: Google's AR viewer (Scene Viewer) — glTF animation
  *   public/ar/<drill>-<step>.usdz  iPhone and iPad: AR Quick Look — USD time samples
- *   public/ar/<drill>-<step>.webp  the preview picture on the AR page
  *   public/ar/<drill>-<step>.mp3   the step's call-outs, timed to the animation (Scene Viewer plays it with
  *                                  the model, in a loop)
- * <step> is 0 (the team in place, still) … the last step, or "all" for the whole drill end to end.
+ * <step> is 0 (the team in place, still) … the last step, or "all" for the whole drill end to end. The AR page's
+ * moving pictures of each step come from scripts/build-ar-cards.mjs.
  * Each drill is recorded once on the 3D drill player's own timeline (src/lib/drill-timeline.ts), so the
  * moves and the voices land where they do in the app. Run it with the dev server going (npm run dev),
  * after changing the 3D team, the steps or the call-outs:
@@ -18,7 +18,7 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { chromium } from "playwright";
 
 // --audio-only rewrites only the narration (.mp3), e.g. after a call-out is re-recorded or re-levelled at the same
-// length; the models and pictures stay as they are
+// length; the models stay as they are
 const AUDIO_ONLY = process.argv.includes("--audio-only");
 const BASE = (process.argv.slice(2).find((a) => !a.startsWith("--")) ?? "http://127.0.0.1:8080").replace(/\/$/, "");
 const ROOT = new URL("../", import.meta.url);
@@ -61,8 +61,7 @@ for (const drill of DRILLS) {
     const name = `${drill}-${seg.name}`;
     const glb = Buffer.from(r.glb, "base64");
     const usdz = Buffer.from(r.usdz, "base64");
-    const webp = Buffer.from(r.picture.split(",")[1], "base64");
-    files.push([`${name}.glb`, glb], [`${name}.usdz`, usdz], [`${name}.webp`, webp]);
+    files.push([`${name}.glb`, glb], [`${name}.usdz`, usdz]);
     if (seg.name !== "0") narration.push({ name, lengthMs: r.lengthMs, events: r.events });
     console.log(`  ${name}: ${(r.lengthMs / 1000).toFixed(1)} s, ${r.tracks} moving parts · glb ${(glb.length / 1024).toFixed(0)} KB, usdz ${(usdz.length / 1024).toFixed(0)} KB`);
   }
