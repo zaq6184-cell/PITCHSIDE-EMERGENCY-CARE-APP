@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, useSyncExternalStore } from "react";
-import { Bone, Eye, HeartPulse, MonitorPlay, PlayCircle, Zap } from "lucide-react";
+import { lazy, Suspense, useState, useSyncExternalStore } from "react";
+import { Bone, ChevronRight, Eye, Headphones, HeartPulse, MonitorPlay, PlayCircle, Smartphone, Zap } from "lucide-react";
 import { AppShell, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { ArButton } from "@/components/ar-button";
 import { MistakeGame } from "@/components/mistake-game";
@@ -12,6 +12,9 @@ import { type Step, workshop } from "@/lib/workshop";
 
 type Search = { case?: "neck" | "mistakes" };
 
+// the room and its QR code load only when an instructor starts a team drill
+const TeamHost = lazy(() => import("@/components/team-drill").then((m) => ({ default: m.TeamHost })));
+
 const noSubscribe = () => () => {};
 
 export const Route = createFileRoute("/drill")({
@@ -19,6 +22,40 @@ export const Route = createFileRoute("/drill")({
   validateSearch: (s: Record<string, unknown>): Search => (s.case === "neck" || s.case === "mistakes" ? { case: s.case } : {}),
   head: () => ({ meta: [{ title: "Team drills in 3D · Pitchside Emergency Care" }] }),
 });
+
+/** Under the drill: a team drill, where each trainee takes a colour on their phone and says their own lines. */
+function TeamDrillPanel() {
+  const [open, setOpen] = useState(false);
+  return (
+    <Panel>
+      <div id="team" className="scroll-mt-24">
+        {open ? (
+          <Suspense fallback={<div className="h-72 animate-pulse bg-note" aria-label="Loading" />}>
+            <TeamHost onEnd={() => setOpen(false)} />
+          </Suspense>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              tap();
+              setOpen(true);
+            }}
+            className="flex w-full items-center gap-3 px-3.5 py-3 text-left active:scale-[0.99]"
+          >
+            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#6B3FA0] text-white">
+              <Smartphone className="size-5" aria-hidden />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-display text-sm font-bold tracking-wide text-heading">Team drill on every phone</span>
+              <span className="block text-xs leading-snug text-muted">Trainees take a colour on their phones; each phone buzzes and says its own lines as the drill plays</span>
+            </span>
+            <ChevronRight className="size-5 shrink-0 text-gold-ink" aria-hidden />
+          </button>
+        )}
+      </div>
+    </Panel>
+  );
+}
 
 function Drill() {
   const search = Route.useSearch();
@@ -105,6 +142,18 @@ function Drill() {
           {neck ? <SpinePlayer3D key="neck" step={step} onStep={setStep} /> : <DrillPlayer3D key="arrest" step={step} onStep={setStep} />}
           <ArButton scenario={neck ? "spine" : "arrest"} step={step} className="border-t border-line px-3.5 py-3" />
         </Panel>
+        <TeamDrillPanel />
+        <Link to="/listen" search={neck ? { drill: "spine" } : {}} className="block active:scale-[0.99]">
+          <div className="reveal flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#4c2d7a] to-[#6B3FA0] px-3.5 py-3 text-white shadow-card">
+            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/15">
+              <Headphones className="size-5" aria-hidden />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-display text-sm font-bold tracking-wide">Listen mode</span>
+              <span className="block text-xs text-white/85">The whole drill as sound, to rehearse with the screen off</span>
+            </span>
+          </div>
+        </Link>
         {neck ? (
           <Link to="/cspine" className="block active:scale-[0.99]">
             <div className="reveal flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#174f7d] to-[#1F6AA5] px-3.5 py-3 text-white shadow-card">

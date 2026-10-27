@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, Bone, BookOpen, Brain, Briefcase, Eye, HeartPulse, Lock, MapPin, Monitor, Palette, Timer, Trophy, Zap, type LucideIcon } from "lucide-react";
+import { Activity, Bone, BookOpen, Brain, Briefcase, ClipboardCheck, Eye, Flame, Headphones, HeartPulse, Lock, MapPin, Monitor, Palette, Timer, Trophy, Users, Zap, type LucideIcon } from "lucide-react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Confetti } from "@/components/confetti";
 import { Panel, SectionLabel } from "@/components/workshop";
@@ -25,10 +25,13 @@ const ICONS: Record<string, LucideIcon> = {
   cases: Monitor,
   mistakes: Eye,
   bag: Briefcase,
+  team: Users,
+  streak: Flame,
+  listen: Headphones,
 };
 
 /** Where to go to earn each badge. */
-const WHERE: Record<string, { to: "/" | "/stations" | "/drill" | "/quiz" | "/aed" | "/timer" | "/cases" | "/bag"; label: string; neck?: boolean; mistakes?: boolean; hash?: string }> = {
+const WHERE: Record<string, { to: "/" | "/stations" | "/drill" | "/quiz" | "/aed" | "/timer" | "/cases" | "/bag" | "/team" | "/daily" | "/listen"; label: string; neck?: boolean; mistakes?: boolean; hash?: string }> = {
   colours: { to: "/", label: "Role cards" },
   modules: { to: "/stations", label: "Skill modules" },
   arrest: { to: "/drill", label: "Arrest drill" },
@@ -41,6 +44,9 @@ const WHERE: Record<string, { to: "/" | "/stations" | "/drill" | "/quiz" | "/aed
   cases: { to: "/cases", label: "Case simulator" },
   mistakes: { to: "/drill", label: "Spot the mistake", mistakes: true },
   bag: { to: "/bag", label: "Pack the bag", hash: "pack" },
+  team: { to: "/team", label: "Team drill" },
+  streak: { to: "/daily", label: "Daily 5" },
+  listen: { to: "/listen", label: "Listen mode" },
 };
 
 const R = 26;
@@ -116,11 +122,15 @@ export function TrainingCard() {
             >
               <Icon className="size-4" aria-hidden />
               <span className="font-display text-[10.5px] font-semibold leading-tight tracking-wide">{b.title}</span>
-              <span className="sr-only">{on ? "earned" : `not yet — ${b.how}`}</span>
+              <span className="sr-only">{on ? "Earned" : `not yet — ${b.how}`}</span>
             </li>
           );
         })}
       </ul>
+      <Link to="/record" className="flex min-h-11 items-center gap-2 border-t border-line px-3.5 font-display text-sm font-semibold tracking-wide text-gold-ink">
+        <ClipboardCheck className="size-4" aria-hidden />
+        Training record · print, save or share
+      </Link>
       <p className="flex items-center justify-between gap-2 border-t border-line px-3.5 py-1.5 text-[11px] text-muted">
         Kept on this device only.
         {done || p.roles.length || p.modules.length ? (

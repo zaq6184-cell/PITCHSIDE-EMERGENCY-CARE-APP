@@ -20,7 +20,7 @@ export type Target =
   | { to: "/station/$id"; id: string; hash?: string }
   | { to: "/drill"; neck?: boolean; mistakes?: boolean }
   | {
-      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover" | "/environment";
+      to: "/" | "/fifa" | "/cspine" | "/focus" | "/pitchside" | "/stations" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/rules" | "/install" | "/about" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover" | "/environment" | "/daily" | "/listen" | "/team" | "/record";
       hash?: string;
     };
 
@@ -156,6 +156,10 @@ const PAGES: Entry[] = [
   { id: "pack", kind: "tool", title: "Pack the bag", sub: "Game · emergency bag trays", text: "Drag items into the FIFA emergency bag trays and pouches; faulty or out-of-date kit goes in the replace bin; critical fails.", target: { to: "/bag", hash: "pack" } },
   { id: "mistakes", kind: "tool", title: "Spot the mistake", sub: "Team drills in 3D · find the error", text: `Planted errors in the 3D drills. ${MISTAKES.map((m) => `${m.what}. ${m.why}`).join(" ")}`, target: { to: "/drill", mistakes: true } },
   { id: "signs", kind: "tool", title: "Spot the sign (concussion)", sub: "FOCUS · visible signs in 3D", text: `Visible signs of concussion acted out in 3D. ${SIGNS.map((s) => `${s.name}: ${s.what}`).join(" ")}`, target: { to: "/focus", hash: "focus-signs" } },
+  { id: "daily", kind: "tool", title: "Daily 5", sub: "Five questions a day · a streak", text: "Daily review, spaced repetition, five quick questions a day from the role cards, questions you miss come back tomorrow, streak, days in a row, flashcards.", target: { to: "/daily" } },
+  { id: "listen", kind: "tool", title: "Listen mode", sub: "The drills as sound · screen off", text: "Audio rehearsal: the cardiac arrest and neck injury drills as sound only, every call-out in order, AED shock and siren, keeps playing with the screen locked, lock-screen controls, mental rehearsal, podcast, headphones.", target: { to: "/listen" } },
+  { id: "team", kind: "tool", title: "Team drill on every phone", sub: "For instructors · each trainee plays their colour", text: "Team rehearsal: the instructor plays the 3D drill on a big screen, each trainee takes a colour on their phone by QR code, the phone buzzes and says their call-out when it is due, shows their part of each step and where they stand.", target: { to: "/team" } },
+  { id: "record", kind: "tool", title: "Training record", sub: "Print, save as PDF or share", text: "Training record, CPD, portfolio, certificate of what you have done: badges with dates, best scores and times, Daily 5 streak, team drills, print, save as PDF, share as text.", target: { to: "/record" } },
   { id: "ar", kind: "tool", title: "AR: the team in your room", sub: "Augmented reality · how to use it", text: "Augmented reality: put the 3D team on the floor or a table through the phone's camera and walk round each step of the set piece. Google's AR viewer on Android, AR Quick Look on iPhone and iPad, live AR in Chrome. Numbered PEAP marks. How to use it, troubleshooting, teaching ideas.", target: { to: "/ar" } },
 ];
 

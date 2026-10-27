@@ -13,7 +13,10 @@ import { record, step as did } from "@/lib/progress";
 // the pacing is shared with the AR models and their narration (lib/drill-timeline.ts)
 import { DEFAULT_HOLD_MS, LEAD_MS, REST_MIN_MS, SFX_MS, VOICE_GAP_MS, VOICE_MIN_MS } from "@/lib/drill-timeline";
 import { type DrillStep, spineCallouts, spineSteps } from "@/lib/spine-drill";
+import { onPhone, tell } from "@/lib/team-bus";
 import { type Callout, callouts, drillCallouts } from "@/lib/voice";
+import { VOICE_SECONDS } from "@/lib/voice-durations";
+import { voiceFile } from "@/lib/voice-files";
 import { type RoleId, roleTag, workshop } from "@/lib/workshop";
 
 const Scene3D = lazy(() => import("@/components/scene-3d"));
@@ -228,6 +231,8 @@ export function RoleExplorer3D() {
 const wait = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
 /** A script entry that is a recorded call-out (not "sfx:…", "wait:…" or "cue"). */
 const isVoice = (id: string) => id !== "cue" && !id.includes(":");
+/** How long a call-out lasts (ms): the time the drill waits while a team drill phone says it. */
+const voiceMs = (id: string) => Math.round((VOICE_SECONDS[voiceFile(id)] ?? 0) * 1000);
 
 /**
  * A drill played in the 3D scene, step by step, with the team's call-outs (spoken if sound is on,
@@ -277,10 +282,12 @@ function StepPlayer3D({
     record(did.drill, scenario, step);
   }, [scenario, step]);
 
-  // each step: a whoosh, then the script in order
+  // each step: a whoosh, then the script in order (a team drill on this screen hears each moment, and the colours
+  // with a phone say their own lines)
   useEffect(() => {
     let cancelled = false;
     setPhase(0);
+    tell({ t: "step", drill: scenario, step });
     const run = async () => {
       if (!firstRun.current) sfx("whoosh", 0.3);
       firstRun.current = false;
@@ -298,6 +305,7 @@ function StepPlayer3D({
         }
         if (id.startsWith("sfx:")) {
           const name = id.slice(4) as SfxName;
+          tell({ t: "sfx", name });
           sfx(name, name === "siren" ? 0.35 : 0.6);
           await wait(SFX_MS);
           continue;
@@ -305,7 +313,9 @@ function StepPlayer3D({
         const c = callouts[id];
         if (c) setCaption(c);
         const started = Date.now();
-        await say(id, false, c ? (voicePan[c.role] ?? 0) : 0);
+        if (c) tell({ t: "say", id, role: c.role });
+        if (c && onPhone(c.role)) await wait(voiceMs(id));
+        else await say(id, false, c ? (voicePan[c.role] ?? 0) : 0);
         const left = VOICE_MIN_MS - (Date.now() - started); // keep each caption up long enough to read
         if (left > 0) await wait(left);
         await wait(VOICE_GAP_MS);
@@ -324,7 +334,7 @@ function StepPlayer3D({
       stopVoice();
       setCaption(null);
     };
-  }, [step, auto, steps, script]);
+  }, [step, auto, steps, script, scenario]);
 
   // the CPR rhythm at 110 per minute while compressions run, only on screen and with sound on
   const compressing = rhythm?.(step) ?? false;
@@ -339,7 +349,7 @@ function StepPlayer3D({
       <div ref={present.ref} className="present">
       <div className="stage-box relative">
         <Stage step={step} phase={phase} scenario={scenario} acting={cur.who} />
-        <p className="pointer-events-none absolute left-2 top-2 max-w-[calc(100%-1rem)] truncate rounded-full bg-[#0b1f3a]/90 px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
+        <p className="pointer-events-none absolute left-2 top-2 max-w-[calc(100%-1rem)] truncate rounded-full bg-[#0b1f3a] px-2.5 py-1 font-display text-[11px] font-semibold tracking-wide text-gold">
           STEP {cur.n} · {cur.title.toUpperCase()}
         </p>
         <div className={cn("absolute right-2 flex items-center gap-1.5", scenario === "arrest" ? "top-2" : "top-10")}>

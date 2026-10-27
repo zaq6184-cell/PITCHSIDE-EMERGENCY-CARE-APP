@@ -11,6 +11,7 @@ import { record, step as did } from "@/lib/progress";
 import { haptic, say, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { type Question, questionPool, shuffle } from "@/lib/quiz-questions";
+import { noteAnswer } from "@/lib/review";
 import { type RoleId, roleTag, workshop } from "@/lib/workshop";
 
 export const Route = createFileRoute("/quiz")({
@@ -185,6 +186,7 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
   const choose = (id: RoleId) => {
     if (answered) return;
     setPicked(id);
+    noteAnswer(q, id === q.answer);
     if (id === q.answer) {
       setScore((v) => v + 1);
       setBurst((v) => v + 1);
@@ -242,7 +244,6 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
                 type="button"
                 disabled={answered}
                 onClick={() => choose(r.id)}
-                aria-label={`${roleTag(r)}, ${r.role}`}
                 className={cn(
                   "relative flex min-h-14 items-center gap-2 overflow-hidden rounded-xl px-3 text-left transition-all duration-200 active:scale-95",
                   answered && !isAnswer && !isWrongPick && "opacity-40",
@@ -271,7 +272,7 @@ function WhoDoesWhat({ onPlace }: { onPlace: () => void }) {
           <div className="caption-in flex flex-col gap-2" aria-live="polite">
             <p className={cn("rounded-lg px-3 py-2 text-sm leading-snug", right ? "bg-[#1A7F45]/12 text-ink" : "bg-danger/10 text-ink")}>
               <span className="font-semibold">{right ? "Correct. " : "Not quite. "}</span>
-              {right ? "" : "It's "}
+              {right ? "" : "The right colour: "}
               <span className="font-semibold">{roleTag(role)}</span> — {role.role}.{" "}
               <Link to="/role/$id" params={{ id: role.id }} className="font-medium text-heading underline underline-offset-2">
                 Open the role

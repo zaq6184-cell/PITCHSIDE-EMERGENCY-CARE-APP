@@ -21,8 +21,10 @@ import { getRole, type RoleId, roleTag, workshop } from "@/lib/workshop";
 function musicFor(pathname: string): MusicScene {
   // no music where a monitor, a metronome or the instructor's timing has to be heard
   if (pathname.startsWith("/timer") || pathname.startsWith("/arrest") || pathname.startsWith("/aed") || pathname.startsWith("/scorer") || pathname.startsWith("/case/") || pathname.startsWith("/live") || pathname.startsWith("/handover")) return "none";
+  // the drill's own voices: Listen mode and the team drill's phones
+  if (pathname.startsWith("/listen") || pathname.startsWith("/team")) return "none";
   if (pathname.startsWith("/drill")) return "drill";
-  if (pathname.startsWith("/quiz")) return "quiz";
+  if (pathname.startsWith("/quiz") || pathname.startsWith("/daily")) return "quiz";
   if (pathname === "/" || pathname.startsWith("/role") || pathname.startsWith("/about") || pathname.startsWith("/install")) return "theme";
   return "study";
 }
@@ -30,7 +32,7 @@ function musicFor(pathname: string): MusicScene {
 /** Where Back goes when this page was the first one opened (from a shared link or a shortcut). */
 function parentOf(pathname: string): "/" | "/stations" | "/timer" | "/cases" | "/drill" {
   if (pathname.startsWith("/station/")) return "/stations";
-  if (pathname === "/ar" || pathname === "/ar/") return "/drill";
+  if (pathname === "/ar" || pathname === "/ar/" || pathname.startsWith("/listen") || pathname.startsWith("/team")) return "/drill";
   if (pathname.startsWith("/case/")) return "/cases";
   if (pathname.startsWith("/plan") || pathname.startsWith("/arrest") || pathname.startsWith("/scorer") || pathname.startsWith("/handover")) return "/timer";
   return "/";
@@ -98,6 +100,10 @@ export function AppShell({
       ["/cases", "Case simulator · make the calls"],
       ["/scorer", "Practical scorer · for instructors"],
       ["/live", "Live class quiz · answer from your phone"],
+      ["/team", "Team drill · every colour on its own phone"],
+      ["/listen", "Listen mode · the drills as sound"],
+      ["/daily", "Daily 5 · five questions a day"],
+      ["/record", "Training record · print, save or share"],
       ["/case/", "Case simulator · make the calls"],
       ["/install", "Install the app · phone, tablet, computer"],
       ["/drill", "Team drills · cardiac arrest and neck injury in 3D"],
@@ -267,7 +273,7 @@ export function Panel({ children, className }: { children: React.ReactNode; clas
 }
 
 export type Tile = {
-  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover" | "/environment";
+  to: "/fifa" | "/focus" | "/cspine" | "/pitchside" | "/stations" | "/drill" | "/bag" | "/guides" | "/quiz" | "/plan" | "/arrest" | "/timer" | "/aed" | "/cases" | "/heat" | "/injuries" | "/live" | "/scorer" | "/ar" | "/medical" | "/handover" | "/environment" | "/daily" | "/listen" | "/team" | "/record";
   icon: typeof Users;
   tint: string;
   ink: string;

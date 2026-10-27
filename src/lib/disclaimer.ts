@@ -41,12 +41,12 @@ export const privacy = {
     "Everything you do in this app is confidential and stays on this device. There is no account and no sign-in, and nothing is sent to the developers or to anyone else: no cookies, no tracking, no adverts.",
   kept: [
     { lead: "Settings:", text: "language, dark mode and sound." },
-    { lead: "Progress:", text: "badges, best scores and times, and the roles, modules, drills and cases you have opened." },
-    { lead: "What you enter:", text: "the arrest timer log, the match plan, the practical scorer's sessions and the lightning countdown." },
+    { lead: "Progress:", text: "badges and the day each was earned, best scores and times, your Daily 5 answers and streak, the team drills you joined, and the roles, modules, drills and cases you have opened." },
+    { lead: "What you enter:", text: "the arrest timer log, the match plan, the practical scorer's sessions, the lightning countdown and the name on your training record." },
     { lead: "Offline copies:", text: "the app's own pages, pictures, sounds and films, saved so it works at the pitch without a signal. They hold nothing about you." },
   ],
   keptNote:
-    "All of it stays in this browser's storage on this device. Something leaves it only when you share it yourself, such as a debrief or a plan, through your phone's share sheet.",
+    "All of it stays in this browser's storage on this device. Something leaves it only when you share it yourself, such as a debrief, a plan or your training record, through your phone's share sheet.",
   permissions: [
     {
       id: "motion",
@@ -62,7 +62,7 @@ export const privacy = {
     },
   ],
   optional: "Both are optional: say no and everything else still works.",
-  noPermission: "Keeping the screen on (timers and drills), vibration, full screen, sharing, copying and installing the app need no permission.",
+  noPermission: "Keeping the screen on (timers and drills), vibration, full screen, sharing, copying, printing, the lock-screen player and installing the app need no permission.",
   never: "The app never asks for your microphone, location, contacts, photos or notifications.",
   online: [
     { lead: "Films:", text: "YouTube's films play in its privacy-enhanced mode when you tap one, and FIFA's open on FIFA's website. Those sites follow their own privacy policies." },
@@ -71,8 +71,12 @@ export const privacy = {
       lead: "Live class quiz:",
       text: "phones connect straight to the instructor's screen. Public relays only introduce them, encrypted with the room code. The nickname you type and your answers go only to that screen, for that quiz, and nothing is stored.",
     },
+    {
+      lead: "Team drill:",
+      text: "phones connect straight to the drill screen in the same way. Only the colour you take goes to that screen, for that drill, and nothing is stored.",
+    },
     { lead: "AR viewers:", text: "Google's AR viewer on Android and AR Quick Look on iPhone open the app's own 3D models." },
   ],
   deleteText:
-    "Removes your settings, progress, logs, plans and scorer sessions from this device. The offline copies hold nothing about you and stay, so the app still works without a signal; clear this site's data in your browser's settings to remove those too.",
+    "Removes your settings, progress, Daily 5, logs, plans, scorer sessions and the name on your training record from this device. The offline copies hold nothing about you and stay, so the app still works without a signal; clear this site's data in your browser's settings to remove those too.",
 };

@@ -21,6 +21,7 @@ import {
   uniqueName,
 } from "@/lib/live";
 import { type Question, questionPool, shuffle } from "@/lib/quiz-questions";
+import { noteAnswer } from "@/lib/review";
 import { siteUrl } from "@/lib/share";
 import { haptic, sfx, tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
@@ -155,7 +156,7 @@ export function LiveHost() {
         <div className="flex flex-col items-center gap-3 px-4 py-5 text-center">
           <SectionLabel>SCAN TO JOIN</SectionLabel>
           {url ? <QrCode text={url} className="w-full max-w-[18rem] rounded-xl shadow-card" /> : <div className="aspect-square w-full max-w-[18rem] rounded-xl bg-note" />}
-          <p className="font-display text-4xl font-bold tracking-[0.3em] text-heading">{code}</p>
+          <p translate="no" className="font-display text-4xl font-bold tracking-[0.3em] text-heading">{code}</p>
           <p className="text-xs leading-snug text-muted">
             Or open <span className="font-semibold text-heading">Live class quiz</span> in the app and type the code.
           </p>
@@ -347,6 +348,8 @@ export function LivePlayer({ code }: { code: string }) {
   const [burst, setBurst] = useState(0);
   const room = useRef<Room | null>(null);
   const answer = useRef<((m: PlayerMsg) => void) | null>(null);
+  const asked = useRef<Extract<HostMsg, { t: "q" }> | null>(null);
+  const answered = useRef(-1);
 
   useEffect(() => () => void room.current?.leave(), []);
   useEffect(() => {
@@ -378,8 +381,12 @@ export function LivePlayer({ code }: { code: string }) {
         sfx("whoosh", 0.3);
         haptic(20);
         setNow(Date.now());
+        asked.current = m;
         setView({ v: "question", q: m, until: Date.now() + m.secs * 1000, picked: null });
       } else if (m.t === "result") {
+        // the question counts towards this phone's Daily 5, like any other answer
+        const q = asked.current;
+        if (q && q.n === m.n && answered.current === m.n) noteAnswer({ prompt: q.prompt, text: q.text, answer: m.answer }, m.correct);
         if (m.correct) {
           sfx("correct");
           setBurst((b) => b + 1);
@@ -402,6 +409,7 @@ export function LivePlayer({ code }: { code: string }) {
     tap();
     haptic(15);
     answer.current?.({ t: "answer", n: view.q.n, choice: c });
+    answered.current = view.q.n;
     setView({ ...view, picked: c });
   };
 
@@ -415,7 +423,9 @@ export function LivePlayer({ code }: { code: string }) {
             join();
           }}
         >
-          <SectionLabel>JOIN · ROOM {code}</SectionLabel>
+          <SectionLabel>
+            JOIN · ROOM <span translate="no">{code}</span>
+          </SectionLabel>
           <label className="flex flex-col gap-1 text-sm font-medium text-heading">
             Your name on the leaderboard
             <input

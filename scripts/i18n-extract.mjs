@@ -62,6 +62,7 @@ function readsAsText(s) {
   // media queries ("(min-width: 640px)", "(hover: none)", not "(studies: 0.15–0.35)"), SVG transforms, selectors, code
   if (/^\((?:[a-z]+-[\w-]+|hover|pointer|orientation|color|monochrome|resolution|scan|grid|update):|^(rotate|translate|scale|matrix)\(|\[data-|function\s*\(|=>|localStorage\./.test(s)) return false;
   if (/^\d{3} \d+px |^\d+px( \d+px)*$|; (autoplay|gyroscope)/.test(s)) return false; // canvas fonts, sizes, iframe permissions
+  if (/^inset \d|\b(?:rgba?|hsla?)\(/.test(s)) return false; // CSS values kept outside a style attribute (a box shadow, a colour)
   if (/\b[\w-]+=[\w-]/.test(s)) return false; // key=value lists (the viewport meta, a query string)
   const words = s.split(" ");
   // one word: a real word ("Pause", "Needles", "SCORE", "Hands-off", "Name(s)", "Bogotá"), not a video id or a camelCase name

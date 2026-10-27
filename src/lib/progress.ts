@@ -3,7 +3,12 @@
  * device only (localStorage) and never sent anywhere. The badge rules are plain functions so they can
  * be tested with `node --test`; the store around them only runs in the browser.
  */
+import { dayKey, isDay } from "./day.ts";
+
 export type DrillName = "arrest" | "spine";
+
+/** A team drill taken part in from this phone: the day, the drill and the colour. */
+export type TeamRun = { d: string; drill: DrillName; role: string };
 
 export type Progress = {
   /** role cards opened */
@@ -28,8 +33,16 @@ export type Progress = {
   cases: string[];
   /** spot the mistake: the planted mistakes found in the 3D drills */
   mistakes: string[];
+  /** team drills joined from this phone, newest last */
+  team: TeamRun[];
+  /** drills listened to to the end in Listen mode */
+  listened: DrillName[];
+  /** the longest run of days with the Daily 5 finished */
+  bestStreak: number;
   /** badges already celebrated */
   badges: string[];
+  /** the day each badge was earned (badges earned before dates were kept have none) */
+  earnedAt: Record<string, string>;
 };
 
 export const EMPTY: Progress = {
@@ -44,8 +57,17 @@ export const EMPTY: Progress = {
   bagClean: false,
   cases: [],
   mistakes: [],
+  team: [],
+  listened: [],
+  bestStreak: 0,
   badges: [],
+  earnedAt: {},
 };
+
+/** The team drills kept (the training record lists them). */
+export const TEAM_RUNS_KEPT = 50;
+/** Days running of the Daily 5 for "Five in a row". */
+export const STREAK_FOR_BADGE = 5;
 
 /** The three cases in the simulator, and how many planted mistakes earn "Eagle eye". */
 export const CASE_IDS = ["vf", "commotio", "heat"] as const;
@@ -69,11 +91,21 @@ export const BADGES: Badge[] = [
   { id: "cases", title: "Case solved", how: "Finish all three cases in the simulator with a good outcome", done: (p) => has(p.cases, CASE_IDS) },
   { id: "mistakes", title: "Eagle eye", how: `Spot ${MISTAKES_FOR_BADGE} planted mistakes in the 3D drills`, done: (p) => p.mistakes.length >= MISTAKES_FOR_BADGE },
   { id: "bag", title: "Bag packed", how: "Pack the bag with every item right and nothing faulty", done: (p) => p.bagClean },
+  { id: "team", title: "Team player", how: "Take part in a team drill from your phone", done: (p) => p.team.length > 0 },
+  { id: "streak", title: "Five in a row", how: "Finish the Daily 5 five days running", done: (p) => p.bestStreak >= STREAK_FOR_BADGE },
+  { id: "listen", title: "All ears", how: "Listen to a whole drill in Listen mode", done: (p) => p.listened.length > 0 },
 ];
 
 /** Badges earned but not yet celebrated. */
 export function newBadges(p: Progress): Badge[] {
   return BADGES.filter((b) => b.done(p) && !p.badges.includes(b.id));
+}
+
+/** Marks newly earned badges as celebrated, with the day they were earned. */
+export function stampBadges(p: Progress, day: string): Progress {
+  const fresh = newBadges(p);
+  if (!fresh.length) return p;
+  return { ...p, badges: [...p.badges, ...fresh.map((b) => b.id)], earnedAt: { ...p.earnedAt, ...Object.fromEntries(fresh.map((b) => [b.id, day])) } };
 }
 
 export const earnedCount = (p: Progress) => BADGES.filter((b) => b.done(p)).length;
@@ -102,6 +134,11 @@ export const step = {
   bag: (p: Progress): Progress => ({ ...p, bagClean: true }),
   caseSolved: (p: Progress, id: string): Progress => ({ ...p, cases: add(p.cases, id) }),
   mistake: (p: Progress, id: string): Progress => ({ ...p, mistakes: add(p.mistakes, id) }),
+  /** a team drill joined: once a day for each drill and colour */
+  team: (p: Progress, run: TeamRun): Progress =>
+    p.team.some((t) => t.d === run.d && t.drill === run.drill && t.role === run.role) ? p : { ...p, team: [...p.team, run].slice(-TEAM_RUNS_KEPT) },
+  listened: (p: Progress, drill: DrillName): Progress => ({ ...p, listened: add(p.listened, drill) }),
+  streak: (p: Progress, days: number): Progress => ({ ...p, bestStreak: Math.max(p.bestStreak, days) }),
 };
 
 /** Reads saved progress back, keeping only what is well formed. */
@@ -113,6 +150,11 @@ export function parseProgress(raw: string | null): Progress {
     const strings = (x: unknown) => (Array.isArray(x) ? x.filter((s): s is string => typeof s === "string") : []);
     const numbers = (x: unknown) => (Array.isArray(x) ? x.filter((n): n is number => typeof n === "number") : []);
     const num = (x: unknown) => (typeof x === "number" && Number.isFinite(x) ? x : null);
+    const drill = (x: unknown): x is DrillName => x === "arrest" || x === "spine";
+    const team = Array.isArray(v.team)
+      ? v.team.filter((t): t is TeamRun => !!t && typeof t === "object" && isDay(t.d) && drill(t.drill) && typeof t.role === "string").slice(-TEAM_RUNS_KEPT)
+      : [];
+    const earnedAt = Object.fromEntries(Object.entries(v.earnedAt ?? {}).filter(([, d]) => isDay(d)));
     return {
       roles: strings(v.roles),
       modules: strings(v.modules),
@@ -125,7 +167,11 @@ export function parseProgress(raw: string | null): Progress {
       bagClean: v.bagClean === true,
       cases: strings(v.cases),
       mistakes: strings(v.mistakes),
+      team,
+      listened: strings(v.listened).filter(drill),
+      bestStreak: num(v.bestStreak) ?? 0,
       badges: strings(v.badges),
+      earnedAt,
     };
   } catch {
     return EMPTY;
@@ -171,7 +217,7 @@ export function onBadge(l: (b: Badge) => void) {
 
 function commit(next: Progress) {
   const fresh = newBadges(next);
-  if (fresh.length) next = { ...next, badges: [...next.badges, ...fresh.map((b) => b.id)] };
+  next = stampBadges(next, dayKey(new Date()));
   if (JSON.stringify(next) === JSON.stringify(state)) return;
   state = next;
   try {

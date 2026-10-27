@@ -13,17 +13,21 @@ import {
   ClipboardCheck,
   ClipboardList,
   ExternalLink,
+  Flame,
   Gamepad2,
+  Headphones,
   HeartPulse,
   ListOrdered,
   MountainSnow,
   PlayCircle,
+  Smartphone,
   Stethoscope,
   Timer,
   Zap,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { ArButton } from "@/components/ar-button";
+import { DailyCard } from "@/components/daily-card";
 import { InstallCard } from "@/components/install-app";
 import { TrainingCard } from "@/components/progress-ui";
 import { SearchBar } from "@/components/search";
@@ -47,6 +51,7 @@ function Home() {
         <SearchBar />
         <InstallCard />
         <TrainingCard />
+        <DailyCard />
         <Note>
           <span className="font-semibold text-heading">{workshop.rule}</span>
         </Note>
@@ -187,6 +192,8 @@ function Home() {
             { to: "/aed", icon: Zap, tint: "#F6EFD6", ink: "#8A6D10", title: "AED pads trainer", sub: "Place the pads in 3D · everyone clear · shock", wide: true },
             { to: "/ar", icon: Box, tint: "#E4EFF8", ink: "#1F6AA5", title: "AR · the team in your room", sub: "Put the 3D team on the floor at full size · how to use it", wide: true },
             { to: "/quiz", icon: Gamepad2, tint: "#F6EFD6", ink: "#8A6D10", title: "Test yourself", sub: "Quiz · place the team · hand signals", wide: true },
+            { to: "/daily", icon: Flame, tint: "#FDEBDD", ink: "#B3541E", title: "Daily 5", sub: "Five questions a day · a streak" },
+            { to: "/listen", icon: Headphones, tint: "#EFE8F7", ink: "#6B3FA0", title: "Listen mode", sub: "The drills as sound · screen off" },
           ]}
         />
         <SectionLabel>FOR INSTRUCTORS</SectionLabel>
@@ -194,6 +201,7 @@ function Home() {
           items={[
             { to: "/live", icon: QrCode, tint: "#EFE8F7", ink: "#6B3FA0", title: "Live class quiz", sub: "Trainees answer from their phones" },
             { to: "/scorer", icon: ClipboardPen, tint: "#E3F2E8", ink: "#1A7F45", title: "Practical scorer", sub: "Time a team on the manikin · debrief" },
+            { to: "/team", icon: Smartphone, tint: "#FBE9E7", ink: "#C0392B", title: "Team drill on every phone", sub: "Each trainee plays their colour from their phone, in step with the 3D drill", wide: true },
           ]}
         />
 

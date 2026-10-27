@@ -17,6 +17,7 @@ import { Route as ArrestRouteImport } from './routes/arrest'
 import { Route as BagRouteImport } from './routes/bag'
 import { Route as CasesRouteImport } from './routes/cases'
 import { Route as CspineRouteImport } from './routes/cspine'
+import { Route as DailyRouteImport } from './routes/daily'
 import { Route as DrillRouteImport } from './routes/drill'
 import { Route as EnvironmentRouteImport } from './routes/environment'
 import { Route as FifaRouteImport } from './routes/fifa'
@@ -26,14 +27,17 @@ import { Route as HandoverRouteImport } from './routes/handover'
 import { Route as HeatRouteImport } from './routes/heat'
 import { Route as InjuriesRouteImport } from './routes/injuries'
 import { Route as InstallRouteImport } from './routes/install'
+import { Route as ListenRouteImport } from './routes/listen'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as MedicalRouteImport } from './routes/medical'
 import { Route as PitchsideRouteImport } from './routes/pitchside'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as RecordRouteImport } from './routes/record'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as ScorerRouteImport } from './routes/scorer'
 import { Route as StationsRouteImport } from './routes/stations'
+import { Route as TeamRouteImport } from './routes/team'
 import { Route as TimerRouteImport } from './routes/timer'
 import { Route as CaseIdRouteImport } from './routes/case.$id'
 import { Route as RoleIdRouteImport } from './routes/role.$id'
@@ -77,6 +81,11 @@ const CasesRoute = CasesRouteImport.update({
 const CspineRoute = CspineRouteImport.update({
   id: '/cspine',
   path: '/cspine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DailyRoute = DailyRouteImport.update({
+  id: '/daily',
+  path: '/daily',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DrillRoute = DrillRouteImport.update({
@@ -124,6 +133,11 @@ const InstallRoute = InstallRouteImport.update({
   path: '/install',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ListenRoute = ListenRouteImport.update({
+  id: '/listen',
+  path: '/listen',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LiveRoute = LiveRouteImport.update({
   id: '/live',
   path: '/live',
@@ -149,6 +163,11 @@ const QuizRoute = QuizRouteImport.update({
   path: '/quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecordRoute = RecordRouteImport.update({
+  id: '/record',
+  path: '/record',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RulesRoute = RulesRouteImport.update({
   id: '/rules',
   path: '/rules',
@@ -162,6 +181,11 @@ const ScorerRoute = ScorerRouteImport.update({
 const StationsRoute = StationsRouteImport.update({
   id: '/stations',
   path: '/stations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TimerRoute = TimerRouteImport.update({
@@ -194,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/bag': typeof BagRoute
   '/cases': typeof CasesRoute
   '/cspine': typeof CspineRoute
+  '/daily': typeof DailyRoute
   '/drill': typeof DrillRoute
   '/environment': typeof EnvironmentRoute
   '/fifa': typeof FifaRoute
@@ -203,14 +228,17 @@ export interface FileRoutesByFullPath {
   '/heat': typeof HeatRoute
   '/injuries': typeof InjuriesRoute
   '/install': typeof InstallRoute
+  '/listen': typeof ListenRoute
   '/live': typeof LiveRoute
   '/medical': typeof MedicalRoute
   '/pitchside': typeof PitchsideRoute
   '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
+  '/record': typeof RecordRoute
   '/rules': typeof RulesRoute
   '/scorer': typeof ScorerRoute
   '/stations': typeof StationsRoute
+  '/team': typeof TeamRoute
   '/timer': typeof TimerRoute
   '/case/$id': typeof CaseIdRoute
   '/role/$id': typeof RoleIdRoute
@@ -225,6 +253,7 @@ export interface FileRoutesByTo {
   '/bag': typeof BagRoute
   '/cases': typeof CasesRoute
   '/cspine': typeof CspineRoute
+  '/daily': typeof DailyRoute
   '/drill': typeof DrillRoute
   '/environment': typeof EnvironmentRoute
   '/fifa': typeof FifaRoute
@@ -234,14 +263,17 @@ export interface FileRoutesByTo {
   '/heat': typeof HeatRoute
   '/injuries': typeof InjuriesRoute
   '/install': typeof InstallRoute
+  '/listen': typeof ListenRoute
   '/live': typeof LiveRoute
   '/medical': typeof MedicalRoute
   '/pitchside': typeof PitchsideRoute
   '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
+  '/record': typeof RecordRoute
   '/rules': typeof RulesRoute
   '/scorer': typeof ScorerRoute
   '/stations': typeof StationsRoute
+  '/team': typeof TeamRoute
   '/timer': typeof TimerRoute
   '/case/$id': typeof CaseIdRoute
   '/role/$id': typeof RoleIdRoute
@@ -257,6 +289,7 @@ export interface FileRoutesById {
   '/bag': typeof BagRoute
   '/cases': typeof CasesRoute
   '/cspine': typeof CspineRoute
+  '/daily': typeof DailyRoute
   '/drill': typeof DrillRoute
   '/environment': typeof EnvironmentRoute
   '/fifa': typeof FifaRoute
@@ -266,14 +299,17 @@ export interface FileRoutesById {
   '/heat': typeof HeatRoute
   '/injuries': typeof InjuriesRoute
   '/install': typeof InstallRoute
+  '/listen': typeof ListenRoute
   '/live': typeof LiveRoute
   '/medical': typeof MedicalRoute
   '/pitchside': typeof PitchsideRoute
   '/plan': typeof PlanRoute
   '/quiz': typeof QuizRoute
+  '/record': typeof RecordRoute
   '/rules': typeof RulesRoute
   '/scorer': typeof ScorerRoute
   '/stations': typeof StationsRoute
+  '/team': typeof TeamRoute
   '/timer': typeof TimerRoute
   '/case/$id': typeof CaseIdRoute
   '/role/$id': typeof RoleIdRoute
@@ -290,6 +326,7 @@ export interface FileRouteTypes {
     | '/bag'
     | '/cases'
     | '/cspine'
+    | '/daily'
     | '/drill'
     | '/environment'
     | '/fifa'
@@ -299,14 +336,17 @@ export interface FileRouteTypes {
     | '/heat'
     | '/injuries'
     | '/install'
+    | '/listen'
     | '/live'
     | '/medical'
     | '/pitchside'
     | '/plan'
     | '/quiz'
+    | '/record'
     | '/rules'
     | '/scorer'
     | '/stations'
+    | '/team'
     | '/timer'
     | '/case/$id'
     | '/role/$id'
@@ -321,6 +361,7 @@ export interface FileRouteTypes {
     | '/bag'
     | '/cases'
     | '/cspine'
+    | '/daily'
     | '/drill'
     | '/environment'
     | '/fifa'
@@ -330,14 +371,17 @@ export interface FileRouteTypes {
     | '/heat'
     | '/injuries'
     | '/install'
+    | '/listen'
     | '/live'
     | '/medical'
     | '/pitchside'
     | '/plan'
     | '/quiz'
+    | '/record'
     | '/rules'
     | '/scorer'
     | '/stations'
+    | '/team'
     | '/timer'
     | '/case/$id'
     | '/role/$id'
@@ -352,6 +396,7 @@ export interface FileRouteTypes {
     | '/bag'
     | '/cases'
     | '/cspine'
+    | '/daily'
     | '/drill'
     | '/environment'
     | '/fifa'
@@ -361,14 +406,17 @@ export interface FileRouteTypes {
     | '/heat'
     | '/injuries'
     | '/install'
+    | '/listen'
     | '/live'
     | '/medical'
     | '/pitchside'
     | '/plan'
     | '/quiz'
+    | '/record'
     | '/rules'
     | '/scorer'
     | '/stations'
+    | '/team'
     | '/timer'
     | '/case/$id'
     | '/role/$id'
@@ -384,6 +432,7 @@ export interface RootRouteChildren {
   BagRoute: typeof BagRoute
   CasesRoute: typeof CasesRoute
   CspineRoute: typeof CspineRoute
+  DailyRoute: typeof DailyRoute
   DrillRoute: typeof DrillRoute
   EnvironmentRoute: typeof EnvironmentRoute
   FifaRoute: typeof FifaRoute
@@ -393,14 +442,17 @@ export interface RootRouteChildren {
   HeatRoute: typeof HeatRoute
   InjuriesRoute: typeof InjuriesRoute
   InstallRoute: typeof InstallRoute
+  ListenRoute: typeof ListenRoute
   LiveRoute: typeof LiveRoute
   MedicalRoute: typeof MedicalRoute
   PitchsideRoute: typeof PitchsideRoute
   PlanRoute: typeof PlanRoute
   QuizRoute: typeof QuizRoute
+  RecordRoute: typeof RecordRoute
   RulesRoute: typeof RulesRoute
   ScorerRoute: typeof ScorerRoute
   StationsRoute: typeof StationsRoute
+  TeamRoute: typeof TeamRoute
   TimerRoute: typeof TimerRoute
   CaseIdRoute: typeof CaseIdRoute
   RoleIdRoute: typeof RoleIdRoute
@@ -463,6 +515,13 @@ declare module '@tanstack/react-router' {
       path: '/cspine'
       fullPath: '/cspine'
       preLoaderRoute: typeof CspineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daily': {
+      id: '/daily'
+      path: '/daily'
+      fullPath: '/daily'
+      preLoaderRoute: typeof DailyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/drill': {
@@ -528,6 +587,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InstallRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/listen': {
+      id: '/listen'
+      path: '/listen'
+      fullPath: '/listen'
+      preLoaderRoute: typeof ListenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/live': {
       id: '/live'
       path: '/live'
@@ -563,6 +629,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/record': {
+      id: '/record'
+      path: '/record'
+      fullPath: '/record'
+      preLoaderRoute: typeof RecordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rules': {
       id: '/rules'
       path: '/rules'
@@ -582,6 +655,13 @@ declare module '@tanstack/react-router' {
       path: '/stations'
       fullPath: '/stations'
       preLoaderRoute: typeof StationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/timer': {
@@ -624,6 +704,7 @@ const rootRouteChildren: RootRouteChildren = {
   BagRoute: BagRoute,
   CasesRoute: CasesRoute,
   CspineRoute: CspineRoute,
+  DailyRoute: DailyRoute,
   DrillRoute: DrillRoute,
   EnvironmentRoute: EnvironmentRoute,
   FifaRoute: FifaRoute,
@@ -633,14 +714,17 @@ const rootRouteChildren: RootRouteChildren = {
   HeatRoute: HeatRoute,
   InjuriesRoute: InjuriesRoute,
   InstallRoute: InstallRoute,
+  ListenRoute: ListenRoute,
   LiveRoute: LiveRoute,
   MedicalRoute: MedicalRoute,
   PitchsideRoute: PitchsideRoute,
   PlanRoute: PlanRoute,
   QuizRoute: QuizRoute,
+  RecordRoute: RecordRoute,
   RulesRoute: RulesRoute,
   ScorerRoute: ScorerRoute,
   StationsRoute: StationsRoute,
+  TeamRoute: TeamRoute,
   TimerRoute: TimerRoute,
   CaseIdRoute: CaseIdRoute,
   RoleIdRoute: RoleIdRoute,

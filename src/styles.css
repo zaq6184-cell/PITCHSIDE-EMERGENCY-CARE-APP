@@ -526,6 +526,39 @@ html[data-vt="back"]::view-transition-new(main-content) {
   .reveal {
     animation: none;
   }
+
+  /* the training record prints on its own, full width, in the light colours whatever the theme */
+  body:has(.print-area) :is(header, nav, .ambient, .fixed, .sticky),
+  body:has(.print-area) main > :not(:has(.print-area)),
+  body:has(.print-area) main div:has(> .print-area) > :not(.print-area) {
+    display: none !important;
+  }
+  body:has(.print-area),
+  body:has(.print-area) .bg-bg {
+    background: #ffffff !important;
+  }
+  body:has(.print-area) main {
+    max-width: none;
+    padding: 0;
+  }
+  .print-area {
+    --color-ink: #1b1b1b;
+    --color-muted: #5b6470;
+    --color-line: #d6d1c4;
+    --color-paper: #ffffff;
+    --color-note: #eef3f8;
+    --color-heading: #0b1f3a;
+    --color-cream: #f4f1ea;
+    box-shadow: none !important;
+    border-radius: 0;
+    color: var(--color-ink);
+    background: #ffffff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .print-area li {
+    break-inside: avoid;
+  }
 }
 
 /* page background: two slow floodlight glows and faint mowing stripes, behind the cards */

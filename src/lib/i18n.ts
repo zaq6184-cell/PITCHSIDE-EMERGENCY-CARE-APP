@@ -286,6 +286,8 @@ function install() {
   const restore = (root: Node) => {
     const walk = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
     for (let n: Node | null = root; n; n = walk.nextNode()) {
+      // text there was never meant to be translated, so it is not missing either (the language names in the menu)
+      if (n.nodeType === 3) misses.delete((n.nodeValue ?? "").trim().replace(/\u00a0/g, " "));
       const e = english.get(n);
       if (!e) continue;
       english.delete(n);
