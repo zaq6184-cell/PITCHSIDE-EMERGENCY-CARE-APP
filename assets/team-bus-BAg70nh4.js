@@ -1,0 +1,1 @@
+var e=new Set,t=new Set,n=null;function r(t){t.t===`step`&&(n=t),e.forEach(e=>e(t))}function i(t){return e.add(t),()=>{e.delete(t)}}var a=()=>n;function o(e){t=new Set(e)}var s=e=>t.has(e);export{r as a,o as i,i as n,s as r,a as t};

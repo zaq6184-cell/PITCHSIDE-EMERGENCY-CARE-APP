@@ -1,0 +1,1 @@
+var e={};function t(e,t,n,r,i,a,o){let s=Math.hypot(i,a)||1,c=i/s,l=a/s,u=e-n,d=t-r,f=u*-l+d*c,p=Math.max(.3,u*c+d*l);return Math.max(-.85,Math.min(.85,f/p*o))}export{e as n,t};

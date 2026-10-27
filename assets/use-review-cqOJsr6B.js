@@ -1,0 +1,1 @@
+import{a as e,n as t}from"./jsx-runtime-B-hcVAMW.js";import{_ as n}from"./index-DsE-fFn3.js";import{l as r,r as i,t as a}from"./review-Enn6P7iz.js";var o=e(t(),1);function s(){return(0,o.useSyncExternalStore)(r,i,()=>a)}function c(){let[e,t]=(0,o.useState)(null);return(0,o.useEffect)(()=>t(n(new Date)),[]),e}export{s as n,c as t};
