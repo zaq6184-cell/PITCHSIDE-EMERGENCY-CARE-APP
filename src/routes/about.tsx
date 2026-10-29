@@ -1,11 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  BriefcaseMedical,
   Camera,
   ChevronRight,
-  ClipboardCheck,
   Download,
-  Flame,
-  Headphones,
   type LucideIcon,
   ShieldCheck,
   Smartphone,
@@ -107,10 +105,7 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
-  "team-170": Smartphone,
-  "daily-170": Flame,
-  "listen-170": Headphones,
-  "record-170": ClipboardCheck,
+  "kit-180": BriefcaseMedical,
 };
 
 function About() {

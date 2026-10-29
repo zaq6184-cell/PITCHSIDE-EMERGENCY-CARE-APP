@@ -296,7 +296,7 @@ function poseFor(ctx: PoseCtx): Pose {
       const head = L(0, 0.2, -1.02);
       if (step === 4) {
         const beat = (t * CPR_HZ) % 10 < 0.9 ? 1 : 0; // one squeeze every tenth compression
-        return hold(L(-0.03, 0.3, -0.9), L(0.2 - beat * 0.06, 0.34 - beat * 0.05, -1.24), 0.62);
+        return hold(L(-0.03, 0.3, -0.9), L(0.17 - beat * 0.02, 0.37 - beat * 0.025, -1.29), 0.62);
       }
       if (step === 5) return { ...hold(R(-0.17, 0.2, -1.02), R(0.17, 0.2, -1.02), 0.72), look: head };
       if (step === 3 && handsOff(step, t)) return clear();
@@ -902,7 +902,25 @@ export function Player({
         <meshStandardMaterial color="#1a120d" roughness={0.9} />
       </mesh>
       {scenario === "spine" ? <SpineGear step={step} phase={phase} fault={fault} /> : null}
+      {scenario === "arrest" && step >= 4 ? <IGel /> : null}
       {bodyExtra}
+    </group>
+  );
+}
+
+/** The i-gel in the mouth from the airway step on (it rolls and lifts with the player): the bite block and the
+ * 15 mm connector, green for size 4, which the bag's catheter mount fits onto. */
+function IGel() {
+  return (
+    <group position={[0, 0.128, -0.945]}>
+      <mesh position={[0, 0.0225, 0]}>
+        <boxGeometry args={[0.026, 0.045, 0.014]} />
+        <meshStandardMaterial color="#e6ecef" roughness={0.35} />
+      </mesh>
+      <mesh position={[0, 0.054, 0]}>
+        <cylinderGeometry args={[0.0085, 0.0085, 0.018, 16]} />
+        <meshStandardMaterial color="#3BA55C" roughness={0.4} />
+      </mesh>
     </group>
   );
 }
@@ -956,8 +974,9 @@ function SpineGear({ step, phase, fault }: { step: number; phase: number; fault?
           <meshStandardMaterial color="#a9e2bd" roughness={0.25} transparent opacity={0.78} />
         </mesh>
       </group>
-      {/* extrication collar: firm band round the neck with the dark chin support on top */}
-      <group ref={collar} position={[0, 0.0, -0.8]} visible={false}>
+      {/* extrication collar: firm band round the neck with the dark chin support on top, up under the chin (the
+          figure's neck is short, so any lower and the shoulders hide most of it) */}
+      <group ref={collar} position={[0, 0.0, -0.835]} visible={false}>
         <KitModel name="collar">
           <mesh rotation={[Math.PI / 2, 0, 0]} scale={[0.088, 0.12, 0.082]}>
             <cylinderGeometry args={[1, 1, 1, 20, 1, true]} />
@@ -1018,19 +1037,50 @@ function Kit({ step }: { step: number }) {
   const cyl = useRef<THREE.MeshStandardMaterial>(null);
   const bag = useRef<THREE.Group>(null);
   const tube = useRef<THREE.Mesh>(null);
+  const mount = useRef<THREE.Mesh>(null);
   const pads = useRef<THREE.Group>(null);
   const scoop = useRef<THREE.Group>(null);
   const flash = useRef<THREE.PointLight>(null);
   // how brightly the AED and the oxygen cylinder light up, for the models and their stand-ins alike
   const aedGlow = useRef(0.05);
   const cylGlow = useRef(0.03);
+  // oxygen tubing from the cylinder, round behind the head on the grass, up to the inlet at the reservoir end
   const tubeGeo = useMemo(
     () =>
       new THREE.TubeGeometry(
-        new THREE.CatmullRomCurve3([v(-0.3, 0.12, 0.2), v(-0.34, 0.11, -0.3), v(-0.3, 0.13, -0.9), v(-0.08, 0.24, -1.3), v(0.12, 0.3, -1.3)]),
-        40,
+        new THREE.CatmullRomCurve3([
+          v(-0.3, 0.12, 0.2),
+          v(-0.34, 0.11, -0.3),
+          v(-0.3, 0.13, -0.9),
+          v(-0.2, 0.05, -1.17),
+          v(0.05, 0.03, -1.21),
+          v(0.25, 0.05, -1.19),
+          v(0.29, 0.2, -1.17),
+          v(0.296, 0.29, -1.21),
+          v(0.296, 0.3, -1.245),
+        ]),
+        64,
         0.012,
         6,
+      ),
+    [],
+  );
+  // the catheter mount from the bag's patient valve, round the head, down onto the i-gel in the mouth
+  const mountGeo = useMemo(
+    () =>
+      new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3([
+          v(-0.09, 0.3, -1.3),
+          v(-0.125, 0.302, -1.29),
+          v(-0.15, 0.32, -1.22),
+          v(-0.12, 0.36, -1.08),
+          v(-0.06, 0.39, -0.98),
+          v(-0.01, 0.385, -0.948),
+          v(0, 0.352, -0.945),
+        ]),
+        48,
+        0.011,
+        8,
       ),
     [],
   );
@@ -1044,10 +1094,13 @@ function Kit({ step }: { step: number }) {
     if (cyl.current) cyl.current.emissiveIntensity = cylGlow.current;
     if (bag.current) {
       const beat = (t * CPR_HZ) % 10 < 0.9;
-      bag.current.scale.set(1, step === 4 && beat ? 0.7 : 1, 1);
-      bag.current.visible = step >= 4 && step < 6;
+      // squeezed flat from above, so the valve and the oxygen inlet stay where the tubes meet them
+      bag.current.scale.set(step === 4 && beat ? 0.7 : 1, 1, 1);
+      // on the i-gel while it is squeezed; off for the log roll, when Orange's hands are on the head
+      bag.current.visible = step === 4;
     }
-    if (tube.current) tube.current.visible = step >= 4 && step < 6;
+    if (tube.current) tube.current.visible = step === 4;
+    if (mount.current) mount.current.visible = step === 4;
     if (pads.current) pads.current.visible = step >= 3 && step < 6 && !(step === 3 && t % 5 < 1.2);
     if (scoop.current) {
       // step 6: the board is under the player and moves with the carry
@@ -1084,7 +1137,8 @@ function Kit({ step }: { step: number }) {
         </mesh>
       </group>
       <pointLight ref={flash} position={[0.3, 0.9, -0.5]} color="#FFF3B0" intensity={0} distance={7} />
-      {/* bag valve at the head, oxygen tubing back to the cylinder */}
+      {/* bag valve across behind the head (the valve on the player's right), on the i-gel by its catheter mount,
+          oxygen tubing back to the cylinder */}
       <group ref={bag} position={[0.2, 0.3, -1.3]} rotation={[0, 0, Math.PI / 2]}>
         <KitModel name="bvm">
           <mesh scale={[0.09, 0.15, 0.09]}>
@@ -1093,6 +1147,9 @@ function Kit({ step }: { step: number }) {
           </mesh>
         </KitModel>
       </group>
+      <mesh ref={mount} geometry={mountGeo} castShadow>
+        <meshStandardMaterial color="#e8eef2" roughness={0.4} />
+      </mesh>
       <mesh ref={tube} geometry={tubeGeo}>
         <meshStandardMaterial color="#d6ecf3" roughness={0.3} transparent opacity={0.9} />
       </mesh>

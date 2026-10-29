@@ -3,9 +3,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { asset } from "@/lib/asset";
 
 /**
- * Real kit for the 3D set piece and the AR models: low-poly models made with Higgsfield (Tripo text-to-3D),
- * shrunk for phones (public/models/kit: 512 px JPEG textures, simplified and quantised meshes). Each one is
- * fitted to the box it should fill; components/kit-model.tsx shows it in place of the simple shape.
+ * Real kit for the 3D set piece and the AR models: low-poly models built in Blender from clean shapes
+ * (scripts/blender/build-kit.py; plain coloured materials, no pictures), each already the way round it sits in the
+ * scene. Each one is scaled evenly into the box it should fill; components/kit-model.tsx shows it in place of the
+ * simple shape.
  */
 export type KitName = "bag" | "aed" | "oxygen" | "bvm" | "scoop" | "basket" | "board" | "collar";
 
@@ -14,25 +15,25 @@ type Fit = {
   size: [number, number, number];
   /** turn the model first (radians, XYZ) so its long side runs the right way */
   turn?: [number, number, number];
-  /** squeeze to fill the box exactly; otherwise scale evenly to fit inside it */
-  stretch?: boolean;
   /** sit on the floor (default), or centre on the origin */
   centre?: boolean;
 };
 
+// in proportion with the models (scripts/blender/build-kit.py prints their sizes), so none is stretched
 const FIT: Record<KitName, Fit> = {
-  bag: { size: [0.55, 0.5, 0.5], turn: [0, Math.PI / 2, 0] },
-  // screen towards the player
-  aed: { size: [0.3, 0.28, 0.3], turn: [0, Math.PI, 0] },
+  // handles over the top, along the bag
+  bag: { size: [0.6, 0.428, 0.376] },
+  // lying flat, the handle away from the player
+  aed: { size: [0.3, 0.13, 0.25] },
   // valve towards the head
-  oxygen: { size: [0.3, 0.3, 0.72], turn: [0, Math.PI, 0], centre: true },
-  // mask down onto the face once its group lays it across the head
-  bvm: { size: [0.18, 0.3, 0.18], turn: [0, Math.PI, 0], centre: true },
-  scoop: { size: [0.64, 0.07, 1.95], stretch: true },
-  basket: { size: [0.7, 0.2, 2.1], stretch: true },
-  board: { size: [0.5, 0.06, 1.9], turn: [0, Math.PI / 2, 0], stretch: true },
-  // round the neck, the chin support on top (the player lies on the back)
-  collar: { size: [0.2, 0.17, 0.11], turn: [0, Math.PI / 2, Math.PI / 2], stretch: true, centre: true },
+  oxygen: { size: [0.167, 0.167, 0.72], centre: true },
+  // the bag upright, the patient valve at the top: its group lays it across behind the head, the valve on the right
+  bvm: { size: [0.12, 0.588, 0.12], centre: true },
+  scoop: { size: [0.63, 0.062, 1.95] },
+  basket: { size: [0.704, 0.202, 2.104] },
+  board: { size: [0.475, 0.062, 1.9] },
+  // round the neck, the chin cup towards the head and the airway opening on top (the player lies on the back)
+  collar: { size: [0.2, 0.164, 0.117], centre: true },
 };
 
 /** Which models each drill shows. */
@@ -54,7 +55,8 @@ function fitted(name: KitName, scene: THREE.Object3D) {
   const box = new THREE.Box3().setFromObject(turned);
   const size = box.getSize(new THREE.Vector3());
   const k = fit.size.map((v, i) => v / Math.max(size.getComponent(i), 1e-6));
-  const scale = fit.stretch ? new THREE.Vector3(k[0], k[1], k[2]) : new THREE.Vector3().setScalar(Math.min(...k));
+  // evenly, so nothing is squashed out of shape
+  const scale = new THREE.Vector3().setScalar(Math.min(...k));
   const centre = box.getCenter(new THREE.Vector3());
   const wrap = new THREE.Group();
   wrap.name = `kit-${name}`;

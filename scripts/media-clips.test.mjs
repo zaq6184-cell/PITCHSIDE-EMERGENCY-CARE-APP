@@ -18,10 +18,12 @@ const modules = covers.includes("/video/module-${id}.mp4") ? [...covers.matchAll
 const caseSmall = read("src/lib/scene-images.ts").includes("smallVideo: asset(`/video/${name}-sm.mp4`)") ? cases.map((c) => `${c}-sm`) : [];
 // the AR page: every step of both drills and the whole drill, big and small (lib/ar.ts; scripts/build-ar-cards.mjs makes them)
 const steps = read("src/lib/ar.ts").match(/AR_STEPS: Record<ArDrill, number> = \{ arrest: (\d+), spine: (\d+) \}/);
+// the cards' version, part of every name
+const cards = read("src/lib/ar.ts").match(/^const CARDS = "([a-z0-9]+)";/m)[1];
 const arClips = [
   ["arrest", Number(steps[1])],
   ["spine", Number(steps[2])],
-].flatMap(([d, n]) => [...Array.from({ length: n + 1 }, (_, i) => `${d}-${i}`), `${d}-all`]);
+].flatMap(([d, n]) => [...Array.from({ length: n + 1 }, (_, i) => `${d}-${i}-${cards}`), `${d}-all-${cards}`]);
 const ar = arClips.flatMap((c) => [`ar-${c}`, `ar-${c}-sm`]);
 // the AR page's header names its clip itself
 const header = [...read("src/routes/ar.tsx").matchAll(/"\/video\/([a-z0-9-]+)\.mp4"/g)].map((m) => m[1]);
@@ -31,7 +33,7 @@ describe("animated pictures", () => {
   it("finds the medical cards, the cases, every page header, the six roles, the six modules and the AR page", () => {
     for (const n of [
       ...["medical-chest", "medical-female", "case-vf", "case-commotio", "case-heat", "case-vf-sm", "heat-cooling", "handover", "live-quiz", "scorer"],
-      ...["env-cold-altitude", "module-1", "module-6", "ar-arrest-0", "ar-arrest-all-sm", "ar-spine-7-sm", "ar-phone"],
+      ...["env-cold-altitude", "module-1", "module-6", `ar-arrest-0-${cards}`, `ar-arrest-all-${cards}-sm`, `ar-spine-7-${cards}-sm`, "ar-phone"],
     ]) {
       assert.ok(named.includes(n), n);
     }

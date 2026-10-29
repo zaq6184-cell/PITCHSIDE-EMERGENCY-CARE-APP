@@ -23,9 +23,12 @@ export const modelFile = (drill: ArDrill, clip: ArClip, ext: "glb" | "usdz" | "m
 /**
  * The AR page's moving pictures of a clip (scripts/build-ar-cards.mjs): its loop on a pitch-green ground, big for the
  * chosen step or small for the cards, and the loop's first frame, the picture under it. Paths in public/, as above.
+ * `CARDS` goes up each time the cards are made again: the service worker keeps a clip by its address, so new
+ * pictures need new names (scripts/build-ar-cards.mjs reads it from here).
  */
-export const cardClip = (drill: ArDrill, clip: ArClip, small = false) => `/video/ar-${drill}-${clampClip(drill, clip)}${small ? "-sm" : ""}.mp4`;
-export const cardPicture = (drill: ArDrill, clip: ArClip) => `/img/ar-cards/${drill}-${clampClip(drill, clip)}.webp`;
+const CARDS = "v2";
+export const cardClip = (drill: ArDrill, clip: ArClip, small = false) => `/video/ar-${drill}-${clampClip(drill, clip)}-${CARDS}${small ? "-sm" : ""}.mp4`;
+export const cardPicture = (drill: ArDrill, clip: ArClip) => `/img/ar-cards/${drill}-${clampClip(drill, clip)}-${CARDS}.webp`;
 
 /** Every clip but the team in place moves, and has its call-outs as a narration track. */
 export const hasNarration = (clip: ArClip) => clip !== 0;

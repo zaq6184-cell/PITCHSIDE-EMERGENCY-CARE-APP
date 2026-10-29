@@ -31,6 +31,12 @@ function base64(bytes: Uint8Array) {
   return btoa(s);
 }
 
+/**
+ * Part of a loaded kit model (lib/kit-models.ts names each one "kit-…"). Only kit is ever left out for being parked
+ * beyond the feet: the people and the player cross that line too, in the carries, and must stay in.
+ */
+const inKit = (o: THREE.Object3D | null): boolean => Boolean(o) && ((o as THREE.Object3D).name.startsWith("kit-") || inKit((o as THREE.Object3D).parent));
+
 /** The bounds of what is shown: hidden parts and the invisible selection rings do not count. */
 function visibleBox(root: THREE.Object3D) {
   const box = new THREE.Box3();
@@ -70,7 +76,8 @@ function Grab({ onState }: { onState: (s: RootState) => void }) {
   return null;
 }
 
-type View = { width: number; height: number; dir: [number, number, number]; fit: number; png?: boolean };
+/** `target` and `dist` (metres) aim a close-up at one spot instead of framing the whole pose (for checking the kit). */
+type View = { width: number; height: number; dir: [number, number, number]; fit: number; png?: boolean; target?: [number, number, number]; dist?: number };
 
 export async function exportStep(
   scenario: Scenario,
@@ -121,14 +128,14 @@ export async function exportStep(
   const at = new THREE.Vector3();
   const beyond = (o: THREE.Object3D) => o.getWorldPosition(at).z > 2.0;
   g.traverse((o) => {
-    if ((o as THREE.Mesh).isMesh && o.visible && (beyond(o) || (o.parent && o.parent !== g && beyond(o.parent)))) o.visible = false;
+    if ((o as THREE.Mesh).isMesh && o.visible && inKit(o) && (beyond(o) || (o.parent && o.parent !== g && beyond(o.parent)))) o.visible = false;
   });
   // frame the whole pose (team, player and kit) from the feet end, a little to the side and high
   const box = visibleBox(g);
-  const centre = box.getCenter(new THREE.Vector3());
+  const centre = view.target ? new THREE.Vector3(...view.target) : box.getCenter(new THREE.Vector3());
   const radius = box.getSize(new THREE.Vector3()).length() / 2;
   const cam = s.camera as THREE.PerspectiveCamera;
-  const dist = (radius / Math.sin((cam.fov * Math.PI) / 360)) * view.fit;
+  const dist = view.dist ?? (radius / Math.sin((cam.fov * Math.PI) / 360)) * view.fit;
   cam.aspect = W / H;
   cam.position.copy(centre).addScaledVector(new THREE.Vector3(...view.dir).normalize(), dist);
   cam.lookAt(centre);
@@ -220,7 +227,7 @@ let rec: Recording | null = null;
 /**
  * Plays a drill on its own timeline (lib/drill-timeline.ts — the pacing of the 3D drill player) and
  * records every part of the scene, frame by frame on a manual clock: position, rotation, scale, whether
- * it shows (its own switch, and not parked more than a metre below the feet), and each mesh's place.
+ * it shows (its own switch, and for kit, not parked more than a metre below the feet), and each mesh's place.
  */
 export async function recordDrill(scenario: Scenario, { fps = 15, durations, lead = 3000 }: { fps?: number; durations: Record<string, number>; lead?: number }) {
   const script = scenario === "spine" ? spineCallouts : drillCallouts;
@@ -274,6 +281,7 @@ export async function recordDrill(scenario: Scenario, { fps = 15, durations, lea
   g.traverse((o) => {
     if (o !== g) nodes.push(o);
   });
+  const parkable = nodes.map(inKit); // before the names go
   nodes.forEach((o, i) => (o.name = `n${i}`)); // the animation finds each part by name
   const index = new Map(nodes.map((o, i) => [o, i]));
   const meshes = nodes.filter(isStandard) as THREE.Mesh[];
@@ -312,7 +320,7 @@ export async function recordDrill(scenario: Scenario, { fps = 15, durations, lea
       scl[p * 3] = o.scale.x;
       scl[p * 3 + 1] = o.scale.y;
       scl[p * 3 + 2] = o.scale.z;
-      own[i] = o.visible && o.getWorldPosition(at).z <= 2.0 ? 1 : 0;
+      own[i] = o.visible && (!parkable[i] || o.getWorldPosition(at).z <= 2.0) ? 1 : 0;
       shown[p] = own[i];
     });
     meshes.forEach((m, j) => {
@@ -354,8 +362,11 @@ export async function exportSegment(name: string) {
   const M = meshes.length;
   const seg = name === "all" ? { start: 0, length: r.length, events: r.segments.flatMap((x) => x.events) } : r.segments.find((x) => String(x.step) === name);
   if (!seg) throw new Error(`no segment ${name}`);
-  const f0 = Math.round((seg.start / 1000) * fps);
-  const f1 = Math.min(r.frames - 1, Math.round(((seg.start + seg.length) / 1000) * fps));
+  // a step's own frames only: rounded, its first or last frame could fall in the step before or after, and that
+  // step's kit would flash up for a frame each time the loop comes round (the whole drill keeps its last frame)
+  const f0 = Math.ceil((seg.start / 1000) * fps - 1e-6);
+  const end = ((seg.start + seg.length) / 1000) * fps;
+  const f1 = Math.min(r.frames - 1, name === "all" ? Math.round(end) : Math.ceil(end - 1e-6) - 1);
   const count = f1 - f0 + 1;
   const animated = name !== "0";
 
