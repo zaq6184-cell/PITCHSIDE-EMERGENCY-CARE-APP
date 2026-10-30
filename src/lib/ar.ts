@@ -26,7 +26,7 @@ export const modelFile = (drill: ArDrill, clip: ArClip, ext: "glb" | "usdz" | "m
  * `CARDS` goes up each time the cards are made again: the service worker keeps a clip by its address, so new
  * pictures need new names (scripts/build-ar-cards.mjs reads it from here).
  */
-const CARDS = "v2";
+const CARDS = "v3";
 export const cardClip = (drill: ArDrill, clip: ArClip, small = false) => `/video/ar-${drill}-${clampClip(drill, clip)}-${CARDS}${small ? "-sm" : ""}.mp4`;
 export const cardPicture = (drill: ArDrill, clip: ArClip) => `/img/ar-cards/${drill}-${clampClip(drill, clip)}-${CARDS}.webp`;
 

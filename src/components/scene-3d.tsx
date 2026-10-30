@@ -296,7 +296,7 @@ function poseFor(ctx: PoseCtx): Pose {
       const head = L(0, 0.2, -1.02);
       if (step === 4) {
         const beat = (t * CPR_HZ) % 10 < 0.9 ? 1 : 0; // one squeeze every tenth compression
-        return hold(L(-0.03, 0.3, -0.9), L(0.17 - beat * 0.02, 0.37 - beat * 0.025, -1.29), 0.62);
+        return hold(L(-0.03, 0.3, -0.9), bagHand(L, beat), 0.62); // the jaw and the i-gel; the bag valve on it
       }
       if (step === 5) return { ...hold(R(-0.17, 0.2, -1.02), R(0.17, 0.2, -1.02), 0.72), look: head };
       if (step === 3 && handsOff(step, t)) return clear();
@@ -481,9 +481,15 @@ function aedPose(ctx: PoseCtx, p: Pose, chest: THREE.Vector3): Pose {
   if (id === "orange") {
     if (step === 2 || step === 4) return clearPose(p);
     const beat = step !== 3 && (t * CPR_HZ) % 10 < 0.9 ? 1 : 0;
-    return holdPose(p, L(-0.03, 0.3, -0.9), L(0.2 - beat * 0.06, 0.34 - beat * 0.05, -1.24), 0.62);
+    return holdPose(p, L(-0.03, 0.3, -0.9), bagHand(L, beat), 0.62);
   }
   return p;
+}
+
+/** Orange's hand on the side of the bag valve on the i-gel (AIRWAY, in the player's frame), pressing in on a squeeze. */
+function bagHand(L: PoseCtx["L"], beat: number) {
+  const at = AIRWAY.bag.clone().addScaledVector(AIRWAY.side, 0.085 - beat * 0.02);
+  return L(at.x, at.y + PLAYER_Y, at.z);
 }
 
 // ------------------------------------------------------------------ shared geometry
@@ -902,26 +908,73 @@ export function Player({
         <meshStandardMaterial color="#1a120d" roughness={0.9} />
       </mesh>
       {scenario === "spine" ? <SpineGear step={step} phase={phase} fault={fault} /> : null}
-      {scenario === "arrest" && step >= 4 ? <IGel /> : null}
+      {/* the i-gel goes in at the airway step and stays; the bag valve is on it while it is squeezed, and off for
+          the log roll, when Orange's hands are on the head */}
+      {scenario === "arrest" ? <Airway igel={step >= 4} bag={step === 4} squeezing={step === 4} /> : null}
       {bodyExtra}
     </group>
   );
 }
 
-/** The i-gel in the mouth from the airway step on (it rolls and lifts with the player): the bite block and the
- * 15 mm connector, green for size 4, which the bag's catheter mount fits onto. */
-function IGel() {
+// The airway in the player's frame, as FIFA has it: insert the i-gel, attach the bag valve to it. The i-gel's stem
+// leaves the mouth upwards, leaning towards the head and to the left, where Orange holds the bag, and the bag valve
+// sits straight on its 15 mm connector, along the same line.
+const AIRWAY_AXIS = new THREE.Vector3(0.3, 0.88, -0.38).normalize();
+const IGEL_AT = new THREE.Vector3(0, 0.128, -0.942);
+export const AIRWAY = (() => {
+  // the bite block (45 mm) and the connector (18 mm) out of the mouth
+  const top = IGEL_AT.clone().addScaledVector(AIRWAY_AXIS, 0.063);
+  // the bag valve model's middle: its patient port, 8 mm over the connector, is 0.294 from it (build-kit.py)
+  const bag = top.clone().addScaledVector(AIRWAY_AXIS, 0.286);
+  // the model's x runs level, so a squeeze presses across the bag; its z, where the oxygen nipple points, as low as it goes
+  const x = AIRWAY_AXIS.clone().cross(UP).normalize();
+  const y = AIRWAY_AXIS.clone().negate();
+  const z = x.clone().cross(y);
+  return {
+    igelTurn: new THREE.Quaternion().setFromUnitVectors(UP, AIRWAY_AXIS),
+    bag,
+    bagTurn: new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z)),
+    /** the side of the bag that Orange's hand squeezes */
+    side: x,
+    /** the tip of the oxygen nipple at the reservoir end, and the way it points */
+    nipple: bag.clone().addScaledVector(y, -0.096).addScaledVector(z, 0.05),
+    nippleOut: z,
+  };
+})();
+
+/**
+ * The i-gel in the mouth (the bite block and the 15 mm connector, green for size 4: FIFA's 50–90 kg) and the bag valve
+ * straight on its connector, squeezed once every tenth compression while `squeezing`. Both are always there and only
+ * shown or hidden, so the AR recorder (scripts/ar/harness.tsx), which lists the parts at the start, knows them.
+ */
+export function Airway({ igel, bag, squeezing }: { igel: boolean; bag: boolean; squeezing: boolean }) {
+  const valve = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    const beat = squeezing && (clock.elapsedTime * CPR_HZ) % 10 < 0.9;
+    // squeezed across, so the valve stays on the connector and the nipple where the tubing meets it
+    valve.current?.scale.set(beat ? 0.7 : 1, 1, 1);
+  });
   return (
-    <group position={[0, 0.128, -0.945]}>
-      <mesh position={[0, 0.0225, 0]}>
-        <boxGeometry args={[0.026, 0.045, 0.014]} />
-        <meshStandardMaterial color="#e6ecef" roughness={0.35} />
-      </mesh>
-      <mesh position={[0, 0.054, 0]}>
-        <cylinderGeometry args={[0.0085, 0.0085, 0.018, 16]} />
-        <meshStandardMaterial color="#3BA55C" roughness={0.4} />
-      </mesh>
-    </group>
+    <>
+      <group position={IGEL_AT} quaternion={AIRWAY.igelTurn} visible={igel}>
+        <mesh position={[0, 0.0225, 0]}>
+          <boxGeometry args={[0.026, 0.045, 0.014]} />
+          <meshStandardMaterial color="#e6ecef" roughness={0.35} />
+        </mesh>
+        <mesh position={[0, 0.054, 0]}>
+          <cylinderGeometry args={[0.0085, 0.0085, 0.018, 16]} />
+          <meshStandardMaterial color="#3BA55C" roughness={0.4} />
+        </mesh>
+      </group>
+      <group ref={valve} position={AIRWAY.bag} quaternion={AIRWAY.bagTurn} visible={bag}>
+        <KitModel name="bvm">
+          <mesh scale={[0.09, 0.15, 0.09]}>
+            <sphereGeometry args={[1, 16, 12]} />
+            <meshStandardMaterial color="#cfe6ee" roughness={0.3} transparent opacity={0.85} />
+          </mesh>
+        </KitModel>
+      </group>
+    </>
   );
 }
 
@@ -1035,55 +1088,25 @@ function SpineGear({ step, phase, fault }: { step: number; phase: number; fault?
 function Kit({ step }: { step: number }) {
   const aed = useRef<THREE.MeshStandardMaterial>(null);
   const cyl = useRef<THREE.MeshStandardMaterial>(null);
-  const bag = useRef<THREE.Group>(null);
   const tube = useRef<THREE.Mesh>(null);
-  const mount = useRef<THREE.Mesh>(null);
   const pads = useRef<THREE.Group>(null);
   const scoop = useRef<THREE.Group>(null);
   const flash = useRef<THREE.PointLight>(null);
   // how brightly the AED and the oxygen cylinder light up, for the models and their stand-ins alike
   const aedGlow = useRef(0.05);
   const cylGlow = useRef(0.03);
-  // oxygen tubing from the cylinder, round behind the head on the grass, up to the inlet at the reservoir end
-  const tubeGeo = useMemo(
-    () =>
-      new THREE.TubeGeometry(
-        new THREE.CatmullRomCurve3([
-          v(-0.3, 0.12, 0.2),
-          v(-0.34, 0.11, -0.3),
-          v(-0.3, 0.13, -0.9),
-          v(-0.2, 0.05, -1.17),
-          v(0.05, 0.03, -1.21),
-          v(0.25, 0.05, -1.19),
-          v(0.29, 0.2, -1.17),
-          v(0.296, 0.29, -1.21),
-          v(0.296, 0.3, -1.245),
-        ]),
-        64,
-        0.012,
-        6,
-      ),
-    [],
-  );
-  // the catheter mount from the bag's patient valve, round the head, down onto the i-gel in the mouth
-  const mountGeo = useMemo(
-    () =>
-      new THREE.TubeGeometry(
-        new THREE.CatmullRomCurve3([
-          v(-0.09, 0.3, -1.3),
-          v(-0.125, 0.302, -1.29),
-          v(-0.15, 0.32, -1.22),
-          v(-0.12, 0.36, -1.08),
-          v(-0.06, 0.39, -0.98),
-          v(-0.01, 0.385, -0.948),
-          v(0, 0.352, -0.945),
-        ]),
-        48,
-        0.011,
-        8,
-      ),
-    [],
-  );
+  // oxygen tubing from the cylinder, round behind the head on the grass, up to the inlet at the reservoir end of the
+  // bag valve on the i-gel (AIRWAY is in the player's frame, which lies PLAYER_Y up at this step)
+  const tubeGeo = useMemo(() => {
+    const tip = AIRWAY.nipple.clone().add(v(0, PLAYER_Y, 0));
+    const out = (d: number) => tip.clone().addScaledVector(AIRWAY.nippleOut, d);
+    return new THREE.TubeGeometry(
+      new THREE.CatmullRomCurve3([v(-0.3, 0.12, 0.2), v(-0.34, 0.11, -0.3), v(-0.3, 0.13, -0.9), v(-0.18, 0.04, -1.2), v(0.12, 0.03, -1.27), v(0.33, 0.2, -1.37), out(0.3), out(0.14), out(0.05), tip]),
+      64,
+      0.012,
+      6,
+    );
+  }, []);
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
     const shock = step === 3 && t % 5 > 4.7;
@@ -1092,15 +1115,8 @@ function Kit({ step }: { step: number }) {
     if (aed.current) aed.current.emissiveIntensity = aedGlow.current;
     if (flash.current) flash.current.intensity = shock ? 16 : 0;
     if (cyl.current) cyl.current.emissiveIntensity = cylGlow.current;
-    if (bag.current) {
-      const beat = (t * CPR_HZ) % 10 < 0.9;
-      // squeezed flat from above, so the valve and the oxygen inlet stay where the tubes meet them
-      bag.current.scale.set(step === 4 && beat ? 0.7 : 1, 1, 1);
-      // on the i-gel while it is squeezed; off for the log roll, when Orange's hands are on the head
-      bag.current.visible = step === 4;
-    }
+    // the bag valve (in the Player) is on the i-gel at step 4 only, and its oxygen with it
     if (tube.current) tube.current.visible = step === 4;
-    if (mount.current) mount.current.visible = step === 4;
     if (pads.current) pads.current.visible = step >= 3 && step < 6 && !(step === 3 && t % 5 < 1.2);
     if (scoop.current) {
       // step 6: the board is under the player and moves with the carry
@@ -1137,19 +1153,7 @@ function Kit({ step }: { step: number }) {
         </mesh>
       </group>
       <pointLight ref={flash} position={[0.3, 0.9, -0.5]} color="#FFF3B0" intensity={0} distance={7} />
-      {/* bag valve across behind the head (the valve on the player's right), on the i-gel by its catheter mount,
-          oxygen tubing back to the cylinder */}
-      <group ref={bag} position={[0.2, 0.3, -1.3]} rotation={[0, 0, Math.PI / 2]}>
-        <KitModel name="bvm">
-          <mesh scale={[0.09, 0.15, 0.09]}>
-            <sphereGeometry args={[1, 16, 12]} />
-            <meshStandardMaterial color="#cfe6ee" roughness={0.3} transparent opacity={0.85} />
-          </mesh>
-        </KitModel>
-      </group>
-      <mesh ref={mount} geometry={mountGeo} castShadow>
-        <meshStandardMaterial color="#e8eef2" roughness={0.4} />
-      </mesh>
+      {/* oxygen tubing to the bag valve on the i-gel (the Player's Airway) */}
       <mesh ref={tube} geometry={tubeGeo}>
         <meshStandardMaterial color="#d6ecf3" roughness={0.3} transparent opacity={0.9} />
       </mesh>

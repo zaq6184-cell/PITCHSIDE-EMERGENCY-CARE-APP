@@ -12,11 +12,11 @@ describe("augmented reality", () => {
   });
 
   it("gives every clip a moving picture, big and small, over its first frame", () => {
-    assert.equal(cardClip("arrest", 3), "/video/ar-arrest-3-v2.mp4");
-    assert.equal(cardClip("spine", "all", true), "/video/ar-spine-all-v2-sm.mp4");
-    assert.equal(cardClip("spine", 99, true), `/video/ar-spine-${AR_STEPS.spine}-v2-sm.mp4`);
-    assert.equal(cardPicture("arrest", 0), "/img/ar-cards/arrest-0-v2.webp");
-    assert.equal(cardPicture("spine", "all"), "/img/ar-cards/spine-all-v2.webp");
+    assert.equal(cardClip("arrest", 3), "/video/ar-arrest-3-v3.mp4");
+    assert.equal(cardClip("spine", "all", true), "/video/ar-spine-all-v3-sm.mp4");
+    assert.equal(cardClip("spine", 99, true), `/video/ar-spine-${AR_STEPS.spine}-v3-sm.mp4`);
+    assert.equal(cardPicture("arrest", 0), "/img/ar-cards/arrest-0-v3.webp");
+    assert.equal(cardPicture("spine", "all"), "/img/ar-cards/spine-all-v3.webp");
   });
 
   it("has the whole drill as a clip, and narration for every clip that moves", () => {

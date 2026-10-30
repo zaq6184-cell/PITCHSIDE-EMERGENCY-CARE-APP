@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  BriefcaseMedical,
   Camera,
   ChevronRight,
   Download,
@@ -9,6 +8,7 @@ import {
   Smartphone,
   Sparkles,
   Trash2,
+  Wind,
 } from "lucide-react";
 import { ShareAppButton } from "@/components/install-app";
 import { LanguageList } from "@/components/language-switch";
@@ -105,7 +105,7 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
-  "kit-180": BriefcaseMedical,
+  "airway-181": Wind,
 };
 
 function About() {

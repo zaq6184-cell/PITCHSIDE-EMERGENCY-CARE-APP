@@ -3,15 +3,15 @@
  * out, and what changed in it. Shown on the About page. Only this version's changes are listed: for the next release,
  * replace the notes rather than adding to them.
  */
-export const APP_VERSION = "1.8.0";
+export const APP_VERSION = "1.8.1";
 export const RELEASED = "October 2026";
 
 export type ReleaseNote = { id: string; title: string; text: string };
 
 export const WHATS_NEW: ReleaseNote[] = [
   {
-    id: "kit-180",
-    title: "Kit rebuilt at real size",
-    text: "The eight pieces of kit in the 3D drills and in AR are new models, built in Blender at their real sizes: the emergency bag, the AED, the oxygen cylinder, the bag valve, the scoop with its two blades, the long board, the basket stretcher and the collar. In the cardiac arrest drill the bag valve now connects to the i-gel in the player's mouth through a catheter mount, with no face mask, and is set aside for the log roll. In the neck injury drill the collar sits up under the chin. In AR, White no longer disappears during the carry.",
+    id: "airway-181",
+    title: "Bag valve straight on the i-gel",
+    text: "In the cardiac arrest drill and the AED pads trainer, the bag valve now fits straight onto the i-gel, as FIFA describes it: insert the laryngeal mask airway, then attach the bag valve to it. There is no connector tube in between. The i-gel is the green size 4, FIFA's size for 50–90 kg. In AR, the i-gel no longer shows before the airway step.",
   },
 ];

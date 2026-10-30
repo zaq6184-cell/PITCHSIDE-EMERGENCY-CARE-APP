@@ -1,7 +1,7 @@
 import { Canvas, type ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { CPR_HZ, GOLD, Lights, PLAYER_Y, Player, Stadium, Team } from "@/components/scene-3d";
+import { Airway, GOLD, Lights, PLAYER_Y, Player, Stadium, Team } from "@/components/scene-3d";
 import { PAD_TARGETS, type PadId, type Tap } from "@/lib/aed-pads";
 import { useSceneVisibility } from "@/lib/use-scene-visibility";
 import { panFrom, voicePan } from "@/lib/view3d";
@@ -167,39 +167,6 @@ function Aed({ stage, placed, shockAt }: { stage: AedStage; placed: Record<PadId
   );
 }
 
-/** The bag valve on the i-gel at the head, squeezed once every 10 compressions while CPR runs. */
-function Bag({ step }: { step: number }) {
-  const bag = useRef<THREE.Group>(null);
-  // the short connector from the bag to the i-gel at the mouth
-  const { tube, aim } = useMemo(() => {
-    const from = new THREE.Vector3(0.14, 0.3, -1.24);
-    const to = new THREE.Vector3(0.0, 0.3, -1.0);
-    const dir = to.clone().sub(from);
-    return {
-      tube: new THREE.CylinderGeometry(0.02, 0.02, dir.length(), 10),
-      aim: new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize()),
-    };
-  }, []);
-  useEffect(() => () => tube.dispose(), [tube]);
-  useFrame(({ clock }) => {
-    const beat = (step <= 1 || step === 5) && (clock.elapsedTime * CPR_HZ) % 10 < 0.9;
-    bag.current?.scale.set(1, beat ? 0.7 : 1, 1);
-  });
-  return (
-    <group>
-      <group ref={bag} position={[0.2, 0.3, -1.3]} rotation={[0, 0, Math.PI / 2]}>
-        <mesh scale={[0.09, 0.15, 0.09]}>
-          <sphereGeometry args={[1, 16, 12]} />
-          <meshStandardMaterial color="#cfe6ee" roughness={0.3} transparent opacity={0.85} />
-        </mesh>
-      </group>
-      <mesh geometry={tube} position={[0.07, 0.3, -1.12]} quaternion={aim}>
-        <meshStandardMaterial color="#e8eef2" roughness={0.4} />
-      </mesh>
-    </group>
-  );
-}
-
 /** Cables from the AED to each pad once it is on. */
 function Cables({ placed }: { placed: Record<PadId, boolean> }) {
   const geos = useMemo(() => {
@@ -337,10 +304,11 @@ export default function AedScene3D({
           chest={(["right", "left"] as const).map((id) => (
             <Pad key={id} id={id} on={view.placed[id]} ghost={view.ghosts[id]} />
           ))}
+          // the bag valve on the i-gel, squeezed once every 10 compressions while CPR runs
+          body={<Airway igel bag squeezing={step <= 1 || step === 5} />}
         />
         <Aed stage={view.stage} placed={view.placed} shockAt={view.shockAt} />
         <Cables placed={view.placed} />
-        <Bag step={step} />
         <MissMark miss={view.miss} />
         <Team ids={TEAM} step={step} scenario="aed" />
       </Canvas>
