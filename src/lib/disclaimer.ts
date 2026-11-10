@@ -20,6 +20,14 @@ export const aboutApp = {
   developers: [
     "Developed by the Sports-Emergency Football Medicine team, HKL.",
   ],
+  /** Under Developers on the About page: whose intellectual property the app is. Names exactly as they gave them, shown untranslated. */
+  owners: [
+    "Dr. Kamaljeet Singh A/L Jaharan Singh",
+    "Dr. Ahmad Ibrahim bin Kamal Batcha",
+    "Dr. Khairul Izwan bin Mohamed@Hashim",
+    "Dr. Peter Dzendrowskyj",
+    "Dr. Krishna Kumar A/L Antrean",
+  ],
   copyright: [
     "FIFA's protocols, documents, images and films are the property of FIFA and remain under FIFA's copyright. FIFA's films and documents are linked to on FIFA's own website; they are not copied into this app.",
     "Films from other publishers play in YouTube's player and remain the property of their owners. Photographs from open-licence sources are credited where they appear.",

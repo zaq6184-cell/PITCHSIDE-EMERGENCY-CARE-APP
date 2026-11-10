@@ -6,6 +6,7 @@ import { LanguageButton } from "@/components/language-switch";
 import { openSearch } from "@/lib/search-open";
 import { SoundButton } from "@/components/sound-control";
 import { ThemeSwitch } from "@/components/theme-switch";
+import { takeArrival } from "@/lib/arrival";
 import { asset } from "@/lib/asset";
 import { setTransitionDirection } from "@/lib/gestures";
 import { type MusicScene, say, setMusicScene, tap } from "@/lib/sound";
@@ -74,11 +75,22 @@ export function AppShell({
   heading?: string;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hash = useRouterState({ select: (s) => s.location.hash });
 
   // the router puts new pages at the top and Back where you were; this only keeps the bar colour right
   useEffect(() => {
     syncThemeColor();
   }, [pathname]);
+
+  // a badge on Home brought you to this section: a gold glow round it for a moment (lib/arrival.ts). The page you came
+  // from sees the new address first, without the section, so the mark is only taken once the section is there.
+  // The glow ends on its own timer, with no clean-up to cut it short (React runs this twice in development).
+  useEffect(() => {
+    const el = hash ? document.getElementById(hash) : null;
+    if (!el || !takeArrival(hash)) return;
+    el.setAttribute("data-arrived", "");
+    window.setTimeout(() => el.removeAttribute("data-arrived"), 2600);
+  }, [hash, pathname]);
 
   useEffect(() => {
     setMusicScene(musicFor(pathname));

@@ -55,40 +55,43 @@ function Home() {
         <Note>
           <span className="font-semibold text-heading">{workshop.rule}</span>
         </Note>
-        <SectionLabel>TAP A COLOUR</SectionLabel>
-        <div className="grid grid-cols-2 gap-2.5">
-          {workshop.roles.map((r, i) => {
-            const Icon = roleIcons[r.id];
-            return (
-              <Link
-                key={r.id}
-                to="/role/$id"
-                params={{ id: r.id }}
-                // like a disc in the diagram: a whoosh, and the role page opens with that colour's call-out
-                onClick={() => {
-                  haptic(10);
-                  sfx("whoosh", 0.25);
-                }}
-                className={`shine relative flex min-h-[5.5rem] flex-col justify-end overflow-hidden rounded-xl px-3 pb-2.5 pt-3 transition-transform duration-150 ease-out active:scale-95${r.id === "black" ? " dark:outline dark:outline-1 dark:outline-white/25" : ""}`}
-                style={
-                  {
-                    "--d": `${i * 0.7}s`,
-                    backgroundColor: r.color,
-                    backgroundImage: "linear-gradient(150deg, rgba(255,255,255,0.16), rgba(0,0,0,0.14))",
-                    color: r.text,
-                    boxShadow:
-                      r.id === "white"
-                        ? "inset 0 0 0 1px rgba(11,31,58,0.22), 0 6px 14px -8px rgba(11,31,58,0.35)"
-                        : `0 8px 16px -8px ${r.color}`,
-                  } as React.CSSProperties
-                }
-              >
-                <Icon className="float-y absolute right-2.5 top-2.5 size-9 opacity-30" strokeWidth={1.6} aria-hidden />
-                <span className="font-display text-xl font-bold leading-none tracking-[0.1em]">{roleTag(r)}</span>
-                <span className="mt-1 text-[11px] font-medium leading-tight">{r.role}</span>
-              </Link>
-            );
-          })}
+        {/* the role cards: the "All six colours" badge comes here once every card has been opened */}
+        <div id="roles" className="flex scroll-mt-24 flex-col gap-3.5">
+          <SectionLabel>TAP A COLOUR</SectionLabel>
+          <div className="grid grid-cols-2 gap-2.5">
+            {workshop.roles.map((r, i) => {
+              const Icon = roleIcons[r.id];
+              return (
+                <Link
+                  key={r.id}
+                  to="/role/$id"
+                  params={{ id: r.id }}
+                  // like a disc in the diagram: a whoosh, and the role page opens with that colour's call-out
+                  onClick={() => {
+                    haptic(10);
+                    sfx("whoosh", 0.25);
+                  }}
+                  className={`shine relative flex min-h-[5.5rem] flex-col justify-end overflow-hidden rounded-xl px-3 pb-2.5 pt-3 transition-transform duration-150 ease-out active:scale-95${r.id === "black" ? " dark:outline dark:outline-1 dark:outline-white/25" : ""}`}
+                  style={
+                    {
+                      "--d": `${i * 0.7}s`,
+                      backgroundColor: r.color,
+                      backgroundImage: "linear-gradient(150deg, rgba(255,255,255,0.16), rgba(0,0,0,0.14))",
+                      color: r.text,
+                      boxShadow:
+                        r.id === "white"
+                          ? "inset 0 0 0 1px rgba(11,31,58,0.22), 0 6px 14px -8px rgba(11,31,58,0.35)"
+                          : `0 8px 16px -8px ${r.color}`,
+                    } as React.CSSProperties
+                  }
+                >
+                  <Icon className="float-y absolute right-2.5 top-2.5 size-9 opacity-30" strokeWidth={1.6} aria-hidden />
+                  <span className="font-display text-xl font-bold leading-none tracking-[0.1em]">{roleTag(r)}</span>
+                  <span className="mt-1 text-[11px] font-medium leading-tight">{r.role}</span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
         <Note>
           If it is not your colour, do not reach in — except Black 1, the team leader, who is in overall control and steps in when a

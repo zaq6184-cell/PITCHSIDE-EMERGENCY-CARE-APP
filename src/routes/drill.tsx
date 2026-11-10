@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { lazy, Suspense, useState, useSyncExternalStore } from "react";
+import { lazy, Suspense, useEffect, useState, useSyncExternalStore } from "react";
 import { Bone, ChevronRight, Eye, Headphones, HeartPulse, MonitorPlay, PlayCircle, Smartphone, Zap } from "lucide-react";
 import { AppShell, Note, Panel, RoleChip, SectionLabel } from "@/components/workshop";
 import { ArButton } from "@/components/ar-button";
@@ -10,7 +10,8 @@ import { tap } from "@/lib/sound";
 import { cn } from "@/lib/utils";
 import { type Step, workshop } from "@/lib/workshop";
 
-type Search = { case?: "neck" | "mistakes" };
+/** `step`: the step to start on (a badge on Home links to the first one not watched yet). */
+type Search = { case?: "neck" | "mistakes"; step?: number };
 
 // the room and its QR code load only when an instructor starts a team drill
 const TeamHost = lazy(() => import("@/components/team-drill").then((m) => ({ default: m.TeamHost })));
@@ -19,7 +20,12 @@ const noSubscribe = () => () => {};
 
 export const Route = createFileRoute("/drill")({
   component: Drill,
-  validateSearch: (s: Record<string, unknown>): Search => (s.case === "neck" || s.case === "mistakes" ? { case: s.case } : {}),
+  validateSearch: (s: Record<string, unknown>): Search => {
+    const out: Search = s.case === "neck" || s.case === "mistakes" ? { case: s.case } : {};
+    const n = Number(s.step);
+    if (Number.isInteger(n) && n >= 1 && n <= spineSteps.length) out.step = n;
+    return out;
+  },
   head: () => ({ meta: [{ title: "Team drills in 3D · Pitchside Emergency Care" }] }),
 });
 
@@ -66,8 +72,16 @@ function Drill() {
   const neck = ready && search.case === "neck";
   const mistakes = ready && search.case === "mistakes";
   const navigate = useNavigate({ from: "/drill" });
-  const [arrestStep, setArrestStep] = useState(1);
-  const [neckStep, setNeckStep] = useState(1);
+  // a step named in the query is where the drill starts: from the first frame when the page opens inside the app (so
+  // step 1 is not counted as watched on the way), and once hydrated when the page is opened from its address
+  const first = ready && !mistakes && search.step ? Math.min(search.step, (neck ? spineSteps : workshop.steps).length) : 1;
+  const [arrestStep, setArrestStep] = useState(neck ? 1 : first);
+  const [neckStep, setNeckStep] = useState(neck ? first : 1);
+  useEffect(() => {
+    if (first === 1) return;
+    if (neck) setNeckStep(first);
+    else setArrestStep(first);
+  }, [first, neck]);
   const step = neck ? neckStep : arrestStep;
   const setStep = neck ? setNeckStep : setArrestStep;
   const steps: readonly Step[] = neck ? spineSteps : workshop.steps;

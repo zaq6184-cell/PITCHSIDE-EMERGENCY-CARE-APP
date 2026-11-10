@@ -1,6 +1,22 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { BADGES, EMPTY, earnedCount, newBadges, nextBadge, parseProgress, stampBadges, step, TEAM_RUNS_KEPT } from "./progress.ts";
+import {
+  BADGES,
+  badgeGoal,
+  badgeProgress,
+  CASE_IDS,
+  DRILL_STEPS,
+  EMPTY,
+  earnedCount,
+  newBadges,
+  nextBadge,
+  parseProgress,
+  QUIZ_FOR_BADGE,
+  ROLE_IDS,
+  stampBadges,
+  step,
+  TEAM_RUNS_KEPT,
+} from "./progress.ts";
 
 describe("progress", () => {
   it("earns the colours badge only when all six role cards are opened", () => {
@@ -105,5 +121,41 @@ describe("progress", () => {
     assert.deepEqual(q.listened, ["spine"]);
     assert.equal(q.bestStreak, 6);
     assert.deepEqual(q.earnedAt, { cpr: "2026-10-27" });
+  });
+
+  it("sends each badge to the next thing still to do", () => {
+    let p = step.role(step.role(EMPTY, "black"), "red");
+    assert.deepEqual(badgeGoal("colours", p), { page: "role", id: "orange" });
+    for (const id of ROLE_IDS) p = step.role(p, id);
+    assert.deepEqual(badgeGoal("colours", p), { page: "roles" });
+    assert.deepEqual(badgeGoal("modules", step.module(EMPTY, "1")), { page: "module", id: "2" });
+    for (const n of [1, 2, 3]) p = step.drill(p, "arrest", n);
+    assert.deepEqual(badgeGoal("arrest", p), { page: "drill", drill: "arrest", step: 4 });
+    assert.deepEqual(badgeGoal("spine", step.drill(EMPTY, "spine", 2)), { page: "drill", drill: "spine", step: 1 });
+    // a drill watched to the end starts again at its first step
+    for (const n of DRILL_STEPS.spine) p = step.drill(p, "spine", n);
+    assert.deepEqual(badgeGoal("spine", p), { page: "drill", drill: "spine", step: 1 });
+    assert.deepEqual(badgeGoal("cases", step.caseSolved(EMPTY, "vf")), { page: "case", id: "commotio" });
+    assert.deepEqual(badgeGoal("cases", CASE_IDS.reduce((q, id) => step.caseSolved(q, id), EMPTY)), { page: "cases" });
+    assert.deepEqual(badgeGoal("aed-fast", EMPTY), { page: "aed" });
+    assert.deepEqual(badgeGoal("streak", EMPTY), { page: "daily" });
+  });
+
+  it("gives every badge somewhere to go", () => {
+    const pages = new Set(["role", "module", "case", "drill", "roles", "modules", "cases", "mistakes", "quiz", "place", "aed", "cpr", "bag", "team", "daily", "listen"]);
+    for (const b of BADGES) assert.ok(pages.has(badgeGoal(b.id, EMPTY).page), b.id);
+    // only "Sharp" falls through to the quiz
+    assert.deepEqual(BADGES.filter((b) => badgeGoal(b.id, EMPTY).page === "quiz").map((b) => b.id), ["quiz"]);
+  });
+
+  it("counts how far each badge that builds up has got", () => {
+    assert.deepEqual(badgeProgress("colours", step.role(EMPTY, "blue")), { have: 1, need: 6 });
+    assert.deepEqual(badgeProgress("spine", step.drill(EMPTY, "spine", 7)), { have: 1, need: 7 });
+    assert.deepEqual(badgeProgress("quiz", step.quiz(EMPTY, 6)), { have: 6, need: QUIZ_FOR_BADGE });
+    assert.deepEqual(badgeProgress("quiz", step.quiz(EMPTY, 10)), { have: QUIZ_FOR_BADGE, need: QUIZ_FOR_BADGE });
+    assert.deepEqual(badgeProgress("streak", step.streak(EMPTY, 9)), { have: 5, need: 5 });
+    // a role that is not one of the six does not count
+    assert.deepEqual(badgeProgress("colours", step.role(EMPTY, "purple")), { have: 0, need: 6 });
+    for (const id of ["place", "aed", "aed-fast", "cpr", "bag", "team", "listen"]) assert.equal(badgeProgress(id, EMPTY), null, id);
   });
 });

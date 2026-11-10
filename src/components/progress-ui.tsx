@@ -1,9 +1,46 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, Bone, BookOpen, Brain, Briefcase, ClipboardCheck, Eye, Flame, Headphones, HeartPulse, Lock, MapPin, Monitor, Palette, Timer, Trophy, Users, Zap, type LucideIcon } from "lucide-react";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import {
+  Activity,
+  ArrowUpRight,
+  Bone,
+  BookOpen,
+  Brain,
+  Briefcase,
+  Check,
+  ClipboardCheck,
+  Eye,
+  Flame,
+  Headphones,
+  HeartPulse,
+  Lock,
+  MapPin,
+  Monitor,
+  Palette,
+  Timer,
+  Trophy,
+  Users,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
+import { type ReactNode, useEffect, useState, useSyncExternalStore } from "react";
 import { Confetti } from "@/components/confetti";
 import { Panel, SectionLabel } from "@/components/workshop";
-import { type Badge, BADGES, EMPTY, earnedCount, getProgress, nextBadge, onBadge, type Progress, resetProgress, subscribeProgress } from "@/lib/progress";
+import { arriveAt } from "@/lib/arrival";
+import {
+  type Badge,
+  type BadgeGoal,
+  BADGES,
+  badgeGoal,
+  badgeProgress,
+  EMPTY,
+  earnedCount,
+  getProgress,
+  nextBadge,
+  onBadge,
+  type Progress,
+  resetProgress,
+  subscribeProgress,
+} from "@/lib/progress";
 import { haptic, sfx } from "@/lib/sound";
 import { translateText } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -30,35 +67,147 @@ const ICONS: Record<string, LucideIcon> = {
   listen: Headphones,
 };
 
-/** Where to go to earn each badge. */
-const WHERE: Record<string, { to: "/" | "/stations" | "/drill" | "/quiz" | "/aed" | "/timer" | "/cases" | "/bag" | "/team" | "/daily" | "/listen"; label: string; neck?: boolean; mistakes?: boolean; hash?: string }> = {
-  colours: { to: "/", label: "Role cards" },
-  modules: { to: "/stations", label: "Skill modules" },
-  arrest: { to: "/drill", label: "Arrest drill" },
-  spine: { to: "/drill", label: "Neck injury drill", neck: true },
-  quiz: { to: "/quiz", label: "Quiz" },
-  place: { to: "/quiz", label: "Place the team", hash: "place" },
-  aed: { to: "/aed", label: "AED trainer" },
-  "aed-fast": { to: "/aed", label: "AED trainer" },
-  cpr: { to: "/timer", label: "CPR rhythm trainer", hash: "cpr-trainer" },
-  cases: { to: "/cases", label: "Case simulator" },
-  mistakes: { to: "/drill", label: "Spot the mistake", mistakes: true },
-  bag: { to: "/bag", label: "Pack the bag", hash: "pack" },
-  team: { to: "/team", label: "Team drill" },
-  streak: { to: "/daily", label: "Daily 5" },
-  listen: { to: "/listen", label: "Listen mode" },
+/** Where each badge is earned, by name (the link itself goes to the next thing to do there: lib/progress.ts badgeGoal). */
+const WHERE: Record<string, string> = {
+  colours: "Role cards",
+  modules: "Skill modules",
+  arrest: "Arrest drill",
+  spine: "Neck injury drill",
+  quiz: "Quiz",
+  place: "Place the team",
+  aed: "AED trainer",
+  "aed-fast": "AED trainer",
+  cpr: "CPR rhythm trainer",
+  cases: "Case simulator",
+  mistakes: "Spot the mistake",
+  bag: "Pack the bag",
+  team: "Team drill",
+  streak: "Daily 5",
+  listen: "Listen mode",
 };
+
+type GoalLinkProps = { goal: BadgeGoal; className?: string; title?: string; children: ReactNode };
+
+/** A link to where a badge is earned. A goal that is a section of a page marks it, so it lights up on arrival. */
+function GoalLink({ goal, ...rest }: GoalLinkProps) {
+  const props = {
+    ...rest,
+    onClick: () => {
+      haptic(10);
+      sfx("whoosh", 0.25);
+      const section = goal.page === "roles" ? "roles" : goal.page === "cpr" ? "cpr-trainer" : goal.page === "bag" ? "pack" : null;
+      if (section) arriveAt(section);
+    },
+  };
+  switch (goal.page) {
+    case "role":
+      return <Link to="/role/$id" params={{ id: goal.id }} {...props} />;
+    case "module":
+      return <Link to="/station/$id" params={{ id: goal.id }} {...props} />;
+    case "case":
+      return <Link to="/case/$id" params={{ id: goal.id }} {...props} />;
+    case "drill": {
+      const step = goal.step > 1 ? goal.step : undefined;
+      return <Link to="/drill" search={goal.drill === "spine" ? { case: "neck", step } : { step }} {...props} />;
+    }
+    case "roles":
+      return <Link to="/" hash="roles" {...props} />;
+    case "modules":
+      return <Link to="/stations" {...props} />;
+    case "cases":
+      return <Link to="/cases" {...props} />;
+    case "mistakes":
+      return <Link to="/drill" search={{ case: "mistakes" }} {...props} />;
+    case "quiz":
+      return <Link to="/quiz" {...props} />;
+    case "place":
+      return <Link to="/quiz" hash="place" {...props} />;
+    case "aed":
+      return <Link to="/aed" {...props} />;
+    case "cpr":
+      return <Link to="/timer" hash="cpr-trainer" {...props} />;
+    case "bag":
+      return <Link to="/bag" hash="pack" {...props} />;
+    case "team":
+      return <Link to="/team" {...props} />;
+    case "daily":
+      return <Link to="/daily" {...props} />;
+    case "listen":
+      return <Link to="/listen" {...props} />;
+  }
+}
+
+// keyboard focus is an outline: the next badge's breathing ring is a box shadow, and an animated shadow would hide a ring
+const TILE =
+  "group relative flex h-full min-h-[3.9rem] w-full flex-col items-center justify-center gap-[3px] overflow-hidden rounded-xl px-1.5 pb-2 pt-2.5 text-center transition-[transform,box-shadow,background-color,color] duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-ink active:scale-[0.96] motion-safe:hover:-translate-y-0.5";
+
+/**
+ * One badge, and the way to it: earned (gold, a tick), the next to go for (a breathing gold ring, an arrow), or still
+ * locked (its own icon dimmed, a lock). Every tile opens the place it is earned; a badge that builds up shows how far
+ * along it is.
+ */
+function BadgeTile({ b, p, next }: { b: Badge; p: Progress; next: boolean }) {
+  const on = b.done(p);
+  const Icon = ICONS[b.id] ?? Trophy;
+  const steps = on ? null : badgeProgress(b.id, p);
+  const best = !on && b.id === "aed-fast" && p.aedBest !== null ? p.aedBest : null;
+  const Corner = on ? Check : next ? ArrowUpRight : Lock;
+  return (
+    <li>
+      <GoalLink
+        goal={badgeGoal(b.id, p)}
+        title={b.how}
+        className={cn(
+          TILE,
+          on
+            ? "badge-earned bg-gradient-to-br from-[#f6e7b4] to-[#e2c25c] text-[#3b2f05] hover:shadow-[0_12px_22px_-12px_rgba(201,162,39,1)]"
+            : next
+              ? "badge-next bg-paper text-heading"
+              : "bg-note text-muted shadow-[inset_0_0_0_1px_var(--color-line)] hover:bg-paper hover:text-heading hover:shadow-card",
+        )}
+      >
+        <span
+          aria-hidden
+          className={cn(
+            "absolute right-1.5 top-1.5 grid size-4 place-items-center rounded-full",
+            on ? "bg-white/70 text-[#5a4708]" : next ? "text-gold-ink" : "opacity-70",
+          )}
+        >
+          <Corner className={on ? "size-2.5" : "size-3"} strokeWidth={on ? 3.2 : 2.4} />
+        </span>
+        <Icon className={cn("size-[18px] transition-transform duration-200 group-hover:scale-110", next ? "text-gold-ink" : "")} aria-hidden />
+        <span className="font-display text-[10.5px] font-semibold leading-tight tracking-wide">{b.title}</span>
+        {steps && steps.have > 0 ? (
+          <span className="mt-0.5 flex w-full max-w-[5.75rem] items-center gap-1">
+            <span className="h-[3px] flex-1 overflow-hidden rounded-full bg-current/15">
+              <span className="block h-full rounded-full bg-gold" style={{ width: `${(steps.have / steps.need) * 100}%` }} />
+            </span>
+            <span className="text-[9.5px] font-semibold leading-none tabular-nums">
+              {steps.have}/{steps.need}
+            </span>
+          </span>
+        ) : null}
+        {/* the best clean time so far: seconds as "s" in every language */}
+        {best !== null ? (
+          <span translate="no" className="text-[9.5px] font-semibold leading-none tabular-nums">
+            {`${best} s`}
+          </span>
+        ) : null}
+        <span className="sr-only">{on ? `Earned. Open ${WHERE[b.id]}` : `Not yet: ${b.how}. Open ${WHERE[b.id]}`}</span>
+      </GoalLink>
+    </li>
+  );
+}
 
 const R = 26;
 const CIRC = 2 * Math.PI * R;
 const go = "whitespace-nowrap font-display font-semibold tracking-wide text-gold-ink";
 
-/** Home: badges earned so far, the next one to go for, and a link straight to it. */
+/** Home: badges earned so far, the next one to go for, and every badge a link straight to where it is earned. */
 export function TrainingCard() {
   const p = useProgress();
   const done = earnedCount(p);
   const next = nextBadge(p);
-  const where = next ? WHERE[next.id] : undefined;
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const shown = mounted ? done : 0;
@@ -88,44 +237,23 @@ export function TrainingCard() {
         </div>
         <div className="min-w-0 flex-1">
           <SectionLabel>YOUR TRAINING</SectionLabel>
-          {next && where ? (
+          {next ? (
             <p className="mt-1.5 text-sm leading-snug">
               <span className="font-semibold text-heading">Next: {next.title}. </span>
               {next.how}.{" "}
-              {where.neck || where.mistakes ? (
-                <Link to="/drill" search={{ case: where.neck ? "neck" : "mistakes" }} className={go}>
-                  {where.label} →
-                </Link>
-              ) : (
-                <Link to={where.to} hash={where.hash} className={go}>
-                  {where.label} →
-                </Link>
-              )}
+              <GoalLink goal={badgeGoal(next.id, p)} className={go}>
+                {WHERE[next.id]} →
+              </GoalLink>
             </p>
           ) : (
             <p className="mt-1.5 text-sm font-semibold leading-snug text-heading">Every badge earned — ready for match day.</p>
           )}
         </div>
       </div>
-      <ul className="grid grid-cols-3 gap-1.5 px-3.5 pb-3 pt-1.5">
-        {BADGES.map((b) => {
-          const on = b.done(p);
-          const Icon = on ? (ICONS[b.id] ?? Trophy) : Lock;
-          return (
-            <li
-              key={b.id}
-              title={b.how}
-              className={cn(
-                "flex min-h-[3.4rem] flex-col items-center justify-center gap-0.5 rounded-lg px-1 py-1.5 text-center",
-                on ? "badge-earned bg-gradient-to-br from-[#f6e7b4] to-[#e2c25c] text-[#3b2f05]" : "bg-note text-muted",
-              )}
-            >
-              <Icon className="size-4" aria-hidden />
-              <span className="font-display text-[10.5px] font-semibold leading-tight tracking-wide">{b.title}</span>
-              <span className="sr-only">{on ? "Earned" : `not yet — ${b.how}`}</span>
-            </li>
-          );
-        })}
+      <ul className="grid grid-cols-3 gap-2 px-3.5 pb-3.5 pt-2">
+        {BADGES.map((b) => (
+          <BadgeTile key={b.id} b={b} p={p} next={b.id === next?.id} />
+        ))}
       </ul>
       <Link to="/record" className="flex min-h-11 items-center gap-2 border-t border-line px-3.5 font-display text-sm font-semibold tracking-wide text-gold-ink">
         <ClipboardCheck className="size-4" aria-hidden />

@@ -72,6 +72,13 @@ export const STREAK_FOR_BADGE = 5;
 /** The three cases in the simulator, and how many planted mistakes earn "Eagle eye". */
 export const CASE_IDS = ["vf", "commotio", "heat"] as const;
 export const MISTAKES_FOR_BADGE = 6;
+/** The score out of 10 in "Who does what?" that earns "Sharp". */
+export const QUIZ_FOR_BADGE = 8;
+
+/** The role cards, the skill modules and each drill's steps, in the order the app shows them. */
+export const ROLE_IDS = ["black", "orange", "red", "blue", "white", "green"] as const;
+export const MODULE_IDS = ["1", "2", "3", "4", "5", "6"] as const;
+export const DRILL_STEPS: Record<DrillName, readonly number[]> = { arrest: [1, 2, 3, 4, 5, 6], spine: [1, 2, 3, 4, 5, 6, 7] };
 
 export type Badge = { id: string; title: string; how: string; done: (p: Progress) => boolean };
 
@@ -79,11 +86,11 @@ const has = (list: readonly (string | number)[], all: readonly (string | number)
 
 /** The badges, in the order they are shown. */
 export const BADGES: Badge[] = [
-  { id: "colours", title: "All six colours", how: "Open every role card", done: (p) => has(p.roles, ["black", "orange", "red", "blue", "white", "green"]) },
-  { id: "modules", title: "Skill modules", how: "Open all six modules", done: (p) => has(p.modules, ["1", "2", "3", "4", "5", "6"]) },
-  { id: "arrest", title: "Arrest drill", how: "Watch all six steps in 3D", done: (p) => has(p.drills.arrest, [1, 2, 3, 4, 5, 6]) },
-  { id: "spine", title: "Neck injury drill", how: "Watch all seven steps in 3D", done: (p) => has(p.drills.spine, [1, 2, 3, 4, 5, 6, 7]) },
-  { id: "quiz", title: "Sharp", how: "Score 8 or more in Who does what?", done: (p) => (p.quizBest ?? 0) >= 8 },
+  { id: "colours", title: "All six colours", how: "Open every role card", done: (p) => has(p.roles, ROLE_IDS) },
+  { id: "modules", title: "Skill modules", how: "Open all six modules", done: (p) => has(p.modules, MODULE_IDS) },
+  { id: "arrest", title: "Arrest drill", how: "Watch all six steps in 3D", done: (p) => has(p.drills.arrest, DRILL_STEPS.arrest) },
+  { id: "spine", title: "Neck injury drill", how: "Watch all seven steps in 3D", done: (p) => has(p.drills.spine, DRILL_STEPS.spine) },
+  { id: "quiz", title: "Sharp", how: "Score 8 or more in Who does what?", done: (p) => (p.quizBest ?? 0) >= QUIZ_FOR_BADGE },
   { id: "place", title: "Team placed", how: "Place all six colours correctly", done: (p) => p.placed },
   { id: "aed", title: "Safe shock", how: "AED trainer: pads right first time, everyone clear", done: (p) => p.aedClean },
   { id: "aed-fast", title: "Under 20 seconds", how: "A clean AED run in under 20 seconds", done: (p) => p.aedBest !== null && p.aedBest < 20 },
@@ -112,6 +119,81 @@ export const earnedCount = (p: Progress) => BADGES.filter((b) => b.done(p)).leng
 
 /** The next thing to try, for the Home card. */
 export const nextBadge = (p: Progress) => BADGES.find((b) => !b.done(p));
+
+/**
+ * Where a badge is earned, so its tile can take you straight there: the page, and on it the next thing still to do
+ * (the first role card not opened yet, the first drill step not watched, the first case not solved). Once a badge is
+ * earned, the same link is the place to practise again.
+ */
+export type BadgeGoal =
+  | { page: "role" | "module" | "case"; id: string }
+  | { page: "drill"; drill: DrillName; step: number }
+  | { page: "roles" | "modules" | "cases" | "mistakes" | "quiz" | "place" | "aed" | "cpr" | "bag" | "team" | "daily" | "listen" };
+
+const missing = <T extends string | number>(all: readonly T[], have: readonly (string | number)[]) => all.find((x) => !have.includes(x));
+
+export function badgeGoal(id: string, p: Progress): BadgeGoal {
+  switch (id) {
+    case "colours": {
+      const next = missing(ROLE_IDS, p.roles);
+      return next ? { page: "role", id: next } : { page: "roles" };
+    }
+    case "modules": {
+      const next = missing(MODULE_IDS, p.modules);
+      return next ? { page: "module", id: next } : { page: "modules" };
+    }
+    case "arrest":
+    case "spine":
+      return { page: "drill", drill: id, step: missing(DRILL_STEPS[id], p.drills[id]) ?? 1 };
+    case "cases": {
+      const next = missing(CASE_IDS, p.cases);
+      return next ? { page: "case", id: next } : { page: "cases" };
+    }
+    case "mistakes":
+      return { page: "mistakes" };
+    case "place":
+      return { page: "place" };
+    case "aed":
+    case "aed-fast":
+      return { page: "aed" };
+    case "cpr":
+      return { page: "cpr" };
+    case "bag":
+      return { page: "bag" };
+    case "team":
+      return { page: "team" };
+    case "streak":
+      return { page: "daily" };
+    case "listen":
+      return { page: "listen" };
+    default:
+      return { page: "quiz" };
+  }
+}
+
+/** How far along a badge that builds up is, done out of needed; null for one earned in a single go. */
+export function badgeProgress(id: string, p: Progress): { have: number; need: number } | null {
+  const count = (all: readonly (string | number)[], have: readonly (string | number)[]) => ({ have: all.filter((x) => have.includes(x)).length, need: all.length });
+  switch (id) {
+    case "colours":
+      return count(ROLE_IDS, p.roles);
+    case "modules":
+      return count(MODULE_IDS, p.modules);
+    case "arrest":
+    case "spine":
+      return count(DRILL_STEPS[id], p.drills[id]);
+    case "cases":
+      return count(CASE_IDS, p.cases);
+    case "mistakes":
+      return { have: Math.min(p.mistakes.length, MISTAKES_FOR_BADGE), need: MISTAKES_FOR_BADGE };
+    case "streak":
+      return { have: Math.min(p.bestStreak, STREAK_FOR_BADGE), need: STREAK_FOR_BADGE };
+    case "quiz":
+      return { have: Math.min(p.quizBest ?? 0, QUIZ_FOR_BADGE), need: QUIZ_FOR_BADGE };
+    default:
+      return null;
+  }
+}
 
 const add = <T>(list: T[], x: T) => (list.includes(x) ? list : [...list, x]);
 

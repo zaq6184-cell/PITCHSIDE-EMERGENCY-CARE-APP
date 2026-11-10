@@ -7,8 +7,9 @@ import {
   ShieldCheck,
   Smartphone,
   Sparkles,
+  Stethoscope,
   Trash2,
-  Wind,
+  Trophy,
 } from "lucide-react";
 import { ShareAppButton } from "@/components/install-app";
 import { LanguageList } from "@/components/language-switch";
@@ -39,6 +40,25 @@ const sections: { id: string; chip: string; title: string; paragraphs?: string[]
 
 const DELETE_CONFIRM = "Delete your settings, progress, logs, plans and scorer sessions from this device? This cannot be undone.";
 const SUBHEAD = "font-display text-sm font-semibold tracking-wide text-heading";
+
+/** Under Developers: the doctors whose intellectual property the app is, their names never translated. */
+function Owners() {
+  return (
+    <>
+      <h3 className={SUBHEAD}>Intellectual property of:</h3>
+      <ul translate="no" className="flex flex-col divide-y divide-line overflow-hidden rounded-xl bg-note">
+        {aboutApp.owners.map((name) => (
+          <li key={name} className="flex items-center gap-2.5 px-3 py-2.5 text-sm font-semibold leading-snug text-heading">
+            <span aria-hidden className="grid size-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#f6e7b4] to-[#e2c25c] text-[#3b2f05]">
+              <Stethoscope className="size-3.5" />
+            </span>
+            {name}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 
 /** What the app keeps, the permissions it may ask for, when it goes online, and how to delete your data. */
 function PrivacyBody() {
@@ -105,7 +125,8 @@ function PrivacyBody() {
 }
 
 const NOTE_ICONS: Record<string, LucideIcon> = {
-  "airway-181": Wind,
+  "badges-190": Trophy,
+  "developers-190": Stethoscope,
 };
 
 function About() {
@@ -221,6 +242,7 @@ function About() {
                 ) : (
                   <PrivacyBody />
                 )}
+                {s.id === "about-developers" ? <Owners /> : null}
               </div>
             </Panel>
           </section>
